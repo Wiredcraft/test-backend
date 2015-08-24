@@ -42,6 +42,8 @@ There's nothing here, we leave it to you to choose the build tool, code structur
 
 - Choose either sql or no-sql database to make the data persistence
 
+- Use git to manage code
+
 
 ## What We Care About
 
@@ -56,3 +58,13 @@ Here's what you should aim for:
 - Solid testing approach
 
 - Extensible code;
+
+## Q&A
+
+* Where should I send back the result when I'm done?
+
+Fork this repo and send us a pull request when you think you are done. We don't have deadline for the task.
+
+* What if I have question?
+
+Create a new issue in the repo and we will get back to you very quickly.
