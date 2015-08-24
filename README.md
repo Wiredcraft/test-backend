@@ -1,4 +1,4 @@
-# Wiredcraft Beck-end Developer Coding Test
+# Wiredcraft Back-end Developer Coding Test
 
 Make sure you read **all** of this document carefully, and follow the guidelines in it.
 
