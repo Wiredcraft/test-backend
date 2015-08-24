@@ -1,10 +1,32 @@
-# Wiredcraft Coding Test
+# Wiredcraft Beck-end Developer Coding Test
 
 Make sure you read **all** of this document carefully, and follow the guidelines in it.
 
 ## Background
 
-Build a static version of the given mockup
+Build a restful api that could `get/create/update/delete` user data from a persistence database
+
+### User Model
+
+```
+{
+  "id": "xxx",                  // user id(you can use uuid or the id provided by database, but need to be unique)
+  "name": "test",               // user name
+  "dob": "",                    // date of birth
+  "address": "",                // user address
+  "description": "",            // user description
+  "created_at": ""              // user created date
+}
+```
+
+### API
+
+```
+GET    /user/{id}                   - Get user by ID
+POST   /user/                       - To create a new user
+PUT    /user/{id}                   - To update an existing user with data
+DELETE /user/{id}                   - To delete a user from database
+```
 
 ## Getting started
 
@@ -12,28 +34,24 @@ There's nothing here, we leave it to you to choose the build tool, code structur
 
 ## Requirements
 
-- A single page application
+- With clear documentation on how to run the code and api usage
 
-- User can navigate from different screen
+- Proper use of RESTFUL api design pattern
 
-- Use a real map, either google maps or others
+- Provide proper unit test
 
-- Have clear documentation on how to run the code
+- Choose either sql or no-sql database to make the data persistence
 
-- Provide unit tests for your JavaScript
 
 ## What We Care About
 
-
 Feel free to use any libraries you would use if this were a real production app, but remember we're interested in your code & the way you solve the problem, not how well you can use a particular library.
-
-We use `React.js` a lot together with `browserify` and some `ES6` code here in Wiredcraft.
 
 We're interested in your method and how you approach the problem just as much as we're interested in the end result.
 
 Here's what you should aim for:
 
-- Good use of current HTML, CSS, JS & performance best practices.
+- Good use of current restful api design & performance best practices.
 
 - Solid testing approach
 
