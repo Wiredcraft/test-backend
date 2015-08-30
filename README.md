@@ -169,6 +169,56 @@ Running migrations:
   Applying userapp.0001_initial... OK
 ```
 
+- Install [Django REST framework](http://www.django-rest-framework.org/)
+
+Note that REST framework requires the following:
+
+```
+Python (2.6.5+, 2.7, 3.2, 3.3, 3.4)
+Django (1.5.6+, 1.6.3+, 1.7+, 1.8)
+```
+
+The following packages are optional:
+
+```
+Markdown (2.1.0+) - Markdown support for the browsable API.
+django-filter (0.9.2+) - Filtering support.
+django-guardian (1.1.1+) - Object level permissions support.
+```
+
+Install Django REST framework with: 
+
+```bash
+$ pip install djangorestframework
+$ pip install markdown       # Markdown support for the browsable API.
+$ pip install django-filter  # Filtering support
+```
+
+or clone the project from github and copy `rest_framework` folder to your project dictionary.(recommended)
+
+```bash
+$ git clone git@github.com:tomchristie/django-rest-framework.git
+```
+
+Add `rest_framework` to your INSTALLED_APPS setting.
+
+```
+INSTALLED_APPS = (
+    ...
+    'rest_framework',
+)
+```
+
+If you're intending to use the browsable API you'll probably also want to add REST framework's login and logout views. Add the following to your root urls.py file.
+
+```
+urlpatterns = [
+    ...
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+]
+```
+
+
 - Run and try
 
 ```bash
