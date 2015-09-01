@@ -45,7 +45,7 @@ If you see something like this, you are good to go.
 
 ### Set up
 
-- Git clone
+- Git clone and install
 
 ```bash
 $ git clone git@github.com:CCharlieLi/backend-test.git 
@@ -73,9 +73,7 @@ Edit `server/datasources.json` to modify database configuration to meet your nee
 $ node .
 ```
 
-Now go to `http://localhost:3000/explorer`.  You'll see the StrongLoop API Explorer showing the two models: 
-people( model we created ) and User ( created by default ). You can edit `server/model-config.json` to determine
-if you want any model to show up by adding `"public": false`. For example:
+Now go to `http://localhost:3000/explorer`.  You'll see the [StrongLoop API Explorer](https://docs.strongloop.com/display/public/LB/Use+API+Explorer) showing the two models: people( model we created ) and User ( created by default ). You can edit `server/model-config.json` to determine if you want any model to show up by adding `"public": false`. For example:
 
 ```json
 "User": {
