@@ -7,22 +7,22 @@ This is Wiredcraft Back-end Developer Coding Test Project built with [LoopBack](
 
 ```
 {
-  "id": "1",                    // int,     [system create],	user id
-  "name": "xxx",                // string,  					user name
-  "dob": "",                    // date,    [YYYY-MM-DD],		date of birth
-  "address": "",                // string,	optional,			user address
-  "description": "",            // string,	optional,			user description
-  "created_at": ""              // date,	[YYYY-MM-DD],		user created date
+  "id": "1",                    // int,     [system create],   user id
+  "name": "xxx",                // string,                     user name
+  "dob": "",                    // date,    [YYYY-MM-DD],      date of birth
+  "address": "",                // string,  optional,          user address
+  "description": "",            // string,  optional,          user description
+  "created_at": ""              // date,    [YYYY-MM-DD],      user created date
 }
 ```
 
 ### API
 
 ```
-GET    /users/{id}                   - Get user by ID
-POST   /users/                       - To create a new user
-PUT    /users/{id}                   - To update an existing user with data
-DELETE /users/{id}                   - To delete a user from database
+GET    /people/{id}                   - Get user by ID
+POST   /people/                       - To create a new user
+PUT    /people/{id}                   - To update an existing user with data
+DELETE /people/{id}                   - To delete a user from database
 ```
 
 
@@ -50,6 +50,7 @@ If you see something like this, you are good to go.
 ```bash
 $ git clone git@github.com:CCharlieLi/backend-test.git 
 $ git checkout loopback
+$ npm install
 ```
 
 - Database configuration
@@ -60,9 +61,9 @@ Edit `server/datasources.json` to modify database configuration to meet your nee
 "mongo": {
     "name": "mongo",
     "connector": "mongodb", 
-    "host": "127.0.0.1",   //YOUR DATABASE HOST
-    "port": 27017,         //YOUR DATABASE PORT
-    "database": "Demo"     //YOUR DATABASE NAME
+    "host": "127.0.0.1",   
+    "port": 27017,        
+    "database": "Demo"    
   }
 ```
 

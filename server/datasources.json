@@ -6,8 +6,8 @@
   "mongo": {
     "name": "mongo",
     "connector": "mongodb", 
-    "host": "127.0.0.1",   //YOUR DATABASE HOST
-    "port": 27017,         //YOUR DATABASE PORT
-    "database": "Demo"     //YOUR DATABASE NAME
+    "host": "127.0.0.1",  
+    "port": 27017,       
+    "database": "Demo"   
   }
 }
