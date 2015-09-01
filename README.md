@@ -1,27 +1,18 @@
 # Wiredcraft Back-end Developer Coding Test
 
-## Description
+This is Wiredcraft Back-end Developer Coding Test Project built with [LoopBack](http://loopback.io). You can `get/create/update/delete` user data from server database.
 
-This is a project under developing. A restful API powered by [Django](https://www.djangoproject.com/) and [Django REST framework](http://www.django-rest-framework.org/). You can `get/create/update/delete` user data from server database.
-
-- Example: [Demo](http://test.charlieli.cn/users/) (need update)
-
-- Try:
-
-```bash
-curl -l -H "Content-type: application/json" -X POST -d '{"Name":"Charlie","Dob":"1991-05-08","Address":"Beijing","Description":"Student"}' http://127.0.0.1:8000/users/
-```
 
 ### User Model
 
 ```
 {
-  "id": "1",                    // int,     [system create],					user id
-  "name": "xxx",                // string,  max_length=20,		        user name
-  "dob": "",                    // date,    YYYY[-MM[-DD]],						date of birth
-  "address": "",                // string,	max_length=50,blank=True,	user address
-  "description": "",            // string,	blank=True						    user description
-  "created_at": ""              // date,	  [system create],					user created date
+  "id": "1",                    // int,     [system create],	user id
+  "name": "xxx",                // string,  					user name
+  "dob": "",                    // date,    [YYYY-MM-DD],		date of birth
+  "address": "",                // string,	optional,			user address
+  "description": "",            // string,	optional,			user description
+  "created_at": ""              // date,	[YYYY-MM-DD],		user created date
 }
 ```
 
@@ -34,223 +25,91 @@ PUT    /users/{id}                   - To update an existing user with data
 DELETE /users/{id}                   - To delete a user from database
 ```
 
+
 ## Getting started
 
-### Postgres
+### MongoDB
 
-Here I use [PostgreSQL](http://www.postgresql.org/) as my database, you can choose to use sqlite3 and skip this step for your convenient.
+- Install [MongoDB](http://docs.mongodb.org/manual/)
 
-- Install [PostgreSQL](http://www.postgresql.org/).
-- PostgreSQL configuration
-
-```bash
-$ psql postgres
-```
-
-To Make sure your database could be visited remotely,edit the `postgresql.conf` and modify `\#listen_addresses = ‘localhost’` to `listen_addresses = ‘*’ ` to listen to anywhere, `\#password_encryption = on` to `password_encryption = on` to enable password authentication. Edit `pg_hba.conf`, add `host all all 0.0.0.0 0.0.0.0 md5` to the last line to allow your client visiting postgresql server.
-
-Linux:
+- Run MongoDB service
 
 ```bash
-$ vi /etc/postgresqlpv/9.4/main/postgresql.conf
-$ vi /etc/postgresql/9.4/main/pg_hba.conf
+$ sudo mongod
+...
+...
+2015-09-01T09:30:10.149+0800 I NETWORK  [initandlisten] waiting for connections on port 27017
 ```
 
-or Mac:
-
-```bash
-$ vi /usr/local/var/postgres/postgresql.conf
-$ vi /usr/local/var/postgres/pg_hba.conf
-```
-
-Restart PostgreSQL server
-
-Linux:
-
-```bash
-$ /etc/init.d/postgresql restart
-```
-
-or Mac:
-
-```bash
-$ pg_ctl restart -D /usr/local/var/postgres
-```
-
-Create your own database
-
-```bash
-$ psql postgres
-$ postgres=# create user “charlie” with password ‘123456’ nocreatedb;
-$ postgres=# create database “charlieDB” with owner=”charlie”;
-$ \q
-```
-
-You can test your database by
-
-```bash
-psql charlieDB
-```
-
-- Install psycopg2 to enable the connection bwtween django and postgresql
-
-Linux:
-
-```bash
-$ sudo apt-get install python-psycopg2
-```
-
-or Mac:
-
-```bash
-$ sudo pip install psycopg2
-```
-
-Test if it's installed properly.
-
-```bash
-    $ python
-    >>> import psycopg2
-    >>> psycopg2.apilevel
-	’2.0′
-```
+If you see something like this, you are good to go.
 
 ### Set up
 
 - Git clone
 
 ```bash
-$ git clone git@github.com:Wiredcraft/backend-test.git backend-test
+$ git clone git@github.com:CCharlieLi/backend-test.git 
+$ git checkout loopback
 ```
 
-- Edit settings.py to meet your PostgreSQL configuration
+- Database configuration
 
+Edit `server/datasources.json` to modify database configuration to meet your need.
+
+```json
+"mongo": {
+    "name": "mongo",
+    "connector": "mongodb", 
+    "host": "127.0.0.1",   //YOUR DATABASE HOST
+    "port": 27017,         //YOUR DATABASE PORT
+    "database": "Demo"     //YOUR DATABASE NAME
+  }
 ```
-'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'charlieDB',        #YOUR DATABASE NAME
-    'USER': 'charlie',          #YOUR DATABASE USERNAME
-    'PASSWORD': '123456',       #YOUR DATABASE PASSWORDch
-    'HOST': '',
-    'PORT': '5432',
-}
-```
-
-- Synchronize model and database
-
-```bash
-$ python manage.py makemigrations
-$ python manage.py migrate  
-```
-
-If you see something like this, you are good to go.
-
-```bash
-$ python manage.py makemigrations
-Migrations for 'userapp':
-  0001_initial.py:
-    - Create model Appuser
-$ python manage.py migrate       
-Operations to perform:
-  Apply all migrations: admin, contenttypes, userapp, auth, sessions
-Running migrations:
-  Rendering model states... DONE
-  Applying contenttypes.0001_initial... OK
-  Applying auth.0001_initial... OK
-  Applying admin.0001_initial... OK
-  Applying contenttypes.0002_remove_content_type_name... OK
-  Applying auth.0002_alter_permission_name_max_length... OK
-  Applying auth.0003_alter_user_email_max_length... OK
-  Applying auth.0004_alter_user_username_opts... OK
-  Applying auth.0005_alter_user_last_login_null... OK
-  Applying auth.0006_require_contenttypes_0002... OK
-  Applying auth.0007_alter_validators_add_error_messages... OK
-  Applying sessions.0001_initial... OK
-  Applying userapp.0001_initial... OK
-```
-
-- Install [Django REST framework](http://www.django-rest-framework.org/)
-
-Note that REST framework requires the following:
-
-```
-Python (2.6.5+, 2.7, 3.2, 3.3, 3.4)
-Django (1.5.6+, 1.6.3+, 1.7+, 1.8)
-```
-
-The following packages are optional:
-
-```
-Markdown (2.1.0+) - Markdown support for the browsable API.
-django-filter (0.9.2+) - Filtering support.
-django-guardian (1.1.1+) - Object level permissions support.
-```
-
-Install Django REST framework with: 
-
-```bash
-$ pip install djangorestframework
-$ pip install markdown       # Markdown support for the browsable API.
-$ pip install django-filter  # Filtering support
-```
-
-or clone the project from github and copy `rest_framework` folder to your project dictionary.(recommended)
-
-```bash
-$ git clone git@github.com:tomchristie/django-rest-framework.git
-```
-
-Add `rest_framework` to your INSTALLED_APPS setting.
-
-```
-INSTALLED_APPS = (
-    ...
-    'rest_framework',
-)
-```
-
-If you're intending to use the browsable API you'll probably also want to add REST framework's login and logout views. Add the following to your root urls.py file.
-
-```
-urlpatterns = [
-    ...
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-]
-```
-
 
 - Run and try
 
 ```bash
-$ python manage.py runserver
-
-System check identified no issues (0 silenced).
-August 28, 2015 - 12:37:18
-Django version 1.9.dev20150827233257, using settings 'backendTest.settings'
-Starting development server at http://127.0.0.1:8000/
-Quit the server with CONTROL-C.
+$ node .
 ```
 
-Try: 
+Now go to `http://localhost:3000/explorer`.  You'll see the StrongLoop API Explorer showing the two models: 
+people( model we created ) and User ( created by default ). You can edit `server/model-config.json` to determine
+if you want any model to show up by adding `"public": false`. For example:
 
-```bash
-curl http://127.0.0.1:8000/users/
+```json
+"User": {
+    "dataSource": "db"
+  },
+  "AccessToken": {
+    "dataSource": "db",
+    "public": false
+  },
+  "ACL": {
+    "dataSource": "db",
+    "public": false
+  },
+  "RoleMapping": {
+    "dataSource": "db",
+    "public": false
+  },
+  "Role": {
+    "dataSource": "db",
+    "public": false
+  },
+  "person": {
+    "dataSource": "mongo",
+    "public": true
+  }
 ```
 
+### Test
 
-## Test
 
-You can find `tests.py` in userapp folder. There are test methods for `get/post/put/delete`.
 
-```bash
-$ python manage.py test
-```
-
-## License
+# License
 
 MIT
 
-## Contact
+# Contact
 
 CCharlieLi(ccharlieli@live.com)
-

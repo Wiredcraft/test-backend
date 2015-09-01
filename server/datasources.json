@@ -1,0 +1,13 @@
+{
+  "db": {
+    "name": "db",
+    "connector": "memory"
+  },
+  "mongo": {
+    "name": "mongo",
+    "connector": "mongodb", 
+    "host": "127.0.0.1",   //YOUR DATABASE HOST
+    "port": 27017,         //YOUR DATABASE PORT
+    "database": "Demo"     //YOUR DATABASE NAME
+  }
+}
