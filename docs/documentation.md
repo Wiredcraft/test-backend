@@ -1,3 +1,20 @@
+#Usage
+
+###Starting the server
+
+    cd $ROOTDIR
+    go build
+    ./<executable>
+
+You should be able to query the API at localhost:3000/user/. You will need a authorization key to
+interact with the API and that is under the header "Authorization: secret".
+
+###Testing the server
+The go test command should test all of the API routes of the server and create/read/update/delete
+users from the database.
+
+    go test
+
 #Frameworks and Tools
 ###Server
 Martini is simple, uses dependency injection and enables quick prototyping.
