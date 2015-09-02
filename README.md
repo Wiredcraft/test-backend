@@ -103,6 +103,28 @@ Now go to `http://localhost:3000/explorer`.  You'll see the [StrongLoop API Expl
 
 ### Test
 
+```bash
+$ mocha test
+
+  testAPI
+    POST /api/people
+      ✓ should be allowed
+      ✓ should have statusCode 200
+      ✓ should respond with a new person
+    GET /api/people
+      ✓ should have statusCode 200
+      ✓ should respond with an array of people
+    GET /api/people/findOne
+      ✓ should have statusCode 200
+      ✓ should respond with a person
+    PUT /api/people/
+      ✓ should have statusCode 200
+      ✓ should respond with a updated person
+    DELETE /api/people/10
+      ✓ should have statusCode 204
+      ✓ should respond with undefined
+```
+
 
 
 # License
