@@ -13,10 +13,14 @@ interact with the API and that is under the header "Authorization: secret".
 The go test command should test all of the API routes of the server and create/read/update/delete
 users from the database.
 
+    cd $ROOTDIR
     go test
 
 #Frameworks and Tools
 ###Server
+
+- Martini
+
 Martini is simple, uses dependency injection and enables quick prototyping.
 I haven't tried other libraries, but martini is very similar to Express which I like and I was
 somewhat familiar with it.
@@ -24,7 +28,10 @@ https://github.com/go-martini/martini
 
 
 ###Database
-Sqlite3 wrapped by gorm
+
+- SQLite3
+- Gorm
+
 I wanted to try out an ORM in a statically typed language so I went with gorm. Sure, there are a lot
 of interface{} casts and a few nil dereferences but overall I think it's nice for a simple CRUD app.
 I didn't want a heavyweight database so I went with sqlite for it's single file storage and ability
@@ -32,33 +39,47 @@ to use in memory tables for testing.
 https://github.com/jinzhu/gorm
 
 ###Testing
-net/http/httptest - I used this to setup a server with an in memory database and test it. Not a lot
+
+- net/http/httptest
+
+I used this to setup a server with an in memory database and test it. Not a lot
 of magic and very simple to understand.
 
 #API
-Here are the available API methods
-GET     /user/
+
+Here are the available API methods:
+
+- GET     /user/
+
 Returns 200 and a list of all the users as json on success.
+
 If the request fails for some reason it returns 500 and text describing the error.
 
-GET     /user/<id>
+- GET     /user/<id>
+
 Returns 200 and a single user as json on success.
+
 If the request fails it either returns 400, 404 or 500 depending on the error.
 
-POST    /
+- POST    /
+
 Post data keys: name, address, dob, description
 Creates a new user with the given parameters and returns that user on success.
 Requires the content type to be "application/x-www-form-urlencoded".
+
 Returns 200 and the added json object on success.
+
 Returns 400, 404 or 500 and text depending on the error.
 
-PUT     /<id>
+- PUT     /<id>
+
 Updates the user at the given id. The message body can contain the keys: name, address, dob or
 description. If none of these parameters are given no rows are updated and the request fails.
 Returns 200 and the updated json object on success.
 Returns 400, 404 or 500 and text depending on the error.
 
-DELETE  /<id>
+- DELETE  /<id>
+
 Deletes the user at the given id.
 Returns 200 and the deleted json object on success.
 Returns 400, 404 or 500 and text depending on the error.
