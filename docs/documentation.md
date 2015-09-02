@@ -3,8 +3,8 @@
 ###Starting the server
 
     cd $ROOTDIR
-    go build
-    ./<executable>
+    go build -o <executable-name>
+    ./<executable-name>
 
 You should be able to query the API at localhost:3000/user/. You will need a authorization key to
 interact with the API and that is under the header "Authorization: secret".
@@ -36,11 +36,50 @@ net/http/httptest - I used this to setup a server with an in memory database and
 of magic and very simple to understand.
 
 #API
+Here are the available API methods
+GET     /user/
+Returns 200 and a list of all the users as json on success.
+If the request fails for some reason it returns 500 and text describing the error.
+
+GET     /user/<id>
+Returns 200 and a single user as json on success.
+If the request fails it either returns 400, 404 or 500 depending on the error.
+
+POST    /
+Post data keys: name, address, dob, description
+Creates a new user with the given parameters and returns that user on success.
+Requires the content type to be "application/x-www-form-urlencoded".
+Returns 200 and the added json object on success.
+Returns 400, 404 or 500 and text depending on the error.
+
+PUT     /<id>
+Updates the user at the given id. The message body can contain the keys: name, address, dob or
+description. If none of these parameters are given no rows are updated and the request fails.
+Returns 200 and the updated json object on success.
+Returns 400, 404 or 500 and text depending on the error.
+
+DELETE  /<id>
+Deletes the user at the given id.
+Returns 200 and the deleted json object on success.
+Returns 400, 404 or 500 and text depending on the error.
+
+
+All of the methods require basic authentication using the header "Authentication" and the value
+"secret". In order to send data using POST or PUT you need to supply the "Content-Type" header.
+
+    Authentication: secret
+    Conent-Type: application/x-www-form-urlencoded
+
 
 #Models
 
 #Authentication
+The API requires very simple authentication based on a hard-coded key in the source code. Since it
+wasn't clear on how the authentication method should be handled, this only demonstrates a handler
+that can be used or replaced for authentication. To authenticate add the header "Authentication" with
+the key "secret" to the request.
+
+    Authentication: secret
 
 #Tests
-
 
