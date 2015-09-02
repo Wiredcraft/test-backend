@@ -1,70 +1,136 @@
 # Wiredcraft Back-end Developer Coding Test
 
-Make sure you read **all** of this document carefully, and follow the guidelines in it.
+This is Wiredcraft Back-end Developer Coding Test Project built with [LoopBack](http://loopback.io). You can `get/create/update/delete` user data from server database.
 
-## Background
-
-Build a restful api that could `get/create/update/delete` user data from a persistence database
 
 ### User Model
 
 ```
 {
-  "id": "xxx",                  // user id(you can use uuid or the id provided by database, but need to be unique)
-  "name": "test",               // user name
-  "dob": "",                    // date of birth
-  "address": "",                // user address
-  "description": "",            // user description
-  "created_at": ""              // user created date
+  "id": "1",                    // int,     [system create],   user id
+  "name": "xxx",                // string,                     user name
+  "dob": "",                    // date,    [YYYY-MM-DD],      date of birth
+  "address": "",                // string,  optional,          user address
+  "description": "",            // string,  optional,          user description
+  "created_at": ""              // date,    [YYYY-MM-DD],      user created date
 }
 ```
 
 ### API
 
 ```
-GET    /user/{id}                   - Get user by ID
-POST   /user/                       - To create a new user
-PUT    /user/{id}                   - To update an existing user with data
-DELETE /user/{id}                   - To delete a user from database
+GET    /people/{id}                   - Get user by ID
+POST   /people/                       - To create a new user
+PUT    /people/{id}                   - To update an existing user with data
+DELETE /people/{id}                   - To delete a user from database
 ```
+
 
 ## Getting started
 
-There's nothing here, we leave it to you to choose the build tool, code structure, framework, testing approach...
+### MongoDB
 
-## Requirements
+- Install [MongoDB](http://docs.mongodb.org/manual/)
 
-- With clear documentation on how to run the code and api usage
+- Run MongoDB service
 
-- Proper use of RESTFUL api design pattern
+```bash
+$ sudo mongod
+...
+...
+2015-09-01T09:30:10.149+0800 I NETWORK  [initandlisten] waiting for connections on port 27017
+```
 
-- Provide proper unit test
+If you see something like this, you are good to go.
 
-- Choose either sql or no-sql database to make the data persistence
+### Set up
 
-- Use git to manage code
+- Git clone and install
+
+```bash
+$ git clone git@github.com:CCharlieLi/backend-test.git 
+$ git checkout loopback
+$ npm install
+```
+
+- Database configuration
+
+Edit `server/datasources.json` to modify database configuration to meet your need.
+
+```json
+"mongo": {
+    "name": "mongo",
+    "connector": "mongodb", 
+    "host": "127.0.0.1",   
+    "port": 27017,        
+    "database": "Demo"    
+  }
+```
+
+- Run and try
+
+```bash
+$ node .
+```
+
+Now go to `http://localhost:3000/explorer`.  You'll see the [StrongLoop API Explorer](https://docs.strongloop.com/display/public/LB/Use+API+Explorer) showing the two models: people( model we created ) and User ( created by default ). You can edit `server/model-config.json` to determine if you want any model to show up by adding `"public": false`. For example:
+
+```json
+"User": {
+    "dataSource": "db"
+  },
+  "AccessToken": {
+    "dataSource": "db",
+    "public": false
+  },
+  "ACL": {
+    "dataSource": "db",
+    "public": false
+  },
+  "RoleMapping": {
+    "dataSource": "db",
+    "public": false
+  },
+  "Role": {
+    "dataSource": "db",
+    "public": false
+  },
+  "person": {
+    "dataSource": "mongo",
+    "public": true
+  }
+```
+
+### Test
+
+```bash
+$ mocha test
+
+  testAPI
+    POST /api/people
+      ✓ should be allowed
+      ✓ should have statusCode 200
+      ✓ should respond with a new person
+    GET /api/people
+      ✓ should have statusCode 200
+      ✓ should respond with an array of people
+    GET /api/people/findOne
+      ✓ should have statusCode 200
+      ✓ should respond with a person
+    PUT /api/people/
+      ✓ should have statusCode 200
+      ✓ should respond with a updated person
+    DELETE /api/people/10
+      ✓ should have statusCode 204
+      ✓ should respond with undefined
+```
 
 
-## What We Care About
 
-Feel free to use any libraries you would use if this were a real production app, but remember we're interested in your code & the way you solve the problem, not how well you can use a particular library.
+# License
 
-We're interested in your method and how you approach the problem just as much as we're interested in the end result.
+MIT
 
-Here's what you should aim for:
+# Contact
 
-- Good use of current restful api design & performance best practices.
-
-- Solid testing approach
-
-- Extensible code;
-
-## Q&A
-
-* Where should I send back the result when I'm done?
-
-Fork this repo and send us a pull request when you think you are done. We don't have deadline for the task.
-
-* What if I have question?
-
-Create a new issue in the repo and we will get back to you very quickly.
+CCharlieLi(ccharlieli@live.com)
