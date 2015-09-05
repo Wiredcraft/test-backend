@@ -1,0 +1,26 @@
+doctype html5
+html(lang="en")
+  head
+    title= pageTitle
+    link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css")
+
+body
+  div.container.center
+    div.panel.panel-default.center
+      div.panel-heading Please login
+      div.panel-body
+        form.form-horizontal(role="form", action="/login", method="post")
+          div.form-group
+              div.col-sm-offset-2.col-sm-10
+                label#errorMsg #{message}
+          div.form-group
+             label.col-sm-2.control-label(for="usernameInput") Username:
+             div.col-sm-10
+               input#usernameInput.form-control(type="text", name="username", placeholder="Input username")
+          div.form-group
+             label.col-sm-2.control-label(for="pwdInput") Password:
+             div.col-sm-10
+               input#pwdInput.form-control(type="password", name="password", placeholder="Input password")
+          div.form-group
+            div.inline.col-sm-offset-2.col-sm-10
+              button.btn.btn-primary(type="submit") LogIn
