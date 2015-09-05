@@ -15,7 +15,7 @@ PORT={some_port_number} npm start
 ```
 
 ## How to play
-accesss http://{FQDN}:{port}/index
+access http://{FQDN}:{port}/index
 
 ## Test
 ```
