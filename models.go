@@ -21,9 +21,9 @@ func (u *User) String() string {
 
 //A predicate to filter collections of users on. Used in conjuction with the User filter function to
 //filter out individual users that match certain attributes.
-type UserPredicate func(User) bool
+type userPredicate func(User) bool
 
-func FilterUsers(users []User, predicate UserPredicate) []User {
+func filterUsers(users []User, predicate userPredicate) []User {
 	filtered := make([]User, 0, 0)
 	for _, u := range users {
 		if predicate(u) {

@@ -10,6 +10,9 @@ import (
 	"log"
 )
 
+//This is a naive approach, but for now it demonstrates a authentication handler...
+const APIKey = "secret"
+
 //Creates a sqlite database. It can either be a file or an in memory database for testing
 //Returns the martini handler used to inject it to martini
 func CreateDb(dbfile string) (martini.Handler, error) {
@@ -32,23 +35,24 @@ func CreateDb(dbfile string) (martini.Handler, error) {
 
 //Sets up martini and adds the route handlers for the api. Also injects the renderer used in most
 //handlers. Note: You need to attach the database handler urself
-func SetupMartini() *martini.ClassicMartini {
+func setupMartini() *martini.ClassicMartini {
 	m := martini.Classic()
 	m.Use(render.Renderer())
 
+	//All of the routes require the auth handler
 	m.Group("/user", func(router martini.Router) {
-		router.Get("/", GetAllUsersHandler)
-		router.Get("/(?P<id>[0-9]+)", GetUserHandler)
-		router.Post("/", AddUserHandler)
-		router.Put("/(?P<id>[0-9]+)", UpdateUserHandler)
-		router.Delete("/(?P<id>[0-9]+)", DeleteUserHandler)
+		router.Get("/", getAllUsersHandler)
+		router.Get("/(?P<id>[0-9]+)", getUserHandler)
+		router.Post("/", addUserHandler)
+		router.Put("/(?P<id>[0-9]+)", updateUserHandler)
+		router.Delete("/(?P<id>[0-9]+)", deleteUserHandler)
 	}, authHandler)
 
 	return m
 }
 
 func main() {
-	m := SetupMartini()
+	m := setupMartini()
 	//Use a local sqlite db
 	handler, err := CreateDb("./test.db")
 	if err != nil {

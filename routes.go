@@ -15,9 +15,6 @@ import (
 	"time"
 )
 
-//This is a naive approach, but for now it demonstrates a authentication handler...
-const APIKey = "secret"
-
 //An error struct to be passed back and forth with a code that notifies the client of what went wrong
 //and a message. Easier than passing multiple params back and forth.
 type httpError struct {
@@ -27,6 +24,10 @@ type httpError struct {
 
 func (e *httpError) Error() string {
 	return e.msg
+}
+
+func (e *httpError) toMartiniRender() (int, string) {
+	return e.code, e.msg
 }
 
 //Ease of use method to find a specific user based on a predicate. Usually the predicate is an ID,
@@ -71,10 +72,9 @@ func authHandler(r *http.Request, ctx martini.Context, ren render.Render) {
 }
 
 // Returns a json list of all the users
-func GetAllUsersHandler(db *gorm.DB, ren render.Render) {
+func getAllUsersHandler(db *gorm.DB, ren render.Render) {
 	users := make([]User, 0, 0)
-	err := db.Find(&users).Error
-	if err != nil {
+	if err := db.Find(&users).Error; err != nil {
 		ren.Text(http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -82,17 +82,17 @@ func GetAllUsersHandler(db *gorm.DB, ren render.Render) {
 }
 
 //Gets a single user as specified in the `id` path param
-func GetUserHandler(db *gorm.DB, params martini.Params, ren render.Render) {
+func getUserHandler(db *gorm.DB, params martini.Params, ren render.Render) {
 	u, err := findUserFromIDParam(db, params["id"])
 	if err != nil {
-		ren.Text(err.code, err.msg)
+		ren.Text(err.toMartiniRender())
 		return
 	}
 	ren.JSON(http.StatusOK, u)
 }
 
 //Adds a user using POST data. Expects `Content-Type` to be `application/x-www-form-urlencoded`
-func AddUserHandler(db *gorm.DB, r *http.Request, ren render.Render) {
+func addUserHandler(db *gorm.DB, r *http.Request, ren render.Render) {
 	name := r.FormValue("name")
 	dob := r.FormValue("dob")
 	address := r.FormValue("address")
@@ -114,10 +114,10 @@ func AddUserHandler(db *gorm.DB, r *http.Request, ren render.Render) {
 //updated it returns a 400 notifying that no update was made. We might need to change the status
 //code, but I'd rather prefer the failure to be visible.
 //Expects `Content-Type` to be `application/x-www-form-urlencoded`
-func UpdateUserHandler(db *gorm.DB, params martini.Params, r *http.Request, ren render.Render) {
+func updateUserHandler(db *gorm.DB, params martini.Params, r *http.Request, ren render.Render) {
 	u, err := findUserFromIDParam(db, params["id"])
 	if err != nil {
-		ren.Text(err.code, err.msg)
+		ren.Text(err.toMartiniRender())
 		return
 	}
 
@@ -157,10 +157,10 @@ func UpdateUserHandler(db *gorm.DB, params martini.Params, r *http.Request, ren 
 }
 
 //Deletes a user based on a given path `id` param
-func DeleteUserHandler(db *gorm.DB, params martini.Params, ren render.Render) {
+func deleteUserHandler(db *gorm.DB, params martini.Params, ren render.Render) {
 	u, err := findUserFromIDParam(db, params["id"])
 	if err != nil {
-		ren.Text(err.code, err.msg)
+		ren.Text(err.toMartiniRender())
 		return
 	}
 	if db.Delete(&u).Error != nil {

@@ -1,11 +1,11 @@
 //Testing functions for the server. It tests the following API methods:
-//
+
 //GET 		/user/
 //GET 		/user/<id>
 //POST 		/user/
 //DELETE 	/user/<id>
 //PUT 		/user/ <id>
-//
+
 //This code honestly contains *a lot* of boilerplate due to the fact that we can't create a user with
 //a specific ID and push it to the server. This means that every time we add a user and want to test
 //if that user was actually added, we have to retrieve all users and filter out our user based on the
