@@ -10,10 +10,11 @@ import (
 	"log"
 )
 
-//This is a naive approach, but for now it demonstrates a authentication handler...
+//As long as the key "secret" is given in the `Authorization` header, it will allow access to
+//restricted apis. This is a naive approach, but for now it demonstrates an authentication handler.
 const APIKey = "secret"
 
-//Creates a sqlite database. It can either be a file or an in memory database for testing
+//Creates a sqlite database. It can either be a file or an in memory database for testing.
 //Returns the martini handler used to inject it to martini
 func CreateDb(dbfile string) (martini.Handler, error) {
 	db, err := gorm.Open("sqlite3", dbfile)
