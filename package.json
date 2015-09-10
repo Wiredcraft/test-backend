@@ -1,0 +1,33 @@
+{
+  "name": "backend-test",
+  "version": "1.0.0",
+  "description": "A simple demo for wiredcraft backend quiz",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "./node_modules/.bin/mocha -R spec ./test/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xavierchow/backend-test.git"
+  },
+  "author": "xavierchow",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xavierchow/backend-test/issues"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.0",
+    "supertest": "^1.1.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "connect-flash": "^0.1.1",
+    "express": "^4.13.3",
+    "express-session": "^1.11.3",
+    "jade": "^1.11.0",
+    "lodash": "^3.10.1",
+    "passport": "^0.3.0",
+    "passport-local": "^1.0.0"
+  }
+}
