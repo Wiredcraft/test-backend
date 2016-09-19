@@ -1,10 +1,13 @@
-# Wiredcraft Back-end Developer Coding Test
+# Wiredcraft Back-end Developer Coding Test (realtime version)
 
 Make sure you read **all** of this document carefully, and follow the guidelines in it.
 
-## Background
+## Overview
 
-Build a restful api that could `get/create/update/delete` user data from a persistence database
+This task is has the following requirements:
+- Build a restful api that could `get/create/update/delete` user data from a database.
+- Build functionality to __communicate data changes to data in realtime__ to web client. You can assume all data modifications go through the API.
+- Build simple frontend that demonstrates the backend works (does not need to be pretty).
 
 ### User Model
 
