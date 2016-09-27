@@ -8,6 +8,7 @@
     "test": "NODE_ENV=test ./node_modules/mocha/bin/mocha test/integration/**/*.js --require test/integration/bootstrap.js"
   },
   "dependencies": {
+    "bunyan": "^1.8.1",
     "compression": "^1.0.3",
     "cors": "^2.5.2",
     "couch": "^0.5.0",
@@ -17,6 +18,7 @@
     "loopback-component-explorer": "^2.4.0",
     "loopback-connector-couch": "^0.1.1",
     "loopback-datasource-juggler": "^2.39.0",
+    "loopback-jwt": "^1.0.1",
     "serve-favicon": "^2.0.1",
     "strong-error-handler": "^1.0.1"
   },
