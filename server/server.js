@@ -8,10 +8,6 @@ var app = module.exports = loopback();
 app.start = function() {
   // start the web server
   return app.listen(function() {
-    app.get('url').replace(/\/$/, '');
-    if (app.get('loopback-component-explorer')) {
-      app.get('loopback-component-explorer').mountPath;
-    }
     app.emit('started');
   });
 };
