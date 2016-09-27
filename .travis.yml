@@ -3,3 +3,6 @@ services:
 
 before_script:
   - curl -X PUT localhost:5984/wiredcraft_test
+
+script:
+  - npm test
