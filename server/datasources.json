@@ -1,1 +1,6 @@
-{}
+{
+  "couchdb": {
+    "name": "couchdb",
+    "connector": "memory"
+  }
+}

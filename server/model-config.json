@@ -12,5 +12,9 @@
       "../common/mixins",
       "./mixins"
     ]
+  },
+  "user": {
+    "dataSource": "couchdb",
+    "public": true
   }
 }
