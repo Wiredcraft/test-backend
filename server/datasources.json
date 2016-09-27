@@ -1,6 +1,6 @@
 {
-  "couchdb": {
-    "name": "couchdb",
+  "maindb": {
+    "name": "maindb",
     "connector": "memory"
   }
 }

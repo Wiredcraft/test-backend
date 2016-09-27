@@ -1,3 +1,0 @@
-[server]
-
-server ansible_connection=local ansible_user=tcp://192.168.99.100:2376

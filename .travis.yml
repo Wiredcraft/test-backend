@@ -1,0 +1,5 @@
+services:
+  - couchdb
+
+before_script:
+  - curl -X PUT localhost:5984/wiredcraft_test

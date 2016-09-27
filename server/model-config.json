@@ -14,7 +14,7 @@
     ]
   },
   "user": {
-    "dataSource": "couchdb",
+    "dataSource": "maindb",
     "public": true
   }
 }

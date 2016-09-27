@@ -5,7 +5,7 @@
   "scripts": {
     "lint": "eslint .",
     "start": "node .",
-    "posttest": "npm run lint && nsp check"
+    "test": "NODE_ENV=test mocha test/integration/**/*.js --require test/integration/bootstrap.js"
   },
   "dependencies": {
     "compression": "^1.0.3",
@@ -21,9 +21,15 @@
     "strong-error-handler": "^1.0.1"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "chance": "^1.0.4",
     "eslint": "^2.13.1",
     "eslint-config-loopback": "^4.0.0",
-    "nsp": "^2.1.0"
+    "mocha": "^3.0.2",
+    "moment": "^2.15.1",
+    "nsp": "^2.1.0",
+    "require-main": "^0.1.1",
+    "supertest": "^2.0.0"
   },
   "repository": {
     "type": "",

@@ -1,6 +1,6 @@
 {
   "name": "user",
-  "plural": "users",
+  "plural": "user",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
