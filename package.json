@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "NODE_ENV=testing ./node_modules/mocha/bin/mocha test/integration/**/*.js --require test/integration/bootstrap.js"
+    "test": "NODE_ENV=testing ./node_modules/mocha/bin/mocha test/integration/**/*.js --require test/integration/bootstrap.js -t 100000"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   "dependencies": {
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
+    "bunyan": "^1.8.1",
     "config": "^1.21.0",
     "express": "^4.14.0",
     "lodash": "^4.16.2",

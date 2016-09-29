@@ -35,34 +35,71 @@ var setup = function(nano, db, model, design) {
       // if design document is already there, update it
       var doc = _.merge({
         '_id': '_design/' + model,
-        'language': 'javascript'
+        'language': 'javascript',
+        '_rev': body._rev
       }, design);
 
       return db.insert(doc);
     });
 };
 
-module.exports = function(nano, model, validate) {
+module.exports = function(nano, model, defaults, design) {
 
   var db = nano.db.use(model);
 
   // setup database, validation rules
   setup(nano, db, model, design);
 
+  // ROUTER
+  // insert new record
   router.post('/', function (req, res, next) {
+    var body = _.defaults(req.body, defaults);
     db
-      .insert(req.body, uuid.v4())
+      .insert(body, uuid.v4())
       .then(function(body) {
         return db.get(body.id);
       })
-      .then(function(body) {
-        return res.send(body);
+      .then(function(data) {
+        return res.send(_.omit(data, ['_rev']));
       })
       .catch(next);
   });
 
-  router.get('/', function (req, res) {
+  // upsert a record
+  router.put('/:id', function (req, res, next) {
+    db
+      .get(req.params.id)
+      .then(function(data) {
+        data = _.merge(data, req.body);
+        return db
+          .insert(data, req.params.id)
+          .return(data);
+      })
+      .then(function (data) {
+        return res.send(_.omit(data, ['_rev']));
+      })
+      .catch(next);
+  });
 
+  // get one record
+  router.get('/:id', function (req, res) {
+    db.get(req.params.id).then(function(body) {
+      return res.send(_.omit(body, ['_rev']));
+    });
+  });
+
+  // delete last revision
+  router.delete('/:id', function (req, res) {
+    db
+      .get(req.params.id)
+      .then(function(data) {
+        return db
+          .destroy(data._id, data._rev)
+          .return(data);
+      })
+      .then(function (data) {
+        return res.send(_.omit(data, ['_rev']));
+      });
   });
 
   return router;
