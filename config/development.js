@@ -14,6 +14,6 @@ module.exports = {
     }]
   },
   "auth": {
-    token_secret: '123456789'
+    token_secret: 'X2l2dDVjNmUkbXN2KnYjPT8xP3JrbWVeaWk3N2V3NjJiYTk4dW5AcjUjcXM1NyFvI2gxejMzMDhh Y3N8NSt4Mg=='
   }
 };

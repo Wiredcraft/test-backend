@@ -3,17 +3,38 @@
 var request = require('supertest');
 
 describe('Users', function () {
-  var app, server, docs;
+  var app, token, docs;
 
-  before(function () {
-    app = request(wct.app);
+  before(function (done) {
     docs = [];
+
+    app = request(wct.app);
+
+    // FIXME make sure app is started
+    setTimeout(function() {
+      // get a token
+      wct.app.locals.nano.db.use('user').insert({
+        "name": "admin",
+        "dob": "2012-09-27",
+        "address": "admin",
+        "description": "admin"
+      }).then(function (data) {
+        var id = data.id;
+        app
+          .get('/auth/token/' + id)
+          .expect(function (response) {
+            token = response.body.token;
+          })
+          .end(done);
+      });
+    }, 1000);
   });
 
   describe('POST', function () {
     it('POST /data/user 200 OK', function(done) {
       app
         .post('/data/user')
+        .set('Authorization', 'Bearer ' + token)
         .set('Content-Type', 'application/json')
         .send({
           "name": "Zhang",
@@ -50,6 +71,7 @@ describe('Users', function () {
     it('POST /data/user 400 Bad Request', function (done) {
       app
         .post('/data/user')
+        .set('Authorization', 'Bearer ' + token)
         .set('Content-Type', 'application/json')
         .send({
           "name": 'Zhang'
@@ -72,6 +94,7 @@ describe('Users', function () {
 
       app
         .get('/data/user/' + doc._id)
+        .set('Authorization', 'Bearer ' + token)
         .expect(200)
         .expect(function (response) {
           var data = response.body;
@@ -88,6 +111,7 @@ describe('Users', function () {
 
       app
         .put('/data/user/' + doc._id)
+        .set('Authorization', 'Bearer ' + token)
         .set('Content-Type', 'application/json')
         .expect(200)
         .send({
@@ -114,6 +138,7 @@ describe('Users', function () {
 
       app
         .delete('/data/user/' + doc._id)
+        .set('Authorization', 'Bearer ' + token)
         .expect(200)
         .expect(function (response) {
           var data = response.body;
@@ -123,4 +148,10 @@ describe('Users', function () {
     });
   });
 
+  after(function (done) {
+    // destroy database at the end of the test
+    wct.app.locals.nano.db.destroy('user').then(function() {
+      done();
+    });
+  });
 });

@@ -2,6 +2,7 @@ var express = require('express');
 var config = require('config');
 var bunyan = require('bunyan');
 var cors = require('cors');
+var jwt = require('jsonwebtoken');
 
 // INIT
 var app = express();
@@ -12,6 +13,8 @@ Promise.config({cancellation: true});
 var nano = require('nano-blue')(
   config.get('database.couchdb.dsn')
 );
+
+app.locals.nano = nano;
 
 // CORS
 app.use(cors({
@@ -29,8 +32,54 @@ app.use(function(req, res, next) {
 var bodyParser = require('body-parser')
 app.use(bodyParser.json());
 
+// AUTHENTICATION
+var authentication = function(model) {
+  return function(req, res, next) {
+    var authorizationheader = req.get('Authorization');
+    if (authorizationheader === undefined) {
+      res.send(401, 'Missing authorization header');
+    }
+
+    var tokens = authorizationheader.split('Bearer ');
+    if (tokens[1] === undefined) {
+      res.status(401).send({'error': 'Authorization header should be Bearer token'})
+    }
+    req.token = tokens[1];
+
+    try {
+      var token = jwt.verify(req.token, new Buffer(config.get('auth.token_secret'),'base64'), {
+        issuer: 'wiredcraft-test'
+      });
+    }
+    catch(err) {
+      if (err instanceof jwt.TokenExpiredError) {
+        return res.status(401).send({'error': 'Token expired'})
+      }
+
+      if (err instanceof jwt.JsonWebTokenError) {
+        return res.status(401).send({'error': 'Json web token verification error'})
+      }
+
+      throw err;
+    }
+
+    // check if user is allowed in here
+    if (token.permission[model] === undefined) {
+      return res.status(401).send({'error': 'Permission error, user is not allowed for this model'});
+    }
+
+    // check if user is allowed for this request method
+    if ( !token.permission[model].includes(req.method)) {
+      return res.status(401).send({'error': 'Permission error, user is not allowed for this operation on this model'});
+    }
+
+    next();
+  };
+};
+
 // ROUTES
-app.use('/data/user', require('./routes/models/user.js')(nano));
+app.use('/data/user', authentication('user'), require('./routes/models/user.js')(nano));
+app.use('/auth', require('./routes/auth.js')(nano, config.get('auth')));
 
 // COUCHDB ERRORS
 app.use(function (err, req, res, next) {
