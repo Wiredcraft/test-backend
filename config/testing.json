@@ -1,0 +1,7 @@
+{
+  "database": {
+    "couchdb": {
+      "dsn": "http://localhost:5984"
+    }
+  }
+}

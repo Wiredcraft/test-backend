@@ -1,0 +1,36 @@
+{
+  "name": "wiredcraft-test",
+  "version": "1.0.0",
+  "description": "Make sure you read **all** of this document carefully, and follow the guidelines in it.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "NODE_ENV=testing ./node_modules/mocha/bin/mocha test/integration/**/*.js --require test/integration/bootstrap.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sylvainv/test-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sylvainv/test-backend/issues"
+  },
+  "homepage": "https://github.com/sylvainv/test-backend#readme",
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "body-parser": "^1.15.2",
+    "config": "^1.21.0",
+    "express": "^4.14.0",
+    "lodash": "^4.16.2",
+    "moment": "^2.15.1",
+    "nano-blue": "git://github.com/sylvainv/nano-blue.git#master",
+    "node-uuid": "^1.4.7"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.1.0",
+    "require-main": "^0.1.1",
+    "supertest": "^2.0.0"
+  }
+}
