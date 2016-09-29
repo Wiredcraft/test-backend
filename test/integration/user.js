@@ -5,15 +5,9 @@ var request = require('supertest');
 describe('Users', function () {
   var app, server, docs;
 
-  before(function (done) {
-    wct.app.on('started', function () {
-      app = request(wct.app);
-      done();
-    });
-
+  before(function () {
+    app = request(wct.app);
     docs = [];
-
-    server = wct.app.start(3000);
   });
 
   describe('POST', function () {
@@ -129,11 +123,4 @@ describe('Users', function () {
     });
   });
 
-  after(function (done) {
-    server.on("close", function () {
-      done();
-    });
-
-    server.close();
-  });
 });

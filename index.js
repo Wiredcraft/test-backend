@@ -1,15 +1,22 @@
 var express = require('express');
 var config = require('config');
 var bunyan = require('bunyan');
+var cors = require('cors');
 
 // INIT
 var app = express();
+
 var Promise = require("bluebird");
 Promise.config({cancellation: true});
 
 var nano = require('nano-blue')(
   config.get('database.couchdb.dsn')
 );
+
+// CORS
+app.use(cors({
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
+}));
 
 // LOGGER
 var logger = bunyan.createLogger(config.get('logger'));
