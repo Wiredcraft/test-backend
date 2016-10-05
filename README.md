@@ -27,10 +27,14 @@ POST   /user/                       - To create a new user
 PUT    /user/{id}                   - To update an existing user with data
 DELETE /user/{id}                   - To delete a user from database
 ```
-### test server
+### How to test ?
+
+You need to have CouchDB install on your machine to run the test http://couchdb.apache.org/.
 
 `npm test`
 
-### start server
+To use continuous integration you can check Travis https://travis-ci.org/sylvainv/test-backend/branches
+
+### Start server
 
 `npm start`
