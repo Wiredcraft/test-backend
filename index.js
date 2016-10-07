@@ -37,7 +37,7 @@ var authentication = function(model) {
   return function(req, res, next) {
     var authorizationheader = req.get('Authorization');
     if (authorizationheader === undefined) {
-      res.send(401, 'Missing authorization header');
+      return res.send(401, 'Missing authorization header');
     }
 
     var tokens = authorizationheader.split('Bearer ');
