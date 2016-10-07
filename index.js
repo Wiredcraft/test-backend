@@ -37,12 +37,12 @@ var authentication = function(model) {
   return function(req, res, next) {
     var authorizationheader = req.get('Authorization');
     if (authorizationheader === undefined) {
-      return res.send(401, 'Missing authorization header');
+      return res.status(401).send({error: 'Missing authorization header'});
     }
 
-    var tokens = authorizationheader.split('Bearer ');
-    if (tokens[1] === undefined) {
-      res.status(401).send({'error': 'Authorization header should be Bearer token'})
+    var tokens = authorizationheader.match(/^Bearer (.+)$/);
+    if (tokens === null) {
+      return res.status(401).send({'error': 'Authorization header should be Bearer token'})
     }
     req.token = tokens[1];
 
@@ -69,7 +69,7 @@ var authentication = function(model) {
     }
 
     // check if user is allowed for this request method
-    if ( !token.permission[model].includes(req.method)) {
+    if (-1 === token.permission[model].indexOf(req.method)) {
       return res.status(401).send({'error': 'Permission error, user is not allowed for this operation on this model'});
     }
 
