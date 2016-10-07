@@ -10,24 +10,21 @@ describe('Users', function () {
 
     app = request(wct.app);
 
-    // FIXME make sure app is started
-    setTimeout(function() {
-      // get a token
-      wct.app.locals.nano.db.use('user').insert({
-        "name": "admin",
-        "dob": "2012-09-27",
-        "address": "admin",
-        "description": "admin"
-      }).then(function (data) {
-        var id = data.id;
-        app
-          .get('/auth/token/' + id)
-          .expect(function (response) {
-            token = response.body.token;
-          })
-          .end(done);
-      });
-    }, 1000);
+    // get a token
+    wct.app.locals.nano.db.use('user').insert({
+      "name": "admin",
+      "dob": "2012-09-27",
+      "address": "admin",
+      "description": "admin"
+    }).then(function (data) {
+      var id = data.id;
+      app
+        .get('/auth/token/' + id)
+        .expect(function (response) {
+          token = response.body.token;
+        })
+        .end(done);
+    });
   });
 
   describe('POST', function () {
