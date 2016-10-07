@@ -1,30 +1,34 @@
 'use strict';
 
 var request = require('supertest');
+var uuid = require('node-uuid');
 
 describe('Users', function () {
-  var app, token, docs;
+  var app, token, adminId;
 
-  before(function (done) {
-    docs = [];
+  before(function () {
+    // setup fix document id
+    adminId = '3168f669-0162-48d1-99fe-217fc45e27ab';
 
     app = request(wct.app);
+  });
 
-    // get a token
+  beforeEach(function (done) {
+    var db = wct.app.locals.nano.db;
+    adminId = uuid.v4();
     wct.app.locals.nano.db.use('user').insert({
-      "name": "admin",
-      "dob": "2012-09-27",
-      "address": "admin",
-      "description": "admin"
-    }).then(function (data) {
-      var id = data.id;
-      app
-        .get('/auth/token/' + id)
-        .expect(function (response) {
-          token = response.body.token;
-        })
-        .end(done);
-    });
+        "name": "admin",
+        "dob": "2012-09-27",
+        "address": "admin",
+        "description": "admin"
+      }, adminId).then(function () {
+        app
+          .get('/auth/token/' + adminId)
+          .expect(function (response) {
+            token = response.body.token;
+          })
+          .end(done);
+      });
   });
 
   describe('POST', function () {
@@ -36,7 +40,7 @@ describe('Users', function () {
         .send({
           "name": "Zhang",
           "dob": "2012-09-27",
-          "address": "12 avenue du Général de Gaulle, 49000, ANGERS",
+          "address": "12 avenue du General de Gaulle, 49000, ANGERS",
           "description": "Zhang is an awesome developer"
         })
         .expect(200)
@@ -59,8 +63,6 @@ describe('Users', function () {
           wct.moment(data['created_at'], 'ISO').isValid().should.be.true;
           var today = wct.moment().format('YYYY-MM-DD');
           wct.moment(data['created_at']).format('YYYY-MM-DD').should.be.eq(today);
-
-          docs.push(data);
         })
         .end(done);
     });
@@ -86,16 +88,19 @@ describe('Users', function () {
 
   describe('GET', function () {
     it('GET /data/user/:id 200 OK', function(done) {
-      var doc = docs[0];
-      doc.should.have.any.keys(['_id']);
-
       app
-        .get('/data/user/' + doc._id)
+        .get('/data/user/' + adminId)
         .set('Authorization', 'Bearer ' + token)
         .expect(200)
         .expect(function (response) {
           var data = response.body;
-          data.should.be.deep.eq(doc)
+          data.should.be.deep.eq({
+            "_id": adminId,
+            "name": "admin",
+            "dob": "2012-09-27",
+            "address": "admin",
+            "description": "admin"
+          })
         })
         .end(done);
     });
@@ -103,11 +108,8 @@ describe('Users', function () {
 
   describe('PUT', function () {
     it('PUT /data/user/:id 200 OK', function (done) {
-      var doc = docs[0];
-      doc.should.have.any.keys(['_id']);
-
       app
-        .put('/data/user/' + doc._id)
+        .put('/data/user/' + adminId)
         .set('Authorization', 'Bearer ' + token)
         .set('Content-Type', 'application/json')
         .expect(200)
@@ -117,12 +119,11 @@ describe('Users', function () {
           "description": "Waiguoren are Laowai and vice versa"
         }).expect(function (response) {
           var data = response.body;
-          data['_id'].should.be.eq(doc._id);
+          data['_id'].should.be.eq(adminId);
           data['name'].should.be.eq('Waiguoren');
           wct.moment(data['dob']).format('YYYY-MM-DD').should.be.eq('2012-09-27');
           data['address'].should.be.eq('Yuyuan Road Shanghai');
           data['description'].should.be.eq('Waiguoren are Laowai and vice versa');
-          data['created_at'].should.be.eq(doc.created_at);
         })
         .end(done);
     });
@@ -130,8 +131,6 @@ describe('Users', function () {
 
   describe('DELETE', function () {
     it.skip('DELETE /data/user/:id 200', function (done) {
-      var doc = docs[0];
-      doc.should.have.any.keys(['_id']);
 
       app
         .delete('/data/user/' + doc._id)
@@ -142,13 +141,6 @@ describe('Users', function () {
           data.should.be.a('object');
         })
         .end(done);
-    });
-  });
-
-  after(function (done) {
-    // destroy database at the end of the test
-    wct.app.locals.nano.db.destroy('user').then(function() {
-      done();
     });
   });
 });
