@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+  - "6"
+
+services:
+  - couchdb
+
+install:
+  - npm install
+
+before_script:
+  - curl -X PUT localhost:5984/wiredcraft_test
+
+script:
+  - npm test
