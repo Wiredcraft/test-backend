@@ -10,8 +10,9 @@ function list(params, callback) {
 function get(params, callback) {
     if (params.id) {
         User
-        .findOne({ _id: params.id })
-        .exec(utils.send(callback));
+        .findOne({ _id: params.id }, utils.send(callback));
+    } else {
+        utils.send(callback);
     }
 }
 
@@ -28,11 +29,17 @@ function post(params, callback) {
 function put(params, callback) {
     if (params.id) {
         User.update({ _id: params.id }, _.omit(params, 'id'), utils.send(callback, 204));
+    } else {
+        utils.send(callback, 204); //act like everything is ok
     }
 }
 
-function remove() {
-
+function remove(params, callback) {
+    if (params.id) {
+        User.remove({ _id: params.id }, utils.send(callback, 204));
+    } else {
+        utils.send(callback, 204); //act like everything is ok
+    }
 }
 
 module.exports = {

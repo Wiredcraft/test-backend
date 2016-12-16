@@ -195,7 +195,33 @@ describe('User endpoint', () => {
     });
 
     describe('/DELETE/:id', () => {
+        let id;
+        beforeEach(done => {
+            const existingUser = new User({
+                name: 'Xavier',
+                description: 'this is a description'
+            });
+            id = existingUser._id;
 
+            existingUser.save((err, savedUser) => {
+                done();
+            });
+        });
+
+        it('should return 204', done => {
+            request(server)
+            .del('/user/' + id)
+            .end((err, res) => {
+                expect(res).to.have.status(204);
+
+                User.findById(id).exec((err, result) => {
+                    expect(result).to.be.null;
+
+                    done();
+                });
+            });
+
+        });
     });
 
 });
