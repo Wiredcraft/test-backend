@@ -1,9 +1,6 @@
 const
-mongoose    = require('mongoose'),
-Schema      = mongoose.Schema,
-ObjectId    = Schema.ObjectId
-;
-
+mongoose = require('mongoose'),
+Schema   = mongoose.Schema;
 
 // {
 //   "id": "xxx",                  // user id(you can use uuid or the id provided by database, but need to be unique)
@@ -15,7 +12,7 @@ ObjectId    = Schema.ObjectId
 // }
 
 
-userSchema  = new Schema({
+const userSchema  = new Schema({
     name: {
         type: String,
         required: true

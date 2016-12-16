@@ -32,12 +32,13 @@ function processRequest(route) {
 
         logger.trace('REQUEST:', req.params);
 
-        route(req.params, (err, result) => {
+        route(req.params, (err, status = 200, result) => {
             if (err) {
                 logger.error(err);
                 res.send(400, err.message || 'could not process request');
             } else {
-                res.send(200, result);
+                logger.trace('RESPONSE:', status, result);
+                res.send(status, result);
             }
 
             next();

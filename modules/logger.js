@@ -1,3 +1,4 @@
+// TODO: this just a fake logger
 function log(type, obj) {
     // console.log.apply(null, [((type || 'INFO').toUpperCase() + ':')].concat(obj));
 }

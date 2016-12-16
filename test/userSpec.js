@@ -117,8 +117,28 @@ describe('User endpoint', () => {
 
                     done();
                 });
+        });
 
+        it('should accept a user with just a name', done => {
+            request(server)
+                .post('/user')
+                .send({ name: 'Xavier' })
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
 
+                    done();
+                });
+        });
+
+        it('should send back the id in the response', done => {
+           request(server)
+               .post('/user')
+               .send({ name: 'Xavier' })
+               .end((err, res) => {
+                   expect(res.body).to.have.property('id');
+
+                   done();
+               });
         });
 
     });
