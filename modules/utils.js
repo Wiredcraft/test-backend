@@ -16,6 +16,10 @@ function sendResponse(callback, status) {
             return;
         }
 
+        if (typeof result.toObject !== 'function') {
+            callback(err, status);
+            return;
+        }
 
         let clientResult = result.toObject();
 

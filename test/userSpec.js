@@ -8,10 +8,7 @@ moment    = require('moment'),
 
 config    = require('../modules/config'),
 server    = require('../server'),
-User      = require('../models/User'),
-
-restifyDateFormat = 'YYYY-MM-DD[T]HH:mm:ssS[Z]'
-;
+User      = require('../models/User');
 
 chai.use(chaiHttp);
 const { request, expect } = chai;
@@ -73,7 +70,7 @@ describe('User endpoint', () => {
         });
 
         it('should return a user by ID', done => {
-            userDb.save((err, saved) => {
+            userDb.save((err, savedUser) => {
 
                 request(server)
                 .get('/user/' + testUserId)
@@ -92,7 +89,7 @@ describe('User endpoint', () => {
         });
 
         it('should return a correct creation_date ', done => {
-            userDb.save((err, saved) => {
+            userDb.save((err, savedUser) => {
                 request(server)
                 .get('/user/' + testUserId)
                 .end((err, res) => {
@@ -142,4 +139,63 @@ describe('User endpoint', () => {
         });
 
     });
+
+    describe('/PUT/:id', () => {
+        let id;
+        beforeEach(done => {
+            const existingUser = new User({
+                name: 'Xavier',
+                description: 'this is a description'
+            });
+            id = existingUser._id;
+
+            existingUser.save((err, savedUser) => {
+                done();
+            });
+        });
+
+        it('should return 204', done => {
+            request(server)
+                .put('/user/' + id)
+                .send({ name: 'Other' })
+                .end((err, res) => {
+                    expect(res).to.have.status(204);
+
+                    done();
+                });
+        });
+
+        it('should allow to change properties', done => {
+            request(server)
+                .put('/user/' + id)
+                .send({ name: 'Other' })
+                .end((err, res) => {
+
+                    User.findById(id).exec((err, result) => {
+                        expect(result).to.have.property('name', 'Other');
+
+                        done();
+                    });
+                });
+        });
+
+        it('it shouldn\'t remove properties for the fun of it', done => {
+            request(server)
+                .put('/user/' + id)
+                .send({ name: 'Other' })
+                .end((err, res) => {
+
+                    User.findById(id).exec((err, result) => {
+                        expect(result).to.have.property('description', 'this is a description');
+
+                        done();
+                    });
+                });
+        });
+    });
+
+    describe('/DELETE/:id', () => {
+
+    });
+
 });

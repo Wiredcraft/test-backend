@@ -1,8 +1,7 @@
 const
+_     = require('lodash'),
 User  = require('../models/User'),
 utils = require('../modules/utils');
-
-
 
 function list(params, callback) {
     callback({ message: 'not allowed' });
@@ -26,8 +25,10 @@ function post(params, callback) {
     }
 }
 
-function put() {
-
+function put(params, callback) {
+    if (params.id) {
+        User.update({ _id: params.id }, _.omit(params, 'id'), utils.send(callback, 204));
+    }
 }
 
 function remove() {
