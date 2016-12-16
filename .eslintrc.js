@@ -4,6 +4,9 @@ module.exports = {
         "node": true
     },
     "extends": "eslint:recommended",
+    "globals": {
+        "console": false
+    },
     "rules": {
         "linebreak-style": [
             "error",

@@ -24,6 +24,8 @@
     "mockgoose": "^6.0.8"
   },
   "dependencies": {
+    "lodash": "^4.17.2",
+    "moment": "^2.17.1",
     "mongoose": "^4.7.2",
     "restify": "^4.3.0"
   }
