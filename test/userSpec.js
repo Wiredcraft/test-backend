@@ -1,22 +1,24 @@
 /* global before, beforeEach, afterEach, describe, it*/
 const
-mongoose  = require('mongoose'),
-mockgoose = require('mockgoose'),
-chai      = require('chai'),
-chaiHttp  = require('chai-http'),
-moment    = require('moment'),
+mongoose     = require('mongoose'),
+mockgoose    = require('mockgoose'),
+chai         = require('chai'),
+chaiHttp     = require('chai-http'),
+moment       = require('moment'),
 
-config    = require('../modules/config'),
-dbConfig  = config.db,
-dbUri     = `${dbConfig.host}:${dbConfig.port}/${dbConfig.test}`,
-logger    = require('../modules/logger'),
-server    = require('../server'),
-User      = require('../models/User');
+config       = require('../modules/config'),
+dbConfig     = config.db,
+dbUri        = `${dbConfig.host}:${dbConfig.port}/${dbConfig.test}`,
+logger       = require('../modules/logger'),
+server       = require('../server').server,
+stopDatabase = require('../server').stopDatabase,
+User         = require('../models/User');
 
 chai.use(chaiHttp);
 const { request, expect } = chai;
 
 before(done => {
+    stopDatabase();
     logger.deactivate();
     mockgoose(mongoose).then(err => {
         console.log(err);

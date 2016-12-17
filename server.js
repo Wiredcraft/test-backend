@@ -81,4 +81,8 @@ server.post('/user',     route(userRoute.post));
 server.put( '/user/:id', route(userRoute.put));
 server.del( '/user/:id', route(userRoute.remove));
 
-module.exports = server; //for testing
+//for testing
+module.exports = {
+    server,
+    stopDatabase,
+};
