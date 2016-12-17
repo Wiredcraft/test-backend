@@ -1,55 +1,84 @@
 const
-restify  = require('restify'),
-mongoose = require('mongoose'),
+restify   = require('restify'),
+mongoose  = require('mongoose'),
 
-user     = require('./routes/userRoute'),
-config   = require('./modules/config'),
-logger   = require('./modules/logger')
+userRoute = require('./routes/userRoute'),
+config    = require('./modules/config'),
+logger    = require('./modules/logger')
 ;
 
-const server = restify.createServer({
-    name: 'wirecraft-test-api',
-    version: '1.0.0'
-});
-server.use(restify.acceptParser(server.acceptable));
-server.use(restify.queryParser());
-server.use(restify.bodyParser());
-server.use(restify.CORS());
-server.on('uncaughtException', (req, res, route, err) => {
-    logger.fatal('UNCAUGHT EXCEPTION:', err);
-    throw err;
-});
+function startServer(port = 8080) {
+    const url    = 'localhost:' + port,
+          server = restify.createServer({
+              name: 'wirecraft-test-api',
+              version: '1.0.0'
+          });
 
-mongoose.Promise = Promise;
-mongoose.connect(config.dbUri);
-const db = mongoose.connection;
-db.once('open', () => {
-    logger.info('connected to mongo');
-});
+    server.use(restify.acceptParser(server.acceptable));
+    server.use(restify.queryParser());
+    server.use(restify.bodyParser());
+    server.use(restify.CORS());
+    server.on('uncaughtException', (req, res, route, err) => {
+        logger.fatal('UNCAUGHT EXCEPTION:', err);
+    });
 
-function processRequest(route) {
-    return (req, res, next) => {
+    server.listen(port);
+    logger.info('Server address:', server.address());
 
-        logger.trace('REQUEST:', req.params);
+    return { server, url };
+}
 
-        route(req.params, (err, status = 200, result) => {
-            if (err) {
-                logger.error(err);
-                res.send(400, err.message || 'could not process request');
-            } else {
-                logger.trace('RESPONSE:', status, result);
-                res.send(status, result);
-            }
+function startDatabase(dbConfig) {
+    const uri = `${dbConfig.host}:${dbConfig.post}/${dbConfig.name}`;
+    mongoose.Promise = Promise;
+    mongoose.connect(uri);
 
-            next();
-        });
+    const db = mongoose.connection;
+    db.on('error', function (err) {
+        logger.error('connection error:', err.message);
+    });
+    db.once('open', () => {
+        logger.info('connected to mongo');
+    });
+
+    return () => { mongoose.disconnect(); };
+}
+
+function processRouteFor(url) {
+    return (route) => {
+        return (req, res, next) => {
+
+            logger.trace('REQUEST:', req.params);
+
+            route(req.params, (err, body, options = {}) => {
+                const status = options.status || 200;
+                if (err) {
+                    logger.error(err);
+                    res.send(400, err.message || 'could not process request');
+                } else {
+                    logger.trace('RESPONSE:', status, body);
+
+                    if (options.location) {
+                        res.setHeader('Location', url + options.location);
+                    }
+
+                    res.send(status, body);
+                }
+
+                next();
+            });
+        };
     };
 }
 
-server.get( '/user',     processRequest(user.list));
-server.get( '/user/:id', processRequest(user.get));
-server.post('/user',     processRequest(user.post));
-server.put( '/user/:id', processRequest(user.put));
-server.del( '/user/:id', processRequest(user.remove));
+const stopDatabase    = startDatabase(config.db),
+      { url, server } = startServer(config.server.port),
+      route           = processRouteFor(url);
+
+server.get( '/user',     route(userRoute.list));
+server.get( '/user/:id', route(userRoute.get));
+server.post('/user',     route(userRoute.post));
+server.put( '/user/:id', route(userRoute.put));
+server.del( '/user/:id', route(userRoute.remove));
 
 module.exports = server; //for testing

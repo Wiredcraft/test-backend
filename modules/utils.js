@@ -1,4 +1,4 @@
-const _    = require('lodash');
+const _ = require('lodash');
 
 function prepareDbObjectForClient(obj) {
     const id = obj._id.toHexString();
@@ -9,27 +9,36 @@ function prepareDbObjectForClient(obj) {
         .value();
 }
 
-function sendResponse(callback, status) {
+/**
+ * @param  {Function}     callback
+ * @param  {Object}       callback.err     error that will be send
+ * @param  {Number}       callback.body    body that will be send
+ * @param  {Object}       callback.options additional options
+ * @param  {Object}       options          additional options that will be handled by server
+ * @param  {Object}       options.status   status to send by server
+ * @param  {Object}       options.location location to send by server
+ */
+function sendResponse(callback, options) {
     return (err, result) => {
         if (err) {
-            callback(err, 500);
+            callback(err, void 1, options);
             return;
         }
 
-        if (typeof result.toObject !== 'function') {
-            callback(err, status);
+        if (!result || typeof result.toObject !== 'function') {
+            callback(void 1, void 1, options);
             return;
         }
 
-        let clientResult = result.toObject();
+        let dataToSend = result.toObject();
 
-        if (_.isArray(clientResult)) {
-            clientResult = _.map(clientResult, prepareDbObjectForClient);
+        if (_.isArray(dataToSend)) {
+            dataToSend = _.map(dataToSend, prepareDbObjectForClient);
         } else {
-            clientResult = prepareDbObjectForClient(clientResult);
+            dataToSend = prepareDbObjectForClient(dataToSend);
         }
 
-        callback(err, status, clientResult);
+        callback(err, { data: dataToSend }, options);
     };
 }
 

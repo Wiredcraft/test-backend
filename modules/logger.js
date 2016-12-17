@@ -1,6 +1,18 @@
 // TODO: this just a fake logger
+let active = true;
+
+function activate() {
+    active = true;
+}
+
+function deactivate() {
+    active = false;
+}
+
 function log(type, obj) {
-    // console.log.apply(null, [((type || 'INFO').toUpperCase() + ':')].concat(obj));
+    if (active) {
+        console.log.apply(null, [((type || 'INFO').toUpperCase() + ':')].concat(obj));
+    }
 }
 
 function trace(...obj) {
@@ -28,6 +40,9 @@ function fatal(...obj) {
 }
 
 module.exports = {
+    activate,
+    deactivate,
+
     trace,
     debug,
     info,

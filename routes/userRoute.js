@@ -9,8 +9,7 @@ function list(params, callback) {
 
 function get(params, callback) {
     if (params.id) {
-        User
-        .findOne({ _id: params.id }, utils.send(callback));
+        User.findOne({ _id: params.id }, utils.send(callback));
     } else {
         utils.send(callback);
     }
@@ -22,23 +21,23 @@ function post(params, callback) {
     } else {
         const user = new User(params);
 
-        user.save(utils.send(callback, 201));
+        user.save(utils.send(callback, { status: 201, location: '/user/' + user._id.toHexString() }));
     }
 }
 
 function put(params, callback) {
     if (params.id) {
-        User.update({ _id: params.id }, _.omit(params, 'id'), utils.send(callback, 204));
+        User.update({ _id: params.id }, _.omit(params, 'id'), utils.send(callback, { status: 204 }));
     } else {
-        utils.send(callback, 204); //act like everything is ok
+        utils.send(callback, { status: 204 }); //act like everything is ok
     }
 }
 
 function remove(params, callback) {
     if (params.id) {
-        User.remove({ _id: params.id }, utils.send(callback, 204));
+        User.remove({ _id: params.id }, utils.send(callback, { status: 204 }));
     } else {
-        utils.send(callback, 204); //act like everything is ok
+        utils.send(callback, { status: 204 }); //act like everything is ok
     }
 }
 

@@ -7,6 +7,9 @@ chaiHttp  = require('chai-http'),
 moment    = require('moment'),
 
 config    = require('../modules/config'),
+dbConfig  = config.db,
+dbUri     = `${dbConfig.host}:${dbConfig.port}/${dbConfig.test}`,
+logger    = require('../modules/logger'),
 server    = require('../server'),
 User      = require('../models/User');
 
@@ -14,14 +17,17 @@ chai.use(chaiHttp);
 const { request, expect } = chai;
 
 before(done => {
-    mockgoose(mongoose).then(() => {
-        done();
+    logger.deactivate();
+    mockgoose(mongoose).then(err => {
+        console.log(err);
+        mongoose.connect(dbUri, err => {
+            done();
+        });
     });
 });
 
 afterEach(done => {
-    mockgoose.reset();
-    done();
+    mockgoose.reset(done);
 });
 
 describe('User endpoint', () => {
