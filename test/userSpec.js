@@ -72,46 +72,65 @@ describe('User endpoint', () => {
             creationDate = moment();
             testUserId = userDb._id;
 
-            done();
+            userDb.save((err, savedUser) => {
+
+                done();
+            });
+
+        });
+
+        it('should return 200', done => {
+            request(server)
+                .get('/user/' + testUserId)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+
+                    done();
+                });
         });
 
         it('should return a user by ID', done => {
-            userDb.save((err, savedUser) => {
-
-                request(server)
+            request(server)
                 .get('/user/' + testUserId)
                 .end((err, res) => {
 
-                    expect(res.body).to.be.a('object');
-                    expect(res.body).to.have.property('name', userObject.name);
-                    expect(moment(res.body.dob).format(config.dateFormat)).to.equal(moment(userObject.dob).format(config.dateFormat));
-                    expect(res.body).to.have.property('address', userObject.address);
-                    expect(res.body).to.have.property('description', userObject.description);
+                    expect(res.body.data).to.be.a('object');
+                    expect(res.body.data).to.have.property('name', userObject.name);
+                    expect(moment(res.body.data.dob).format(config.dateFormat)).to.equal(moment(userObject.dob).format(config.dateFormat));
+                    expect(res.body.data).to.have.property('address', userObject.address);
+                    expect(res.body.data).to.have.property('description', userObject.description);
 
                     done();
                 });
 
-            });
         });
 
         it('should return a correct creation_date ', done => {
-            userDb.save((err, savedUser) => {
-                request(server)
+            request(server)
                 .get('/user/' + testUserId)
                 .end((err, res) => {
                     const expectedDate = moment(res.body.created_at).format(),
-                          userDate     = moment(creationDate).format();
+                        userDate = moment(creationDate).format();
 
                     expect(userDate).to.equal(expectedDate);
 
                     done();
                 });
-
-            });
         });
     });
 
     describe('/POST', () => {
+        it('should return 201', done => {
+            request(server)
+                .post('/user')
+                .send({ name: 'Xavier' })
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+
+                    done();
+                });
+        });
+
         it('should not accept a user without a name', done => {
             request(server)
                 .post('/user', {})
@@ -127,7 +146,7 @@ describe('User endpoint', () => {
                 .post('/user')
                 .send({ name: 'Xavier' })
                 .end((err, res) => {
-                    expect(res).to.have.status(201);
+                    expect(res.body.data).to.have.property('name', 'Xavier');
 
                     done();
                 });
@@ -138,7 +157,7 @@ describe('User endpoint', () => {
                .post('/user')
                .send({ name: 'Xavier' })
                .end((err, res) => {
-                   expect(res.body).to.have.property('id');
+                   expect(res.body.data).to.have.property('id');
 
                    done();
                });
@@ -148,6 +167,7 @@ describe('User endpoint', () => {
 
     describe('/PUT/:id', () => {
         let id;
+
         beforeEach(done => {
             const existingUser = new User({
                 name: 'Xavier',
@@ -185,7 +205,7 @@ describe('User endpoint', () => {
                 });
         });
 
-        it('it shouldn\'t remove properties for the fun of it', done => {
+        it('shouldn\'t remove properties for the fun of it', done => {
             request(server)
                 .put('/user/' + id)
                 .send({ name: 'Other' })
@@ -216,18 +236,26 @@ describe('User endpoint', () => {
 
         it('should return 204', done => {
             request(server)
-            .del('/user/' + id)
-            .end((err, res) => {
-                expect(res).to.have.status(204);
-
-                User.findById(id).exec((err, result) => {
-                    expect(result).to.be.null;
+                .del('/user/' + id)
+                .end((err, res) => {
+                    expect(res).to.have.status(204);
 
                     done();
                 });
-            });
-
         });
+
+        it('should have deleted the user', done => {
+           request(server)
+               .del('/user/' + id)
+               .end((err, res) => {
+                   User.findById(id).exec((err, result) => {
+                       expect(result).to.be.null;
+
+                       done();
+                   });
+               });
+           });
+
     });
 
 });
