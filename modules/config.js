@@ -17,8 +17,8 @@ nconf
 const config = nconf.get();
 
 /**
- * @param  {Boolean=} use test server
- * @return {String}   the connection string to connect with mongo
+ * @param  {Boolean=} test  use test server
+ * @return {String}         the connection string to connect with mongo
  */
 function getDbConnectionString(test) {
     const dbConfig = config.db || {};

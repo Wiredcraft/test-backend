@@ -14,9 +14,10 @@ function prepareDbObjectForClient(obj) {
  * @param  {Object}       callback.err     error that will be send
  * @param  {Number}       callback.body    body that will be send
  * @param  {Object}       callback.options additional options
+ *
  * @param  {Object}       options          additional options that will be handled by server
- * @param  {Object}       options.status   status to send by server
- * @param  {Object}       options.location location to send by server
+ * @param  {Number}       options.status   status to send by server
+ * @param  {String}       options.location location to send by server
  */
 function sendResponse(callback, options) {
     return (err, result) => {
