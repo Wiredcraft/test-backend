@@ -23,7 +23,7 @@ const config = nconf.get();
  */
 function getDbConnectionString(test) {
     const dbConfig = config.db || {};
-    let uri = `mongodb://${dbConfig.host}:${dbConfig.post}/${test ? dbConfig.test : dbConfig.name}`;
+    let uri = `mongodb://${dbConfig.host}:${dbConfig.port}/${test ? dbConfig.test : dbConfig.name}`;
 
     if (dbConfig.user && dbConfig.pass) {
         uri = `${dbConfig.user}:${dbConfig.pass}@` + uri;

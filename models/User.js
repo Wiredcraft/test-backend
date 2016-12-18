@@ -18,7 +18,7 @@ const userSchema  = new Schema({
         required: true
     },
     dob: {
-        type: Date,
+        type: String,
         required: false
     },
     address: {
@@ -32,7 +32,8 @@ const userSchema  = new Schema({
     created_at: {
         type: Date,
         required: true,
-        default: Date.now
+        default: Date.now,
+        set: function (val) { return this.securedField; }
     }
 });
 

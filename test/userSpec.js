@@ -20,9 +20,9 @@ before(done => {
     stopDatabase();
     logger.deactivate();
     mockgoose(mongoose).then(err => {
-        console.error('MongoError:', err);
+        // console.error('MongoError:', err);
         mongoose.connect(dbUri, err => {
-            console.error('MongoError:', err);
+            // console.error('MongoError:', err);
             done();
         });
     });
@@ -62,7 +62,7 @@ describe('User endpoint', () => {
     describe('/GET/:id', () => {
         const userObject = {
             name: 'Xavier',
-            dob: moment.utc('1981/06/30', 'YYYY/MM/DD').format(),
+            dob: '30/06/1981',
             address: 'My place right here',
             description: 'Yup'
         };
@@ -98,13 +98,12 @@ describe('User endpoint', () => {
 
                     expect(res.body.data).to.be.a('object');
                     expect(res.body.data).to.have.property('name', userObject.name);
-                    expect(moment(res.body.data.dob).format(config.dateFormat)).to.equal(moment(userObject.dob).format(config.dateFormat));
+                    expect(res.body.data).to.have.property('dob', userObject.dob);
                     expect(res.body.data).to.have.property('address', userObject.address);
                     expect(res.body.data).to.have.property('description', userObject.description);
 
                     done();
                 });
-
         });
 
         it('should return a correct creation_date ', done => {
@@ -112,7 +111,7 @@ describe('User endpoint', () => {
                 .get('/user/' + testUserId)
                 .end((err, res) => {
                     const expectedDate = moment(res.body.created_at).format(),
-                        userDate = moment(creationDate).format();
+                          userDate = moment(creationDate).format();
 
                     expect(userDate).to.equal(expectedDate);
 
@@ -165,6 +164,47 @@ describe('User endpoint', () => {
                });
         });
 
+        it('should accept a DOB in the DD/MM/YYYY format', done => {
+            request(server)
+                .post('/user')
+                .send({
+                    name: 'Xavier',
+                    dob: '30/06/1981'
+                })
+                .end((err, res) => {
+                    expect(res.body.data).to.have.property('dob', '30/06/1981');
+
+                    done();
+                });
+        });
+
+        it('should accept a DOB in the DD-MM-YYYY format', done => {
+            request(server)
+                .post('/user')
+                .send({
+                    name: 'Xavier',
+                    dob: '30-06-1981'
+                })
+                .end((err, res) => {
+                    expect(res.body.data).to.have.property('dob', '30/06/1981');
+
+                    done();
+                });
+        });
+
+        it('shouldn\'t accept setting created_at manually', done => {
+           request(server)
+               .post('/user')
+               .send({
+                   name: 'Xavier',
+                   created_at: '2016-12-17T12:00:06.576Z'
+               })
+               .end((err, res) => {
+                    expect(res.body.data).to.be.undefined;
+
+                   done();
+               });
+        });
     });
 
     describe('/PUT/:id', () => {

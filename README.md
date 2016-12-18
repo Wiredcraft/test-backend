@@ -23,15 +23,13 @@ DELETE /user/{id}                   - To delete a user from database
 
 ## User Model
 
-```json
+```
 {
   "id": "xxx",
-  "name": "test",
-  "dob": "",
+  "name": "test",                       // required
+  "dob": ["DD/MM/YYYY"|"DD-MM-YYYY"],
   "address": "",
   "description": "",
-  "created_at": ""
+  "created_at": ""                      // read-only
 }
 ```
-
-
