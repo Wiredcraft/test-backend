@@ -7,6 +7,5 @@
         "port": 27017,
         "name": "test-backend",
         "test": "test-backend-test"
-    },
-    "dateFormat": "YYYY-MM-DD[T]HH:mm:ss Z"
+    }
 }

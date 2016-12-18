@@ -10,8 +10,7 @@ nconf
         'db:name',
         'db:test',
         'db:login:user',
-        'db:login:pass',
-        'dateFormat'
+        'db:login:pass'
     ] })
     .file('./config.json');
 

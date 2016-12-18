@@ -1,15 +1,33 @@
 # Wiredcraft Back-end Developer Coding Test
 
-## Run tests
+## Setup
 
-```js
-npm test
+Have a mongodb server running.
+```npm install
 ```
 
 ## Start server
 
 ```js
 node .
+```
+
+## Configuration
+
+You can adapt the config.json or use arguments when starting up the server.
+Accepted arguments are:
+- server:port
+- db:host
+- db:port
+- db:name
+- db:test
+- db:login:user
+- db:login:pass
+
+## Run tests
+
+```js
+npm test
 ```
 
 ## API
