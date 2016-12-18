@@ -1,16 +1,15 @@
 # Wiredcraft Back-end Developer Coding Test
 
-## User Model
+## Run tests
 
+```js
+npm test
 ```
-{
-  "id": "xxx",                  // user id(you can use uuid or the id provided by database, but need to be unique)
-  "name": "test",               // user name
-  "dob": "",                    // date of birth
-  "address": "",                // user address
-  "description": "",            // user description
-  "created_at": ""              // user created date
-}
+
+## Start server
+
+```js
+node .
 ```
 
 ## API
@@ -22,13 +21,17 @@ PUT    /user/{id}                   - To update an existing user with data
 DELETE /user/{id}                   - To delete a user from database
 ```
 
-## Start server
+## User Model
 
-```js
-node .
+```json
+{
+  "id": "xxx",
+  "name": "test",
+  "dob": "",
+  "address": "",
+  "description": "",
+  "created_at": ""
+}
 ```
 
-## Run tests
-```js
-npm test
-```
+
