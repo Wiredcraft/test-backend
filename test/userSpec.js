@@ -7,8 +7,7 @@ chaiHttp     = require('chai-http'),
 moment       = require('moment'),
 
 config       = require('../modules/config'),
-dbConfig     = config.db,
-dbUri        = `${dbConfig.host}:${dbConfig.port}/${dbConfig.test}`,
+dbUri        = config.getDbConnectionString(true),
 logger       = require('../modules/logger'),
 server       = require('../server').server,
 stopDatabase = require('../server').stopDatabase,
@@ -21,8 +20,9 @@ before(done => {
     stopDatabase();
     logger.deactivate();
     mockgoose(mongoose).then(err => {
-        console.log(err);
+        console.error('MongoError:', err);
         mongoose.connect(dbUri, err => {
+            console.error('MongoError:', err);
             done();
         });
     });

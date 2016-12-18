@@ -4,11 +4,12 @@ mongoose  = require('mongoose'),
 
 userRoute = require('./routes/userRoute'),
 config    = require('./modules/config'),
-logger    = require('./modules/logger')
-;
+logger    = require('./modules/logger'),
+
+dbUri     = config.getDbConnectionString();
 
 function startServer(port = 8080) {
-    const url    = 'localhost:' + port,
+    const uri    = 'localhost:' + port,
           server = restify.createServer({
               name: 'wirecraft-test-api',
               version: '1.0.0'
@@ -22,11 +23,10 @@ function startServer(port = 8080) {
     server.listen(port);
     logger.info('Server address:', server.address());
 
-    return { server, url };
+    return { server, uri };
 }
 
-function startDatabase(dbConfig) {
-    const uri = `${dbConfig.host}:${dbConfig.post}/${dbConfig.name}`;
+function startDatabase(uri) {
     mongoose.Promise = Promise;
     mongoose.connect(uri);
 
@@ -68,9 +68,9 @@ function processRouteFor(url) {
     };
 }
 
-const stopDatabase    = startDatabase(config.db),
-      { url, server } = startServer(config.server.port),
-      route           = processRouteFor(url);
+const stopDatabase    = startDatabase(dbUri),
+      { uri, server } = startServer(config.server.port),
+      route           = processRouteFor(uri);
 
 server.on('uncaughtException', (req, res, route, err) => {
     logger.fatal('UNCAUGHT EXCEPTION:', err);
