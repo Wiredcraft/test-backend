@@ -18,9 +18,6 @@ function startServer(port = 8080) {
     server.use(restify.queryParser());
     server.use(restify.bodyParser());
     server.use(restify.CORS());
-    server.on('uncaughtException', (req, res, route, err) => {
-        logger.fatal('UNCAUGHT EXCEPTION:', err);
-    });
 
     server.listen(port);
     logger.info('Server address:', server.address());
@@ -74,6 +71,11 @@ function processRouteFor(url) {
 const stopDatabase    = startDatabase(config.db),
       { url, server } = startServer(config.server.port),
       route           = processRouteFor(url);
+
+server.on('uncaughtException', (req, res, route, err) => {
+    logger.fatal('UNCAUGHT EXCEPTION:', err);
+    stopDatabase();
+});
 
 server.get( '/user',     route(userRoute.list));
 server.get( '/user/:id', route(userRoute.get));

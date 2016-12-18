@@ -29,7 +29,7 @@ function put(params, callback) {
     if (params.id) {
         User.update({ _id: params.id }, _.omit(params, 'id'), utils.send(callback, { status: 204 }));
     } else {
-        utils.send(callback, { status: 204 }); //act like everything is ok
+        callback({ message: 'no id specified' });
     }
 }
 
@@ -37,7 +37,7 @@ function remove(params, callback) {
     if (params.id) {
         User.remove({ _id: params.id }, utils.send(callback, { status: 204 }));
     } else {
-        utils.send(callback, { status: 204 }); //act like everything is ok
+        callback({ message: 'no id specified' });
     }
 }
 
