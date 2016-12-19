@@ -45,7 +45,7 @@ DELETE /user/{id}                   - To delete a user from database
 {
   "id": "xxx",
   "name": "test",                       // required
-  "dob": ["DD/MM/YYYY"|"DD-MM-YYYY"],
+  "dob": "DD/MM/YYYY",
   "address": "",
   "description": "",
   "created_at": ""                      // read-only

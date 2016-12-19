@@ -1,6 +1,5 @@
 const
 _      = require('lodash'),
-moment = require('moment'),
 User   = require('../models/User'),
 utils  = require('../modules/utils');
 
@@ -20,17 +19,6 @@ function post(params, callback) {
     if (Object.keys(params).length === 0) {
         callback({ message: 'request has no body' });
     } else {
-        if (params.dob) {
-            const dob = moment(params.dob, ['DD/MM/YYYY', 'DD-MM-YYYY'], true);
-
-            if (dob.isValid()) {
-                params.dob = dob.format('DD/MM/YYYY');
-            } else {
-                callback({ message: 'dob should be in DD/MM/YYYY or DD-MM-YYYY format' });
-                return;
-            }
-        }
-
         const user = new User(params);
 
         user.save(utils.send(callback, { status: 201, location: '/user/' + user._id.toHexString() }));

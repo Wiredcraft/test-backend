@@ -178,20 +178,6 @@ describe('User endpoint', () => {
                 });
         });
 
-        it('should accept a DOB in the DD-MM-YYYY format', done => {
-            request(server)
-                .post('/user')
-                .send({
-                    name: 'Xavier',
-                    dob: '30-06-1981'
-                })
-                .end((err, res) => {
-                    expect(res.body.data).to.have.property('dob', '30/06/1981');
-
-                    done();
-                });
-        });
-
         it('shouldn\'t accept setting created_at manually', done => {
            request(server)
                .post('/user')
