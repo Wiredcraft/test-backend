@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "standard server/**/*.js",
     "start": "nodemon . --exec babel-node --config ./configs/nodemon.json",
-    "posttest": "npm run lint && nsp check"
+    "posttest": "npm run lint && nsp check && ava"
   },
   "dependencies": {
     "babel-cli": "^6.24.0",
@@ -22,6 +22,8 @@
     "strong-error-handler": "^1.0.1"
   },
   "devDependencies": {
+    "ava": "^0.18.2",
+    "axios": "^0.15.3",
     "nodemon": "^1.11.0",
     "nsp": "^2.1.0",
     "standard": "^9.0.2"
