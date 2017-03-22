@@ -1,0 +1,28 @@
+{
+  "name": "WUser",
+  "plural": "users",
+  "base": "WBase",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "dob": {
+      "type": "date"
+    },
+    "address": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

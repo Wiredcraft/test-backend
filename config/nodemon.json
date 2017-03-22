@@ -1,0 +1,21 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules",
+    "client/*"
+  ],
+  "verbose": true,
+  "events": {
+    "restart": "osascript -e 'display notification \"Project restart... \" with title \"Interview Test\"'",
+    "crash": "osascript -e 'display notification \"Project have been crashed!!\" with title \"Interview Test\"'"
+  },
+  "watch": [
+    "configs/*",
+    "server/*"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ext": "js json html yaml"
+}
