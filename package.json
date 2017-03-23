@@ -5,8 +5,10 @@
   "main": "server/server.js",
   "scripts": {
     "lint": "standard server/**/*.js",
-    "start": "nodemon . --exec babel-node --config ./configs/nodemon.json",
-    "posttest": "npm run lint && nsp check && ava"
+    "server": "nodemon . --exec babel-node --config ./configs/nodemon.json",
+    "server-test": "NODE_ENV=test babel-node .",
+    "test": "npm run posttest && ava",
+    "posttest": "npm run lint && nsp check"
   },
   "dependencies": {
     "babel-cli": "^6.24.0",
@@ -19,7 +21,8 @@
     "loopback-component-explorer": "^4.0.0",
     "loopback-connector-mongodb": "^1.18.1",
     "serve-favicon": "^2.0.1",
-    "strong-error-handler": "^1.0.1"
+    "strong-error-handler": "^1.0.1",
+    "uuid": "^3.0.1"
   },
   "devDependencies": {
     "ava": "^0.18.2",

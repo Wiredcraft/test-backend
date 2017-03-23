@@ -20,5 +20,9 @@
   "WBase": {
     "dataSource": "mongo",
     "public": false
+  },
+  "WToken": {
+    "dataSource": "mongo",
+    "public": false
   }
 }

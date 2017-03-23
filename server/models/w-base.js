@@ -2,11 +2,11 @@ import { app } from '../server'
 
 module.exports = WBase => {
   WBase.observe('before save', (ctx, next) => {
-    if (ctx.isNewInstance && ctx.instance) {
+    if (ctx.isNewInstance) {
       // Add Created timeinfo
       Object.assign(ctx.instance, {'created_at': new Date()})
       next()
-    } else if (ctx.instance.id) {
+    } else if (ctx.instance && ctx.instance.id) {
       const { WUser } = app.models
 
       WUser.findById(ctx.instance.id, (err, user) => {
