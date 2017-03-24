@@ -1,0 +1,54 @@
+{
+  "name": "WUser",
+  "plural": "users",
+  "base": "WBase",
+  "idInjection": true,
+  "indexes": {
+    "user_index": {
+      "keys": {
+        "user_name": 1
+      },
+      "options": {
+        "unique": true
+      }
+    }
+  },
+  "options": {
+    "validateUpsert": true
+  },
+  "hidden": [
+    "password",
+    "salt"
+  ],
+  "properties": {
+    "user_name": {
+      "type": "string",
+      "required": true
+    },
+    "password": {
+      "type": "string",
+      "required": true
+    },
+    "salt": {
+      "type": "string",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "dob": {
+      "type": "date"
+    },
+    "address": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
