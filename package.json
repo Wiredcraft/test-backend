@@ -7,7 +7,7 @@
     "lint": "standard server/**/*.js",
     "server": "nodemon . --exec babel-node --config ./configs/nodemon.json",
     "server-test": "NODE_ENV=test babel-node .",
-    "test": "npm run posttest && ava",
+    "test": "npm run posttest && ava -verbose",
     "posttest": "npm run lint && nsp check"
   },
   "dependencies": {
