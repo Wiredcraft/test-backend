@@ -9,12 +9,13 @@
     "mixins": [
       "loopback/common/mixins",
       "loopback/server/mixins",
+      "../node_modules/loopback-ds-timestamp-mixin",
       "../common/mixins",
       "./mixins"
     ]
   },
-  "myUser": {
-    "dataSource": null,
+  "user": {
+    "dataSource": "postGreSql",
     "public": true
   }
 }

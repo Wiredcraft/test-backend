@@ -1,7 +1,9 @@
 {
-  "name": "myUser",
-  "base": "Model",
+  "name": "user",
+  "base": "PersistedModel",
   "idInjection": true,
+  "plural": "user",
+  "replaceOnPUT" : true,
   "options": {
     "validateUpsert": true
   },
@@ -20,14 +22,13 @@
     },
     "description": {
       "type": "string"
-    },
-    "created_at": {
-      "type": "date",
-      "required": true
     }
   },
   "validations": [],
   "relations": {},
   "acls": [],
-  "methods": {}
+  "methods": {}, 
+  "mixins": {
+      "TimeStamp" : true
+    }
 }

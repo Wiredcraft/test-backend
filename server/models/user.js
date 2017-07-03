@@ -1,0 +1,25 @@
+'use strict';
+
+module.exports = function(user) {
+
+let methodWhiteList = [
+  "create", "findById", "deleteById"
+]
+
+user.disableRemoteMethodByName('upsert');     // Removes (PUT) /products
+
+user.sharedClass.methods().forEach(function(method) 
+{
+  if (methodWhiteList.indexOf(method.name) == -1) // check if method is in the white list
+  {
+    	user.disableRemoteMethodByName(method.name); // Method is disable because not white-listed
+    	console.log("user model Method : " + method.name + "Is now disable");
+  }});
+
+
+ user.validatesUniquenessOf('name', {message: 'User Already exist'});
+ user.validatesLengthOf('name', {min: 3, max: 42 , message : {
+ 	min : 'Name is too short', 
+ 	max : 'Name is too long'}});
+ //user.validatesAbsenceOf('id', 'createdAt', 'updatedAt');
+};
