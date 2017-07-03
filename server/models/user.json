@@ -3,7 +3,6 @@
   "base": "PersistedModel",
   "idInjection": true,
   "plural": "user",
-  "replaceOnPUT" : true,
   "options": {
     "validateUpsert": true
   },
@@ -21,7 +20,9 @@
       "required": true
     },
     "description": {
-      "type": "string"
+      "type": "string",
+      "required": false,
+      "default" : "NA"
     }
   },
   "validations": [],
