@@ -1,0 +1,12 @@
+{
+  "postGreSql": {
+    "host": "stampy.db.elephantsql.com",
+    "port": 5432,
+    "url": "postgres://saxumygt:G24V6OnhcxuPInnuCXZ4Oad8UeVwgDC_@stampy.db.elephantsql.com:5432/saxumygt",
+    "database": "saxumygt",
+    "password": "G24V6OnhcxuPInnuCXZ4Oad8UeVwgDC_",
+    "name": "postGreSql",
+    "user": "saxumygt",
+    "connector": "postgresql"
+  }
+}

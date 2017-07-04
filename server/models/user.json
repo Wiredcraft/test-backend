@@ -1,0 +1,35 @@
+{
+  "name": "user",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "plural": "user",
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "dob": {
+      "type": "date",
+      "required": true
+    },
+    "address": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "string",
+      "required": false,
+      "default" : "NA"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}, 
+  "mixins": {
+      "TimeStamp" : true
+    }
+}
