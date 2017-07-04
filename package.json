@@ -8,7 +8,7 @@
   "scripts": {
     "lint": "eslint .",
     "start": "node .",
-    "test" : "node tool/dataBaseReset.js; mocha -b --timeout 15000"
+    "test": "node tool/dataBaseReset.js; mocha -b --timeout 15000"
   },
   "dependencies": {
     "compression": "^1.0.3",
@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "dateformat": "^2.0.0",
-    "eslint": "^3.17.1",
+    "eslint": "^3.19.0",
     "eslint-config-loopback": "^8.0.0",
     "mocha": "^3.4.2",
     "nsp": "^2.1.0",
