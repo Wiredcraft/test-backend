@@ -1,6 +1,5 @@
 # Wiredcraft Back-end Developer Coding Test
 
-Make sure you read **all** of this document carefully, and follow the guidelines in it.
 
 ## Background
 
@@ -22,15 +21,15 @@ Build a restful api that could `get/create/update/delete` user data from a persi
 ### API
 
 ```
-GET    /user/{id}                   - Get user by ID
-POST   /user/                       - To create a new user
-PUT    /user/{id}                   - To update an existing user with data
-DELETE /user/{id}                   - To delete a user from database
+GET    /users/{id}                   - Get user by ID
+POST   /users/                       - To create a new user
+PUT    /users/{id}                   - To update an existing user with data
+DELETE /users/{id}                   - To delete a user from database
 ```
 
 ## Getting started
 
-There's nothing here, we leave it to you to choose the build tool, code structure, framework, testing approach...
+I choose MongoDB for persisting data, so before you running this application, please configure your MongoDB settings through `server/datasources.json`.
 
 ## Requirements
 
