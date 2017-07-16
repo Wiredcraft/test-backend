@@ -50,3 +50,4 @@ npm test
 ## Requirements
 
 - Make sure you have [Node.js](https://nodejs.org/en/) installed.
+- In order to run test, please make sure you've installed [mocha](https://mochajs.org/) as a global dependency through `npm install mocha -g`.
