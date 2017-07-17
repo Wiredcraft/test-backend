@@ -39,5 +39,9 @@
   "user": {
     "dataSource": "mongodb",
     "public": true
+  },
+  "Admin": {
+    "dataSource": "db",
+    "public": true
   }
 }
