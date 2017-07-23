@@ -2,8 +2,14 @@
 
 var loopback = require('loopback');
 var boot = require('loopback-boot');
-
+var passport = require('./auth');
 var app = module.exports = loopback();
+app.use(passport.initialize());
+app.all('/api/*',
+  passport.authenticate('basic'),
+  function(req, res, next) {
+    next();
+  });
 
 app.start = function() {
   // start the web server

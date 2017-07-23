@@ -11,6 +11,7 @@ describe('POST /users', function() {
   it('should create an user successfully', function(done) {
     request
       .post('/users')
+      .auth('fred', 'password')
       .send({
         'id': userId,
         'name': 'fred',
@@ -31,6 +32,7 @@ describe('GET /users/:id', function() {
   it('should retrieve the user information back successfully', function(done) {
     request
       .get('/users/' + userId)
+      .auth('fred', 'password')
       .expect(200)
       .end(function(err, res) {
         res.status.should.equal(200);
@@ -48,6 +50,7 @@ describe('PUT /users/:id', function() {
   it('should update user information successfully', function(done) {
     request
       .put('/users/' + userId)
+      .auth('fred', 'password')
       .send({
         'address': 'TEST ADDR',
         'description': 'TEST DESC',
@@ -66,6 +69,7 @@ describe('DELETE /users/:id', function() {
   it('should delete user successfully', function(done) {
     request
       .delete('/users/' + userId)
+      .auth('fred', 'password')
       .send()
       .expect('Content-type', /json/)
       .expect(200)
