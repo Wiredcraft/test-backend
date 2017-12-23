@@ -1,12 +1,12 @@
-'use strict'
+const express = require('express');
 
-const express = require('express')
-const router = express.Router()
+const router = express.Router();
 
-var User = require('../../models/user')
+// Expose User model
+const User = require('../../models/user');
 
 // APIs actions
 User.methods(['get', 'post', 'put', 'delete']);
-User.register(router, '/users')
+User.register(router, '/users');
 
 module.exports = router;
