@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000
 const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'))
 
 // Databse connection
-require('./app/db/db').connect()
+require('./app/db/db').connect(config.database.connectionString)
 
 // parse application/json
 app.use(bodyParser.json())
