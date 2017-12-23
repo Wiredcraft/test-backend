@@ -3,8 +3,8 @@
 const mongoose = require('mongoose')
 
 module.exports = {
-  connect: function(){
-    mongoose.connect('mongodb://localhost:27017/wiredcraft', { useMongoClient: true })
+  connect: function(connectionString){
+    mongoose.connect(connectionString, { useMongoClient: true })
     mongoose.Promise = global.Promise
     return mongoose
   }
