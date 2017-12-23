@@ -1,0 +1,19 @@
+{
+  "name": "user-api",
+  "version": "1.0.0",
+  "description": "wiredcraft backend test",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BigaDev/test-backend.git"
+  },
+  "author": "BigaDev (Ahmed Gaber)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BigaDev/test-backend/issues"
+  },
+  "homepage": "https://github.com/BigaDev/test-backend#readme"
+}
