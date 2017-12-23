@@ -1,0 +1,26 @@
+{
+  "name": "user-api",
+  "version": "1.0.0",
+  "description": "wiredcraft backend test",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BigaDev/test-backend.git"
+  },
+  "author": "BigaDev (Ahmed Gaber)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BigaDev/test-backend/issues"
+  },
+  "homepage": "https://github.com/BigaDev/test-backend#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.1.0",
+    "mongoose": "^4.13.7",
+    "morgan": "^1.9.0"
+  }
+}
