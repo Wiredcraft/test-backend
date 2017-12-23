@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/BigaDev/test-backend/issues"
   },
-  "homepage": "https://github.com/BigaDev/test-backend#readme"
+  "homepage": "https://github.com/BigaDev/test-backend#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.1.0",
+    "mongoose": "^4.13.7",
+    "morgan": "^1.9.0"
+  }
 }
