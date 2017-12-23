@@ -19,6 +19,9 @@ app.use(bodyParser.json())
 // logging
 app.use(morgan('dev'))
 
+// Routes
+app.use('/api/v1', require('./app/api/v1/user'))
+
 // start server
 app.listen(PORT, function() {
   console.log(`server listening on port ${PORT}`)
