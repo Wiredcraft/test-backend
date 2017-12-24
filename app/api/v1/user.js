@@ -12,6 +12,22 @@ const User = require('../../models/user');
 User.methods(['get', 'post', 'put', 'delete']);
 
 // Login API
+function validatePassword(user, password, res) {
+  user.isValidPassword(password).then((isValid) => {
+    if (isValid) {
+      // generate api token that will be expired in 24 hours
+      const token = jwt.sign({ username: user.name }, config.get('secret'), {
+        expiresIn: '24h',
+      });
+      res.json({
+        success: true,
+        token,
+      });
+    } else {
+      res.json({ success: false, message: 'Wrong password' });
+    }
+  });
+}
 
 function login(req, res) {
   User.findOne({
@@ -21,20 +37,7 @@ function login(req, res) {
     if (!user) {
       res.json({ success: false, message: 'User not found' });
     } else if (user) {
-      user.isValidPassword(req.body.password).then((isValid) => {
-        if (isValid) {
-          // generate api token that will be expired in 24 hours
-          const token = jwt.sign({ user: user.name }, config.get('secret'), {
-            expiresIn: '24h',
-          });
-          res.json({
-            success: true,
-            token,
-          });
-        } else {
-          res.json({ success: false, message: 'Wrong password' });
-        }
-      });
+      validatePassword(user, req.body.password, res);
     }
   });
 }
@@ -44,17 +47,31 @@ User.route('login.post', login);
 // APIs hooks
 
 // Authenticate API token
+function verifyToken(res, token, next) {
+  jwt.verify(token, config.get('secret'), (err, userPayload) => {
+    if (err || userPayload === undefined) {
+      res.status(401).json({ success: false, message: 'invalid token' });
+    } else {
+      // valid token
+      User.findOne({
+        name: userPayload.username,
+      }, (userError, user) => {
+        if (userError) throw userError;
+        if (!user) {
+          res.status(401).json({ success: false, message: 'invalid token' });
+        } else {
+          next();
+        }
+      });
+    }
+  });
+}
+
 function authenticateToken(req, res, next) {
   // Get access token from header, url or post body
   const token = req.body.token || req.query.token || req.headers['x-access-token'];
   if (token) {
-    jwt.verify(token, config.get('secret'), (err) => {
-      if (err) {
-        res.status(401).json({ success: false, message: 'invalid token' });
-      }
-      // valid token
-      next();
-    });
+    verifyToken(res, token, next);
   } else {
     res.status(401).json({ success: false, message: 'missing authorization header' });
   }
