@@ -6,7 +6,7 @@ const router = express.Router();
 const passwordStars = 'xxxxxxxxxxxx';
 
 // Expose User model
-const User = require('../../models/user');
+const User = require('../../../models/user');
 
 // APIs actions
 User.methods(['get', 'post', 'put', 'delete']);

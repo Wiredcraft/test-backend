@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 // Routes
-app.use('/api/v1', require('./app/api/v1/user'));
+app.use('/api/v1', require('./app/api/v1/user/api'));
 
 // start server
 app.listen(PORT);
