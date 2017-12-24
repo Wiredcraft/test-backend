@@ -1,5 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const config = require('config');
 
 const router = express.Router();
 const passwordStars = 'xxxxxxxxxxxx';
@@ -22,7 +23,7 @@ User.route('login.post', function(req, res, next) {
       user.isValidPassword(req.body.password).then( (isValid) => {
         if (isValid) {
           // generate api token that will be expired in 24 hours
-          const token = jwt.sign({user: user.name}, process.env.secret_key, {
+          const token = jwt.sign({user: user.name}, config.get('secret'), {
             expiresIn: '24h'
           });
           res.json({
