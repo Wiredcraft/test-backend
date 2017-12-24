@@ -1,5 +1,6 @@
 {
   "database": {
     "connectionString" : "mongodb://localhost:27017/Wiredcraft"
-  }
+  },
+  "secret": "AXXX4578;&8#/cedL2017"
 }
