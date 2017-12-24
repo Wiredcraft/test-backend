@@ -26,14 +26,14 @@ User.schema = new mongoose.Schema({
 
 // validate user password
 User.schema.methods = {
-	async isValidPassword(password) {
-	  try {
-			return await bcrypt.compare(password, this.password);
-	  } catch (error) {
-	    throw new Error(error);
-	  }
-	},
-}
+  async isValidPassword(password) {
+    try {
+      return await bcrypt.compare(password, this.password);
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+};
 
 // Create hashed password
 async function hashPassword(next) {

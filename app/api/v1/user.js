@@ -12,23 +12,24 @@ const User = require('../../models/user');
 User.methods(['get', 'post', 'put', 'delete']);
 
 // Login API
-User.route('login.post', function(req, res, next) {
+
+function login(req, res) {
   User.findOne({
-    name: req.body.name
-  }, function(err, user) {
+    name: req.body.name,
+  }, (err, user) => {
     if (err) throw err;
     if (!user) {
       res.json({ success: false, message: 'User not found' });
     } else if (user) {
-      user.isValidPassword(req.body.password).then( (isValid) => {
+      user.isValidPassword(req.body.password).then((isValid) => {
         if (isValid) {
           // generate api token that will be expired in 24 hours
-          const token = jwt.sign({user: user.name}, config.get('secret'), {
-            expiresIn: '24h'
+          const token = jwt.sign({ user: user.name }, config.get('secret'), {
+            expiresIn: '24h',
           });
           res.json({
             success: true,
-            token: token
+            token,
           });
         } else {
           res.json({ success: false, message: 'Wrong password' });
@@ -36,7 +37,9 @@ User.route('login.post', function(req, res, next) {
       });
     }
   });
-});
+}
+
+User.route('login.post', login);
 
 // APIs hooks
 
