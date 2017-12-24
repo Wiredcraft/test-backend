@@ -43,6 +43,27 @@ User.route('login.post', login);
 
 // APIs hooks
 
+// Authenticate API token
+function authenticateToken(req, res, next) {
+  // Get access token from header, url or post body
+  const token = req.body.token || req.query.token || req.headers['x-access-token'];
+  if (token) {
+    jwt.verify(token, config.get('secret'), (err) => {
+      if (err) {
+        res.status(401).json({ success: false, message: 'invalid token' });
+      }
+      // valid token
+      next();
+    });
+  } else {
+    res.status(401).json({ success: false, message: 'missing authorization header' });
+  }
+}
+
+User.before('get', authenticateToken)
+  .before('put', authenticateToken)
+  .before('delete', authenticateToken);
+
 // Remove password field for any action
 function removePassword(req, res, next) {
   if (res.locals.status_code === 200 || res.locals.status_code === 201) {
