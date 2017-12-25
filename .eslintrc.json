@@ -1,6 +1,15 @@
 {
-    "extends": "airbnb-base",
-    "rules": {
-      "no-param-reassign": 0
-    }
+  "extends": "airbnb-base",
+  "rules": {
+    "no-param-reassign": 0,
+    "no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "should|expect"
+      }
+    ]
+  },
+  "env": {
+    "mocha": true
+  }
 }
