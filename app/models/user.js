@@ -1,5 +1,6 @@
 const restful = require('node-restful');
 const bcrypt = require('bcrypt');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const { mongoose } = restful;
 
@@ -49,6 +50,9 @@ async function hashPassword(next) {
 }
 
 User.schema.pre('save', hashPassword);
+
+// integrate uniqueValidator plugin
+User.schema.plugin(uniqueValidator);
 
 User.model = mongoose.model('user', User.schema);
 
