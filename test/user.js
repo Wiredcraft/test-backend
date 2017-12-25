@@ -33,9 +33,8 @@ describe('Users', () => {
           });
     });
 
-    it('it should not POST a new user if name related to old user', (done) => {
+    it('it should not POST a new user if name not in body', (done) => {
       let user = {
-        name: 'ahmed',
         password: '123456',
         description: 'software geek',
         dob: '1992/3/16',
@@ -45,7 +44,22 @@ describe('Users', () => {
           .post('/api/v1/users')
           .send(user)
           .end((err, res) => {
-            console.log(err);
+            res.should.have.status(400);
+            done();
+          });
+    });
+
+    it('it should not POST a new user if password not in body', (done) => {
+      let user = {
+        name: 'biga',
+        description: 'software geek',
+        dob: '1992/3/16',
+        address: 'ALexandria, Egypt'
+      }
+      chai.request(server)
+          .post('/api/v1/users')
+          .send(user)
+          .end((err, res) => {
             res.should.have.status(400);
             done();
           });
