@@ -7,14 +7,14 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
-describe('Users', () => {
-  beforeEach((done) => {
-    User.remove({}, () => {
-      done();
-    });
-  });
-
+describe('Users SignUp', () => {
   describe('/POST users', () => {
+    before((done) => {
+      User.remove({}, () => {
+        done();
+      });
+    });
+
     const user = {
       name: 'ahmed',
       password: '123456',
@@ -53,6 +53,16 @@ describe('Users', () => {
       chai.request(server)
         .post('/api/v1/users')
         .send(invalidUser)
+        .end((err, res) => {
+          res.should.have.status(400);
+          done();
+        });
+    });
+
+    it('it should not POST a new user if name is exist', (done) => {
+      chai.request(server)
+        .post('/api/v1/users')
+        .send(user)
         .end((err, res) => {
           res.should.have.status(400);
           done();
