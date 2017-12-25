@@ -53,7 +53,7 @@ describe('Users Authentication', () => {
       chai.request(server)
         .put(`/api/v1/users/${userID}`)
         .set('x-access-token', userToken)
-        .send({description: "new description"})
+        .send({ description: 'new description' })
         .end((err, res) => {
           res.should.have.status(200);
           res.body.description.should.be.eql('new description');
@@ -99,7 +99,7 @@ describe('Users Authentication', () => {
       chai.request(server)
         .put(`/api/v1/users/${userID}`)
         .set('x-access-token', invalidToken)
-        .send({description: "new description"})
+        .send({ description: 'new description' })
         .end((err, res) => {
           res.should.have.status(401);
           done();
