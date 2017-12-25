@@ -20,3 +20,6 @@ app.use('/api/v1', require('./app/api/v1/user/api'));
 
 // start server
 app.listen(PORT);
+
+// for testing
+module.exports = app;

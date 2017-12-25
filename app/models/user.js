@@ -56,4 +56,4 @@ User.schema.plugin(uniqueValidator);
 
 User.model = mongoose.model('user', User.schema);
 
-module.exports = restful.model('Users', User.schema);
+module.exports = restful.model('Users', User.schema).updateOptions({ new: true });

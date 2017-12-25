@@ -18,7 +18,7 @@ function login(req, res) {
   }, (err, user) => {
     if (err) throw err;
     if (!user) {
-      res.json({ success: false, message: 'User not found' });
+      res.status(401).json({ success: false, message: 'User not found' });
     } else if (user) {
       UserService.validatePassword(user, req.body.password, res);
     }
