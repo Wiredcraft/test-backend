@@ -52,5 +52,5 @@ module.exports = {
       res.locals.bundle.password = `${passwordStars}`;
     }
     return res;
-  }
-}
+  },
+};
