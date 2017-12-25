@@ -3,6 +3,8 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../app');
 
+const should = chai.should();
+
 chai.use(chaiHttp);
 
 describe('Users', () => {
@@ -13,14 +15,15 @@ describe('Users', () => {
   });
 
   describe('/POST users', () => {
+    const user = {
+      name: 'ahmed',
+      password: '123456',
+      description: 'software geek',
+      dob: '1992/3/16',
+      address: 'ALexandria, Egypt',
+    };
+
     it('it should POST a new user', (done) => {
-      const user = {
-        name: 'ahmed',
-        password: '123456',
-        description: 'software geek',
-        dob: '1992/3/16',
-        address: 'ALexandria, Egypt',
-      };
       chai.request(server)
         .post('/api/v1/users')
         .send(user)
@@ -33,15 +36,11 @@ describe('Users', () => {
     });
 
     it('it should not POST a new user if name not in body', (done) => {
-      const user = {
-        password: '123456',
-        description: 'software geek',
-        dob: '1992/3/16',
-        address: 'ALexandria, Egypt',
-      };
+      const invalidUser = JSON.parse(JSON.stringify(user));
+      delete invalidUser.name;
       chai.request(server)
         .post('/api/v1/users')
-        .send(user)
+        .send(invalidUser)
         .end((err, res) => {
           res.should.have.status(400);
           done();
@@ -49,15 +48,11 @@ describe('Users', () => {
     });
 
     it('it should not POST a new user if password not in body', (done) => {
-      const user = {
-        name: 'biga',
-        description: 'software geek',
-        dob: '1992/3/16',
-        address: 'ALexandria, Egypt',
-      };
+      const invalidUser = JSON.parse(JSON.stringify(user));
+      delete invalidUser.password;
       chai.request(server)
         .post('/api/v1/users')
-        .send(user)
+        .send(invalidUser)
         .end((err, res) => {
           res.should.have.status(400);
           done();
