@@ -4,7 +4,7 @@
   "description": "wiredcraft backend test",
   "main": "app.js",
   "scripts": {
-    "test": "mocha",
+    "test": "NODE_ENV=test mocha",
     "eslint": "eslint ."
   },
   "repository": {
