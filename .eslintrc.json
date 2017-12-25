@@ -7,7 +7,8 @@
       {
         "varsIgnorePattern": "should|expect"
       }
-    ]
+    ],
+    "no-underscore-dangle": 0
   },
   "env": {
     "mocha": true
