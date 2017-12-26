@@ -15,6 +15,12 @@ describe('Users SignUp', () => {
       });
     });
 
+    after((done) => {
+      User.remove({}, () => {
+        done();
+      });
+    });
+
     const user = {
       name: 'ahmed',
       password: '123456',

@@ -1,5 +1,4 @@
-const jwt = require('jsonwebtoken');
-const config = require('config');
+const jwt = require('../../../utils/jwt');
 
 // Expose User model
 const User = require('../../../models/user');
@@ -11,11 +10,10 @@ module.exports = {
     user.isValidPassword(password).then((isValid) => {
       if (isValid) {
         // generate api token that will be expired in 24 hours
-        const token = jwt.sign({ username: user.name }, config.get('secret'), {
-          expiresIn: '24h',
-        });
+        const token = jwt.generate({ username: user.name });
         res.json({
           success: true,
+          _id: user._id,
           token,
         });
       } else {
@@ -24,7 +22,7 @@ module.exports = {
     });
   },
   verifyToken(res, token, next) {
-    jwt.verify(token, config.get('secret'), (err, userPayload) => {
+    jwt.verify(token, (err, userPayload) => {
       if (err || userPayload === undefined) {
         res.status(401).json({ success: false, message: 'invalid token' });
       } else {

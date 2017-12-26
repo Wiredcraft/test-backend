@@ -1,3 +1,4 @@
+const User = require('../app/models/user');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../app');
@@ -11,12 +12,28 @@ describe('Users SignIn', () => {
     const user = {
       name: 'ahmed',
       password: '123456',
+      description: 'software geek',
+      dob: '1992/3/16',
+      address: 'ALexandria, Egypt',
     };
 
     const invalidUser = {
       name: 'nouser',
       password: '123456',
     };
+
+    before((done) => {
+      User.create(user, (err) => {
+        if (err) throw err;
+        done();
+      });
+    });
+
+    after((done) => {
+      User.remove({}, () => {
+        done();
+      });
+    });
 
     it('it should LOGIN an exist user', (done) => {
       chai.request(server)

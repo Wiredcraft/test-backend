@@ -1,3 +1,5 @@
+const User = require('../app/models/user');
+const jwt = require('../app/utils/jwt');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../app');
@@ -10,19 +12,27 @@ describe('Users Authentication', () => {
   const user = {
     name: 'ahmed',
     password: '123456',
+    description: 'software geek',
+    dob: '1992/3/16',
+    address: 'ALexandria, Egypt',
   };
 
   let userToken;
   let userID;
-  // login
+  // Create a new user
   before((done) => {
-    chai.request(server)
-      .post('/api/v1/users/login')
-      .send(user)
-      .end((err, res) => {
-        userToken = res.body.token;
-        done();
-      });
+    User.create(user, (err, userObj) => {
+      if (err) throw err;
+      userID = userObj._id;
+      userToken = jwt.generate({ username: userObj.name });
+      done();
+    });
+  });
+
+  after((done) => {
+    User.remove({}, () => {
+      done();
+    });
   });
 
   describe('Valid Token', () => {
@@ -31,7 +41,6 @@ describe('Users Authentication', () => {
         .get('/api/v1/users')
         .set('x-access-token', userToken)
         .end((err, res) => {
-          userID = res.body[0]._id;
           res.should.have.status(200);
           res.body.should.be.a('array');
           done();
