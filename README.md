@@ -45,4 +45,4 @@ npm run eslint
 | DELETE | /api/users/:id          | Delete user by id (authorization required) |
 |  POST  | /api/users/login        | Login                                      |
 
-##### Note: you can import [wiredcraft-api.postman_collection.json](https://github.com/BigaDev/test-backend/blob/master/wiredcraft-api.postman_collection.json) into POSTMAN v2 to try APIs.
+##### Note: you can import [wiredcraft-api.postman_collection.json](https://raw.githubusercontent.com/BigaDev/test-backend/master/wiredcraft-api.postman_collection.json) into POSTMAN v2 to try APIs.
