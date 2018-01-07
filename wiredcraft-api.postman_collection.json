@@ -1,0 +1,132 @@
+{
+	"variables": [],
+	"info": {
+		"name": "wiredcraft-api",
+		"_postman_id": "7094305e-dd0f-6ece-5e7d-06d49f8bdf67",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "LOGIN",
+			"request": {
+				"url": "http://localhost:3000/api/v1/users/login",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"ahmed\",\n\t\"password\": \"ahmedgabr292\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET USER BY ID",
+			"request": {
+				"url": "http://localhost:3000/api/v1/users/5a403b1ff832514d48bc784b",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFobWVkIiwiaWF0IjoxNTE0MTU4OTI3LCJleHAiOjE1MTQyNDUzMjd9.JscwpX82Pu8NwZ3rsxo6PAKB-a4yNk9j1LWso-3ijow",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE NEW USER",
+			"request": {
+				"url": "http://localhost:3000/api/v1/users",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"ahmed\",\n\t\"dob\": \"1992/2/29\",\n\t\"password\": \"ahmedgabr292\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "LIST USERS",
+			"request": {
+				"url": "http://localhost:3000/api/v1/users",
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFobWVkIiwiaWF0IjoxNTE0MjQwOTUxLCJleHAiOjE1MTQzMjczNTF9.yogKIjfd78D6xyBepG47-L4nwp-kNZ30npMfh70paRY",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "UPDATE USER",
+			"request": {
+				"url": "localhost:3000/api/v1/users/5a417bb13fcab51ea3d52912",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFobWVkIiwiaWF0IjoxNTE0MjQwOTUxLCJleHAiOjE1MTQzMjczNTF9.yogKIjfd78D6xyBepG47-L4nwp-kNZ30npMfh70paRY",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"description\": \"xksmxs\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE USER",
+			"request": {
+				"url": "localhost:3000/api/v1/users/5a417bb13fcab51ea3d52912",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFobWVkIiwiaWF0IjoxNTE0MjQwOTUxLCJleHAiOjE1MTQzMjczNTF9.yogKIjfd78D6xyBepG47-L4nwp-kNZ30npMfh70paRY",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,16 @@
+{
+  "extends": "airbnb-base",
+  "rules": {
+    "no-param-reassign": 0,
+    "no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "should|expect"
+      }
+    ],
+    "no-underscore-dangle": 0
+  },
+  "env": {
+    "mocha": true
+  }
+}

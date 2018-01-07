@@ -1,70 +1,48 @@
-# Wiredcraft Back-end Developer Coding Test
+# User APIs
 
-Make sure you read **all** of this document carefully, and follow the guidelines in it.
+Dependencies:
 
-## Background
+- Node.js: v8.2
+- MongoDB: v3.2.15
 
-Build a restful api that could `get/create/update/delete` user data from a persistence database
+### Installation
 
-### User Model
-
-```
-{
-  "id": "xxx",                  // user id(you can use uuid or the id provided by database, but need to be unique)
-  "name": "test",               // user name
-  "dob": "",                    // date of birth
-  "address": "",                // user address
-  "description": "",            // user description
-  "created_at": ""              // user created date
-}
+```shell
+npm install
 ```
 
-### API
+### Start Server
 
-```
-GET    /user/{id}                   - Get user by ID
-POST   /user/                       - To create a new user
-PUT    /user/{id}                   - To update an existing user with data
-DELETE /user/{id}                   - To delete a user from database
+```shell
+npm start
 ```
 
-## Getting started
+###  Docker
 
-There's nothing here, we leave it to you to choose the build tool, code structure, framework, testing approach...
+```shell
+docker-compose up --build
+```
+### Test
 
-## Requirements
+```shell
+npm run test
+```
 
-- With clear documentation on how to run the code and api usage
+### Lint the code
 
-- Proper use of RESTFUL api design pattern
+```shell
+npm run eslint
+```
 
-- Provide proper unit test
+#### API
 
-- Choose either sql or no-sql database to make the data persistence
+| Method | URI                     | Description                                |
+| :----: | :---------------------- | :---------------------------------------   |
+|  GET   | /api/users/             | Get list users (authorization required)    |
+|  GET   | /api/users/:id          | Get user by id (authorization required)    |
+|  POST  | /api/users/             | Create new user (SignUp)                   |
+|  PUT   | /api/users/:id          | Update User by id (authorization required) |
+| DELETE | /api/users/:id          | Delete user by id (authorization required) |
+|  POST  | /api/users/login        | Login                                      |
 
-- Use git to manage code
-
-
-## What We Care About
-
-Feel free to use any libraries you would use if this were a real production app, but remember we're interested in your code & the way you solve the problem, not how well you can use a particular library.
-
-We're interested in your method and how you approach the problem just as much as we're interested in the end result.
-
-Here's what you should aim for:
-
-- Good use of current restful api design & performance best practices.
-
-- Solid testing approach
-
-- Extensible code;
-
-## Q&A
-
-* Where should I send back the result when I'm done?
-
-Fork this repo and send us a pull request when you think you are done. We don't have deadline for the task.
-
-* What if I have question?
-
-Create a new issue in the repo and we will get back to you very quickly.
+##### Note: you can import [wiredcraft-api.postman_collection.json](https://raw.githubusercontent.com/BigaDev/test-backend/master/wiredcraft-api.postman_collection.json) into POSTMAN v2 to try APIs.
