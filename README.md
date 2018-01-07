@@ -2,7 +2,7 @@
 
 Dependencies:
 
-- Node.js: v9.3.0
+- Node.js: v8.2
 - MongoDB: v3.2.15
 
 ### Installation
