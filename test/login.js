@@ -24,7 +24,7 @@ describe('Users SignIn', () => {
 
     before((done) => {
       User.create(user, (err) => {
-        if (err) throw err;
+        if (err) console.error(err);
         done();
       });
     });

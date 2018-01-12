@@ -16,7 +16,7 @@ function login(req, res) {
   User.findOne({
     name: req.body.name,
   }, (err, user) => {
-    if (err) throw err;
+    if (err) console.error(err);
     if (!user) {
       res.status(401).json({ success: false, message: 'User not found' });
     } else if (user) {
@@ -34,7 +34,12 @@ function authenticateToken(req, res, next) {
   // Get access token from header, url or post body
   const token = req.body.token || req.query.token || req.headers['x-access-token'];
   if (token) {
-    UserService.verifyToken(res, token, next);
+    try {
+      UserService.verifyToken(res, token, next);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ success: false, message: 'something went wrong' });
+    }
   } else {
     res.status(401).json({ success: false, message: 'missing authorization header' });
   }
