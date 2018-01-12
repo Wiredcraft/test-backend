@@ -19,6 +19,9 @@ module.exports = {
       } else {
         res.json({ success: false, message: 'Wrong password' });
       }
+    }).catch((e) => {
+      console.error(e);
+      res.status(500).json({ success: false, message: 'something went wrong' });
     });
   },
   verifyToken(res, token, next) {

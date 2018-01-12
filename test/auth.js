@@ -22,7 +22,7 @@ describe('Users Authentication', () => {
   // Create a new user
   before((done) => {
     User.create(user, (err, userObj) => {
-      if (err) throw err;
+      if (err) console.error(err);
       userID = userObj._id;
       userToken = jwt.generate({ username: userObj.name });
       done();
