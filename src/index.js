@@ -60,8 +60,8 @@ userRouter.post('/', (req, res) => {
  * @apiParam {String} id the id of the user to delete
  */
 userRouter.delete('/:id', (req, res) => {
-  userService.delete(req.params.userId)
-    .then(() => res.status(200).end())
+  userService.delete(req.params.id)
+    .then((a) => res.status(200).end())
     .catch((e) => res.status(400).send(e.message))
 })
 

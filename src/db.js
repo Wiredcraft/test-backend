@@ -55,9 +55,15 @@ module.exports = class Db extends EventEmitter {
   }
 
   async update (collectionName, id, attributes) {
+    let oid 
+    try {
+      oid = ObjectID(id)
+    } catch (e) {
+      throw new Error('Invalid id provided')
+    }
     const result = await this.db.collection(collectionName).findOneAndUpdate(
-        { _id: id }, attributes, { upsert: false }
-      )
+      { _id: oid }, attributes, { upsert: false }
+    )
 
     if (!result.value) {
       throw new Error('Item not found')
@@ -65,14 +71,14 @@ module.exports = class Db extends EventEmitter {
     return
   }
 
-  delete (collectionName, id) {
+  async delete (collectionName, id) {
     let oid
     try {
       oid = ObjectID(id)
     } catch (e) {
       throw new Error('Invalid id provided')
     }
-    return this.db.collection(collectionName).deleteOne({ _id: oid })
+    return await this.db.collection(collectionName).deleteOne({ _id: oid })
   }
 
   close () {
