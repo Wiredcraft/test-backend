@@ -11,8 +11,20 @@ const userRouter = express.Router()
 const app = express()
 app.use(bodyParser.json())
 
-userRouter.get('/:userId', (req, res) => {
-  userService.get(req.params.userId)
+/**
+ * @api {get} /user/:id Read the data of a user
+ * @apiName GetUser
+ * @apiGroup User
+ *
+ * @apiParam {Number} id Users unique ID.
+ *
+ * @apiSuccess {String} name          name of the user
+ * @apiSuccess {String} dob           the users date of birth in the format YYYY-MM-DD 
+ * @apiSuccess {String} address       the users address
+ * @apiSuccess {String} description   a description of the user
+ */
+userRouter.get('/:id', (req, res) => {
+  userService.get(req.params.id)
     .then((user) => {
       if (user) {
         res.json(user)
@@ -22,20 +34,49 @@ userRouter.get('/:userId', (req, res) => {
     }).catch(e => res.status(400).send(e.message))
 })
 
+/**
+ * @api {post} /user Create a new user
+ * @apiName CreateUser
+ * @apiGroup User
+ *
+ * @apiParam {String} name          the name of the user
+ * @apiParam {String} address       the users address
+ * @apiParam {String} dob           the users date of birth in the format YYYY-MM-DD
+ * @apiParam {String} description   the users description
+ *
+ * @apiSuccess {String} id          the id of the created user
+ */
 userRouter.post('/', (req, res) => {
   userService.create(req.body)
-    .then(({ id: userId }) => res.json({ userId }))
+    .then(({ id }) => res.json({ id }))
     .catch(e => res.status(400).send(e.message))
 })
 
-userRouter.delete('/:userId', (req, res) => {
+/**
+ * @api {delete} /user/:id Delete a user
+ * @apiName DeleteUser
+ * @apiGroup User
+ *
+ * @apiParam {String} id the id of the user to delete
+ */
+userRouter.delete('/:id', (req, res) => {
   userService.delete(req.params.userId)
     .then(() => res.status(200).end())
     .catch((e) => res.status(400).send(e.message))
 })
 
-userRouter.post('/:userId', (req, res) => {
-  userService.update(req.params.userId, req.body)
+/**
+ * @api {post} /user/:id Update an existing user
+ * @apiName UpdateUser
+ * @apiGroup User
+ *
+ * @apiParam {String} [name]          the name of the user
+ * @apiParam {String} [address]       the users address
+ * @apiParam {String} [dob]           the users date of birth in the format YYYY-MM-DD
+ * @apiParam {String} [description]   the users description
+ */
+userRouter.post('/:id', (req, res) => {
+  userService.update(req.params.id, req.body)
     .then(() => res.status(200).end())
     .catch(e => res.status(400).send(e.message))
 })
