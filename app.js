@@ -1,13 +1,26 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose')
 
 /* API routes */
-var users = require('./server/routes/users');
+const users = require('./server/routes/users');
 
-var app = express();
+/* Database setup */
+const config = require('./server/config/config')
+// connect the database
+mongoose.connect(config.url)
+// check if the database is running
+mongoose.connection.on('connected', () => {
+  console.log('Database connected')
+})
+mongoose.connection.on('error', () => {
+  console.error('Database connection error. Make sure your database is running')
+})
+
+const app = express();
 
 /*
  * uncomment for setting up server side view rendering
