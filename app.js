@@ -4,8 +4,8 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose')
-const passport = required('passport')
-const session = required('express-session')
+const passport = require('passport')
+const session = require('express-session')
 
 /* API routes */
 const users = require('./server/routes/users');
@@ -34,7 +34,7 @@ require('./server/config/passport')(passport)
 
 // // view engine setup
 // app.set('views', path.join(__dirname, 'server/views'));
-// app.set('view engine', 'jade');
+// app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -43,12 +43,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 /* required for passport */
-app.use(session({secret: 'someSecretKey' }))
+app.use(session({
+  secret: 'some secret key',
+  saveUninitialized: true,
+  resave: true
+}))
 app.use(passport.initialize())
 app.use(passport.session())
 
 /* the api entry point */
-app.use('/api/v1/')
+app.use('/api/v1/', employees)
 app.use('/', users);
 
 // catch 404 and forward to error handler
