@@ -4,9 +4,12 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose')
+const passport = required('passport')
+const session = required('express-session')
 
 /* API routes */
 const users = require('./server/routes/users');
+const employees = require('./server/routes/employees')
 
 /* Database setup */
 const config = require('./server/config/config')
@@ -22,6 +25,9 @@ mongoose.connection.on('error', () => {
 
 const app = express();
 
+/* Configure passport */
+require('./server/config/passport')(passport)
+
 /*
  * uncomment for setting up server side view rendering
  */
@@ -36,7 +42,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api/v1/', users);
+/* required for passport */
+app.use(session({secret: 'someSecretKey' }))
+app.use(passport.initialize())
+app.use(passport.session())
+
+/* the api entry point */
+app.use('/api/v1/')
+app.use('/', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
