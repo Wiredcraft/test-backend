@@ -1,0 +1,12 @@
+[
+  {
+    "model":"User",
+    "items":[
+      {
+        "id":1,
+        "name": "test",
+        "password": "123456"
+      }
+    ]
+  }
+]
