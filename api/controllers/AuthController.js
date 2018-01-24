@@ -43,5 +43,6 @@ module.exports = {
 				return res.send(user);
 			});
 		}
+		return res.unauthorized({message: "Unauthorized"});
 	}
 }

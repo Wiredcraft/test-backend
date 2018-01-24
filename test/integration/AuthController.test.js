@@ -24,7 +24,7 @@ describe('AuthController', function() {
     });
   });
   describe('#current()', function() {
-    if('should return 403', function(done){
+    it('should return 403', function(done){
       request(sails.hooks.http.app)
         .get('/auth/current')
         .expect('Content-Type', /json/)
