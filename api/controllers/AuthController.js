@@ -36,12 +36,8 @@ module.exports = {
 		});
 	},
 	current: function(req, res){
-		if(req.authenticated){
-			User.find({id: req.session.userId}).exec(function(err, user){
-				if(err) return res.unauthorized(err);
-				if (!user) return res.notFound({message: "not found"});
-				return res.send(user);
-			});
+		if(req.session.authenticated == true){
+				return res.send({'id': req.session.userId});
 		}
 		return res.unauthorized({message: "Unauthorized"});
 	}

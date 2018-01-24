@@ -20,7 +20,7 @@ module.exports = function unauthorized (data, options) {
   var sails = req._sails;
 
   // Set status code
-  res.status(403);
+  res.status(401);
 
   // Log error to console
   if (data !== undefined) {

@@ -1,11 +1,13 @@
 var request = require('supertest');
+var helper = require('./helper');
+var agent;
 
 describe('AuthController', function() {
 
   describe('#login()', function() {
     it('should login success', function (done) {
       request(sails.hooks.http.app)
-        .post('/auth/login')
+        .post('/login')
         .send({ name: 'test', password: '123456' })
         .expect('Content-Type', /json/)
         .expect(200, done);
@@ -17,7 +19,7 @@ describe('AuthController', function() {
       var name = 'test2';
       var passsword = '123456';
       request(sails.hooks.http.app)
-        .post('/auth/signup')
+        .post('/signup')
         .send({ name: name, password: passsword })
         .expect('Content-Type', /json/)
         .expect(200, done);
@@ -26,9 +28,19 @@ describe('AuthController', function() {
   describe('#current()', function() {
     it('should return 403', function(done){
       request(sails.hooks.http.app)
-        .get('/auth/current')
+        .get('/current')
         .expect('Content-Type', /json/)
-        .expect(403, done);
+        .expect(401, done);
     });
+
+    it('should return 200', function(done){
+      helper.login(function(agent){
+        agent
+          .get('/current')
+          .expect('Content-Type', /json/)
+          .expect(200, done);
+      });
+    });
+
   });
 });

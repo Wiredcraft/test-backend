@@ -6,7 +6,7 @@ var testAccount = {
 exports.login = function(done){
   var agent = request.agent(sails.hooks.http.app);
   agent
-    .post('/auth/login')
+    .post('/login')
     .send(testAccount)
     .end(function (err, res) {
       if (err) done(err);
