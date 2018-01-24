@@ -29,24 +29,23 @@ module.exports.http = {
   * router is invoked by the "router" middleware below.)                     *
   *                                                                          *
   ***************************************************************************/
-
-    // order: [
-    //   'startRequestTimer',
-    //   'cookieParser',
-    //   'session',
+    order: [
+       'startRequestTimer',
+       'cookieParser',
+       'session',
     //   'myRequestLogger',
-    //   'bodyParser',
+       'bodyParser',
     //   'handleBodyParserError',
-    //   'compress',
+       'compress',
     //   'methodOverride',
-    //   'poweredBy',
+       'poweredBy',
     //   '$custom',
-    //   'router',
-    //   'www',
-    //   'favicon',
+       'router',
+       'www',
+       'favicon',
     //   '404',
     //   '500'
-    // ],
+    ],
 
   /****************************************************************************
   *                                                                           *
@@ -54,10 +53,10 @@ module.exports.http = {
   *                                                                           *
   ****************************************************************************/
 
-    // myRequestLogger: function (req, res, next) {
-    //     console.log("Requested :: ", req.method, req.url);
-    //     return next();
-    // }
+    myRequestLogger: function (req, res, next) {
+         sails.log.info("Requested :: ", req.method, req.url);
+         return next();
+   }
 
 
   /***************************************************************************
