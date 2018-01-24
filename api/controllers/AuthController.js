@@ -34,5 +34,14 @@ module.exports = {
 			}
 			return res.send(newUser)
 		});
+	},
+	current: function(req, res){
+		if(req.authenticated){
+			User.find({id: req.session.userId}).exec(function(err, user){
+				if(err) return res.unauthorized(err);
+				if (!user) return res.notFound({message: "not found"});
+				return res.send(user);
+			});
+		}
 	}
 }

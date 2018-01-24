@@ -23,4 +23,12 @@ describe('AuthController', function() {
         .expect(200, done);
     });
   });
+  describe('#current()', function() {
+    if('should return 403', function(done){
+      request(sails.hooks.http.app)
+        .get('/auth/current')
+        .expect('Content-Type', /json/)
+        .expect(403, done);
+    });
+  });
 });
