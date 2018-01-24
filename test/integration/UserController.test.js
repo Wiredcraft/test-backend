@@ -3,18 +3,38 @@ var helper = require('./helper');
 var agent;
 
 describe('UserController', function() {
-  describe('#find()', function() {
-    before(function (done) {
-      helper.login(function(_agent){
-        agent = _agent;
-        done();
-      });
-    });
 
+  before(function (done) {
+    helper.login(function(_agent){
+      agent = _agent;
+      done();
+    });
+  });
+
+  describe('#find()', function() {
     it('should return user list', function (done) {
       agent
         .get('/user')
         .expect(200)
+        .expect('Content-Type', /json/, done);
+      });
+    });
+
+  describe('#findOne()', function() {
+    it('should return user instance', function (done) {
+      agent
+        .get('/user/1')
+        .expect(200)
+        .expect('Content-Type', /json/, done);
+      });
+    });
+
+
+  describe('#destroy()', function() {
+    it('should return 403 without admine permisson', function (done) {
+      agent
+        .delete('/user/1')
+        .expect(403)
         .expect('Content-Type', /json/, done);
       });
     });
