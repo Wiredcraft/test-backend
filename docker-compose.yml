@@ -1,0 +1,15 @@
+version: '3.1'
+services:
+  app:
+    build: .
+    environment:
+      NODE_ENV: production
+    ports:
+      - '1357:8080'
+    depends_on:
+      - db
+    restart: always
+  db:
+    image: daocloud.io/mongo
+    volumes:
+      - ./data:/data/db
