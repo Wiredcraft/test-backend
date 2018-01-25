@@ -5,9 +5,11 @@ services:
     environment:
       NODE_ENV: production
     ports:
-      - '1357:8080'
+      - '1337:8080'
     depends_on:
       - db
+    volumes:
+      - ./config/env/docker.js:/server/config/env/production.js
     restart: always
   db:
     image: daocloud.io/mongo

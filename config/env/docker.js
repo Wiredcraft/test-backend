@@ -18,18 +18,19 @@ module.exports = {
    ***************************************************************************/
 
   models: {
-     connection: 'herokulMongodbServer'
+     connection: 'localMongodbServer'
   },
   session: {
     adapter: 'mongo',
-    url: 'mongodb://sails:sails123@ds113648.mlab.com:13648/heroku_55jn9sgg', // user, password and port optional
-  }
+    url: 'mongodb://db:27017/session', // user, password and port optional
+  },
 
   /***************************************************************************
    * Set the port in the production environment to 80                        *
    ***************************************************************************/
 
   // port: 80,
+  host: '0.0.0.0',
 
   /***************************************************************************
    * Set the log level in production environment to "silent"                 *
