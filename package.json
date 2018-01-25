@@ -23,7 +23,9 @@
     "rc": "1.0.1",
     "sails": "~0.12.14",
     "sails-disk": "~0.10.9",
-    "sails-mongo": "^0.12.3"
+    "sails-mongo": "^0.12.3",
+    "sails-swagger": "^0.5.1",
+    "seneca": "^3.4.3"
   },
   "scripts": {
     "debug": "node debug app.js",
@@ -40,6 +42,7 @@
   "devDependencies": {
     "mocha": "^5.0.0",
     "sails-fixtures": "^1.0.8",
-    "supertest": "^3.0.0"
+    "supertest": "^3.0.0",
+    "swagger-ui": "^2.2.10"
   }
 }
