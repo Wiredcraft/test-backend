@@ -57,8 +57,7 @@ module.exports.routes = {
           body: {
               username: { type: 'string', required: true },
               password: { type: 'password', required: true }
-          },
-          query: [{ $ref: '#/parameters/IDPathParam' }]
+          }
       }
   },
   'post /login': {
@@ -70,8 +69,7 @@ module.exports.routes = {
           body: {
               username: { type: 'string', required: true },
               password: { type: 'password', required: true }
-          },
-          query: [{ $ref: '#/parameters/IDPathParam' }]
+          }
       }
   }
 
