@@ -5,7 +5,7 @@ services:
     environment:
       NODE_ENV: production
     ports:
-      - '1337:8080'
+      - 8080:1337
     depends_on:
       - db
     volumes:
