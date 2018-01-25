@@ -4,7 +4,7 @@ exports.login = function(done){
   agent
     .post('/login')
     .send({
-      name: 'test',
+      username: 'test',
       password: '123456'
     })
     .end(function (err, res) {
@@ -18,7 +18,7 @@ exports.admin = function(done){
   agent
     .post('/login')
     .send({
-      name: 'admin',
+      username: 'admin',
       password: '123456'
     })
     .end(function (err, res) {

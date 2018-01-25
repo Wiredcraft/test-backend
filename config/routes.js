@@ -32,12 +32,10 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': {
-    view: 'homepage'
-  },
-  'post /signup': 'AuthController.signup',
-  'post /login': 'AuthController.login',
-  'get /current': 'AuthController.current',
+  //'/': {
+  //  view: 'homepage'
+  //},
+
 
   /***************************************************************************
   *                                                                          *
@@ -48,5 +46,33 @@ module.exports.routes = {
   * for configuration options and examples.                                  *
   *                                                                          *
   ***************************************************************************/
+
+  'get /current': 'AuthController.current',
+  'post /signup': {
+      controller: 'AuthController',
+      action: 'signup',
+      swagger: {
+         	summary: 'Signup',
+          description: 'This is for signup of any user',
+          body: {
+              username: { type: 'string', required: true },
+              password: { type: 'password', required: true }
+          },
+          query: [{ $ref: '#/parameters/IDPathParam' }]
+      }
+  },
+  'post /login': {
+      controller: 'AuthController',
+      action: 'login',
+      swagger: {
+      		summary: 'Authentication',
+          description: 'This is for authentication of any user',
+          body: {
+              username: { type: 'string', required: true },
+              password: { type: 'password', required: true }
+          },
+          query: [{ $ref: '#/parameters/IDPathParam' }]
+      }
+  }
 
 };

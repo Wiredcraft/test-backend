@@ -4,16 +4,16 @@
     "items":[
       {
         "id": 1,
-        "name": "test",
+        "username": "test",
         "password": "123456"
       },{
         "id": 2,
-        "name": "admin",
+        "username": "admin",
         "isAdmin": true,
         "password": "123456"
       },{
         "id": 3,
-        "name": "deleted",
+        "username": "deleted",
         "password": "123456"
       }
     ]

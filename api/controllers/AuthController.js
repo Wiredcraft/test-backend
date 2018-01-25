@@ -7,11 +7,11 @@
 
 module.exports = {
 	login: function(req, res) {
-		var name = req.param('name');
+		var username = req.param('username');
 		var password = req.param('password');
-		if(!name) return res.badRequest({message: 'name Invalid'});
+		if(!username) return res.badRequest({message: 'username Invalid'});
 		if(!password) return res.badRequest({message: 'password Invalid'});
-    User.authenticate(name, password, function(err, user, info){
+    User.authenticate(username, password, function(err, user, info){
       if((err) || (!user)) {
         return res.unauthorized({
           message: info.message,
@@ -29,7 +29,7 @@ module.exports = {
   },
 	signup: function(req, res){
 		User.create({
-			name: req.param('name'),
+			username: req.param('username'),
 			password: req.param('password')
 		}).exec(function(err, newUser){
 			if(err) {

@@ -23,8 +23,8 @@
     "rc": "1.0.1",
     "sails": "~0.12.14",
     "sails-disk": "~0.10.9",
-    "sails-mongo": "^0.12.3",
-    "sails-swagger": "^0.5.1"
+    "sails-hook-swagger-generator": "^2.3.0",
+    "sails-mongo": "^0.12.3"
   },
   "scripts": {
     "debug": "node debug app.js",

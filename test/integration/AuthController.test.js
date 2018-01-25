@@ -8,7 +8,7 @@ describe('AuthController', function() {
     it('should login success', function (done) {
       request(sails.hooks.http.app)
         .post('/login')
-        .send({ name: 'test', password: '123456' })
+        .send({ username: 'test', password: '123456' })
         .expect('Content-Type', /json/)
         .expect(200, done);
       });
@@ -16,7 +16,7 @@ describe('AuthController', function() {
     it('should login failure without password', function (done) {
       request(sails.hooks.http.app)
         .post('/login')
-        .send({ name: 'test' })
+        .send({ username: 'test' })
         .expect('Content-Type', /json/)
         .expect(400, done);
       });
@@ -24,11 +24,11 @@ describe('AuthController', function() {
 
   describe('#signup()', function() {
     it('should signup success', function(done){
-      var name = 'test2';
+      var username = 'test2';
       var passsword = '123456';
       request(sails.hooks.http.app)
         .post('/signup')
-        .send({ name: name, password: passsword })
+        .send({ username: username, password: passsword })
         .expect('Content-Type', /json/)
         .expect(200, done);
     });

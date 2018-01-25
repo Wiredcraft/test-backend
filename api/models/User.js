@@ -10,7 +10,7 @@ var bcrypt = require('bcrypt');
 module.exports = {
 
   attributes: {
-    name: {
+    username: {
       type: 'string',
       size: 24,
       required: true,
@@ -52,8 +52,8 @@ module.exports = {
     });
   },
 
-  authenticate: function (name, password, cb) {
-    User.findOne({name: name}, function(err, user){
+  authenticate: function (username, password, cb) {
+    User.findOne({username: username}, function(err, user){
       if(err) return cb(err);
       if(!user) return cb(null, false, {message: 'name not found'});
       bcrypt.compare(password, user.password, function(err, res){
