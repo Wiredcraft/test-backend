@@ -64,7 +64,7 @@ module.exports.connections = {
 
   herokulMongodbServer: {
     adapter: 'sails-mongo',
-    host: 's113648.mlab.com',
+    host: 'ds113648.mlab.com',
     port: 13648,
     database:'heroku_55jn9sgg',
     user: 'sails',
