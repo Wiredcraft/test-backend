@@ -3,8 +3,17 @@
     "model":"User",
     "items":[
       {
-        "id":1,
+        "id": 1,
         "name": "test",
+        "password": "123456"
+      },{
+        "id": 2,
+        "name": "admin",
+        "isAdmin": true,
+        "password": "123456"
+      },{
+        "id": 3,
+        "name": "deleted",
         "password": "123456"
       }
     ]

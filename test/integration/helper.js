@@ -1,13 +1,26 @@
 var request = require('supertest');
-var testAccount = {
-  name: 'test',
-  password: '123456'
-}
 exports.login = function(done){
   var agent = request.agent(sails.hooks.http.app);
   agent
     .post('/login')
-    .send(testAccount)
+    .send({
+      name: 'test',
+      password: '123456'
+    })
+    .end(function (err, res) {
+      if (err) done(err);
+      done(agent);
+    });
+}
+
+exports.admin = function(done){
+  var agent = request.agent(sails.hooks.http.app);
+  agent
+    .post('/login')
+    .send({
+      name: 'admin',
+      password: '123456'
+    })
     .end(function (err, res) {
       if (err) done(err);
       done(agent);

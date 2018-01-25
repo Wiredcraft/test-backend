@@ -58,10 +58,7 @@ module.exports = {
       if(!user) return cb(null, false, {message: 'name not found'});
       bcrypt.compare(password, user.password, function(err, res){
         if(!res) return cb(null, false, { message: 'Invalid Password' });
-        let userDetails = {
-          name: user.name,
-          id: user.id};
-        return cb(null, userDetails, { message: 'Login Succesful'});
+        return cb(null, user, { message: 'Login Succesful'});
       });
     });
   }

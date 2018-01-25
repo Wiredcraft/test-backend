@@ -7,7 +7,11 @@
 
 module.exports = {
 	login: function(req, res) {
-    User.authenticate(req.param('name'),req.param('password'), function(err, user, info){
+		var name = req.param('name');
+		var password = req.param('password');
+		if(!name) return res.badRequest({message: 'name Invalid'});
+		if(!password) return res.badRequest({message: 'password Invalid'});
+    User.authenticate(name, password, function(err, user, info){
       if((err) || (!user)) {
         return res.unauthorized({
           message: info.message,
@@ -16,6 +20,7 @@ module.exports = {
       }
 			req.session.userId = user.id;
 			req.session.authenticated = true;
+			if (user.isAdmin) req.session.isAdmin = true;
       return res.send({
         message: info.message,
         user

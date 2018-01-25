@@ -12,6 +12,14 @@ describe('AuthController', function() {
         .expect('Content-Type', /json/)
         .expect(200, done);
       });
+
+    it('should login failure without password', function (done) {
+      request(sails.hooks.http.app)
+        .post('/login')
+        .send({ name: 'test' })
+        .expect('Content-Type', /json/)
+        .expect(400, done);
+      });
   });
 
   describe('#signup()', function() {
