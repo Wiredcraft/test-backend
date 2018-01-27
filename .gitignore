@@ -58,4 +58,4 @@ typings/
 .env
 
 # Secret keys
-server/config/keys.js
+# server/config/keys.js
