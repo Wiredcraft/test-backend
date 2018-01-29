@@ -53,7 +53,7 @@ app.use(passport.session())
 
 /* the api entry point */
 app.use('/api/v1/', employees)
-app.use('/', users);
+app.use('/api/', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,6 +1,21 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require('express-jwt');
+const jwks = require('jwks-rsa');
 const Employee = require('../models/employee')
+
+/* The authentication middleware */
+const auth = jwt({
+  secret: jwks.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: "https://mudu.eu.auth0.com/.well-known/jwks.json"
+    }),
+    audience: 'http://wiredcraft-test-auth-api.com',
+    issuer: "https://mudu.eu.auth0.com/",
+    algorithms: ['RS256']
+})
 
 
 /* GET all employees. */
@@ -15,9 +30,11 @@ router.get('/employees', (req, res) => {
 })
 
 /* GET employee by id */
-router.get('/:employee_id', (req, res) => {
+router.get('/:employee_id', auth, (req, res) => {
   Employee.findById(req.params.employee_id, (err, employee) => {
-    if (err) {
+    if (err.name === 'UnauthorizedError') {
+      res.json({message: 'Missing or invalid token'})
+    } else {
       res.send(err)
     }
     // everything good, return employee
@@ -26,9 +43,11 @@ router.get('/:employee_id', (req, res) => {
 })
 
 /* GET employee by username */
-router.get('/employees/:username', (req, res) => {
+router.get('/employees/:username', auth, (req, res) => {
   Employee.find((err, employees) => {
-    if (err) {
+    if (err.name === 'UnauthorizedError') {
+      res.json({message: 'Missing or invalid token'})
+    } else {
       res.send(err)
     }
     // everything good, find and return the employee
@@ -58,9 +77,11 @@ router.post('/employee', (req, res) => {
 })
 
 /* Update employee */
-router.put('/:employee_id', (req, res) => {
+router.put('/:employee_id', auth, (req, res) => {
   Employee.findById(req.params.employee_id, (err, employee) => {
-    if (err) {
+    if (err.name === 'UnauthorizedError') {
+      res.json({message: 'Missing or invalid token'})
+    } else {
       res.send(err)
     }
     // everything good, update employee
@@ -81,9 +102,11 @@ router.put('/:employee_id', (req, res) => {
 })
 
 // Delete employee by id
-router.delete('/:employee_id', (req, res) => {
+router.delete('/:employee_id', auth, (req, res) => {
   Employee.remove({_id: req.params.employee_id}, (err, employee) => {
-    if (err) {
+    if (err.name === 'UnauthorizedError') {
+      res.json({message: 'Missing or invalid token'})
+    } else {
       res.send(err)
     }
     // everything good, send success message
