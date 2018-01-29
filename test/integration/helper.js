@@ -22,7 +22,11 @@ exports.admin = function(done) {
       password: '123456'
     })
     .end(function(err, res) {
-      if (err) done(err);
-      done(agent);
+      if (err) {
+        done(err)
+      } else {
+        done(agent);
+      };
+
     });
 }
