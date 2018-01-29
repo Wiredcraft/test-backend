@@ -1,0 +1,17 @@
+version: '3.1'
+services:
+  app:
+    build: .
+    environment:
+      NODE_ENV: production
+    ports:
+      - 8080:1337
+    depends_on:
+      - db
+    volumes:
+      - ./config/env/docker.js:/server/config/env/production.js
+    restart: always
+  db:
+    image: daocloud.io/mongo
+    volumes:
+      - ./data:/data/db

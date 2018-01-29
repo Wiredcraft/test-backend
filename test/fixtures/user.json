@@ -1,0 +1,21 @@
+[
+  {
+    "model":"User",
+    "items":[
+      {
+        "id": 1,
+        "username": "test",
+        "password": "123456"
+      },{
+        "id": 2,
+        "username": "admin",
+        "isAdmin": true,
+        "password": "123456"
+      },{
+        "id": 3,
+        "username": "deleted",
+        "password": "123456"
+      }
+    ]
+  }
+]
