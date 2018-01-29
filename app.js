@@ -5,7 +5,9 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose')
 const passport = require('passport')
-const session = require('express-session')
+const session = require('cookie-session')
+
+const keys = require('./server/config/keys')
 
 /* API routes */
 const users = require('./server/routes/users');
@@ -42,18 +44,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-/* required for passport */
+/* setup cookie-session before you initialize passport */
 app.use(session({
-  secret: 'some secret key',
-  saveUninitialized: true,
-  resave: true
+  maxAge: 24 * 60 * 60 * 1000,
+  keys: [keys.cookieKey]
 }))
+
 app.use(passport.initialize())
 app.use(passport.session())
 
 /* the api entry point */
 app.use('/api/v1/', employees)
-app.use('/api/', users);
+app.use('/', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

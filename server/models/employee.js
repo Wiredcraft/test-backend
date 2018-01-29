@@ -7,7 +7,8 @@ const EmployeeSchema = new Schema({
   dob:         { type: String, default: '', required: true },
   address:     { type: String, default: '', required: true },
   description: { type: String, default: '', required: true },
-  createdAt:   { type: Date, default: Date.now }
+  createdAt:   { type: Date, default: Date.now },
+  createdBy:   { type: String, default: ''}
 })
 
 /* Regisrer the model and export it */

@@ -1,21 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('express-jwt');
-const jwks = require('jwks-rsa');
 const Employee = require('../models/employee')
 
 /* The authentication middleware */
-const auth = jwt({
-  secret: jwks.expressJwtSecret({
-        cache: true,
-        rateLimit: true,
-        jwksRequestsPerMinute: 5,
-        jwksUri: "https://mudu.eu.auth0.com/.well-known/jwks.json"
-    }),
-    audience: 'http://wiredcraft-test-auth-api.com',
-    issuer: "https://mudu.eu.auth0.com/",
-    algorithms: ['RS256']
-})
+const isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next()
+  }
+  // if not logged in return 401 error
+  res.status(401).send({message: 'Unauthorized'})
+}
 
 
 /* GET all employees. */
@@ -30,11 +24,9 @@ router.get('/employees', (req, res) => {
 })
 
 /* GET employee by id */
-router.get('/:employee_id', auth, (req, res) => {
+router.get('/:employee_id', isLoggedIn, (req, res) => {
   Employee.findById(req.params.employee_id, (err, employee) => {
-    if (err.name === 'UnauthorizedError') {
-      res.json({message: 'Missing or invalid token'})
-    } else {
+    if (err) {
       res.send(err)
     }
     // everything good, return employee
@@ -43,11 +35,9 @@ router.get('/:employee_id', auth, (req, res) => {
 })
 
 /* GET employee by username */
-router.get('/employees/:username', auth, (req, res) => {
+router.get('/employees/:username', isLoggedIn, (req, res) => {
   Employee.find((err, employees) => {
-    if (err.name === 'UnauthorizedError') {
-      res.json({message: 'Missing or invalid token'})
-    } else {
+    if (err) {
       res.send(err)
     }
     // everything good, find and return the employee
@@ -57,7 +47,7 @@ router.get('/employees/:username', auth, (req, res) => {
 })
 
 /* Create employee */
-router.post('/employee', (req, res) => {
+router.post('/employee', isLoggedIn, (req, res) => {
   // instantiate the model
   const employee = new Employee()
   // get the employee (coming from the request)
@@ -65,6 +55,7 @@ router.post('/employee', (req, res) => {
   employee.dob = req.body.dob
   employee.address = req.body.address
   employee.description = req.body.description
+  employee.createdBy = req.user.username
 
   // save the data received
   employee.save((err) => {
@@ -77,11 +68,9 @@ router.post('/employee', (req, res) => {
 })
 
 /* Update employee */
-router.put('/:employee_id', auth, (req, res) => {
+router.put('/:employee_id', isLoggedIn, (req, res) => {
   Employee.findById(req.params.employee_id, (err, employee) => {
-    if (err.name === 'UnauthorizedError') {
-      res.json({message: 'Missing or invalid token'})
-    } else {
+    if (err) {
       res.send(err)
     }
     // everything good, update employee
@@ -89,6 +78,7 @@ router.put('/:employee_id', auth, (req, res) => {
     employee.dob = req.body.dob
     employee.address = req.body.address
     employee.description = req.body.description
+    employee.createdBy = req.user.username
 
     // save the new data
     employee.save((err) => {
@@ -102,11 +92,9 @@ router.put('/:employee_id', auth, (req, res) => {
 })
 
 // Delete employee by id
-router.delete('/:employee_id', auth, (req, res) => {
+router.delete('/:employee_id', isLoggedIn, (req, res) => {
   Employee.remove({_id: req.params.employee_id}, (err, employee) => {
-    if (err.name === 'UnauthorizedError') {
-      res.json({message: 'Missing or invalid token'})
-    } else {
+    if (err) {
       res.send(err)
     }
     // everything good, send success message
