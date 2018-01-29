@@ -12,8 +12,8 @@ before(function(done) {
     if (err) return done(err);
     // here you can load fixtures, etc.
     fixtures.init({
-      'dir':'./test/fixtures/',
-      'pattern':'*.json' // Default is '*.json'
+      'dir': './test/fixtures/',
+      'pattern': '*.json' // Default is '*.json'
     }, done);
   });
 });

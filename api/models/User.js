@@ -46,19 +46,27 @@ module.exports = {
   },
   beforeCreate: function(value, cb) {
     bcrypt.hash(value.password, 8, function(err, hash) {
-      if(err) return cb(err);
+      if (err) return cb(err);
       value.password = hash;
       cb();
     });
   },
 
-  authenticate: function (username, password, cb) {
-    User.findOne({username: username}, function(err, user){
-      if(err) return cb(err);
-      if(!user) return cb(null, false, {message: 'name not found'});
-      bcrypt.compare(password, user.password, function(err, res){
-        if(!res) return cb(null, false, { message: 'Invalid Password' });
-        return cb(null, user, { message: 'Login Succesful'});
+  authenticate: function(username, password, cb) {
+    User.findOne({
+      username: username
+    }, function(err, user) {
+      if (err) return cb(err);
+      if (!user) return cb(null, false, {
+        message: 'name not found'
+      });
+      bcrypt.compare(password, user.password, function(err, res) {
+        if (!res) return cb(null, false, {
+          message: 'Invalid Password'
+        });
+        return cb(null, user, {
+          message: 'Login Succesful'
+        });
       });
     });
   }
