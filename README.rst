@@ -1,11 +1,13 @@
-## How to install and test the REST API
+How to install and test the REST API
+====================================
 
 - Git clone the `repo` or fetch the `PR`
 - Then `npm install` to install dependencies
 - `npm test` to run test cases
 - `npm start` to start the dev server
 
-### Testing the APIs
+Testing the APIs
+================
 I recommend using `Postman the chrome extension`
 - 1 run the dev server `npm start` then open a new web page goto `http://localhost:3000/api/auth` to authenticate with your google email address
 - 2 goto the `Postman chrome extension` and try the `APIs bellow`
@@ -31,15 +33,18 @@ I recommend using `Postman the chrome extension`
 +-------------------------------------+----------------------------------------------------------+
 
 
-# Wiredcraft Back-end Developer Test
+Wiredcraft Back-end Developer Test
+==================================
 
 Make sure you read **all** of this document carefully, and follow the guidelines in it.
 
-## Context
+Content
+-------
 
 Build a RESTful API that can `get/create/update/delete` user data from a persistence database
 
-### User Model
+User Model
+==========
 
 ```
 {
@@ -52,27 +57,32 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 }
 ```
 
-## Requirements
+Requirements
+============
 
-### Functionality
+Functionality
+=============
 
 - The API should follow typical RESTful API design pattern.
 - The data should be saved in the DB.
 - Provide proper API document.
 
-### Tech stack
+Tech stack
+==========
 
 - Use Node.js and any framework.
 - Use any DB. NoSQL DB is preferred.
 
-### Bonus
+Bonus
+=====
 
 - Write clear **documentation** on how it's designed and how to run the code.
 - Provide proper unit test.
 - Write good commit messages.
 - An online demo is always welcome.
 
-### Advanced requirements
+Advanced requirements
+=====================
 
 These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.
 
@@ -81,7 +91,8 @@ These are used for some further challenges. You can safely skip them if you are 
 - Provide a complete logging (when/how/etc) strategy.
 - Use a NoSQL DB and build a filter feature that can filter records with some of the attributes such as username. Do not use query languages such as MongoDB Query or Couchbase N1QL.
 
-## What We Care About
+What We Care About
+------------------
 
 Feel free to use any libraries you would use if this were a real production App, but remember we're interested in your code & the way you solve the problem, not how well you can use a particular library.
 
@@ -93,7 +104,8 @@ Here's what you should aim for:
 - Solid testing approach.
 - Extensible code.
 
-## Q&A
+Q&A
+===
 
 > Where should I send back the result when I'm done?
 
