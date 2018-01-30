@@ -1,3 +1,36 @@
+## How to install and test the REST API
+
+- Git clone the `repo` or fetch the `PR`
+- Then `npm install` to install dependencies
+- `npm test` to run test cases
+- `npm start` to start the dev server
+
+### Testing the APIs
+I recommend using `Postman the chrome extension`
+- 1 run the dev server `npm start` then open a new web page goto `http://localhost:3000/api/auth` to authenticate with your google email address
+- 2 goto the `Postman chrome extension` and try the `APIs bellow`
+
++-------------------------------------+----------------------------------------------------------+
+| API Endpoint                        | Description                                              |
++=====================================+==========================================================+
+| ``/api/auth/logout``                | remove the cookie session              (GET)             |
++-------------------------------------+----------------------------------------------------------+
+| ``/api/auth``                       | authenticate with google Oauth2.0      (GET)             |
++-------------------------------------+----------------------------------------------------------+
+| ``/api/v1/employees``               | get all the employees from the API     (GET)             |
++-------------------------------------+----------------------------------------------------------+
+| ``/api/v1/employee_id``             | get the employee with that Id          (GET)             |
++-------------------------------------+----------------------------------------------------------+
+| ``/api/v1/employees/employee_name`` | get the employee with that username    (GET)             |
++-------------------------------------+----------------------------------------------------------+
+| ``/api/v1/employee``                | create a new employee                  (POST)            |
++-------------------------------------+----------------------------------------------------------+
+| ``/api/v1/employee_id``             | update the employee with that Id       (PUT)             |
++-------------------------------------+----------------------------------------------------------+
+| ``/api/v1/employee_id``             | delete the employee with that Id       (DELETE)          |
++-------------------------------------+----------------------------------------------------------+
+
+
 # Wiredcraft Back-end Developer Test
 
 Make sure you read **all** of this document carefully, and follow the guidelines in it.
