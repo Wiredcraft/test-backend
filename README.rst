@@ -8,7 +8,7 @@ How to install and test the REST API
 
 Testing the APIs
 ================
-I recommend using this `Postman <https://chrome.google.com/webstore/detail/tabbed-postman-rest-clien/coohjcphdfgbiolnekdpbcijmhambjff?hl=en>`__ 
+I recommend using this `Postman <https://chrome.google.com/webstore/detail/tabbed-postman-rest-clien/coohjcphdfgbiolnekdpbcijmhambjff?hl=en/>`__
 - 1 run the dev server `npm start` then open a new web page goto `http://localhost:3000/api/auth` to authenticate with your google email address
 - 2 goto the `Postman chrome extension` and try the `APIs bellow`
 
