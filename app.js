@@ -6,6 +6,9 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose')
 const passport = require('passport')
 const session = require('cookie-session')
+/* Seneca imports */
+const seneca = require('seneca')()
+const senecaWeb = require('seneca-web')
 
 const keys = require('./server/config/keys')
 
@@ -30,6 +33,16 @@ const app = express();
 /* Configure passport */
 require('./server/config/passport')(passport)
 
+/* setup senecaWeb */
+const Router = express.Router
+const context = new Router()
+
+const senecaWebConfig = {
+  context: context,
+  adapter: require('seneca-web-adapter-express'),
+  options: { parseBody: false } // for body-parser to be used
+}
+
 /*
  * uncomment for setting up server side view rendering
  */
@@ -43,6 +56,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+/* register context for seneca */
+app.use(context)
 
 /* setup cookie-session before you initialize passport */
 app.use(session({
@@ -56,6 +71,11 @@ app.use(passport.session())
 /* the api entry point */
 app.use('/api/v1/', employees)
 app.use('/', users);
+
+/* Integrate seneca and express */
+seneca.use(senecaWeb, senecaWebConfig)
+seneca.use('./server/routes/seneca-api')
+      .client({ type:'tcp', pin:'role:employees'})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

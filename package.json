@@ -16,6 +16,9 @@
     "morgan": "~1.9.0",
     "passport": "^0.4.0",
     "passport-google-oauth20": "^1.0.0",
+    "seneca": "^3.4.3",
+    "seneca-web": "^2.2.0",
+    "seneca-web-adapter-express": "^1.1.1",
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {

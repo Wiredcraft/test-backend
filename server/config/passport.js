@@ -24,11 +24,9 @@ module.exports = (passport) => {
     // check if the user already exists
     User.findOne({googleId: profile.id}, (err, user) => {
       if (err) {
-        console.log('first error: ', err)
         return done(err)
       }
       if (user) {
-        console.log('second error: ', user)
         return done(null, user)
       } else {
         // if not save the user
