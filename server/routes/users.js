@@ -11,7 +11,6 @@ router.get('/api/auth', passport.authenticate('google', {
 router.get('/api/auth/logout', (req, res) => {
   // logout with passport
   req.logout()
-  res.status(204).send({message: 'successfully logged Out'})
 })
 
 /* callback route for google to redirect to */

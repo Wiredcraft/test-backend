@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Employee = require('../models/employee')
 
-/* The authentication middleware */
+/* The authorization middleware */
 const isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next()
