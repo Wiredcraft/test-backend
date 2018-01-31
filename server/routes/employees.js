@@ -13,7 +13,7 @@ const isLoggedIn = (req, res, next) => {
 
 
 /* GET all employees. */
-router.get('/employees', (req, res) => {
+router.get('/employees', isLoggedIn, (req, res) => {
   Employee.find((err, employees) => {
     if (err) {
       res.send(err)
