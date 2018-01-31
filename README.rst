@@ -3,7 +3,8 @@ How to install and test the REST API
 
 - Git clone the `repo` or fetch the `PR`
 - Then `npm install` to install dependencies
-- `npm test` to run test cases
+- `npm test` to run normal tests
+- `npm run test-integration` to run e2e tests
 - `npm start` to start the dev server
 
 Testing the APIs
