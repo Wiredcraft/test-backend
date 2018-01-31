@@ -15,21 +15,21 @@ I recommend using this `Postman <https://chrome.google.com/webstore/detail/tabbe
 +-------------------------------------+----------------------------------------------------------+
 | API Endpoint                        | Description                                              |
 +=====================================+==========================================================+
-| ``/api/auth/logout``                | remove the cookie session              (GET)             |
+|``/api/auth/logout``                 | remove the cookie session              (GET)             |
 +-------------------------------------+----------------------------------------------------------+
-| ``/api/auth``                       | authenticate with google Oauth2.0      (GET)             |
+|``/api/auth``                        | authenticate with google Oauth2.0      (GET)             |
 +-------------------------------------+----------------------------------------------------------+
-| ``/api/v1/employees``               | get all the employees from the API     (GET)             |
+|``/api/v1/employees``                | get all the employees from the API     (GET)             |
 +-------------------------------------+----------------------------------------------------------+
-| ``/api/v1/employee_id``             | get the employee with that Id          (GET)             |
+|``/api/v1/employees/{employee_id}``  | get the employee with that Id          (GET)             |
 +-------------------------------------+----------------------------------------------------------+
-| ``/api/v1/employees/employee_name`` | get the employee with that username    (GET)             |
+|``/api/v1/employee/{username}``      | get the employee with that username    (GET)             |
 +-------------------------------------+----------------------------------------------------------+
-| ``/api/v1/employee``                | create a new employee                  (POST)            |
+|``/api/v1/employees``                | create a new employee                  (POST)            |
 +-------------------------------------+----------------------------------------------------------+
-| ``/api/v1/employee_id``             | update the employee with that Id       (PUT)             |
+|``/api/v1/employees/{employee_id}``  | update the employee with that Id       (PUT)             |
 +-------------------------------------+----------------------------------------------------------+
-| ``/api/v1/employee_id``             | delete the employee with that Id       (DELETE)          |
+|``/api/v1/employees/{employee_id}``  | delete the employee with that Id       (DELETE)          |
 +-------------------------------------+----------------------------------------------------------+
 
 

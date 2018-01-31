@@ -16,7 +16,7 @@ const isLoggedIn = (req, res, next) => {
 router.get('/employees', isLoggedIn, (req, res) => {
   Employee.find((err, employees) => {
     if (err) {
-      res.send(err)
+      res.status(404).send(err)
     }
     // everything good, return employees
     res.json(employees)
@@ -24,10 +24,10 @@ router.get('/employees', isLoggedIn, (req, res) => {
 })
 
 /* GET employee by id */
-router.get('/:employee_id', isLoggedIn, (req, res) => {
+router.get('/employees/:employee_id', isLoggedIn, (req, res) => {
   Employee.findById(req.params.employee_id, (err, employee) => {
     if (err) {
-      res.send(err)
+      res.status(404).send({message: "employee does not exist"})
     }
     // everything good, return employee
     res.json(employee)
@@ -35,19 +35,24 @@ router.get('/:employee_id', isLoggedIn, (req, res) => {
 })
 
 /* GET employee by username */
-router.get('/employees/:username', isLoggedIn, (req, res) => {
+router.get('/employee/:username', isLoggedIn, (req, res) => {
   Employee.find((err, employees) => {
     if (err) {
-      res.send(err)
+      res.status(404).send(err)
     }
-    // everything good, find and return the employee
+    // find employee with provided username
     const employee = employees.filter(employee => employee.name === req.params.username)
-    res.json(employee)
+    if (employee.length < 1) {
+      res.status(404).send({message: 'employee does not exist'})
+    } else {
+      // everything good, return the employee
+      res.json(employee)
+    }
   })
 })
 
 /* Create employee */
-router.post('/employee', isLoggedIn, (req, res) => {
+router.post('/employees', isLoggedIn, (req, res) => {
   // instantiate the model
   const employee = new Employee()
   // get the employee (coming from the request)
@@ -68,37 +73,39 @@ router.post('/employee', isLoggedIn, (req, res) => {
 })
 
 /* Update employee */
-router.put('/:employee_id', isLoggedIn, (req, res) => {
+router.put('/employees/:employee_id', isLoggedIn, (req, res) => {
   Employee.findById(req.params.employee_id, (err, employee) => {
     if (err) {
-      res.send(err)
-    }
-    // everything good, update employee
-    employee.name = req.body.name
-    employee.dob = req.body.dob
-    employee.address = req.body.address
-    employee.description = req.body.description
-    employee.createdBy = req.user.username
+      res.status(404).send({message: 'employee does not exist'})
+    } else {
+      // everything good, update employee
+      employee.name = req.body.name
+      employee.dob = req.body.dob
+      employee.address = req.body.address
+      employee.description = req.body.description
+      employee.createdBy = req.user.username
 
-    // save the new data
-    employee.save((err) => {
-      if (err) {
-        res.send(err)
-      }
-      // everything good, send success message
-      res.json({message: 'Employee updated successfully'})
-    })
+      // save the new data
+      employee.save((err) => {
+        if (err) {
+          res.send(err)
+        }
+        // everything good, send success message
+        res.json({message: 'Employee updated successfully'})
+      })
+    }
   })
 })
 
 // Delete employee by id
-router.delete('/:employee_id', isLoggedIn, (req, res) => {
+router.delete('/employees/:employee_id', isLoggedIn, (req, res) => {
   Employee.remove({_id: req.params.employee_id}, (err, employee) => {
     if (err) {
-      res.send(err)
+      res.status(404).send({message: 'employee does not exist'})
+    } else {
+      // everything good, send success message
+      res.json({message: 'Employee deleted successfully'})
     }
-    // everything good, send success message
-    res.json({message: 'Employee deleted successfully'})
   })
 })
 

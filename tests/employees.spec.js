@@ -82,10 +82,94 @@ describe('Employees', () => {
     })
   })
 
-  describe('POST /api/v1/employee', () => {
+  describe('GET /api/v1/employees/{employee_id}', () => {
+    it('should return 404 if id not found', (done) => {
+      nock(baseUrl)
+       .get('/api/v1/employees/123')
+       .reply(404, {message: 'employee does not exist'})
+
+      chai.request(baseUrl)
+        .get('/api/v1/employees/12')
+        .end((err, res) => {
+          // should error
+          should.exist(err)
+          // status code should be 404
+          err.status.should.eql(404)
+          done()
+        })
+    })
+    it('should return employee if id found', (done) => {
+      nock(baseUrl)
+       .get('/api/v1/employees/1')
+       .reply(200, {
+         name: 'test1',
+         dob: '12/12/1992',
+         address: '200 five street',
+         description: 'he is an amazing guy',
+         createdBy: 'good dev',
+         _id: '1'
+       })
+
+      chai.request(baseUrl)
+        .get('/api/v1/employees/1')
+        .end((err, res) => {
+          // should not error
+          should.not.exist(err)
+          // status code should be 200
+          res.status.should.eql(200)
+          // name should be test1
+          res.body.name.should.eql('test1')
+          done()
+        })
+    })
+  })
+
+  describe('GET /api/v1/employee/{username}', () => {
+    it('should return 404 if username not found', (done) => {
+      nock(baseUrl)
+       .get('/api/v1/employees/smith')
+       .reply(404, {message: 'employee does not exist'})
+
+      chai.request(baseUrl)
+        .get('/api/v1/employees/ally')
+        .end((err, res) => {
+          // should error
+          should.exist(err)
+          // status code should be 404
+          err.status.should.eql(404)
+          done()
+        })
+    })
+    it('should return employee if username found', (done) => {
+      nock(baseUrl)
+       .get('/api/v1/employees/musa')
+       .reply(200, {
+         name: 'test2',
+         dob: '12/12/1992',
+         address: '200 five street',
+         description: 'he is an amazing guy',
+         createdBy: 'good dev',
+         _id: '1'
+       })
+
+      chai.request(baseUrl)
+        .get('/api/v1/employees/musa')
+        .end((err, res) => {
+          // should not error
+          should.not.exist(err)
+          // status code should be 200
+          res.status.should.eql(200)
+          // name should be test1
+          res.body.name.should.eql('test2')
+          done()
+        })
+    })
+  })
+
+  describe('POST /api/v1/employees', () => {
     it('should return a "401" if not authenticated', (done) => {
       nock(baseUrl)
-        .get('/api/v1/employee')
+        .get('/api/v1/employees')
         .reply(function(uri, requestBody) {
           if (!this.req.headers.authenticated) {
             return [
@@ -96,7 +180,7 @@ describe('Employees', () => {
         })
 
       chai.request(baseUrl)
-        .get('/api/v1/employee')
+        .get('/api/v1/employees')
         .end((err, res) => {
           // there should an error
           should.exist(err)
@@ -110,7 +194,7 @@ describe('Employees', () => {
     })
     it('should respond with employee created successfully if authenticated', (done) => {
       nock(baseUrl)
-        .post('/api/v1/employee', {
+        .post('/api/v1/employees', {
           name: 'test3',
           dob: '12/12/1995',
           address: '505 bay erea',
@@ -128,7 +212,7 @@ describe('Employees', () => {
         })
 
       chai.request(baseUrl)
-      .post('/api/v1/employee')
+      .post('/api/v1/employees')
       .set('authenticated', 'true')
       .send({
         name: 'test3',
@@ -151,10 +235,10 @@ describe('Employees', () => {
     })
   })
 
-  describe('PUT /api/v1/employee_id', () => {
+  describe('PUT /api/v1/employees/{employee_id}', () => {
     it('should return a "401" if not authenticated', (done) => {
       nock(baseUrl)
-        .get('/api/v1/employee_id')
+        .get('/api/v1/employees/1')
         .reply(function(uri, requestBody) {
           if (!this.req.headers.authenticated) {
             return [
@@ -165,7 +249,7 @@ describe('Employees', () => {
         })
 
       chai.request(baseUrl)
-        .get('/api/v1/employee_id')
+        .get('/api/v1/employees/1')
         .end((err, res) => {
           // there should an error
           should.exist(err)
@@ -179,7 +263,7 @@ describe('Employees', () => {
     })
     it('should responed with Employee updated successfully if authenticated', (done) => {
       nock(baseUrl)
-        .put('/api/v1/1', {
+        .put('/api/v1/employees/1', {
           address: '4099 SF bey area'
         })
         .reply(function(uri, requestBody) {
@@ -192,7 +276,7 @@ describe('Employees', () => {
         })
 
       chai.request(baseUrl)
-        .put('/api/v1/1')
+        .put('/api/v1/employees/1')
         .set('authenticated', 'true')
         .send({address: '4099 SF bey area'})
         .end((err, res) => {
@@ -208,10 +292,10 @@ describe('Employees', () => {
     })
   })
 
-  describe('DELETE /api/v1/employee_id', () => {
+  describe('DELETE /api/v1/employees/{employee_id}', () => {
     it('should return a "401" if not authenticated', (done) => {
       nock(baseUrl)
-        .get('/api/v1/employee_id')
+        .get('/api/v1/employees/2')
         .reply(function(uri, requestBody) {
           if (!this.req.headers.authenticated) {
             return [
@@ -222,7 +306,7 @@ describe('Employees', () => {
         })
 
       chai.request(baseUrl)
-        .get('/api/v1/employee_id')
+        .get('/api/v1/employees/2')
         .end((err, res) => {
           // there should an error
           should.exist(err)
@@ -236,7 +320,7 @@ describe('Employees', () => {
     })
     it('should responed with Employee deleted successfully if authenticated', (done) => {
       nock(baseUrl)
-        .delete('/api/v1/2')
+        .delete('/api/v1/employees/2')
         .reply(function(uri, requestBody) {
           if (this.req.headers.authenticated) {
             return [
@@ -247,7 +331,7 @@ describe('Employees', () => {
         })
 
       chai.request(baseUrl)
-        .delete('/api/v1/2')
+        .delete('/api/v1/employees/2')
         .set('authenticated', 'true')
         .end((err, res) => {
           // there should be no errors
