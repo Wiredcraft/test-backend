@@ -8,12 +8,25 @@ const expect = chai.expect; // eslint-disable-line prefer-destructuring
 chai.config.includeStack = true;
 
 describe('## User APIs', () => {
+  let token;
   const user = {
+    username: `${+new Date()}@test.com`,
     name: 'Test',
+    password: 'irrelevant'
   };
   let createdUser;
 
   describe(`# POST ${config.basePath}users`, () => {
+    afterEach((done) => {
+      request(app)
+        .post(`${config.basePath}sessions`)
+        .send(user)
+        .end((err, res) => {
+          token = `Bearer ${res.body.token}`;
+          done();
+        });
+    });
+
     it('should create a new user', (done) => {
       request(app)
         .post(`${config.basePath}users`)
@@ -42,6 +55,7 @@ describe('## User APIs', () => {
     it('should get user details', (done) => {
       request(app)
         .get(`${config.basePath}users/${createdUser.id}`)
+        .set('Authorization', token)
         .expect(httpStatus.OK)
         .then((res) => {
           expect(res.body.name).to.equal(user.name);
@@ -49,19 +63,43 @@ describe('## User APIs', () => {
         })
         .catch(done);
     });
-    it('should get error for non existing user', (done) => {
+    it('should get error invalid token for that id', (done) => {
       request(app)
         .get(`${config.basePath}users/000000000000000000000001`)
-        .expect(httpStatus.NOT_FOUND)
+        .set('Authorization', token)
+        .expect(httpStatus.UNAUTHORIZED)
         .then(() => {
           done();
         })
         .catch(done);
     });
-    it('should get error for non existing user without valid objectID', (done) => {
+    it('should return Authentication error for lack of token', (done) => {
       request(app)
-        .get(`${config.basePath}users/001`)
-        .expect(httpStatus.NOT_FOUND)
+        .get(`${config.basePath}users/${createdUser.id}`)
+        .expect(httpStatus.UNAUTHORIZED)
+        .then(() => {
+          done();
+        })
+        .catch(done);
+    });
+  });
+
+  describe(`# GET ${config.basePath}users/me`, () => {
+    it('should get user details', (done) => {
+      request(app)
+        .get(`${config.basePath}users/me`)
+        .set('Authorization', token)
+        .expect(httpStatus.OK)
+        .then((res) => {
+          expect(res.body.name).to.equal(user.name);
+          done();
+        })
+        .catch(done);
+    });
+    it('should return Authentication error for lack of token', (done) => {
+      request(app)
+        .get(`${config.basePath}users/me`)
+        .expect(httpStatus.UNAUTHORIZED)
         .then(() => {
           done();
         })
@@ -73,6 +111,7 @@ describe('## User APIs', () => {
     it('should get error for sending non especified values', (done) => {
       request(app)
         .put(`${config.basePath}users/${createdUser.id}`)
+        .set('Authorization', token)
         .send({ name: 'Non valid', nonEspecified: 'something' })
         .expect(httpStatus.BAD_REQUEST)
         .then(() => {
@@ -84,6 +123,7 @@ describe('## User APIs', () => {
       const newName = 'Another test';
       request(app)
         .put(`${config.basePath}users/${createdUser.id}`)
+        .set('Authorization', token)
         .send({ name: newName })
         .expect(httpStatus.OK)
         .then((res) => {
@@ -92,19 +132,56 @@ describe('## User APIs', () => {
         })
         .catch(done);
     });
-    it('should get error for non existing user', (done) => {
+    it('should get error invalid token for that id', (done) => {
       request(app)
         .put(`${config.basePath}users/000000000000000000000001`)
-        .expect(httpStatus.NOT_FOUND)
+        .set('Authorization', token)
+        .expect(httpStatus.UNAUTHORIZED)
         .then(() => {
           done();
         })
         .catch(done);
     });
-    it('should get error for non existing user without valid objectID', (done) => {
+    it('should return Authentication error for lack of token', (done) => {
       request(app)
-        .put(`${config.basePath}users/001`)
-        .expect(httpStatus.NOT_FOUND)
+        .put(`${config.basePath}users/${createdUser.id}`)
+        .expect(httpStatus.UNAUTHORIZED)
+        .then(() => {
+          done();
+        })
+        .catch(done);
+    });
+  });
+
+  describe(`# PUT ${config.basePath}users/me`, () => {
+    it('should get error for sending non especified values', (done) => {
+      request(app)
+        .put(`${config.basePath}users/me`)
+        .set('Authorization', token)
+        .send({ name: 'Non valid', nonEspecified: 'something' })
+        .expect(httpStatus.BAD_REQUEST)
+        .then(() => {
+          done();
+        })
+        .catch(done);
+    });
+    it('should update user details', (done) => {
+      const newName = 'Another more test';
+      request(app)
+        .put(`${config.basePath}users/me`)
+        .set('Authorization', token)
+        .send({ name: newName })
+        .expect(httpStatus.OK)
+        .then((res) => {
+          expect(res.body.name).to.equal(newName);
+          done();
+        })
+        .catch(done);
+    });
+    it('should return Authentication error for lack of token', (done) => {
+      request(app)
+        .put(`${config.basePath}users/me`)
+        .expect(httpStatus.UNAUTHORIZED)
         .then(() => {
           done();
         })
@@ -113,9 +190,29 @@ describe('## User APIs', () => {
   });
 
   describe(`# DELETE ${config.basePath}users/:userId`, () => {
+    it('should get error invalid token for that id', (done) => {
+      request(app)
+        .delete(`${config.basePath}users/000000000000000000000001`)
+        .set('Authorization', token)
+        .expect(httpStatus.UNAUTHORIZED)
+        .then(() => {
+          done();
+        })
+        .catch(done);
+    });
+    it('should return Authentication error for lack of token', (done) => {
+      request(app)
+        .delete(`${config.basePath}users/${createdUser.id}`)
+        .expect(httpStatus.UNAUTHORIZED)
+        .then(() => {
+          done();
+        })
+        .catch(done);
+    });
     it('should delete user', (done) => {
       request(app)
         .delete(`${config.basePath}users/${createdUser.id}`)
+        .set('Authorization', token)
         .expect(httpStatus.OK)
         .then((res) => {
           expect(res.body.id).to.equal(createdUser.id);
@@ -123,18 +220,10 @@ describe('## User APIs', () => {
         })
         .catch(done);
     });
-    it('should get error for non existing user', (done) => {
+    it('should get not found by trying to delete that user again', (done) => {
       request(app)
-        .delete(`${config.basePath}users/000000000000000000000001`)
-        .expect(httpStatus.NOT_FOUND)
-        .then(() => {
-          done();
-        })
-        .catch(done);
-    });
-    it('should get error for non existing user without valid objectID', (done) => {
-      request(app)
-        .delete(`${config.basePath}users/001`)
+        .delete(`${config.basePath}users/me`)
+        .set('Authorization', token)
         .expect(httpStatus.NOT_FOUND)
         .then(() => {
           done();
