@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const crypto = require('crypto');
 
 require('dotenv').config();
 
@@ -12,6 +13,10 @@ const envVarsSchema = Joi.object({
     .default(''),
   PORT: Joi.number()
     .default(3000),
+  PWD_SECRET: Joi.string()
+    .default(crypto.randomBytes(16).toString('hex')),
+  JWT_SECRET: Joi.string().required()
+    .description('JWT Secret required to sign'),
   MONGO_HOST: Joi.string()
     .description('Mongo DB host url')
     .required(),
@@ -26,6 +31,8 @@ if (error) {
 const config = {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
+  pwdSecret: envVars.PWD_SECRET,
+  jwtSecret: envVars.JWT_SECRET,
   mongo: {
     host: envVars.MONGO_HOST,
   },
