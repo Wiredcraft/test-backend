@@ -15,12 +15,14 @@ describe('Employees', () => {
     headers: { 'content-type': 'application/json' },
     body: [
       { name: 'test1',
+        username: 'user1',
         dob: '12/12/1992',
         address: '200 five street',
         description: 'he is an amazing guy',
         createdBy: 'good dev',
         _id: '1' },
       { name: 'test2',
+        username: 'user2',
         dob: '12/12/1993',
         address: '201 mian road',
         description: 'he is really amazing',
@@ -108,21 +110,22 @@ describe('Employees', () => {
           done()
         })
     })
-    it('should respond with employee created successfully if authenticated', (done) => {
+    it('should respond with created employee if authenticated', (done) => {
       nock(baseUrl)
-        .post('/api/v1/employees', {
-          name: 'test3',
-          dob: '12/12/1995',
-          address: '505 bay erea',
-          description: 'he is really good',
-          createdBy: 'amazing dev',
-          _id: '3'
-        })
+        .post('/api/v1/employees')
         .reply(function(uri, requestBody) {
           if (this.req.headers.authenticated) {
             return [
               201,
-              {message: 'Employee created successfully'}
+              {
+                name: 'test3',
+                username: 'user3',
+                dob: '12/12/1995',
+                address: '505 bay erea',
+                description: 'he is really good',
+                createdBy: 'amazing dev',
+                _id: '3'
+              }
             ]
           }
         })
@@ -132,6 +135,7 @@ describe('Employees', () => {
       .set('authenticated', 'true')
       .send({
         name: 'test3',
+        username: 'user3',
         dob: '12/12/1995',
         address: '505 bay erea',
         description: 'he is really good',
@@ -145,7 +149,7 @@ describe('Employees', () => {
         // (indicating that something was "created")
         res.status.should.equal(201)
         // there should be a success message
-        res.body.message.should.eql('Employee created successfully')
+        res.body.name.should.eql('test3')
         done()
       })
     })
@@ -154,7 +158,7 @@ describe('Employees', () => {
   describe('PUT /api/v1/employees/{employee_id}', () => {
     it('should return a "401" if not authenticated', (done) => {
       nock(baseUrl)
-        .get('/api/v1/employees/1')
+        .put('/api/v1/employees/1')
         .reply(function(uri, requestBody) {
           if (!this.req.headers.authenticated) {
             return [
@@ -165,7 +169,7 @@ describe('Employees', () => {
         })
 
       chai.request(baseUrl)
-        .get('/api/v1/employees/1')
+        .put('/api/v1/employees/1')
         .end((err, res) => {
           // there should an error
           should.exist(err)
@@ -177,16 +181,22 @@ describe('Employees', () => {
           done()
         })
     })
-    it('should responed with Employee updated successfully if authenticated', (done) => {
+    it('should responed with updated employee if authenticated', (done) => {
       nock(baseUrl)
-        .put('/api/v1/employees/1', {
-          address: '4099 SF bey area'
-        })
+        .put('/api/v1/employees/1')
         .reply(function(uri, requestBody) {
           if (this.req.headers.authenticated) {
             return [
               200,
-              {message: 'Employee updated successfully'}
+              {
+                name: 'test1',
+                username: 'user1',
+                dob: '12/12/1992',
+                address: '4034 bay area',
+                description: 'he is an amazing guy',
+                createdBy: 'good dev',
+                _id: '1'
+              }
             ]
           }
         })
@@ -194,7 +204,15 @@ describe('Employees', () => {
       chai.request(baseUrl)
         .put('/api/v1/employees/1')
         .set('authenticated', 'true')
-        .send({address: '4099 SF bey area'})
+        .send({
+          name: 'test1',
+          username: 'user1',
+          dob: '12/12/1992',
+          address: '4034 bay area',
+          description: 'he is an amazing guy',
+          createdBy: 'good dev',
+          _id: '1'
+        })
         .end((err, res) => {
           // there should be no errors
           should.not.exist(err)
@@ -202,7 +220,7 @@ describe('Employees', () => {
           // (indicating that something was "updated")
           res.status.should.eql(200)
           // there should be a success message
-          res.body.message.should.eql('Employee updated successfully')
+          res.body.address.should.eql('4034 bay area')
           done()
         })
     })

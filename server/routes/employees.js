@@ -18,8 +18,12 @@ router.get('/employees', isLoggedIn, (req, res) => {
     if (err) {
       res.status(404).send(err)
     }
-    // everything good, return employees
-    res.json(employees)
+    if (employees.length < 1) {
+      res.status(200).send({message: "you don't have any employees yet"})
+    } else {
+      // everything good, return employees
+      res.status(200).json(employees)
+    }
   })
 })
 
@@ -30,7 +34,7 @@ router.get('/employees/:employee_id', isLoggedIn, (req, res) => {
       res.status(404).send({message: "employee does not exist"})
     }
     // everything good, return employee
-    res.json(employee)
+    res.status(200).json(employee)
   })
 })
 
@@ -41,7 +45,7 @@ router.get('/employee/:username', isLoggedIn, (req, res) => {
       res.status(404).send(err)
     }
     // find employee with provided username
-    const employee = employees.filter(employee => employee.name === req.params.username)
+    const employee = employees.filter(employee => employee.username === req.params.username)
     if (employee.length < 1) {
       res.status(404).send({message: 'employee does not exist'})
     } else {
@@ -57,6 +61,7 @@ router.post('/employees', isLoggedIn, (req, res) => {
   const employee = new Employee()
   // get the employee (coming from the request)
   employee.name = req.body.name
+  employee.username = req.body.username
   employee.dob = req.body.dob
   employee.address = req.body.address
   employee.description = req.body.description
@@ -65,10 +70,16 @@ router.post('/employees', isLoggedIn, (req, res) => {
   // save the data received
   employee.save((err) => {
     if (err) {
-      res.send(err)
+      if (err.code === 11000) {
+        res.status(409).send({message: err.errmsg})
+      }
+      if (err.name === 'ValidationError') {
+        res.status(400).send({message: err.message})
+      }
+    } else {
+      // everything good, return created employee
+      res.status(201).json(employee)
     }
-    // everything good, send success message
-    res.json({message: 'Employee created successfully'})
   })
 })
 
@@ -80,6 +91,7 @@ router.put('/employees/:employee_id', isLoggedIn, (req, res) => {
     } else {
       // everything good, update employee
       employee.name = req.body.name
+      employee.username = req.body.username
       employee.dob = req.body.dob
       employee.address = req.body.address
       employee.description = req.body.description
@@ -90,8 +102,8 @@ router.put('/employees/:employee_id', isLoggedIn, (req, res) => {
         if (err) {
           res.send(err)
         }
-        // everything good, send success message
-        res.json({message: 'Employee updated successfully'})
+        // everything good, return updated employee
+        res.status(200).json(employee)
       })
     }
   })
@@ -104,7 +116,7 @@ router.delete('/employees/:employee_id', isLoggedIn, (req, res) => {
       res.status(404).send({message: 'employee does not exist'})
     } else {
       // everything good, send success message
-      res.json({message: 'Employee deleted successfully'})
+      res.status(204).send({message: 'Employee deleted successfully'})
     }
   })
 })
