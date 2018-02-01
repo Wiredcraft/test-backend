@@ -11,7 +11,7 @@ const UserController = {
   },
   read(req, res, next) {
     const { userId } = req.params;
-    utils.isValidObjectID(userId, next);
+    utils.isValidObjectID(userId, req.user, next);
     User.findOne({ _id: userId })
       .then((user) => {
         if (!user) {
@@ -24,9 +24,12 @@ const UserController = {
       })
       .catch(next);
   },
+  readMe(req, res) {
+    return res.json(req.user);
+  },
   update(req, res, next) {
     const { userId } = req.params;
-    utils.isValidObjectID(userId, next);
+    utils.isValidObjectID(userId, req.user, next);
     User.findByIdAndUpdate({ _id: req.params.userId }, { $set: req.body }, { new: true })
       .then((user) => {
         if (!user) {
@@ -39,9 +42,14 @@ const UserController = {
       })
       .catch(next);
   },
+  updateMe(req, res, next) {
+    User.findByIdAndUpdate({ _id: req.user.id }, { $set: req.body }, { new: true })
+      .then(user => res.json(user))
+      .catch(next);
+  },
   delete(req, res, next) {
     const { userId } = req.params;
-    utils.isValidObjectID(userId, next);
+    utils.isValidObjectID(userId, req.user, next);
     User.findOneAndRemove({ _id: req.params.userId })
       .then((user) => {
         if (!user) {
@@ -52,6 +60,11 @@ const UserController = {
         }
         return res.json(user);
       })
+      .catch(next);
+  },
+  deleteMe(req, res, next) {
+    User.findOneAndRemove({ _id: req.user.id })
+      .then(user => res.json(user))
       .catch(next);
   },
 };
