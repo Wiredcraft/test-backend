@@ -7,6 +7,8 @@ module.exports = {
   create: {
     body: {
       name: Joi.string(),
+      username: Joi.string().required(),
+      password: Joi.string().required(),
       dob: Joi.date(),
       address: Joi.string(),
       description: Joi.string(),
