@@ -26,11 +26,20 @@ describe('## User APIs', () => {
         })
         .catch(done);
     });
+    it('should get error for sending non especified values', (done) => {
+      request(app)
+        .post(`${config.basePath}users`)
+        .send({ name: 'Non valid', nonEspecified: 'something' })
+        .expect(httpStatus.BAD_REQUEST)
+        .then(() => {
+          done();
+        })
+        .catch(done);
+    });
   });
 
   describe(`# GET ${config.basePath}users/:userId`, () => {
     it('should get user details', (done) => {
-      console.log('createdUser', createdUser);
       request(app)
         .get(`${config.basePath}users/${createdUser.id}`)
         .expect(httpStatus.OK)
@@ -40,9 +49,37 @@ describe('## User APIs', () => {
         })
         .catch(done);
     });
+    it('should get error for non existing user', (done) => {
+      request(app)
+        .get(`${config.basePath}users/000000000000000000000001`)
+        .expect(httpStatus.NOT_FOUND)
+        .then(() => {
+          done();
+        })
+        .catch(done);
+    });
+    it('should get error for non existing user without valid objectID', (done) => {
+      request(app)
+        .get(`${config.basePath}users/001`)
+        .expect(httpStatus.NOT_FOUND)
+        .then(() => {
+          done();
+        })
+        .catch(done);
+    });
   });
 
   describe(`# PUT ${config.basePath}users/:userId`, () => {
+    it('should get error for sending non especified values', (done) => {
+      request(app)
+        .put(`${config.basePath}users/${createdUser.id}`)
+        .send({ name: 'Non valid', nonEspecified: 'something' })
+        .expect(httpStatus.BAD_REQUEST)
+        .then(() => {
+          done();
+        })
+        .catch(done);
+    });
     it('should update user details', (done) => {
       const newName = 'Another test';
       request(app)
@@ -51,6 +88,24 @@ describe('## User APIs', () => {
         .expect(httpStatus.OK)
         .then((res) => {
           expect(res.body.name).to.equal(newName);
+          done();
+        })
+        .catch(done);
+    });
+    it('should get error for non existing user', (done) => {
+      request(app)
+        .put(`${config.basePath}users/000000000000000000000001`)
+        .expect(httpStatus.NOT_FOUND)
+        .then(() => {
+          done();
+        })
+        .catch(done);
+    });
+    it('should get error for non existing user without valid objectID', (done) => {
+      request(app)
+        .put(`${config.basePath}users/001`)
+        .expect(httpStatus.NOT_FOUND)
+        .then(() => {
           done();
         })
         .catch(done);
@@ -64,6 +119,24 @@ describe('## User APIs', () => {
         .expect(httpStatus.OK)
         .then((res) => {
           expect(res.body.id).to.equal(createdUser.id);
+          done();
+        })
+        .catch(done);
+    });
+    it('should get error for non existing user', (done) => {
+      request(app)
+        .delete(`${config.basePath}users/000000000000000000000001`)
+        .expect(httpStatus.NOT_FOUND)
+        .then(() => {
+          done();
+        })
+        .catch(done);
+    });
+    it('should get error for non existing user without valid objectID', (done) => {
+      request(app)
+        .delete(`${config.basePath}users/001`)
+        .expect(httpStatus.NOT_FOUND)
+        .then(() => {
           done();
         })
         .catch(done);
