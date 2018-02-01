@@ -9,21 +9,17 @@ chai.config.includeStack = true;
 
 describe('## User APIs', () => {
   const user = {
-    email: `${+new Date()}@test.com`,
     name: 'Test',
-    password: 'irrelevant'
   };
   let createdUser;
 
   describe(`# POST ${config.basePath}users`, () => {
-
     it('should create a new user', (done) => {
       request(app)
         .post(`${config.basePath}users`)
         .send(user)
         .expect(httpStatus.OK)
         .then((res) => {
-          expect(res.body.email).to.equal(user.email);
           expect(res.body.name).to.equal(user.name);
           createdUser = res.body;
           done();
@@ -34,11 +30,11 @@ describe('## User APIs', () => {
 
   describe(`# GET ${config.basePath}users/:userId`, () => {
     it('should get user details', (done) => {
+      console.log('createdUser', createdUser);
       request(app)
-        .get(`${config.basePath}users/${createdUser._id}`)
+        .get(`${config.basePath}users/${createdUser.id}`)
         .expect(httpStatus.OK)
         .then((res) => {
-          expect(res.body.email).to.equal(user.email);
           expect(res.body.name).to.equal(user.name);
           done();
         })
@@ -50,11 +46,10 @@ describe('## User APIs', () => {
     it('should update user details', (done) => {
       const newName = 'Another test';
       request(app)
-        .put(`${config.basePath}users/${createdUser._id}`)
+        .put(`${config.basePath}users/${createdUser.id}`)
         .send({ name: newName })
         .expect(httpStatus.OK)
         .then((res) => {
-          expect(res.body.email).to.equal(user.email);
           expect(res.body.name).to.equal(newName);
           done();
         })
@@ -63,13 +58,12 @@ describe('## User APIs', () => {
   });
 
   describe(`# DELETE ${config.basePath}users/:userId`, () => {
-    const { email } = user;
     it('should delete user', (done) => {
       request(app)
-        .delete(`${config.basePath}users/${createdUser._id}`)
+        .delete(`${config.basePath}users/${createdUser.id}`)
         .expect(httpStatus.OK)
         .then((res) => {
-          expect(res.body.email).to.equal(email);
+          expect(res.body.id).to.equal(createdUser.id);
           done();
         })
         .catch(done);
