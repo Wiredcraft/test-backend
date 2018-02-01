@@ -27,6 +27,7 @@
     "http-status": "^1.0.1",
     "joi": "^13.1.1",
     "joi-objectid": "^2.0.0",
+    "jsonwebtoken": "^8.1.1",
     "method-override": "^2.3.10",
     "mongoose": "^4.12.4",
     "morgan": "^1.9.0"
