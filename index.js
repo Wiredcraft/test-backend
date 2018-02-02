@@ -1,8 +1,10 @@
 const methodOverride = require('method-override');
+const expressWinston = require('express-winston');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
 const express = require('express');
+const winston = require('winston');
 const logger = require('morgan');
 const cors = require('cors');
 
@@ -11,6 +13,15 @@ const config = require('./config');
 const routes = require('./routes');
 
 const app = express();
+
+const winstonInstance = new (winston.Logger)({
+  transports: [
+    new (winston.transports.Console)({
+      json: true,
+      colorize: true
+    })
+  ]
+});
 
 if (config.env === 'development') {
   app.use(logger('dev'));
@@ -21,6 +32,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(methodOverride());
 app.use(cors());
+
+if (config.env === 'development') {
+  expressWinston.requestWhitelist.push('body');
+  expressWinston.responseWhitelist.push('body');
+  app.use(expressWinston.logger({
+    winstonInstance,
+    meta: true,
+    msg: 'HTTP {{req.method}} {{req.url}} {{res.statusCode}} {{res.responseTime}}ms',
+    colorStatus: true
+  }));
+}
 
 app.use(config.basePath, routes);
 
