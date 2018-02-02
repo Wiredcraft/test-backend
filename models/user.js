@@ -25,6 +25,9 @@ const Schema = mongoose.Schema; // eslint-disable-line prefer-destructuring
  *       createdAt:
  *         type: string
  *         format: date-time
+ *       updatedAt:
+ *         type: string
+ *         format: date-time
  *       username:
  *         type: string
  *       password:
@@ -44,10 +47,6 @@ const UserSchema = new Schema({
   description: {
     type: String,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
   username: {
     type: String,
     unique: true,
@@ -57,7 +56,7 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-});
+}, { timestamps: true });
 
 UserSchema.methods = {
   authenticate(password) {

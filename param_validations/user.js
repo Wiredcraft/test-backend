@@ -22,6 +22,8 @@ module.exports = {
       dob: Joi.date(),
       address: Joi.string(),
       description: Joi.string(),
+      createdAt: Joi.date(),
+      updatedAt: Joi.date(),
     },
   },
 };
