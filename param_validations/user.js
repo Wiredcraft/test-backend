@@ -16,12 +16,12 @@ module.exports = {
   },
   update: {
     body: {
+      username: Joi.string(),
+      password: Joi.string(),
       name: Joi.string(),
       dob: Joi.date(),
       address: Joi.string(),
       description: Joi.string(),
-      createdAt: Joi.date(),
-      updatedAt: Joi.date(),
     },
   },
 };
