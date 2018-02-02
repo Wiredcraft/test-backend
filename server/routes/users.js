@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport')
 
-/* Login with google */
+/* Login with passport and google */
 router.get('/api/auth', passport.authenticate('google', {
   scope: ['profile']
 }))

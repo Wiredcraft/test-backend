@@ -8,7 +8,7 @@ How to install and test the REST API
 - `npm start` to start the dev server
 
 Testing the APIs Manually
-================
+=========================
 - 1 You need to authenticate with google Oauth2.0 (your Gmail) before you can do anything with the APIs
 - 2 I recommend using this `Postman <https://chrome.google.com/webstore/detail/tabbed-postman-rest-clien/coohjcphdfgbiolnekdpbcijmhambjff?hl=en/>`__
 - 3 run the dev server `npm start` then open a new web page goto `http://localhost:3000/api/auth` to authenticate with your google email address
