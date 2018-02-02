@@ -1,5 +1,7 @@
 const methodOverride = require('method-override');
 const expressWinston = require('express-winston');
+const swaggerTools = require('swagger-tools');
+const swaggerDoc = require('swagger-jsdoc');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
@@ -23,6 +25,21 @@ const winstonInstance = new (winston.Logger)({
   ]
 });
 
+const spec = swaggerDoc({
+  swaggerDefinition: {
+    info: {
+      title: 'Users api',
+      version: '0.0.1',
+    },
+    basePath: config.basePath,
+  },
+  apis: [
+    'routes/**/*.js',
+    'models/**/*.js',
+    'controllers/**/*.js',
+  ],
+});
+
 if (config.env === 'development') {
   app.use(logger('dev'));
 }
@@ -44,28 +61,39 @@ if (config.env === 'development') {
   }));
 }
 
-app.use(config.basePath, routes);
+swaggerTools.initializeMiddleware(spec, (middleware) => {
+  app.use(config.basePath, routes);
+  app.use(middleware.swaggerUi({
+    apiDocs: `${config.basePath}docs.json`,
+    swaggerUi: `${config.basePath}docs`,
+    apiDocsPrefix: config.proxyPath,
+    swaggerUiPrefix: config.proxyPath,
+  }));
+  app.use(middlewares.convertToApiError);
+  app.use(middlewares.notFound);
+  if (config.env !== 'test') {
+    app.use(expressWinston.errorLogger({
+      winstonInstance
+    }));
+  }
+  app.use(middlewares.addTrace);
 
-app.use(middlewares.convertToApiError);
-app.use(middlewares.notFound);
+  const querystring = config.mongo.host;
 
-app.use(middlewares.addTrace);
+  mongoose.models = {};
+  mongoose.modelSchemas = {};
 
-const querystring = config.mongo.host;
+  mongoose.Promise = Promise;
 
-mongoose.models = {};
-mongoose.modelSchemas = {};
+  mongoose.connect(querystring, { useMongoClient: true })
+    .then(({ db: { databaseName } }) => console.log(`Connected to Mongo server in ${databaseName}`)) // eslint-disable-line no-console
+    .catch(() => Promise.reject(new Error(`Unable to connect to database: ${querystring}`)));
 
-mongoose.Promise = Promise;
-
-mongoose.connect(querystring, { useMongoClient: true })
-  .then(({ db: { databaseName } }) => console.log(`Connected to Mongo server in ${databaseName}`)) // eslint-disable-line no-console
-  .catch(() => Promise.reject(new Error(`Unable to connect to database: ${querystring}`)));
-
-if (!module.parent) {
-  app.listen(config.port, () => {
-    console.info(`API started on port ${config.port} (${config.env})`); // eslint-disable-line no-console
-  });
-}
+  if (!module.parent) {
+    app.listen(config.port, () => {
+      console.info(`API started on port ${config.port} (${config.env})`); // eslint-disable-line no-console
+    });
+  }
+});
 
 module.exports = app;
