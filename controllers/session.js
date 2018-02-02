@@ -44,12 +44,10 @@ const SessionController = {
     })
       .then((user) => {
         if (!user) {
-          console.log('***************is it here?');
           const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED, true);
           return next(err);
         }
         if (!user.authenticate(req.body.password)) {
-          console.log('***************or here?');
           const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED, true);
           return next(err);
         }

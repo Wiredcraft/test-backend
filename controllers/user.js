@@ -65,7 +65,7 @@ const UserController = {
   */
   create(req, res, next) {
     User.create(req.body)
-      .then(newUser => res.json(newUser))
+      .then(newUser => res.status(httpStatus.CREATED).json(newUser))
       .catch(next);
   },
   /**
