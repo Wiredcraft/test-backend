@@ -1,71 +1,59 @@
-# Wiredcraft Back-end Developer Test
+# Wiredcraft Back-end Developer Test - Users API
 
-Make sure you read **all** of this document carefully, and follow the guidelines in it.
+## Description
 
-## Context
+RESTful API to `get/create/update/delete` users from a persistence database. 
 
-Build a RESTful API that can `get/create/update/delete` user data from a persistence database
+### Tech stack
+
+- Node.js and Express.
+- MongoDB.
+
 
 ### User Model
 
 ```
 {
-  "id": "xxx",                  // user ID (you can use uuid or the ID provided by database, but need to be unique)
+  "id": "xxx",                  // user ID (ObjectID provided by database, unique)
   "name": "test",               // user name
+  "username": "test",           // username for managing authentication
+  "password": "test",           // password for managing authentication
+  "name": "test",               // user's name
   "dob": "",                    // date of birth
   "address": "",                // user address
   "description": "",            // user description
   "createdAt": ""               // user created date
+  "updatedAt": ""               // user updated date
 }
 ```
 
-## Requirements
+### Documentation and deployment
+[Swagger](https://swagger.io/) is used for documenting endpoints. This documentatation can be found at `/docs` of the base path (e.g. `http://localhost:3000/docs`) [here](http://ec2-18-216-148-32.us-east-2.compute.amazonaws.com:3000/api/docs/) for a live demo. All endpoints can be found there. This API uses and requires a few env variables (that can be stored in a `.env` file) listed bellow:
+- `NODE_ENV`: (*default: development*) this is the usual environment variable, this API is thought to use 3; `development`, `production` and `test`
+- `BASE_PATH`: (*default: /*) this is the main route for the API, it should end always with `/`
+- `PORT`: (*default: 3000*) port in which the API would run
+- `PWD_SECRET`: (*default: random 16 bits hex string*) this is the salt used to encode and compare passwords. It is not required but if none is provided then passwords won't match after restarting the API.
+- `JWT_SECRET`: (*REQUIRED*) this is the salt used to encode JWT
+- `MONGO_HOST`: (*REQUIRED*) MongoDB host url
 
-### Functionality
+For deploying this project just `npm install` and `npm start` with the required env variables, it is adviced to store them in a `.env` file for simplicity.
 
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper API document.
+### Unit tests
+A BDD approach is used in order for creating tests, [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/) help with that. Just `npm run test`, usually done with a different database in order to avoid any inconsistencies with the data.
 
-### Tech stack
+### Commit messages
+_*If applied this commit will*_ is the mantra for commits messages, inspired by [this](https://chris.beams.io/posts/git-commit/) article.
 
-- Use Node.js and any framework.
-- Use any DB. NoSQL DB is preferred.
+### Online demo
+An already deployed production instance demonized with [pm2](http://pm2.keymetrics.io/) can be found [here](http://ec2-18-216-148-32.us-east-2.compute.amazonaws.com:3000/api/docs/)
 
-### Bonus
+### User authentication
+Simple authentication using username + password that retrieves a token that should be used for protected resources. The flow is the following:
+- User is created using the `POST /users` endpoint
+- User is authenticated using the `POST /sessions` endpoint
+- `token` returned should be add as `Authorization` header with the word `Bearer` as prefix, e.g: `Authorization: Bearer xxxxxxxxxxxxxx` 
 
-- Write clear **documentation** on how it's designed and how to run the code.
-- Provide proper unit test.
-- Write good commit messages.
-- An online demo is always welcome.
+### Logging strategy
+When env is set to development this API (with the help of [winston](https://github.com/winstonjs/winston) and [morgan](https://github.com/expressjs/morgan)) logs everything happening in the request, from the method used to the status code, body, headers and even response time.
 
-### Advanced requirements
-
-These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.
-
-- Use [Seneca](http://senecajs.org/) to build the core feature and use a different framework (such as Express or Loopback) to handle HTTP requests.
-- Provide a complete user auth (authentication/authorization/etc) strategy, such as OAuth.
-- Provide a complete logging (when/how/etc) strategy.
-- Use a NoSQL DB and build a filter feature that can filter records with some of the attributes such as username. Do not use query languages such as MongoDB Query or Couchbase N1QL.
-
-## What We Care About
-
-Feel free to use any libraries you would use if this were a real production App, but remember we're interested in your code & the way you solve the problem, not how well you can use a particular library.
-
-We're interested in your method and how you approach the problem just as much as we're interested in the end result.
-
-Here's what you should aim for:
-
-- Good use of current Node.js & API design best practices.
-- Solid testing approach.
-- Extensible code.
-
-## Q&A
-
-> Where should I send back the result when I'm done?
-
-Fork this repo and send us a pull request when you think you are done. We don't have a deadline for the task.
-
-> What if I have a question?
-
-Create a new issue in the repo and we will get back to you very quickly.
+### TODO: Use seneca
