@@ -4,6 +4,33 @@ const config = require('../config');
 
 const Schema = mongoose.Schema; // eslint-disable-line prefer-destructuring
 
+/**
+ * @swagger
+ * definitions:
+ *   User:
+ *     type: object
+ *     required:
+ *       - username
+ *       - password
+ *     properties:
+ *       name:
+ *         type: string
+ *       dob:
+ *         type: string
+ *         format: date-time
+ *       address:
+ *         type: string
+ *       description:
+ *         type: string
+ *       createdAt:
+ *         type: string
+ *         format: date-time
+ *       username:
+ *         type: string
+ *       password:
+ *         type: string
+ *         format: password
+ */
 const UserSchema = new Schema({
   name: {
     type: String,
@@ -24,9 +51,11 @@ const UserSchema = new Schema({
   username: {
     type: String,
     unique: true,
+    required: true,
   },
   password: {
     type: String,
+    required: true,
   },
 });
 
