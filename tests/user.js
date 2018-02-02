@@ -31,7 +31,7 @@ describe('## User APIs', () => {
       request(app)
         .post(`${config.basePath}users`)
         .send(user)
-        .expect(httpStatus.OK)
+        .expect(httpStatus.CREATED)
         .then((res) => {
           expect(res.body.name).to.equal(user.name);
           createdUser = res.body;
