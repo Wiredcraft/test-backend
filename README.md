@@ -1,8 +1,8 @@
-# Wiredcraft Back-end Developer Test - User's API
+# Wiredcraft Back-end Developer Test - Users API
 
 ## Description
 
-RESTful API to `get/create/update/delete` user's from a persistence database. 
+RESTful API to `get/create/update/delete` users from a persistence database. 
 
 ### Tech stack
 
