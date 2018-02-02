@@ -7,14 +7,12 @@ chai.use(chaiHttp)
 const server = require('../../app')
 
 describe('Employees', () => {
-  // keep ids and usernames
+  // keep _id and username
   const identiFies = []
   before(() => {
     // override the req.isAuthenticated() method
-    // to be able to pass the api endpoints
-    server.request.isAuthenticated = function() {
-      return true
-    }
+    // to be able to pass the api endpoints for testing
+    server.request.isAuthenticated = () => true
     // attache a user to the request
     // for the createdBy field
     server.request.user = {
@@ -50,9 +48,9 @@ describe('Employees', () => {
           should.not.exist(err)
           // status code should be 201
           res.status.should.eql(201)
-          // employee name should equal to ally
+          // employee name should equal to musa musa
           res.body.name.should.eql('musa musa')
-          // store the username
+          // store the username and _id
           identiFies.push(
             {username: res.body.username},
             {_id: res.body._id}
@@ -74,7 +72,7 @@ describe('Employees', () => {
         .end((err, res) => {
           // should error
           should.exist(err)
-          // status code should be 201
+          // status code should be 409
           res.status.should.eql(409)
           done()
         })
