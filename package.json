@@ -1,0 +1,31 @@
+{
+  "name": "test-backend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "mocha './tests/*.spec.js'",
+    "test-integration": "mocha --timeout 20000 './tests/e2e/*.spec.js'"
+  },
+  "dependencies": {
+    "body-parser": "~1.18.2",
+    "cookie-parser": "~1.4.3",
+    "cookie-session": "^2.0.0-beta.3",
+    "debug": "~2.6.9",
+    "express": "~4.15.5",
+    "mongoose": "^5.0.0",
+    "morgan": "~1.9.0",
+    "passport": "^0.4.0",
+    "passport-google-oauth20": "^1.0.0",
+    "seneca": "^3.4.3",
+    "seneca-web": "^2.2.0",
+    "seneca-web-adapter-express": "^1.1.1",
+    "serve-favicon": "~2.4.5"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
+    "mocha": "^5.0.0",
+    "nock": "^9.1.6"
+  }
+}
