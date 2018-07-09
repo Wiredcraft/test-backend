@@ -32,10 +32,10 @@ func GetUsers(c *gin.Context) {
       limit = int(per_page)
     }
   }
-  
+
   if page, err := strconv.ParseInt(c.Query("page"), 10, 32); err == nil {
     offset = limit * (int(page) - 1)
-  }  
+  }
 
   var users []models.User
   if getError := wiredDB.Offset(offset).Limit(limit).Find(&users).Error; getError != nil {
@@ -50,10 +50,10 @@ func CreateUser(c *gin.Context) {
   if err := c.ShouldBindJSON(&user); err != nil {
     c.JSON(400, gin.H{"error": err.Error()})
   } else {
-    if valid, errMes := user.Valid(); !valid { 
+    if valid, errMes := user.Valid(); !valid {
       c.JSON(400, gin.H{"error": errMes})
       return
-    } 
+    }
     user.CreatedAt = time.Now()
     if createErr := wiredDB.Create(&user).Error; createErr != nil {
       c.JSON(400, gin.H{"error": createErr})
@@ -74,14 +74,14 @@ func UpdateUser(c *gin.Context) {
   if err := c.ShouldBindJSON(&user); err != nil {
     c.JSON(400, gin.H{"error": err.Error()})
     return
-  }  
+  }
 
   user.ID = userId // make sure user_id is taken from url param, and not from payload
   findUser := models.User{ID: userId}
   if findData := wiredDB.First(&findUser); findData.Error != nil {
     c.JSON(400, gin.H{"error": "user not found"})
     return
-  } 
+  }
 
   if updateData := wiredDB.Model(&user).Updates(user); updateData.Error != nil {
     c.JSON(400, gin.H{"error": updateData.Error})

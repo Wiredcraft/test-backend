@@ -29,7 +29,7 @@ func OpenDb() *gorm.DB {
   } else {
     connAddr := "root:@tcp(localhost:3306)/wiredcraft?charset=utf8&parseTime=True&loc=UTC"
     db, dbErr = gorm.Open("mysql", connAddr)
-  } 
+  }
 
   db.LogMode(true)
 
@@ -51,4 +51,8 @@ func setLogFile() {
     log.Fatal(logErr)
   }
   return
+}
+
+func CloseLogFile() {
+  logFile.Close()
 }
