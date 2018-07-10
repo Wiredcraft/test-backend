@@ -3,6 +3,7 @@ package main
 import (
   "github.com/gin-contrib/cors"
   "github.com/khier996/test-backend/maksim_khier/handlers"
+  "github.com/khier996/test-backend/maksim_khier/middleware"
 )
 
 func initializeRoutes() {
@@ -10,10 +11,15 @@ func initializeRoutes() {
 
   api := router.Group("/api")
   api.GET("/users", handlers.GetUsers)
-  api.GET("/user/:id", handlers.GetUser)
   api.POST("/user", handlers.CreateUser)
-  api.PUT("/user/:id", handlers.UpdateUser)
-  api.DELETE("/user/:id", handlers.DeleteUser)
+
+  userApi := api.Group("/user")
+  userApi.Use(middleware.AuthMiddleware())
+  userApi.GET("/:id", handlers.GetUser)
+  userApi.PUT("/:id", handlers.UpdateUser)
+  userApi.DELETE("/:id", handlers.DeleteUser)
+
+  api.POST("/login", handlers.Login)
 }
 
 func setUpCors() {

@@ -2,6 +2,7 @@ package handlers
 
 import (
   "github.com/khier996/test-backend/maksim_khier/models"
+  "github.com/khier996/test-backend/maksim_khier/utils"
   "github.com/gin-gonic/gin"
   "time"
   "strconv"
@@ -55,6 +56,8 @@ func CreateUser(c *gin.Context) {
       return
     }
     user.CreatedAt = time.Now()
+    user.PasswordHash = utils.HashPassword(user.Password)
+
     if createErr := wiredDB.Create(&user).Error; createErr != nil {
       c.JSON(400, gin.H{"error": createErr})
     } else {
@@ -102,5 +105,33 @@ func DeleteUser(c *gin.Context) {
     c.JSON(400, gin.H{"error": deleteErr})
   } else {
     c.Status(200)
+  }
+}
+
+func Login(c *gin.Context) {
+  email := c.PostForm("email")
+  password := c.PostForm("password")
+
+  passwordHash := utils.HashPassword(password)
+  user := models.User{}
+  userToken := models.UserToken{}
+
+  wiredDB.Where("email = ? AND password_hash = ?", email, passwordHash).First(&user)
+  wiredDB.Model(&user).Related(&userToken)
+
+  if userToken.ID != 0 {
+    c.JSON(200, gin.H{"token": userToken.Token})
+  } else if user.ID != 0 {
+    var userToken models.UserToken
+    userToken.Create()
+
+    if userToken.Error == "" {
+      wiredDB.Model(&user).Update("user_token_id", userToken.ID)
+      c.JSON(200, gin.H{"token": userToken.Token})
+    } else {
+      c.JSON(400, gin.H{"error": userToken.Error})
+    }
+  } else {
+    c.JSON(400, gin.H{"error": "Email-Password combination is not correct"})
   }
 }

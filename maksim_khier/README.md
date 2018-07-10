@@ -19,10 +19,13 @@ Run 'go test'
 API endpoints:
 
 All API endpoints are under /api namespace.
+User get, update, and delete endpoints should be requested with "Authorization" header. The value of the header should be "bearer " + token received from /login endpoint.
 
 User model:
 ```
 {
+  email string
+  password string
   name string
   dob string
   address string
@@ -36,6 +39,8 @@ Endpoint: ```POST /user```
 Send payload as json string in body:
 ```
 {
+  "email": "boris@uk.com",
+  "password": "test",
   "name": "Boris",
   "dob": "1950-01-01T12:00:00Z",
   "address": "London",
@@ -44,16 +49,23 @@ Send payload as json string in body:
 ```
 
 ###########################################################################
+**User login**
+Endpoint: ``` POST /login```
+Send payload as form data:
+email: boris@uk.com
+password: test
+
+###########################################################################
 
 **Retrieve individual user**
-Endpoint: ```GET /user/:id```, where ```:id``` is the id of the user we want to retrieve 
+Endpoint: ```GET /user/:id```, where ```:id``` is the id of the user we want to retrieve
 
 ###########################################################################
 
 **Retrieve all users**
 Endpoint: ```GET /users```
 Params: page(default: 1),
-        per_page(default: 10) 
+        per_page(default: 10)
 
 ###########################################################################
 

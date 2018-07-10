@@ -17,7 +17,7 @@ var logErr error
 
 func main() {
   wiredDB = db.OpenDb()
-  wiredDB.AutoMigrate(&models.User{})
+  wiredDB.AutoMigrate(&models.User{}, &models.UserToken{})
   defer wiredDB.Close()
   defer db.CloseLogFile()
 
