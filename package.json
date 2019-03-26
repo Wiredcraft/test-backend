@@ -3,8 +3,36 @@
   "version": "1.0.0",
   "description": "response to the wiredcraft deleoper test submitted by jakangah(Justice Adeenze-Kangah)",
   "main": "index.js",
+  "dependencies":{
+    "bcrypt": "^3.0.5",
+    "body-parser": "^1.18.3",
+    "cross-env": "^5.0.1",
+    "dotenv-safe": "^6.0.0",
+    "express": "^4.16.4",
+    "helmet": "^3.16.0",
+    "jsonwebtoken": "^8.5.1",
+    "method-override": "^3.0.0",
+    "mongodb": "^2.2.33",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.18.10",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "pm2": "^3.0.0",
+    "seneca": "^3.8.4",
+    "seneca-web": "^2.2.1",
+    "seneca-web-adapter-express": "^1.1.2",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "apidoc": "^0.17.5",
+    "chai": "^4.1.0",
+    "mocha": "^3.3.0",
+    "nodemon": "^1.18.10",
+    "supertest": "^4.0.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "apidoc": "apidoc -i src -o docs",
+    "dev": "nodemon ./src/services/index.js"
   },
   "repository": {
     "type": "git",
