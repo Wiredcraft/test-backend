@@ -1,0 +1,6 @@
+version: "1"
+services:
+  wiredcraft-backend-dev-test:
+    command: yarn dev
+    environment:
+      - NODE_ENV=development

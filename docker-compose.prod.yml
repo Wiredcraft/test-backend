@@ -1,0 +1,6 @@
+version: "1"
+services:
+  wiredcraft-backend-dev-test:
+    command: yarn start
+    environment:
+      - NODE_ENV=production
