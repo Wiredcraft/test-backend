@@ -4,6 +4,7 @@
   "description": "response to the wiredcraft deleoper test submitted by jakangah(Justice Adeenze-Kangah)",
   "main": "index.js",
   "scripts": {
+    "apidoc": "apidoc -i src -o docs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
