@@ -8,7 +8,6 @@ const dbConnector = require('./storage/connector')
 const { port, env, jwt } = require('../config/vars')
 const { errorHandler } = require('./http/utils/response')
 const logger = require('../config/logger')
-
 async function init () {
   /**
    * Register storage plugin

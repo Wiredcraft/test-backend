@@ -21,8 +21,10 @@
 
 - Logging is done pretty straight forward using Winston , console log in development and logging to a file in production. On further thought about this it might be feasible to have logging handled completely seperately 
   
-- Authentication is handled with JWT
+- Authentication is handled with JWT , I created a model to hold a username and password , not further validation in terms of unique username are done. I used bycrypt to handle salting the passwords and used a salt factor to reduce possibility of brute force cracking them 
+  
 - Testing is done with mocha 
+- 
 - Documentation is done with apidocs , as I decided not to use Graphql to help with that , also generally unless its an exposed service I believe browsing endpoints could be a security issue. I created a plugin a while back to secure Graphql endpoints just because I had this fear of exposing documentation 
   
 - Build process is handled with Docker, I wrote a deployment script but as I dont have a server to play with . Its more of a reference 

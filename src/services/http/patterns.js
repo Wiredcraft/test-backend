@@ -36,20 +36,23 @@ module.exports = function plugin (options) {
     let args = msg.args.body
     let message
     seneca.act('role:storage,cmd:fetchAdmin', ({ username: args.username }), function (err, admin) {
-      bcrypt.compare(args.password, admin.password, function (err, res) {
-        if (res == true) {
-          let payload = { id: admin._id, username: admin.username }
-          let token = jwt.sign(payload, options.secretOrKey)
-          message = {
-            token: token
+      message = {
+        error: 'invalid credentials'
+      }
+      if (admin._id) {
+        bcrypt.compare(args.password, admin.password, function (err, res) {
+          if (res === true) {
+            let payload = { id: admin._id, username: admin.username }
+            let token = jwt.sign(payload, options.secretOrKey)
+            message = {
+              token: token
+            }
+            done(err, responseHandler(message))
           }
-        } else {
-          message = {
-            error: 'invalid credentials'
-          }
-        }
-        done(null, responseHandler(message))
-      })
+        })
+      } else {
+        done(err, responseHandler(message))
+      }
     })
   })
 
