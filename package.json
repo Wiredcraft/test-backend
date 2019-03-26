@@ -1,0 +1,22 @@
+{
+  "name": "test-backend-wired",
+  "version": "1.0.0",
+  "description": "response to the wiredcraft deleoper test submitted by jakangah(Justice Adeenze-Kangah)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jakangah/test-backend.git"
+  },
+  "keywords": [
+    "wiredcraft"
+  ],
+  "author": "Justice Adeenze-Kangah",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/jakangah/test-backend/issues"
+  },
+  "homepage": "https://github.com/jakangah/test-backend#readme"
+}
