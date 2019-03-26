@@ -16,7 +16,7 @@ describe('Http Layer Test', async () => {
     return request(server)
       .get('/')
       .then((res) => {
-        expect(res.body).to.have.property('msg')
+        expect(res.body.data).to.have.property('message')
       })
   })
 })

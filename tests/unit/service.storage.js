@@ -24,7 +24,7 @@ describe('Storage service unit tests', async () => {
     expect(fetchResult.test).to.be.equal(1)
 
     const deleteResult = await deleteOne('testDocuments', fetchResult._id)
-    expect(deleteResult).to.be.null
+    expect(deleteResult.test).to.be.equal(1)
   })
 
   it('document modification', async () => {
@@ -35,6 +35,6 @@ describe('Storage service unit tests', async () => {
     expect(updateResult.newKey).to.be.equal('boom')
 
     const deleteResult = await deleteOne('testDocuments', updateResult._id)
-    expect(deleteResult).to.be.null
+    expect(deleteResult.newKey).to.be.equal('boom')
   })
 })
