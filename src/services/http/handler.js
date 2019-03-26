@@ -6,7 +6,7 @@ const methodOverride = require('method-override')
 const helmet = require('helmet')
 const morgan = require('morgan')
 const passport = require('./utils/passport')
-const response = require('./utils/response')
+const { responseHandler } = require('./utils/response')
 const { logs } = require('../../config/vars')
 const logger = require('../../config/logger')
 
@@ -34,7 +34,7 @@ app.use(passport.initialize())
 
 // route to show server is running
 app.get('/', (req, res, next) => {
-  return res.json(response({ 'message': 'server running ' }))
+  return res.json(responseHandler({ 'message': 'server running ' }))
 })
 
 // export the express http layer to be used

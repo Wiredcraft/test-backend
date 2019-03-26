@@ -31,8 +31,15 @@
     "supertest": "^4.0.2"
   },
   "scripts": {
+    "dev": "nodemon ./src/services/index.js",
     "apidoc": "apidoc -i src -o docs",
-    "dev": "nodemon ./src/services/index.js"
+    "prestart": "yarn run apidoc",
+    "start": "cross-env NODE_ENV=production pm2 start ./src/services/index.js",
+    "docker:start": "cross-env NODE_ENV=production pm2-docker start ./src/services/index.js",
+    "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up",
+    "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up",
+    "test:unit": "mocha tests/unit",
+    "test:watch": "mocha --watch tests/unit"
   },
   "repository": {
     "type": "git",
