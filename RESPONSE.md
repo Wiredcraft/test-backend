@@ -24,7 +24,7 @@
 - Authentication is handled with JWT , I created a model to hold a username and password , not further validation in terms of unique username are done. I used bycrypt to handle salting the passwords and used a salt factor to reduce possibility of brute force cracking them 
   
 - Testing is done with mocha 
-- 
+  
 - Documentation is done with apidocs , as I decided not to use Graphql to help with that , also generally unless its an exposed service I believe browsing endpoints could be a security issue. I created a plugin a while back to secure Graphql endpoints just because I had this fear of exposing documentation 
   
 - Build process is handled with Docker, I wrote a deployment script but as I dont have a server to play with . Its more of a reference 
@@ -32,7 +32,11 @@
 - I use standard for my formatting my code 
 - The service handler is responsible for registering the services and serves as the main entry point of my application
 - I use git-flow in handling my branching
-- 
+  
 In conclusion I hope this helps explain my methodology and approach for tackling this problem , I tried my best to stick to the ideology of speration of concerns and my architecture could definitely use some more revision as every time I think about it I find new ways to further improve , but I hope what I have now gives an idea of what I was thinking and how I tackled the issue.
 
+## How to run it 
+For ease and convenience I have included several scripts in the package.json file. 
+- Start the development server with docker yarn run docker:dev or npm run docker:dev
+- Start in production mode goes as yarn run  docker:start or npm run docker:start
 #### Submitted by Justice Adeennze-Kangah

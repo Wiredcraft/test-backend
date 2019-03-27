@@ -1,4 +1,8 @@
-FROM node:8-alpine
+FROM node:alpine
+
+RUN npm install pm2 -g
+RUN npm install nodemon -g
+RUN npm install yarn -g
 
 EXPOSE 3000
 

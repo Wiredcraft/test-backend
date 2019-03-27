@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "response to the wiredcraft deleoper test submitted by jakangah(Justice Adeenze-Kangah)",
   "main": "index.js",
-  "dependencies":{
-    "bcrypt": "^3.0.5",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cross-env": "^5.0.1",
     "dotenv-safe": "^6.0.0",
@@ -34,7 +34,7 @@
     "dev": "nodemon ./src/services/index.js",
     "apidoc": "apidoc -i src -o docs",
     "prestart": "yarn run apidoc",
-    "start": "cross-env NODE_ENV=production pm2 start ./src/services/index.js",
+    "start": "cross-env NODE_ENV=production pm2 start ./src/services/index.js --name=backend-dev-api --watch",
     "docker:start": "cross-env NODE_ENV=production pm2-docker start ./src/services/index.js",
     "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up",
     "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up",

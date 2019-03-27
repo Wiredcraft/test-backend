@@ -1,6 +1,6 @@
 'use strict'
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const { crypt } = require('../../config/vars')
 const { responseHandler, errorHandler } = require('../../services/http/utils/response')
 
@@ -19,13 +19,14 @@ module.exports = function plugin (options) {
       bcrypt.genSalt(crypt.SALT_WORK_FACTOR, function (err, salt) {
         bcrypt.hash(args.password, salt, function (err, hash) {
           seneca.act('role:storage,cmd:insert', ({ type: 'administrator', input: { username: args.username, password: hash } }), function (err, res) {
+            console.log(res)
             delete res.password
             done(err, responseHandler(res))
           })
         })
       })
     } catch (err) {
-      done(err, responseHandler(hash))
+      done(err, responseHandler(err))
     }
   })
 
@@ -39,7 +40,7 @@ module.exports = function plugin (options) {
       message = {
         error: 'invalid credentials'
       }
-      if (admin._id) {
+      if (admin) {
         bcrypt.compare(args.password, admin.password, function (err, res) {
           if (res === true) {
             let payload = { id: admin._id, username: admin.username }
@@ -47,6 +48,8 @@ module.exports = function plugin (options) {
             message = {
               token: token
             }
+            done(err, responseHandler(message))
+          } else {
             done(err, responseHandler(message))
           }
         })
@@ -95,7 +98,6 @@ module.exports = function plugin (options) {
     let body = msg.args.body
     let params = msg.args.params
     seneca.act('role:validator,cmd:update', { user: body }, (err, result) => {
-      console.log(body)
       if (result.valid === true) {
         seneca.act('role:storage,cmd:update', { type: 'user', input: result.object, id: params.id }, function (err, res) {
           done(err, responseHandler(res))
