@@ -1,4 +1,4 @@
-let { fetchAdmin, fetch, insert, update, deleteOne } = require('./handler')
+let { fetchAdmin, fetch, insert, update, deleteOne, list } = require('./handler')
 
 const ROLE_NAME = 'storage'
 
@@ -7,6 +7,11 @@ module.exports = function storage (options) {
   this
     .add({ role: ROLE_NAME, cmd: 'fetch' }, async (msg, reply) => {
       const result = await fetch(msg.type, msg.id)
+      reply(result)
+    })
+
+    .add({ role: ROLE_NAME, cmd: 'list' }, async (msg, reply) => {
+      const result = await list(msg.type)
       reply(result)
     })
 

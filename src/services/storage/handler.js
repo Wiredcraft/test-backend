@@ -43,6 +43,14 @@ let fetch = async function (collection, id) {
   }
 }
 
+let list = async function (collection) {
+  try {
+    return await db.collection(collection).find({ })
+  } catch (e) {
+    logger.error(e)
+  }
+}
+
 let fetchAdmin = async function (username) {
   try {
     return await db.collection('administrator').findOne({ 'username': username })
@@ -74,5 +82,5 @@ let deleteOne = async function (collection, id) {
 }
 
 module.exports = {
-  connect, disconnect, insert, fetch, update, deleteOne, fetchAdmin
+  connect, disconnect, insert, fetch, update, deleteOne, fetchAdmin, list
 }

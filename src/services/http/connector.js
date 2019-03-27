@@ -78,38 +78,6 @@ module.exports = [
     prefix: '/user',
     map: {
       /**
-         * @api {get} /user Get Users
-         * @apiName GetUsers
-         * @apiGroup User
-         * @apiVersion  1.0.0
-         *
-         *
-         * @apiSuccessExample Success-Response:
-         *     HTTP/1.1 200 OK
-         *       {
-         *       "data": [{
-         *           "_id": "5c99b8dce69885448104360d",
-         *           "name": "jaks",
-         *           "dob": "12/12/1990",
-         *           "address": "ashdjakhsdk",
-         *           "description": null
-         *       }],
-         *       "status": 200
-         *      }
-         *
-         * @apiError UserNotFound The id of the User was not found.
-         *
-         * @apiErrorExample Error-Response:
-         *     HTTP/1.1 404 Not Found
-         *     {
-         *       "error": ""
-         *     }
-         */
-      list: {
-        GET: true,
-        name: ''
-      },
-      /**
          * @api {get} /user/:id GetUser
          * @apiName GetUser
          * @apiGroup User

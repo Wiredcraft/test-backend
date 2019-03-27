@@ -76,6 +76,16 @@ module.exports = function plugin (options) {
   })
 
   /**
+     * handles returning an array of user entity
+     */
+  seneca.add('role:user,cmd:list', async (msg, done) => {
+    // let args = msg.args.params
+    seneca.act('role:storage,cmd:list', { type: 'user' }, (err, res) => {
+      done(err, responseHandler(res))
+    })
+  })
+
+  /**
      * handles creating user entity
      */
   seneca.add('role:user,cmd:create', (msg, done) => {
