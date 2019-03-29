@@ -36,22 +36,21 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 ### Bonus
 
 - Write clear **documentation** on how it's designed and how to run the code.
+- Write good in-code comments.
 - Write good commit messages.
 - An online demo is always welcome.
 
 ### Advanced requirements
 
-These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.
+*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
 
+- Imagine we have a new requirement now, that the user instances need to link to each other, for example, a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
 - Provide a complete user auth (authentication/authorization/etc) strategy, such as OAuth.
-- Suppose we have a new requirement to manage the user-relationship. e.g. echa user has a list of friends, find a way to enhance the data model and expose an API for querying friends of a certain user.
 - Provide a complete logging (when/how/etc) strategy.
 
 ## What We Care About
 
-Feel free to use any libraries you would use if this were a real production App, but remember we're interested in your code & the way you solve the problem, not how well you can use a particular library.
-
-We're interested in your method and how you approach the problem just as much as we're interested in the end result.
+Feel free to use any open-source library if you see a good fit, but also remember that we're more interested in finding out your code skill and problem solving skill.
 
 Here's what you should aim for:
 
@@ -63,8 +62,8 @@ Here's what you should aim for:
 
 > Where should I send back the result when I'm done?
 
-Fork this repo and send us a pull request when you think you are done. We don't have a deadline for the task.
+Fork this repo and send us a pull request when you think it's ready for review. You don't have to finish everything prior and you can continue work on it. We don't have a deadline for the task.
 
 > What if I have a question?
 
-Create a new issue in the repo and we will get back to you very quickly.
+Create a new issue in the repo and we will get back to you quickly.
