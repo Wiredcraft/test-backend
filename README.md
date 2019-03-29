@@ -10,7 +10,7 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 
 ```
 {
-  "id": "xxx",                  // user ID (you can use uuid or the ID provided by database, but need to be unique)
+  "id": "xxx",                  // user ID 
   "name": "test",               // user name
   "dob": "",                    // date of birth
   "address": "",                // user address
@@ -25,6 +25,7 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 
 - The API should follow typical RESTful API design pattern.
 - The data should be saved in the DB.
+- Provide proper unit test.
 - Provide proper API document.
 
 ### Tech stack
@@ -35,7 +36,6 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 ### Bonus
 
 - Write clear **documentation** on how it's designed and how to run the code.
-- Provide proper unit test.
 - Write good commit messages.
 - An online demo is always welcome.
 
@@ -43,10 +43,9 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 
 These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.
 
-- Use [Seneca](http://senecajs.org/) to build the core feature and use a different framework (such as Express or Loopback) to handle HTTP requests.
 - Provide a complete user auth (authentication/authorization/etc) strategy, such as OAuth.
+- Suppose we have a new requirement to manage the user-relationship. e.g. echa user has a list of friends, find a way to enhance the data model and expose an API for querying friends of a certain user.
 - Provide a complete logging (when/how/etc) strategy.
-- Use a NoSQL DB and build a filter feature that can filter records with some of the attributes such as username. Do not use query languages such as MongoDB Query or Couchbase N1QL.
 
 ## What We Care About
 
