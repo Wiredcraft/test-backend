@@ -2,6 +2,9 @@
 
 Make sure you read **all** of this document carefully, and follow the guidelines in it.
 
+## Answer
+You can found my answer document from the [Strategy summary](Strategy.md)
+
 ## Context
 
 Build a RESTful API that can `get/create/update/delete` user data from a persistence database
@@ -10,7 +13,7 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 
 ```
 {
-  "id": "xxx",                  // user ID 
+  "id": "xxx",                  // user ID
   "name": "test",               // user name
   "dob": "",                    // date of birth
   "address": "",                // user address
