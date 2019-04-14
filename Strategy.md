@@ -34,6 +34,9 @@ The API dependencies are scanned for security issues using [snyk](https://snyk.i
 ###### Developer Documentation
 The documentation must be present and generated with any instance of the API (dev, pre-prod, prod, ...).  
 A simple swagger documentation will be provided.  
+
+The initial swagger-express package led to [security vulnerabilities](https://app.snyk.io/org/lerignoux/test/github/fdd02673-fde9-4828-abaa-182baa1cdad2/master..cab303b53de205505d60a799ae9d2b5f100e390a?fromStatus=true) so I switched to swagger-jsdoc + swagger-ui-express instead. This setup is less simple but safer.  
+
 If it became too complex, additional documentation may be added later on.
 
 ###### Testing
