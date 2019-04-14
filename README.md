@@ -1,3 +1,5 @@
+[![Known Vulnerabilities](https://snyk.io/test/github/lerignoux/wiredcraft-test-backend/badge.svg?targetFile=api%2Fpackage.json)](https://snyk.io/test/github/lerignoux/wiredcraft-test-backend?targetFile=api%2Fpackage.json)
+
 # Wiredcraft Back-end Developer Test
 
 Make sure you read **all** of this document carefully, and follow the guidelines in it.
