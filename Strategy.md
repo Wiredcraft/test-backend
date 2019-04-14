@@ -56,7 +56,7 @@ The end user application is a wechat mini program.
 
 ###### Technology stack
 The tencent development system will be used to develop the wechat mini-program.
-It is based on javascrip
+It is based on javascript
 
 ###### User Documentation
 The interface should be clear and simple enough to not require additional documentation.  

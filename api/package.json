@@ -1,0 +1,15 @@
+{
+  "name": "wiredcraft-test-backend-api",
+  "version": "1.0.0",
+  "description": "A User Api",
+  "main": "app.js",
+  "scripts": {
+    "start": "node api.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Erignoux Laurent",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}

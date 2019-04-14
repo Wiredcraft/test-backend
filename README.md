@@ -5,6 +5,34 @@ Make sure you read **all** of this document carefully, and follow the guidelines
 ## Answer
 You can found my answer document from the [Strategy summary](Strategy.md)
 
+## tldr
+```
+docker-compose up -d
+```
+
+## Setup
+ensure you have docker and docker-compose installed.
+fetch the repository
+update the nginx configuration with your certificates
+```
+docker-compose up -d
+```
+the api is accessible at `https://<server_name>:1443/api`
+
+## Dev Setup
+To setup the dev environement (*no ssl*) you can use the development docker-compose:
+```
+docker-compose -f docker-compose-dev.yml up -d
+```
+
+the api is then accessible at [http://localhost:1080/api](http://localhost:1080/api)
+
+### Test run
+In order to run the test suite:
+```
+docker run -it --rm --name wiredcraft-test-backend-tests -v <your_path>/wiredcraft-test-backend/api:/app wiredcraft-api npm run test
+```
+
 ## Context
 
 Build a RESTful API that can `get/create/update/delete` user data from a persistence database
