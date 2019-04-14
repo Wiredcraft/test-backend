@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+
+  wiredcraft-api:
+    container_name: wiredcraft-api
+    build:
+      context: ./api/
+      dockerfile: Dockerfile
+    image: wiredcraft-api
+    networks:
+      - wiredcraft
+    depends_on:
+      - wiredcraft-db
+    restart: always
+    volumes:
+      - "./api:/app"
+
+  wiredcraft-db:
+    container_name: wiredcraft-db
+    image: cassandra:3.11
+    networks:
+      - wiredcraft
+    restart: always
+
+  wiredcraft-nginx:
+    container_name: wiredcraft-nginx
+    image: nginx:alpine
+    networks:
+      - wiredcraft
+    depends_on:
+      - wiredcraft-api
+      - wiredcraft-db
+    ports:
+      - 1443:443
+      - 1080:80
+    restart: always
+    volumes:
+      - "./nginx/nginx.conf:/etc/nginx/nginx.conf:ro"
+
+networks:
+  wiredcraft:
