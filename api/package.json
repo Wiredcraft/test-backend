@@ -10,6 +10,7 @@
   "author": "Erignoux Laurent",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "swagger-express": "^1.0.5"
   }
 }
