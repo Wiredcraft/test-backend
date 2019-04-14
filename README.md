@@ -29,6 +29,13 @@ docker-compose -f docker-compose-dev.yml up -d
 
 the api is then accessible at [http://localhost:1080/api](http://localhost:1080/api)
 
+### Documentation:
+The swagger documentation is available on the api:
+```
+http://localhost:1080/api/api-docs/
+```
+adapt the host on production
+
 ### Test run
 In order to run the test suite:
 ```
