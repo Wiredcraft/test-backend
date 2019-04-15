@@ -1,4 +1,4 @@
-[![Known Vulnerabilities](https://snyk.io/test/github/lerignoux/wiredcraft-test-backend/badge.svg?targetFile=api%2Fpackage.json)](https://snyk.io/test/github/lerignoux/wiredcraft-test-backend?targetFile=api%2Fpackage.json)
+[![CircleCI](https://circleci.com/gh/lerignoux/wiredcraft-test-backend/tree/master.svg?style=svg)](https://circleci.com/gh/lerignoux/wiredcraft-test-backend/tree/master) [![Known Vulnerabilities](https://snyk.io/test/github/lerignoux/wiredcraft-test-backend/badge.svg?targetFile=api%2Fpackage.json)](https://snyk.io/test/github/lerignoux/wiredcraft-test-backend?targetFile=api%2Fpackage.json)
 
 # Wiredcraft Back-end Developer Test
 
