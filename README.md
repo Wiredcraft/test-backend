@@ -13,13 +13,13 @@ docker-compose up -d
 ```
 
 ## Setup
-ensure you have docker and docker-compose installed.
-fetch the repository
-update the nginx configuration with your certificates
+ensure you have docker and docker-compose installed.  
+fetch the repository  
+update the nginx configuration with your certificates  
 ```
 docker-compose up -d
 ```
-the api is accessible at `https://<server_name>:1443/api`
+the api is accessible at `https://<server_name>:1443/api/v1`
 
 ## Dev Setup
 To setup the dev environement (*no ssl*) you can use the development docker-compose:
@@ -27,12 +27,12 @@ To setup the dev environement (*no ssl*) you can use the development docker-comp
 docker-compose -f docker-compose-dev.yml up -d
 ```
 
-the api is then accessible at [http://localhost:1080/api](http://localhost:1080/api)
+the api is then accessible at [http://localhost:1080/api/v1](http://localhost:1080/api/v1)
 
 ### Documentation:
 The swagger documentation is available on the api:
 ```
-http://localhost:1080/api/api-docs/
+http://localhost:1080/api/v1/api-docs/
 ```
 adapt the host on production
 
