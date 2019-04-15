@@ -6,6 +6,7 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const options = {
   definition: {
+    openapi: '3.0.0',
     basePath: '/api/v1',
     info: {
       title: 'Wiredcraft test backend api', // Title (required)
