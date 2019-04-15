@@ -12,7 +12,8 @@
   "dependencies": {
     "express": "^4.16.4",
     "swagger-jsdoc": "^3.2.8",
-    "swagger-ui-express": "^4.0.2"
+    "swagger-ui-express": "^4.0.2",
+    "js-yaml": "^3.13.1"
   },
   "devDependencies": {
     "mocha": "^6.1.3",
