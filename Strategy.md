@@ -18,6 +18,9 @@ see [draw.io diagram](https://www.draw.io/#Uhttps://raw.githubusercontent.com/le
 ## User Sequence diagram:
 see [draw.io diagram](https://www.draw.io/#Uhttps://raw.githubusercontent.com/lerignoux/wiredcraft-test-backend/master/ressources/Wiredcraft%20backend%20test%20user%20sequence.drawio)
 
+## CI-CD diagram
+see [draw.io diagram](https://www.draw.io/#Uhttps://raw.githubusercontent.com/lerignoux/wiredcraft-test-backend/master/ressources/Wiredcraft%20backend%20test%20CI-CD.drawio)
+
 ## Components:
 ----
 ### API
