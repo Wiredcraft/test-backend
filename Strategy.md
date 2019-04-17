@@ -3,7 +3,7 @@
 The objective of this Document is to exhaustively design and present a full user order management application.
 
 ## Architecture diagram:
-see [draw.io diagram]()
+see [draw.io diagram](https://www.draw.io/#Uhttps://raw.githubusercontent.com/lerignoux/wiredcraft-test-backend/master/ressources/Wiredcraft%20backend%20test%20architecture.drawio)
 
 ## Global technology summary:
 - [Docker](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/) for the micro-service structure and scalability.
@@ -16,7 +16,7 @@ see [draw.io diagram]()
   An elasticsearch instance could also be considered for this purpose but would require more work on consultation side.
 
 ## User Sequence diagram:
-see [draw.io diagram]()
+see [draw.io diagram](https://www.draw.io/#Uhttps://raw.githubusercontent.com/lerignoux/wiredcraft-test-backend/master/ressources/Wiredcraft%20backend%20test%20user%20sequence.drawio)
 
 ## Components:
 ----
@@ -40,7 +40,7 @@ The full test suite should be run to ensure each branch is valid before any inte
 on each new version the associated docker container will be released with the version considered as docker tag
 
 ###### Versioning
-The API will follow Semantic versioning for the release versionning.
+The API will follow Semantic versioning for the release versioning.
 
 ----
 ### database
@@ -55,7 +55,7 @@ The backend is supported by a Cassandra database cluster, also hosted on docker 
 The end user application is a wechat mini program.
 
 ###### Technology stack
-The tencent development system will be used to develop the wechat mini-program.
+The Tencent development system will be used to develop the wechat mini-program.
 It is based on javascript
 
 ###### User Documentation
@@ -65,7 +65,7 @@ A dedicated email address and wechat account is probably enough in a first time.
 
 ----
 ### authentication
-The authentication is fully delegated to tencent wechat mini-program authentication system. The mini program authentication information are directly verified by the API upon reception of a query.
+The authentication is fully delegated to Tencent wechat mini-program authentication system. The mini program authentication information are directly verified by the API upon reception of a query.
 ###### Technology stack
 The Tencent authentication system is based on OAuth2
 
