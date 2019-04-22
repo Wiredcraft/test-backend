@@ -11,9 +11,10 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.4",
+    "express-cassandra": "^2.3.0",
+    "js-yaml": "^3.13.1",
     "swagger-jsdoc": "^3.2.9",
-    "swagger-ui-express": "^4.0.2",
-    "js-yaml": "^3.13.1"
+    "swagger-ui-express": "^4.0.2"
   },
   "devDependencies": {
     "mocha": "^6.1.4",
