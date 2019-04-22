@@ -20,6 +20,10 @@ const swaggerSpec = swaggerJSDoc(options);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// Import my test routes into the path '/test'
+const routes = require('./routes');
+routes.setup(app);
+
 var server = app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 module.exports = server;
