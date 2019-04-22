@@ -13,9 +13,9 @@ docker-compose up -d
 ```
 
 ## Setup
-ensure you have docker and docker-compose installed.  
-fetch the repository  
-update the nginx configuration with your certificates  
+ensure you have docker and docker-compose installed.
+fetch the repository
+update the nginx configuration with your certificates
 ```
 docker-compose up -d
 ```
@@ -29,12 +29,11 @@ docker-compose -f docker-compose-dev.yml up -d
 
 the api is then accessible at [http://localhost:1080/api/v1](http://localhost:1080/api/v1)
 
-### Documentation:
-The swagger documentation is available on the api:
+### Documentation
+The api documentation is available as a swagger at:
 ```
-http://localhost:1080/api/v1/api-docs/
+[http://localhost:1080/api/v1/documentation](http://localhost:1080/api/v1/documentation)
 ```
-adapt the host on production
 
 ### Test run
 In order to run the test suite:
