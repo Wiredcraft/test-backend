@@ -49,6 +49,37 @@ module.exports.setup = function(app) {
      res.send('Ok');
    });
 
+   /**
+    * @swagger
+    *
+    * /users:
+    *   post:
+    *     description: Update a user with the given data
+    *     produces:
+    *       - application/json
+    *     parameters:
+    *       - name: user
+    *         description: User object
+    *         in:  body
+    *         required: true
+    *         type: string
+    *         schema:
+    *           $ref: '#/definitions/NewUser'
+    *     responses:
+    *       200:
+    *         description: users
+    *         schema:
+    *           $ref: '#/definitions/User'
+    *       400:
+    *         description: Bad request, The payload is incorrect
+    *       404:
+    *         description: user not found
+    */
+    app.post('/users', (req, res) => {
+      // Create a new user
+     res.send('Ok');
+   });
+
   /**
    * @swagger
    *
@@ -58,8 +89,8 @@ module.exports.setup = function(app) {
    *     produces:
    *       - application/json
    *     parameters:
-   *       - id: user to fetch
-   *         description: UserId of the user to fetch in the data.
+   *       - id: userId
+   *         description: UserId of the user to fetch.
    *         in: path
    *         required: true
    *         type: string
@@ -70,7 +101,7 @@ module.exports.setup = function(app) {
    *           type: object
    *           $ref: '#/definitions/User'
    *       404:
-  *          description: user not found
+   *          description: user not found
    */
   app.get('/users/:id', (req, res) => {
     var userId = req.params.id;
@@ -81,26 +112,58 @@ module.exports.setup = function(app) {
    * @swagger
    *
    * /users:
-   *   post:
-   *     description: Creates a user
+   *   put:
+   *     description: Update a user
    *     produces:
    *       - application/json
    *     parameters:
-   *       - name: user
-   *         description: User object
-   *         in:  body
+   *       - id: userId
+   *         description: UserId of the user to update.
+   *         in: path
    *         required: true
    *         type: string
-   *         schema:
-   *           $ref: '#/definitions/NewUser'
    *     responses:
    *       200:
-   *         description: users
+   *         description: updated user
    *         schema:
+   *           type: object
    *           $ref: '#/definitions/User'
+   *       400:
+   *         description: Bad request, The payload is incorrect
+   *       404:
+   *          description: user not found
    */
-   app.post('/users', (req, res) => {
-    // Your implementation logic comes here ...
+   app.put('/users/:id', (req, res) => {
+     // Update a User
     res.send('Ok');
   });
+
+  /**
+   * @swagger
+   *
+   * /users:
+   *   delete:
+   *     description: Delete a user
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - id: user to delete
+   *         description: UserId of the user to delete.
+   *         in: path
+   *         required: true
+   *         type: string
+   *     responses:
+   *       200:
+   *         description: user deleted
+   *         schema:
+   *           type: object
+   *           $ref: '#/definitions/User'
+   *       404:
+   *          description: user not found
+   */
+   app.delete('/users/:id', (req, res) => {
+     // Delete a User
+    res.send('Ok');
+  });
+
 };
