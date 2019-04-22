@@ -1,3 +1,5 @@
+var models = require('express-cassandra');
+
 // Sets up the routes.
 module.exports.setup = function(app) {
   /**
@@ -77,7 +79,25 @@ module.exports.setup = function(app) {
     */
     app.post('/users', (req, res) => {
       // Create a new user
-     res.send('Ok');
+      try {
+        var user = new models.instance.User({
+            name: req.name,
+            dob: req.dob,
+            address: req.address,
+            description: req.description,
+        });
+      }
+      catch (err) {
+          console.log(err);
+          res.status(400).send(err);
+      }
+      user.save(function(err){
+          if(err) {
+              console.log(err);
+              res.status(500).send(err);
+          }
+      });
+     res.send(user);
    });
 
   /**
