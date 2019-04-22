@@ -41,6 +41,15 @@ In order to run the test suite:
 docker run -it --rm --name wiredcraft-test-backend-tests -v <your_path>/wiredcraft-test-backend/api:/app wiredcraft-api npm run test
 ```
 
+### Conflicts resolution:
+in order to easily solve conflicts on the API packages files:
+in rebase:
+```
+docker run -it -v ~/Projects/wiredcraft-test-backend:/home node:alpine sh
+apk add git
+npx npm-merge-driver install -g
+```
+
 ## Context
 
 Build a RESTful API that can `get/create/update/delete` user data from a persistence database
