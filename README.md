@@ -1,6 +1,6 @@
 # Wiredcraft Back-end Developer Test
 
-Make sure you read **all** of this document carefully, and follow the guidelines in it.
+Make sure you read the whole document carefully and follow the guidelines in it.
 
 ## Context
 
@@ -35,7 +35,7 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 
 ### Bonus
 
-- Write clear **documentation** on how it's designed and how to run the code.
+- Write clear documentation on how it's designed and how to run the code.
 - Write good in-code comments.
 - Write good commit messages.
 - An online demo is always welcome.
@@ -50,20 +50,20 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 
 ## What We Care About
 
-Feel free to use any open-source library if you see a good fit, but also remember that we're more interested in finding out your code skill and problem solving skill.
+Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
 
 Here's what you should aim for:
 
 - Good use of current Node.js & API design best practices.
-- Solid testing approach.
+- Good testing approach.
 - Extensible code.
 
-## Q&A
+## FAQ
 
 > Where should I send back the result when I'm done?
 
-Fork this repo and send us a pull request when you think it's ready for review. You don't have to finish everything prior and you can continue work on it. We don't have a deadline for the task.
+Fork this repo and send us a pull request when you think it's ready for review. You don't have to finish everything prior and you can continue to work on it. We don't have a deadline for the task.
 
 > What if I have a question?
 
-Create a new issue in the repo and we will get back to you quickly.
+Create a new issue in the repo and we will get back to you shortly.
