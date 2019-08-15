@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WiredCraft Backend Test</title>
+
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/skeleton.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script type="application/javascript" src="/static/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <p><!-- nothing to see here --></p>
+    <div class="row">
+        <h4>WiredCraft Backend Test</h4>
+        <form action="/user" method="post">
+            <div class="ten columns">
+                <input type="text" placeholder="user id"
+                       name="id" id="id" value="" autofocus
+                       class="u-full-width {% if msg %}field-{{msg.0}}{% endif %}" />
+                <br>
+                <input type="text" placeholder="user name"
+                       name="name" id="name" value="" autofocus
+                       class="u-full-width {% if msg %}field-{{msg.0}}{% endif %}" />
+                <br>
+                <input type="date" placeholder="user birthday"
+                       name="dob" id="dob" value="" autofocus
+                       class="u-full-width {% if msg %}field-{{msg.0}}{% endif %}" />
+                <br>
+                <input type="test" placeholder="user address"
+                       name="address" id="address" value="" autofocus
+                       class="u-full-width {% if msg %}field-{{msg.0}}{% endif %}" />
+                <br>
+                <input type="test" placeholder="user description"
+                       name="description" id="description" value="" autofocus
+                       class="u-full-width {% if msg %}field-{{msg.0}}{% endif %}" />
+                {% if msg %}
+                <small class="field-{{msg.0}}-msg">
+                    {{msg.1}}
+                </small>
+                {% endif %}
+            </div>
+            <div class="two columns">
+                <input type="submit" value="add user">
+            </div>
+        </form>
+    </div>
+
+    <div class="row">
+        <div class="twelve columns">
+            <ul>
+                {% for user in users %}
+                <li>
+                    ID: {{ user.id }}<br>
+                    name: {{ user.name }}<br>
+                    dob: {{ user.dob }}<br>
+                    address: {{ user.address }}<br>
+                    description: {{ user.address }}
+                    <button type="submit" class="primary small" id="submit-{{ user.id }}">delete</button>
+                    <script>
+                        $(document).ready(function () {
+                                $("#submit-{{ user.id }}").off().on("click",function () {
+                                    $.ajax({
+                                        cache: false,
+                                        async: true,
+                                        url: "/user/{{ user.id }}",
+                                        type: "DELETE",
+                                        data: {},
+                                    });
+                                });
+                            });
+                    </script>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
