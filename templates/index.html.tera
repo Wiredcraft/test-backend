@@ -65,11 +65,13 @@
                         $(document).ready(function () {
                                 $("#submit-{{ user.id }}").off().on("click",function () {
                                     $.ajax({
-                                        cache: false,
-                                        async: true,
                                         url: "/user/{{ user.id }}",
                                         type: "DELETE",
-                                        data: {},
+                                        cache: false,
+                                        async: true,
+                                        success: function() {
+                                            window.location.reload();
+                                        }
                                     });
                                 });
                             });
