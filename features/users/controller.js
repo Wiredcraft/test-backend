@@ -22,9 +22,9 @@ class UsersController extends BaseApi {
       });
   }
 
-  getUsers(req, res) {
+  async getUsers(req, res) {
     log.info("getting users");
-    User.find()
+    await User.find()
       .sort({ "name": 1 })
       .exec( (err, models) => {
         log.info("result: ", models);

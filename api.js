@@ -11,6 +11,7 @@ class BaseApi {
     this.bucket = require('./config').bucket;
     this.req = null;
     this.res = null;
+    this.mongoConnect();
   }
 
   success(res, data) {
@@ -48,6 +49,7 @@ class BaseApi {
   }
 
   mongoConnect() {
+    log.info("connecting to mongo");
     if(!this.bucket) {
       this.error(500, "Impossible to connect to mongo: empty bucket");
     }
@@ -60,11 +62,6 @@ class BaseApi {
     let data = this.getToken(req, res);
     log.info("checking authentication of", data);
     if (data) {
-      this.bucket = data.cluster;
-      this.mongoConnect();
-
-      console.info("mongo connected");
-
       next();
     } else {
       return this.permissionDenied(res);

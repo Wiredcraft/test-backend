@@ -23,4 +23,4 @@ var sch = new Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model("User", sch, "Users");
+module.exports = mongoose.model("User", sch);

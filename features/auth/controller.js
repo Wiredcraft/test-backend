@@ -3,7 +3,7 @@ var debugEnabled = require("../config").debug;
 var log = require("color-logs")(debugEnabled, debugEnabled, __filename);
 
 var jwt = require("jsonwebtoken");
-var baseApi = require("../../api");
+var baseApi = require("../api");
 
 class AuthenticationApi extends baseApi {
 
