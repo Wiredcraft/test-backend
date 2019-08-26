@@ -31,6 +31,8 @@ describe('Users controller', () => {
   it('should create user', (done) => {
   	let model = {
     	name: chance.name(),
+      email: chance.email(),
+      password: chance.hash(),
   	};
     this.onSuccess.callsFake((res, data) => {
       expect(data.name).to.be.equal(model.name);

@@ -55,7 +55,7 @@ class BaseApi {
     }
     let mongoConn = "mongodb://localhost:27017/" + this.bucket;
     log.info("connecting into " + mongoConn);
-    mongoose.connect(mongoConn, { useNewUrlParser: true });
+    mongoose.connect(mongoConn, { useNewUrlParser: true, useCreateIndex: true });
   }
 
   isAuthenticated(req, res, next) {

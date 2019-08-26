@@ -26,7 +26,7 @@ app.use(require("./services/debug.js"));
 
 
 
-//require("./features/auth/routes")(app);
+require("./features/auth/routes")(app);
 require("./features/users/routes")(app);
 
 app.listen(port);

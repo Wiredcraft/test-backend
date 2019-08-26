@@ -10,6 +10,8 @@ var server = require('../server').server;
 exports.getRandomUser = (type) => {
 	return {
 		name: chance.name(),
+		email: chance.email(),
+		password: chance.hash(),
 		dob: chance.birthday(),
 		address: chance.address(),
 		description: chance.sentence()

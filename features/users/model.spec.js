@@ -9,6 +9,7 @@ describe('User model', () => {
 
     m.validate((err) => {
       expect(err.errors.name).to.exist;
+      expect(err.errors.email).to.exist;
       done();
     });
   });
@@ -16,7 +17,8 @@ describe('User model', () => {
   it('should validate if all data is correct', (done) => {
     var m = new User({
       name: mocks.Chance.last(),
-      type: "income"
+      email: mocks.Chance.email(),
+      password: mocks.Chance.hash(),
     });
 
     m.validate((err) => {
