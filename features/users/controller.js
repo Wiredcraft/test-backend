@@ -1,31 +1,40 @@
 "use strict";
 var debugEnabled = require("../../config").debug;
 var log = require("color-logs")(debugEnabled, debugEnabled, __filename);
-var Promise = require('promise');
 var Chance = new require('chance')();
 
 var User = require('./model');
+var Friendship = require('./friendship.service');
 var BaseApi = require("../../api");
 
 var mocks = require('../../test-helpers/_mocks');
 
 class UsersController extends BaseApi {
 
+  async getUserById(id) {
+    try {
+      let user = await User.findById(id).select(['-friends']);
+      let friends = await Friendship.getFriends(id);
+      return {
+        user: user,
+        friends: friends
+      };
+    } catch(ex) {
+      throw ex;
+    }
+  }
+
   getUser(req, res) {
     let id = req.params.id;
     log.info("looking for user id " + id);
-    User.findById(id)
-      .exec((err, model) => {
-        if(err) {
-          return this.exception(res, err);
-        } else {
-          return this.success(res, model);
-        }
-      });
+    this.getUserById(id)
+      .then(model => this.success(res, model))
+      .catch(err => this.exception(res, err));
   }
 
   async getUsers(req, res) {
     await User.find()
+      .select(['-friends'])
       .sort({ "name": 1 })
       .exec( (err, models) => {
         if (err) {
@@ -41,7 +50,7 @@ class UsersController extends BaseApi {
     log.info(data);
 
     try {
-      let user = await User.findById(data.user_id);
+      let user = await this.getUserById(data.user_id);
       if (!user) {
         return this.fail(res, 401, "User not found!");
       }
@@ -65,6 +74,30 @@ class UsersController extends BaseApi {
         return resolve(model);
       });
     })
+  }
+
+  async meet(req, res) {
+    let user = req.params.id;
+    let friend = req.params.friend;
+    try {
+      await Friendship.makeFriend(user, friend);
+      let response = await this.getUserById(user);
+      return this.success(res, response);
+    } catch(ex) {
+      return this.exception(res, ex);
+    }
+  }
+  async break(req, res) {
+    let user = req.params.id;
+    let friend = req.params.friend;
+    log.info(user + " breaking up with "+ friend);
+    try {
+      await Friendship.breakUp(user, friend);
+      let response = await this.getUserById(user);
+      return this.success(res, response);
+    } catch(ex) {
+      return this.exception(res, ex);
+    }
   }
 
   updateUser(req, res) {
