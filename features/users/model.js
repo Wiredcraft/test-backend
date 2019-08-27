@@ -30,7 +30,11 @@ var sch = new Schema({
   },
   description: {
     type: String,
-  }
+  },
+  friends: [{
+    type: Schema.ObjectId, 
+    ref: "User"
+  }]
 }, {
   timestamps: true
 });
@@ -86,4 +90,4 @@ sch.methods.checkPassword = function(pwd) {
 };
 
 
-module.exports = mongoose.model("User", sch);
+module.exports = mongoose.model("User", sch, "Users");

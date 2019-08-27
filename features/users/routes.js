@@ -15,6 +15,11 @@ module.exports = (app) => {
 		.put(auth, controller.updateUser.bind(controller))
 		.delete(controller.deleteUser.bind(controller));
 
+	app.route('/:id/meet/:friend')
+		.get(controller.meet.bind(controller));
+	app.route('/:id/break/:friend')
+		.get(controller.break.bind(controller));
+
 	app.route('/me')
 		.get(auth, controller.getMe.bind(controller));
 

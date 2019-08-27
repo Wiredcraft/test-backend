@@ -23,10 +23,10 @@ describe('Users controller', () => {
     this.onSuccess = this.sandbox.stub(this.controller, "success");
     helpers.db_open(done);
   });
-	after((done) => {
+  after((done) => {
     this.sandbox.restore();
     helpers.db_close(done);
-	})
+  });
 
   it('should create user', (done) => {
   	let model = {
