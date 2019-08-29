@@ -80,7 +80,7 @@ class BaseApi {
           });
         }
         log.error(e);
-        return this.error(401, "Token is not valid");
+        return this.error(res, 401, "Token is not valid");
       }
     } else {
       return this.permissionDenied();
