@@ -52,9 +52,14 @@ class FriendshipService {
     let user = await User
       .findById(user_id)
       .populate("friends");
-    return user.friends.map((f) => {
+    let friends = user.friends.map((f) => {
       return { id: f.id, name: f.name, email: f.email, birthday: f.dob };
-    });
+    }).reduce((acc, current) => {
+      const x = acc.find(item => item.id === current.id);
+      if (!x) return acc.concat([current]);
+      else return acc;
+    }, []);
+    return friends;
   }
 
 }

@@ -18,7 +18,7 @@ module.exports = (app) => {
 	app.route('/:id/meet/:friend')
 		.get(controller.meet.bind(controller));
 	app.route('/:id/break/:friend')
-		.get(controller.break.bind(controller));
+		.get(controller.breakUp.bind(controller));
 
 	app.route('/me')
 		.get(auth, controller.getMe.bind(controller));

@@ -22,8 +22,7 @@ app.options("*", function(req, res, next){
 });
 
 app.use(require("./services/debug.js"));
-
-
+app.use(require("./services/connect.js"));
 
 
 require("./features/auth/routes")(app);

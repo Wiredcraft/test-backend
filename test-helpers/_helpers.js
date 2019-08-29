@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 
 module.exports = {
 	db_open: (done) => {
-		mongoose.connect("mongodb://localhost:27017/mongoose-testing", {useNewUrlParser: true }, () => {
+		mongoose.connect("mongodb://localhost:27017/wiredcraft-testing", {useNewUrlParser: true }, () => {
 			try {
 				mongoose.connection.db.dropDatabase(done);
 			} catch(ex) {

@@ -3,15 +3,12 @@ var debugEnabled = require("./config").debug;
 var log = require("color-logs")(debugEnabled, debugEnabled, __filename);
 
 var jwt = require("jsonwebtoken");
-var mongoose = require("mongoose");
 
 class BaseApi {
 
   constructor() {
-    this.bucket = require('./config').bucket;
     this.req = null;
     this.res = null;
-    this.mongoConnect();
   }
 
   success(res, data) {
@@ -46,16 +43,6 @@ class BaseApi {
 
   permissionDenied(res) {
     return res.status(401).send("permission denied");
-  }
-
-  mongoConnect() {
-    log.info("connecting to mongo");
-    if(!this.bucket) {
-      this.error(500, "Impossible to connect to mongo: empty bucket");
-    }
-    let mongoConn = "mongodb://localhost:27017/" + this.bucket;
-    log.info("connecting into " + mongoConn);
-    mongoose.connect(mongoConn, { useNewUrlParser: true, useCreateIndex: true });
   }
 
   isAuthenticated(req, res, next) {

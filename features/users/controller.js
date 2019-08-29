@@ -87,7 +87,7 @@ class UsersController extends BaseApi {
       return this.exception(res, ex);
     }
   }
-  async break(req, res) {
+  async breakUp(req, res) {
     let user = req.params.id;
     let friend = req.params.friend;
     log.info(user + " breaking up with "+ friend);
@@ -105,19 +105,13 @@ class UsersController extends BaseApi {
     let data = this.getToken(req);
     if(!data || data.user_id != id) return this.error(res, 401, "Denied");
 
-    User.findById(id)
-      .exec((err, model) => {
-        let data = req.body;
-        if(data.name) model.name = req.body.name;
-        if(data.email) model.email = req.body.email;
-        if(data.dob) model.dob = req.body.dob;
-        if(data.address) model.address = req.body.address;
-        if(data.description) model.description = req.body.description;
-        model.save((err, savedModel) => {
-          if (err) return this.exception(res, err);
-          return this.success(res, savedModel);
-        });
-      });
+    User.update({ _id: id }, req.body)
+      .then((model) => {
+        this.getUserById(id)
+          .then(model => this.success(res, model))
+          .catch(err => this.exception(res, err));
+      })
+      .catch(err => this.exception(res, err));
   }
 
   async deleteUser(req, res) {

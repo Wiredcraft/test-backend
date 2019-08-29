@@ -40,24 +40,23 @@ var sch = new Schema({
 });
 
 
-sch.statics.authenticate = function (name, password, callback) {
-  User.findOne({ name: name })
-    .exec(function (err, user) {
-      if (err) {
-        return callback(err)
-      } else if (!user) {
-        var err = new Error("User not found.");
-        err.status = 401;
-        return callback(err);
-      }
-      bcrypt.compare(password, user.password, function (err, result) {
-        if (result === true) {
-          return callback(null, user);
-        } else {
-          return callback();
-        }
-      })
-    });
+sch.statics.authenticate = async (name, password) => {
+  try {
+    let user = await User.findOne({ name: name }).exec();
+    if (!user) {
+      var err = new Error("User not found.");
+      err.status = 401;
+      throw err;
+    }
+    let result = await bcrypt.compareSync(password, user.password);
+    if (result === true) {
+      return user;
+    } else {
+      return false;
+    }
+  } catch(err) {
+    throw err;
+  }
 };
 
 // Pre-save of user to database, hash password if password is modified or new

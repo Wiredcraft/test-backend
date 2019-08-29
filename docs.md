@@ -23,6 +23,7 @@ creates an user
       address: String
       description: String
 ```
+returns the created user
 
 - GET `/users`
 returns all users
@@ -41,6 +42,7 @@ updates user. **Requires authentication**
       address: String
       description: String
 ```
+returns updated user
 
 - GET `/user/:id`
 removes user
@@ -63,6 +65,17 @@ authenticates an existing user
     * email: String
     * password: String
 ```
+    _returns:_
+```
+{
+    "success": boolean
+    "data": {
+        "token": string,
+        "expires": timestamp
+    }
+}
+```
+
 
 - GET `/token`
 return data of sent token. **Requires authentication**
