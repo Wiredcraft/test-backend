@@ -1,0 +1,33 @@
+{
+  "name": "test-backend",
+  "version": "1.0.0",
+  "description": "Make sure you read the whole document carefully and follow the guidelines in it.",
+  "main": "index.js",
+  "dependencies": {
+    "egg": "^2.24.0",
+    "egg-mongoose": "^3.2.0",
+    "egg-validate": "^2.0.2"
+  },
+  "devDependencies": {
+    "egg-bin": "^4.14.0",
+    "egg-mock": "^3.24.1"
+  },
+  "scripts": {
+    "start": "eggctl start",
+    "dev": "egg-bin dev",
+    "test": "npm run test-local",
+    "test-local": "egg-bin test",
+    "cov": "egg-bin cov",
+    "debug": "egg-bin debug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ksloveyuan/test-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ksloveyuan/test-backend/issues"
+  },
+  "homepage": "https://github.com/Ksloveyuan/test-backend#readme"
+}
