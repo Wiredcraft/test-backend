@@ -6,6 +6,10 @@ module.exports = appInfo => {
   // should change to your own
   config.keys = appInfo.name + '_1490750627161_5967';
 
+  config.security = {
+    csrf: false
+  }
+
   config.mongoose = {
     client: {
       url: 'mongodb://127.0.0.1/test_backend',
