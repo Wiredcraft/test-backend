@@ -33,8 +33,8 @@ class UserService extends Service {
         let count = 0
         let skip = ((Number(pageNum)) - 1) * Number(pageSize)
 
-        users = await ctx.model.User.find({ valid: true }, 'basicInfo createAt').skip(skip).limit(Number(pageSize)).sort({ createdAt: -1 }).exec()
-        count = await ctx.model.User.count({}).exec()
+        users = await ctx.model.User.find({ valid: true }, 'basicInfo createdAt').skip(skip).limit(Number(pageSize)).sort({ createdAt: -1 }).exec()
+        count = await ctx.model.User.countDocuments({}).exec()
 
         res.code = 1
         res.data = { users, count }
