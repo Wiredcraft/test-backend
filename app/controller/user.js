@@ -74,6 +74,30 @@ class UserController extends Controller {
         };
     }
 
+    async follow() {
+        const { ctx } = this;
+        ctx.validate({ source: { type: 'string' }, target: { type: 'string' } });
+
+        try {
+            let res = await ctx.service.user.follow(ctx.request.body);
+            ctx.helper.success({ ctx, res })
+        } catch (err) {
+            ctx.helper.error({ ctx, err })
+        };
+    }
+
+    async unfollow() {
+        const { ctx } = this;
+        ctx.validate({ source: { type: 'string' }, target: { type: 'string' } });
+
+        try {
+            let res = await ctx.service.user.unfollow(ctx.request.body);
+            ctx.helper.success({ ctx, res })
+        } catch (err) {
+            ctx.helper.error({ ctx, err })
+        };
+    }
+
     async destroy() {
         const { ctx } = this;
         ctx.validate({ id: { type: 'string' } }, ctx.params);

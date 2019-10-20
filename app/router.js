@@ -1,5 +1,8 @@
 'use strict';
 
 module.exports = app => {
-    app.router.resources('user', '/api/v1/user', 'user');
+    const { router, controller } = app; 
+    router.resources('user', '/api/v1/user', 'user');
+    router.post('/api/v1/user/follow', controller.user.follow);
+    router.post('/api/v1/user/unfollow', controller.user.unfollow);
 };
