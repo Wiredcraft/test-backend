@@ -141,7 +141,12 @@ class UserService extends Service {
         const res = {};
         const userObj = { basicInfo }
         const result = await ctx.model.User.findByIdAndUpdate(id, userObj, { new: true });
-        res.code = 1;
+        res.code = result != null ? 1 : -1;
+        if (res.code == -1) {
+            ctx.logger.warn("user.updateById - user %s doesn't exist", id)
+            res.msg = `user ${id} doesn't exist`
+        }
+
         res.data = result;
         return res;
     }
@@ -151,7 +156,11 @@ class UserService extends Service {
         const res = {};
         const userObj = { valid: false }
         const result = await ctx.model.User.findByIdAndUpdate(id, userObj, { select: ["valid"], new: true });
-        res.code = 1;
+        res.code = result != null ? 1 : -1;
+        if (res.code == -1) {
+            ctx.logger.warn("user.markAsInvalid - user %s doesn't exist", id)
+            res.msg = `user ${id} doesn't exist`
+        }
         res.data = result;
         return res;
     }
