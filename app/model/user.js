@@ -6,8 +6,9 @@ module.exports = app => {
     const ObjectId = Schema.Types.ObjectId;
 
     const UserRefSchema = new Schema({
-        user: { type: ObjectId, ref: 'User' },
-        valid: { type: Boolean, default: true }
+        userId: { type: ObjectId, ref: 'User' },
+        userName: { type: String, required: true },
+        valid: { type: Boolean, default: true}
     }, { versionKey: false, timestamps: true });
 
     const UserSchema = new Schema({

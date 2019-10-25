@@ -76,7 +76,7 @@ class UserController extends Controller {
 
     async follow() {
         const { ctx } = this;
-        ctx.validate({ source: { type: 'string' }, target: { type: 'string' } });
+        ctx.validate({ sourceId: { type: 'string' }, targetId: { type: 'string' }});
 
         try {
             let res = await ctx.service.user.follow(ctx.request.body);
@@ -88,7 +88,7 @@ class UserController extends Controller {
 
     async unfollow() {
         const { ctx } = this;
-        ctx.validate({ source: { type: 'string' }, target: { type: 'string' } });
+        ctx.validate({ sourceId: { type: 'string' }, targetId: { type: 'string' } });
 
         try {
             let res = await ctx.service.user.unfollow(ctx.request.body);

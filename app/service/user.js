@@ -19,12 +19,6 @@ class UserService extends Service {
         return res
     }
 
-    async checkExistence(filter) {
-        const { ctx } = this;
-        const count = await ctx.model.User.count(filter).exec();
-        return count != 0;
-    }
-
     async find({ pageNum = 1, pageSize = 10 }) {
         const { ctx } = this;
         const res = {};
@@ -56,36 +50,36 @@ class UserService extends Service {
         return res;
     }
 
-    async follow({ source, target }) {
+    async follow({ sourceId, targetId }) {
         const { ctx } = this;
         const res = {};
-        const sourceExisted = await this.checkExistence({ _id: source })
-        if (!sourceExisted) {
-            ctx.logger.warn("user.addFollower - user %s doesn't exist", source)
+        const sourceUser = await ctx.model.User.findById(sourceId);
+        if (!sourceUser) {
+            ctx.logger.warn("user.addFollower - user %s doesn't exist", sourceId)
         }
 
-        const targetExisted = await this.checkExistence({ _id: target })
-        if (!targetExisted) {
-            ctx.logger.warn("user.follow - user %s doesn't exist", source)
+        const targetUser = await ctx.model.User.findById(targetId);
+        if (!targetUser) {
+            ctx.logger.warn("user.follow - user %s doesn't exist", targetId)
         }
 
-        if (!sourceExisted || !targetExisted) {
+        if (!sourceUser || !targetUser) {
             res.code = -1
             res.msg = "neither source nor target user doesn't exist"
             return res
         }
 
-        const sourceActionRes = await ctx.model.User.findByIdAndUpdate(source, { $addToSet: { following: { user: target } } }, { new: true, select: "_id" });
+        const sourceActionRes = await ctx.model.User.findByIdAndUpdate(sourceId, { $addToSet: { following: { userId: targetId, userName: targetUser.basicInfo.name } } }, { new: true, select: "_id" });
         if (!sourceActionRes) {
             res.code = -2
-            ctx.logger.warn("user.follow - %s follow %s failed", source, target)
+            ctx.logger.warn("user.follow - %s follow %s failed", sourceId, targetId)
             return res
         }
 
-        const targetActionRes = await ctx.model.User.findByIdAndUpdate(target, { $addToSet: { followers: { user: source } } }, { new: true, select: "_id" });
+        const targetActionRes = await ctx.model.User.findByIdAndUpdate(targetId, { $addToSet: { followers: { userId: sourceId, userName: sourceUser.basicInfo.name } } }, { new: true, select: "_id" });
         if (!targetActionRes) {
             res.code = -3
-            ctx.logger.warn("user.follow - %s follow %s failed", source, target)
+            ctx.logger.warn("user.follow - %s follow %s failed", sourceId, targetId)
             return res
         }
 
@@ -94,17 +88,17 @@ class UserService extends Service {
         return res
     }
 
-    async unfollow({ source, target }) {
+    async unfollow({ sourceId, targetId }) {
         const { ctx } = this;
         const res = {};
-        const sourceExisted = await this.checkExistence({ _id: source })
+        const sourceExisted = await this.checkExistence({ _id: sourceId })
         if (!sourceExisted) {
-            ctx.logger.warn("user.unfollow - user %s doesn't exist", source)
+            ctx.logger.warn("user.unfollow - user %s doesn't exist", sourceId)
         }
 
-        const targetExisted = await this.checkExistence({ _id: target })
+        const targetExisted = await this.checkExistence({ _id: targetId })
         if (!targetExisted) {
-            ctx.logger.warn("user.unfollow - user %s doesn't exist", source)
+            ctx.logger.warn("user.unfollow - user %s doesn't exist", sourceId)
         }
 
         if (!sourceExisted || !targetExisted) {
@@ -114,20 +108,20 @@ class UserService extends Service {
         }
 
         const sourceActionRes = await ctx.model.User
-            .findOneAndUpdate({ _id: source, following: { $elemMatch: { user: target, valid: true } } },
+            .findOneAndUpdate({ _id: sourceId, following: { $elemMatch: { userId: targetId, valid: true } } },
                 { $set: { "following.$.valid": false } }, { new: true, select: "_id" })
         if (!sourceActionRes) {
             res.code = -2
-            ctx.logger.warn("user.unfollow - %s follow %s failed", source, target)
+            ctx.logger.warn("user.unfollow - %s follow %s failed", sourceId, targetId)
             return res
         }
 
         const targetActionRes = await ctx.model.User
-            .findOneAndUpdate({ _id: target, followers: { $elemMatch: { user: source, valid: true } } },
+            .findOneAndUpdate({ _id: targetId, followers: { $elemMatch: { userId: sourceId, valid: true } } },
                 { $set: { "followers.$.valid": false } }, { new: true, select: "_id" });
         if (!targetActionRes) {
             res.code = -3
-            ctx.logger.warn("user.addFollower - %s follow %s failed", source, target)
+            ctx.logger.warn("user.addFollower - %s follow %s failed", sourceId, targetId)
             return res
         }
 
