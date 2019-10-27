@@ -1,0 +1,285 @@
+openapi: 3.0.1
+info:
+  title: test-backend
+  version: 1.0.0
+paths:
+
+  /api/v1/user:
+    get:
+      tags: 
+        - user
+      summary: get a list of users
+      operationId: index
+      parameters:
+        - name: pageNum
+          in: query
+          description: the page number
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: number
+        - name: pageSize
+          in: query
+          description: the page size
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: number
+
+      responses:
+          '500':
+            description: some error happens
+            content: {}
+          '200':
+            description: successful response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UsersResponse'
+    post:
+      tags: 
+        - user
+      summary: create a user with basic info
+      operationId: create
+      requestBody:
+        content:
+          application/text-json:
+            schema:
+              $ref: '#/components/schemas/UserBasicInfo'
+      responses:
+          '500':
+            description: some error happens
+            content: {}
+          '200':
+            description: successful response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UserResponse'
+
+  '/api/v1/user/{userId}':
+    get:
+      tags: 
+        - user
+      summary: get a user by Id
+      operationId: show
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+      responses:
+          '500':
+            description: some error happens
+            content: {}
+          '200':
+            description: successful response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UserResponse'
+    delete:
+      tags: 
+        - user
+      summary: delete a user by Id
+      operationId: destroy
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+      responses:
+          '500':
+            description: some error happens
+            content: {}
+          '200':
+            description: successful response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ActionResponse'
+    put:
+      tags: 
+        - user
+      summary: update user's basic info
+      operationId: update
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+            format: ObjectId
+      requestBody:
+        content:
+          application/text-json:
+            schema:
+              $ref: '#/components/schemas/UserBasicInfo'
+      responses:
+          '500':
+            description: some error happens
+            content: {}
+          '200':
+            description: successful response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UserResponse'
+
+  /api/v1/user/follow:
+    post:
+      tags: 
+        - follow/unfollow
+      summary: source user follow target user
+      operationId: follow
+      requestBody:
+        content:
+          application/text-json:
+            schema:
+              properties:
+                sourceId:
+                  type: string
+                  description: The Id of source user
+                targetId:
+                  type: string
+                  description: The id of target user
+      responses:
+          '500':
+            description: some error happens
+            content: {}
+          '200':
+            description: successful response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ActionResponse'
+                  
+  /api/v1/user/unfollow:
+    post:
+      tags: 
+        - follow/unfollow
+      summary: source user unfollow target user
+      operationId: unfollow
+      requestBody:
+        content:
+          application/text-json:
+            schema:
+              properties:
+                sourceId:
+                  type: string
+                  description: The Id of source user
+                targetId:
+                  type: string
+                  description: The id of target user
+      responses:
+          '500':
+            description: some error happens
+            content: {}
+          '200':
+            description: successful response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ActionResponse'
+
+components:
+  schemas:
+    UserBasicInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        dob:
+          type: string
+          format: date
+        address:
+          type: string
+        description:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        basicInfo:
+          type: object
+          properties:
+            name:
+              type: string
+            dob:
+              type: string
+              format: date
+            address:
+              type: string
+            description:
+              type: string
+        following:
+          type: array
+          items:
+            properties:
+              userId:
+                type: string
+              userName:
+                type: string
+              valid:
+                type: boolean
+        followers:
+          type: array
+          items:
+            properties:
+              userId:
+                type: string
+              userName:
+                type: string
+              valid:
+                type: boolean   
+        valid:
+          type: boolean
+        createdAt:
+          type: string
+          format: datetime
+        updatedAt:
+          type: string
+          format: datetime
+
+    UsersResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        data:
+          type: array
+          items:
+             $ref: '#/components/schemas/User'
+        msg:
+          type: string
+    UserResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        data:
+          $ref: '#/components/schemas/User'
+        msg:
+          type: string
+    ActionResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        msg:
+          type: string
+
