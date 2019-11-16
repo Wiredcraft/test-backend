@@ -1,0 +1,50 @@
+---
+swagger: '2.0'
+
+################################################################################
+#                              API Information                                 #
+################################################################################
+info:
+  version: v0.1.1
+  title: demo API
+  description: |
+    API document for test-backend server。The API follow typical RESTful API design pattern. Without special response 
+    payload look like {"message": "respnse description", "code": "error code", "data": "response data" }
+    The code refer to Code definition
+################################################################################
+#                  Host, Base Path, Schemes and Content Types                  #
+################################################################################
+host: test-backend.sangsay.com
+basePath: /
+schemes:
+  - http
+produces:
+  - application/json
+consumes:
+  - application/json
+  - multipart/form-data
+################################################################################
+#                                  Security                                    #
+################################################################################
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: |
+      1. You can get token from api: `/login`
+      2. Put 'Bearer: xxxxxx.yyyyyyy.zzzzzz' to field Authorization of request header
+################################################################################
+#                                   Tags                                       #
+################################################################################
+tags:
+  - name: Auth
+    description: authorization module api
+  - name: Users
+    description: user module
+parameters:
+  $ref: ./paramters.yaml
+paths:
+  $ref: ./routers/index.yaml
+definitions:
+  $ref: ./definitions/index.yaml

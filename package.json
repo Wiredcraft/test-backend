@@ -4,7 +4,9 @@
   "description": "demo for Wiredcraft backend test",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "prettier": "prettier --write 'server/**/*.js'",
+    "precommit": "lint-staged"
   },
   "repository": {
     "type": "git",
@@ -33,6 +35,14 @@
     "mocha": "^6.2.2",
     "nodemon": "^1.19.4",
     "pm2": "^4.1.2",
+    "prettier": "^1.19.1",
     "swagger-ui-dist": "^3.24.2"
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "eslint --ext .js --fix",
+      "npm run prettier",
+      "git add"
+    ]
   }
 }
