@@ -4,9 +4,11 @@
   "description": "demo for Wiredcraft backend test",
   "main": "index.js",
   "scripts": {
+    "start": "debug=test-backend:* NODE_ENV=development nodemon server/app.js",
     "test": "test",
     "prettier": "prettier --write 'server/**/*.js'",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "lint": "eslint --fix --ext .js server"
   },
   "repository": {
     "type": "git",
@@ -15,6 +17,9 @@
   "keywords": [
     "demo"
   ],
+  "engines": {
+    "node": ">=8.10.0"
+  },
   "author": "shisang",
   "license": "ISC",
   "bugs": {
@@ -24,14 +29,15 @@
   "dependencies": {
     "config": "^3.2.4",
     "express": "^4.17.1",
+    "helmet": "^3.21.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.11",
     "supertest": "^4.0.2",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "eslint": "5.9.0",
-    "eslint-config-koa": "^2.0.2",
+    "eslint": "^6.5.1",
+    "eslint-config-koa": "^2.0.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-node": "^10.0.0",
@@ -47,7 +53,7 @@
     "swagger-ui-dist": "^3.24.2"
   },
   "lint-staged": {
-    "src/**/*.js": [
+    "server/**/*.js": [
       "eslint --ext .js --fix",
       "npm run prettier",
       "git add"
