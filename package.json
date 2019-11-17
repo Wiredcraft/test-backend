@@ -27,11 +27,14 @@
   },
   "homepage": "https://github.com/Wiredcraft/test-backend#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "config": "^3.2.4",
     "express": "^4.17.1",
     "helmet": "^3.21.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.11",
+    "pbkdf2": "^3.0.17",
+    "pwd": "^1.1.0",
     "supertest": "^4.0.2",
     "winston": "^3.2.1"
   },

@@ -1,3 +1,6 @@
+const user = require('./user');
+const auth = require('./auth');
+
 const jwtAuth = (req, res, next) => {
   const user = req.user;
   if (!user) {
@@ -10,6 +13,10 @@ const jwtAuth = (req, res, next) => {
 };
 
 module.exports = app => {
-  app.get('/user', jwtAuth);
+  app.post('/signup', auth.signUp);
+  app.post('/signin', auth.signIn);
+  app.get('/users', jwtAuth, user.users);
+  app.get('/users/:userId', jwtAuth, user.profile);
+
   return app;
 };

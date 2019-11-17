@@ -5,11 +5,15 @@ const helmet = require('helmet');
 const middleware = require('./middleware');
 const logger = require('./lib/logger');
 const router = require('./api');
+const bodyParser = require('body-parser');
 
 const env = process.env.NODE_ENV;
 const app = express();
 app.use(helmet());
 app.use(middleware.jwt);
+app.use(bodyParser.json({ limit: '5mb' }));
+app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' }));
+app.use(bodyParser.text({ limit: '5mb' }));
 router(app);
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -37,7 +41,7 @@ app.use((err, req, res, next) => {
     };
     logger.log('error', err.message, detail);
     if (env === 'development') {
-      res.status(err.status).json({ message: err.message });
+      throw err;
     } else {
       res.status(err.status).json({
         message: 'Server Error',
