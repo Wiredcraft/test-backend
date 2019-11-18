@@ -1,0 +1,22 @@
+# file extension
+*.dev
+*.tmp
+*.swp
+*.swo
+*.org
+*.old
+
+* node.js
+/node_modules
+
+* porting ignoring
+/porting
+
+* semantic hierarchy 
+/run
+
+# security
+/server/secret
+
+# generating entity
+/server/config.json
