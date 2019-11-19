@@ -1,0 +1,42 @@
+# Typescript compiled file
+dist
+
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+build/Release
+
+# Dependency directories
+node_modules
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# 0x
+profile-*
+
+# mac files
+.DS_Store
+
+# vim swap files
+*.swp
+
+# webstorm
+.idea
+
+# vscode
+.vscode
+*code-workspace
+
+# clinic
+profile*
+*clinic*
+*flamegraph*
+
+# lock files
+yarn.lock
+package-lock.json
+package-base.json
+yarn-error.log
+# generated code

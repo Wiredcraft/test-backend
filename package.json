@@ -1,0 +1,58 @@
+{
+  "name": "test-backend",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "rm -rf /dist && tsc && node ./dist/app.js",
+    "lint": "node tools/lint.js",
+    "build": "rm -rf dist && tsc",
+    "test": "mocha \"./{,!(node_modules)/**/}*.test.ts\""
+  },
+  "keywords": [],
+  "dependencies": {
+    "@types/moment": "^2.13.0",
+    "config": "^3.1.0",
+    "cookie-parser": "~1.4.4",
+    "crypto": "^1.0.1",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "mongodb": "^3.2.7",
+    "mongoose": "^5.5.15",
+    "morgan": "~1.9.1",
+    "moment": "^2.24.0",
+    "crypto-random-string": "^3.0.1",
+    "jsonwebtoken": "^8.3.0",
+    "express-jwt": "^5.3.1",
+    "@types/lodash": "^4.14.144",
+    "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "@types/express-jwt": "^0.0.40",
+    "@types/jsonwebtoken": "^7.2.8",
+    "@types/chai": "^4.1.7",
+    "@types/chai-http": "^4.2.0",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^11.11.4",
+    "axios": "^0.18.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
+    "mocha": "^6.0.2",
+    "ts-node": "^6.2.0",
+    "tslint": "^5.14.0",
+    "typescript": "^3.3.4000"
+  },
+  "mocha": {
+    "extension": [
+      "ts"
+    ],
+    "opts": "./mocha.opts",
+    "recursive": true,
+    "require": "./node_modules/ts-node/register",
+    "ui": "bdd",
+    "timeout": 60000
+  },
+  "repository": "https://github.com/Wiredcraft/test-backend.git",
+  "author": "Frank Xiang<http://github.com/Liyoh>",
+  "license": "MIT"
+}

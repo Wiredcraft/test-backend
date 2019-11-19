@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "allowJs": true,
+    "outDir": "dist",
+    "lib": ["esnext", "dom"],
+    "sourceMap": true,
+    "removeComments": false,
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "preserveConstEnums": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "typeRoots": [
+      "node_modules/@types",
+      "typings"
+    ]
+  },
+  "compileOnSave": false,
+  "autoFixOnSave": true,
+  "includes": [
+    "./**/*"
+  ],
+  "exclude": [
+    "./node_modules/**/*",
+    "./dist/**/*",
+    "./lib"
+  ]
+}
