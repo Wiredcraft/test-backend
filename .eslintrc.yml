@@ -1,1 +1,7 @@
+env:
+  mocha: true
+  node: true
 extends: koa
+rules:
+  no-var: 0
+  prefer-arrow-callback: 0

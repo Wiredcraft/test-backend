@@ -1,17 +1,17 @@
 const { Schema } = require('mongoose');
-const conn = require('./index');
+const pwd = require('pwd');
+const db = require('./index');
 
 const User = new Schema({
   name: { type: String, required: true, unique: true },
-  dob: { type: Date },
+  dob: { type: Number },
   address: { type: String, default: '' },
   description: { type: String, default: '' },
-  createdAt: { type: Date, default: Date.now },
   updateAt: { type: Date, default: Date.now },
   password: { type: String },
   salt: { type: String },
   location: { type: [Number], index: { type: '2dsphere', sparse: true } }
-});
+}, { timestamps: { createdAt: 'created_at' } });
 
 User.options.toObject = {};
 User.options.toJSON = {};
@@ -29,4 +29,14 @@ User.options.toJSON.transform = (doc, ret, options) => {
   delete ret.salt;
 };
 
-module.exports = conn.model('users', User);
+// add new user encode password
+User.statics.addUser = async function(user) {
+  const password = String(user.password);
+  const result = await pwd.hash(password);
+  user.password = result.hash;
+  user.salt = result.salt;
+
+  return this.create(user);
+};
+
+module.exports = db.model('users', User);

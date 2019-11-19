@@ -4,8 +4,8 @@
   "description": "demo for Wiredcraft backend test",
   "main": "index.js",
   "scripts": {
-    "start": "debug=test-backend:* NODE_ENV=development nodemon server/app.js",
-    "test": "test",
+    "start": "debug=test-backend:* NODE_ENV=development nodemon server.js",
+    "test": "NODE_ENV=development mocha --recursive",
     "prettier": "prettier --write 'server/**/*.js'",
     "precommit": "lint-staged",
     "lint": "eslint --fix --ext .js server"
@@ -53,6 +53,8 @@
     "nodemon": "^1.19.4",
     "pm2": "^4.1.2",
     "prettier": "^1.19.1",
+    "should": "^13.2.3",
+    "sinon": "^7.5.0",
     "swagger-ui-dist": "^3.24.2"
   },
   "lint-staged": {

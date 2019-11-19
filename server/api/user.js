@@ -6,7 +6,12 @@ module.exports = {
       const page = req.query.page || 1;
       const pageSize = req.query.pageSize || 20;
       const skip = (page - 1) * pageSize;
-      const users = await User.find({}).skip(skip).limit(pageSize);
+      const where = {
+        status: {
+          $ne: -1
+        }
+      };
+      const users = await User.find(where).skip(skip).limit(pageSize);
       const total = await User.countDocuments();
 
       return res.json({
@@ -27,7 +32,7 @@ module.exports = {
     try {
       const userId = req.params.userId;
       const user = await User.findById(userId);
-      if (!user) {
+      if (!user || user.status === -1) {
         return res.status(400).json({
           message: 'user not found',
           code: 11404

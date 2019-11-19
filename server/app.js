@@ -1,6 +1,4 @@
-const http = require('http');
 const express = require('express');
-const config = require('config');
 const helmet = require('helmet');
 const middleware = require('./middleware');
 const logger = require('./lib/logger');
@@ -11,6 +9,7 @@ const env = process.env.NODE_ENV;
 const app = express();
 app.use(helmet());
 app.use(middleware.jwt);
+app.use(middleware.pagination);
 app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' }));
 app.use(bodyParser.text({ limit: '5mb' }));
@@ -35,62 +34,22 @@ app.use((err, req, res, next) => {
       name: err.name,
       method: req.method,
       url: req.url,
-      stack: stack,
       token: token || '',
       user: user || ''
     };
-    logger.log('error', err.message, detail);
     if (env === 'development') {
-      throw err;
-    } else {
-      res.status(err.status).json({
-        message: 'Server Error',
-        code: err.code || 10500
-      });
+      detail.stack = stack;
     }
+
+    logger.log('error', err.message, detail);
+    res.status(err.status).json({
+      message: 'Server Error',
+      code: err.code || 10500
+    });
   } else {
     res.status(err.status || 400).json({ message: err.message, code: err.code || 10400 });
   }
   next();
 });
-const server = http.createServer(app);
-server.listen(config.port, config.host);
-server.on('error', err => {
-  if (err.code === 'EADDRINUSE') {
-    console.log('error! listen address is in used~!');
-    close();
-  } else {
-    logger.log('error', err.message, {
-      stack: err.stack
-    });
-  }
-});
 
-server.on('listening', () => {
-  const host = server.address().address;
-  const port = server.address().port;
-  console.log('app listening at http://%s:%s', host, port);
-});
-
-process.on('uncaughtException', err => {
-  logger.log(
-    'error',
-    'uncaughtException process will reload',
-    err.message,
-    err.stack
-  );
-  const killTimer = setTimeout(() => {
-    process.exit(1);
-  }, 3000);
-  killTimer.unref();
-  server.close();
-});
-
-process.on('SIGINT', close);
-process.on('SIGTERM', close);
-
-function close() {
-  server.close(() => {
-    process.exit();
-  });
-}
+module.exports = app;

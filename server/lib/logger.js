@@ -9,7 +9,7 @@ const file = new winston.transports.File({
 });
 const transports = [];
 transports.push(file);
-transports.push(new winston.transports.Console());
+// transports.push(new winston.transports.Console());
 const logger = winston.createLogger({
   transports,
   format: combine(

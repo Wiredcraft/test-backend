@@ -17,7 +17,7 @@ module.exports = {
       }
 
       const user = await User.findOne({ name: username });
-      if (!user) {
+      if (!user || user.status === -1) {
         return res.status(400).json({
           message: 'user not found',
           code: 10404
@@ -65,7 +65,7 @@ module.exports = {
       const passwd = String(password);
       if (!username || !password || passwd.length < 6) {
         return res.status(400).json({
-          message: 'invalid username and password',
+          message: 'invalid username or password',
           code: 10400
         });
       }
@@ -73,7 +73,7 @@ module.exports = {
       if (password !== confirm) {
         return res.status(400).json({
           message: 'input password and confirm must be consistent',
-          code: 10400
+          code: 11400
         });
       }
 
@@ -81,15 +81,13 @@ module.exports = {
       if (exists) {
         return res.status(400).json({
           message: 'user existed',
-          code: 13400
+          code: 12400
         });
       }
 
-      const result = await pwd.hash(passwd);
       const user = {
         name: username,
-        password: result.hash,
-        salt: result.salt,
+        password: passwd,
         address: address,
         dob: birthday ? new Date(birthday) : null,
         createdAt: Date.now(),
@@ -99,7 +97,7 @@ module.exports = {
         user.location = location;
       }
 
-      await new User(user).save();
+      await User.addUser(user);
       res.json({
         message: 'ok',
         code: 0
