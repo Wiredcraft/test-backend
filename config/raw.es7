@@ -38,7 +38,7 @@ const mongodbServerProfileConfig = {
             //path: '', // diagnostic log file path
             logAppend: beDevelopment,
             logRotate: beDevelopment ? 'reopen' : 'rename',
-            //destination: 'file',
+            destination: 'file',
             timeStampFormat: 'iso8601-local',
             component: {
                 accessControl: { verbosity: beDevelopment ? 1 : 0 },
@@ -200,11 +200,11 @@ const mongodbServerProfileConfig = {
         //    path: '',
         //    filter: '',
         //},
-        snmp: {
-            disabled: true,
+        //snmp: {
+        //    disabled: true,
         //    subagent: false,
         //    master: false,
-        }
+        //}
     },
     default: {
         port: 27017,

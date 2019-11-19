@@ -1,0 +1,35 @@
+const jsYaml = require('js-yaml')
+    , cfg = require('../../config/raw.es7')
+
+
+const yamlDumpOptions = {
+    indent: 2,
+    noArrayIndent: false,
+    skipInvalid: false,
+    flowLevel: -1,
+    styles: {},
+    sortKeys: false,
+    lineWidth: 120,
+    noRefs: false,
+    noCompatMode: false,
+    condenseFlow: false,
+};
+
+
+//TODO handle options, which include mongodb instance name
+const generate = (_options) => {
+    const serverProfile = cfg.mongodb.server.profile.fallback;
+
+    serverProfile.net.port = cfg.mongodb.server.profile.default.port;
+    serverProfile.net.bindIp = cfg.mongodb.server.profile.default.bindIp;
+    serverProfile.systemLog.path = cfg.file.path.log.mongodb.default.diagnostic;
+    serverProfile.storage.dbPath = cfg.directory.data.mongodb.default;
+    serverProfile.processManagement.pidFilePath = cfg.file.path.pid.mongodb.default;
+
+    return jsYaml.safeDump(serverProfile, yamlDumpOptions);
+};
+
+
+module.exports = {
+    generate: generate,
+};

@@ -1,0 +1,10 @@
+const fs = require('fs')
+    , config = require('./config.es7')
+    , cfg = require('../../config/raw.es7');
+
+
+fs.writeFile(
+    cfg.file.path.config.mongodb.default,
+    config.generate(),
+    (err) => { if (err) { throw err; } }
+);
