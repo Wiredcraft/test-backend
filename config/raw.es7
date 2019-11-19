@@ -30,6 +30,185 @@ const mongodbVersionConfig = '4.2.1';
 
 const mongodbServerProfileConfig = {
     fallback: {
+        systemLog: {
+            verbosity: beDevelopment ? 1 : 0,
+            quiet: beDevelopment,
+            traceAllExceptions: !beDevelopment,
+            syslogFacility: 'user',
+            //path: '', // diagnostic log file path
+            logAppend: beDevelopment,
+            logRotate: beDevelopment ? 'reopen' : 'rename',
+            //destination: 'file',
+            timeStampFormat: 'iso8601-local',
+            component: {
+                accessControl: { verbosity: beDevelopment ? 1 : 0 },
+                command: { verbosity: beDevelopment ? 1 : 0 },
+                control: { verbosity: beDevelopment ? 1 : 0 },
+                replication: {
+                    verbosity: beDevelopment ? 1 : 0,
+                    election: { verbosity: beDevelopment ? 1 : 0 },
+                    rollback: { verbosity: beDevelopment ? 1 : 0 },
+                    initialSync: { verbosity: beDevelopment ? 1 : 0 },
+                    heartbeats: { verbosity: beDevelopment ? 1 : 0 },
+                },
+                storage: {
+                    verbosity: beDevelopment ? 1 : 0,
+                    journal: { verbosity: beDevelopment ? 1 : 0 },
+                    recovery: { verbosity: beDevelopment ? 1 : 0 },
+                },
+                geo: { verbosity: beDevelopment ? 1 : 0 },
+                ftdc: { verbosity: beDevelopment ? 1 : 0 },
+                write: { verbosity: beDevelopment ? 1 : 0 },
+                index: { verbosity: beDevelopment ? 1 : 0 },
+                query: { verbosity: beDevelopment ? 1 : 0 },
+                network: { verbosity: beDevelopment ? 1 : 0 },
+                sharding: { verbosity: beDevelopment ? 1 : 0 },
+                transaction: { verbosity: beDevelopment ? 1 : 0 },
+            }
+        },
+        processManagement: {
+            fork: true,
+            //pidFilePath: '',
+            //timeZoneInfo: '',
+        },
+        cloud: {
+            monitoring: {
+                free: {
+                    //tags: '',
+                    state: 'runtime',
+                }
+            }
+        },
+        net: {
+            //port: 27017,
+            //bindIp: localhost,
+            //bindIpAll: false,
+            maxIncomingConnections: 64,
+            wireObjectCheck: true,
+            ipv6: false,
+            unixDomainSocket: {
+                enabled: false,
+                //pathPrefix: dir('run/mongodb'),
+                filePermissions: 448 // octet mask 0700
+            },
+            tls: {
+                mode: 'disabled'
+                //certificateSelector: '',
+                //clusterCertificateSelector: '',
+                //certificateKeyFile: '',
+                //certificateKeyFilePassword: '',
+                //clusterFile: '',
+                //clusterPassword: '',
+                //CAFile: '',
+                //clusterCAFile: '',
+                //CRLFile: '',
+                //allowConnectionsWithoutCertificates: false,
+                //allowInvalidCertificates: false,
+                //allowInvalidHostnames: false,
+                //disabledProtocols: '',
+                //FIPSMode: false
+            },
+            compression: { compressors: 'snappy' },
+            serviceExecutor: 'synchronous'
+        },
+        security: {
+            //keyFile: '',
+            //clusterAuthMode: 'keyFile',
+            //authorization: 'enabled',
+            //transitionToAuth: false,
+            javascriptEnabled: true
+            //redactClientLogData: '',
+            //clusterIpSourceWhitelist: '',
+            //sasl: {
+            //    hostName: '',
+            //    serviceName: '',
+            //    saslauthdSocketPath: ''
+            //},
+            //enableEncryption: false,
+            //encryptionCipherMode: '',
+            //encryptionKeyFile: '',
+            //kmip: {
+            //    keyIdentifier: '',
+            //    rotateMasterKey: true,
+            //    serverName: '',
+            //    port: '',
+            //    clientCertificateFile: '',
+            //    clientCertificatePassword: '',
+            //    clientCertificateSelector: '',
+            //    serverCAFile: ''
+            //},
+            //ldap: {
+            //    servers: '',
+            //    bind: {
+            //        method: '',
+            //        saslMechanisms: '',
+            //        queryUser: '',
+            //        queryPassword: '',
+            //        useOSDefaults: true
+            //    },
+            //    transportSecurity: '',
+            //    timeoutMS: 0,
+            //    userToDNMapping: '',
+            //    authz: {
+            //        queryTemplate: ''
+            //    }
+            //}
+        },
+        //setParameter: {
+        //    enableLocalHostAuthBypass: false
+        //    ldapUserCacheInvalidationInterval: 30
+        //},
+        storage: {
+            //dbPath: '',
+            indexBuildRetry: true,
+            journal: {
+                enabled: true,
+                commitIntervalMs: 100
+            },
+            directoryPerDB: false,
+            syncPeriodSecs: 60,
+            engine: 'wiredTiger',
+            wiredTiger: {
+                engineConfig: {
+                    cacheSizeGB: 0.25,
+                    journalCompressor: 'snappy',
+                    directoryForIndexes: false,
+                    maxCacheOverflowFileSizeGB: 0,
+                },
+                collectionConfig: { blockCompressor: 'snappy' },
+                indexConfig: { prefixCompression: true },
+            }
+            //inMemory: { engineConfig: { inMemorySizeGB: 0.25 } }
+        },
+        operationProfiling: {
+            mode: 'off',
+            slowOpSampleRate: 1.0,
+            slowOpThresholdMs: 100,
+        },
+        replication: {
+            oplogSizeMB: 512,
+            //replSetName: '',
+            enableMajorityReadConcern: true,
+        },
+        //sharding: {
+        //    clusterRole: 'shardsvr|configsvr',
+        //    archiveMovedChunks: false,
+        //},
+        //auditLog: {
+        //    destination: '',
+        //    format: '',
+        //    path: '',
+        //    filter: '',
+        //},
+        snmp: {
+            disabled: true,
+        //    subagent: false,
+        //    master: false,
+        }
+    },
+    default: {
+        port: 27017,
+        bindIp: localhost,
     }
 }
 
@@ -71,21 +250,35 @@ const expressSettingConfig = {
     }
 }
 
+
 const expressMiddlewareConfig = {
 }
+
+
+const directoryConfig = {
+    root: rootDirectory,
+    data: { mongodb: { default: dir('var/data/mongodb/default') } },
+};
 
 
 const filePathConfig = {
     config: {
         raw: {
-            productionVariantModule: dir('config/variant/production.es7')
+            productionVariantModule: dir('config/variant/production.es7'),
         },
         server: {
-            json: dir('server/config.json')
+            json: dir('server/config.json'),
+        },
+        mongodb: {
+            default: dir(`porting/mongodb-linux-x86_64-${mongodbVersionConfig}.cfg.yaml`),
         }
     },
+    pid: {
+        mongodb: { default: dir('run/pid/mongodb.default.log') }
+    },
     log: {
-        default: dir('run/log/default.log')
+        default: dir('run/log/default.log'),
+        mongodb: { default: { diagnostic: dir('run/log/mongodb/default.diagnostic.log') }}
     }
 }
 
@@ -99,7 +292,7 @@ exports = {
         database: { name: mongodbDatabaseNameConfig },
         collection: { name: mongodbCollectionNameConfig },
     },
-    directory: { root: rootDirectory },
+    directory: directoryConfig,
     file: { path: filePathConfig },
     mongoose: mongooseConfig,
     logging: loggingConfig,

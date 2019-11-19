@@ -15,6 +15,7 @@
 * semantic hierarchy 
 /run
 /tmp
+/var
 
 # security
 /server/secret
