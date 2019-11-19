@@ -1,0 +1,120 @@
+const fs = require('fs')
+    , path = require('path');
+
+
+const beDevelopment = false
+    , localhost = '127.0.0.1';
+
+
+const rootDirectory = path.resolve(__dirname, '..')
+    , dir = (...args) => path.resolve(rootDirectory, ...args);
+
+
+const projectConfig = {
+    name: 'Karken',
+    domain: 'karken.com',
+}
+
+
+const mongodbDatabaseNameConfig = {
+    user: 'user',
+}
+
+const mongodbCollectionNameConfig = {
+    user: 'user',
+    userPosition: 'user_position',
+    userRelationship: 'user_relationship',
+}
+
+const mongodbVersionConfig = '4.2.1';
+
+const mongodbServerProfileConfig = {
+    fallback: {
+    }
+}
+
+const mongodbClientConfig = {
+    connection: { option: {
+        fallback: {
+        }
+    } }
+}
+
+const mongooseConfig = {
+    debug: false,
+    document: { raw: { field: '_doc' } },
+    option: {
+    }
+}
+
+
+const urlSliceConfig = {
+}
+
+
+const randomHexadecimalCharLengthConfig = {
+    document: { id: {
+        user: 8
+    } }
+}
+
+
+const loggingConfig = {
+}
+
+
+const expressSettingConfig = {
+    fallback: {
+    }
+}
+
+const expressMiddlewareConfig = {
+}
+
+
+const filePathConfig = {
+    config: {
+        raw: {
+            productionVariantModule: dir('config/variant/production.es7')
+        },
+        server: {
+            json: dir('server/config.json')
+        }
+    }
+}
+
+
+const productionExports = {
+    project: projectConfig,
+    mongodb: {
+        version: mongodbVersionConfig,
+        server: { profile: mongodbServerProfileConfig },
+        client: mongodbClientConfig,
+        database: { name: mongodbDatabaseNameConfig },
+        collection: { name: mongodbCollectionNameConfig },
+    },
+    directory: { root: rootDirectory },
+    file: { path: filePathConfig },
+    mongoose: mongooseConfig,
+    logging: loggingConfig,
+    express: {
+        setting: expressSettingConfig,
+        middleware: expressMiddlewareConfig,
+    },
+    random: { hexadecimal: { charLength: randomHexadecimalCharLengthConfig } },
+    url: { slice: urlSliceConfig },
+}
+
+
+exports = {}
+
+if (!beDevelopment && fs.existsSync(filePathConfig.config.raw.productionVariantModule)) {
+    const productionConfigPatch = require(filePathConfig.config.raw.productionVariantModule);
+
+    exports = productionConfigPatch.patch(productionExports);
+} else {
+    exports = productionExports;
+}
+
+
+module.exports = exports;
