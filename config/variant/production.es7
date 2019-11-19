@@ -1,0 +1,8 @@
+const patch = (rawConfig) => {
+    rawConfig.logging.pino.level = 'info';
+}
+
+
+module.exports = {
+    patch: patch,
+}

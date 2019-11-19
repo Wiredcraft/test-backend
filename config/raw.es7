@@ -2,7 +2,7 @@ const fs = require('fs')
     , path = require('path');
 
 
-const beDevelopment = false
+const beDevelopment = true
     , localhost = '127.0.0.1';
 
 
@@ -60,6 +60,9 @@ const randomHexadecimalCharLengthConfig = {
 
 
 const loggingConfig = {
+    pino: {
+        level: 'debug',
+    }
 }
 
 
@@ -80,11 +83,14 @@ const filePathConfig = {
         server: {
             json: dir('server/config.json')
         }
+    },
+    log: {
+        default: dir('run/log/default.log')
     }
 }
 
 
-const productionExports = {
+exports = {
     project: projectConfig,
     mongodb: {
         version: mongodbVersionConfig,
@@ -106,14 +112,10 @@ const productionExports = {
 }
 
 
-exports = {}
-
 if (!beDevelopment && fs.existsSync(filePathConfig.config.raw.productionVariantModule)) {
     const productionConfigPatch = require(filePathConfig.config.raw.productionVariantModule);
 
-    exports = productionConfigPatch.patch(productionExports);
-} else {
-    exports = productionExports;
+    productionConfigPatch.patch(exports);
 }
 
 
