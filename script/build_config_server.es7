@@ -1,0 +1,15 @@
+const fs = require('fs')
+    , cfg = require('../config/raw.es7');
+
+
+//TODO raw config should be transform(e.g drop needless part) before building
+const serverCfg = cfg;
+
+
+fs.writeFile(
+    cfg.file.path.config.server.json,
+    JSON.stringify(serverCfg, null, 2),
+    (err) => {
+        if (err) { throw err; }
+    }
+);
