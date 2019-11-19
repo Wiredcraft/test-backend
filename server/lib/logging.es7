@@ -1,0 +1,38 @@
+const pino = require('pino')
+    , assert = require('assert')
+    , cfg = require('../config.json');
+
+
+let logger = null;
+
+
+const initialize = (callback) => {
+    //NOTICE bypass error handle
+    const logDestination = pino.destination(cfg.file.path.log.default);
+
+    logger = pino(
+        {level: cfg.logging.pino.level},
+        logDestination
+    );
+
+    callback();
+};
+
+
+const getLogger = () => {
+    assert(logger, 'Logger Not Intialized');
+    return logger;
+};
+
+
+const getLoggerModule = (moduleName) => {
+    assert(logger, 'Logger Not Intialized');
+    return logger.child({module: moduleName});
+}
+
+
+module.exports = {
+    initialize: initialize,
+    getLogger: getLogger,
+    getLoggerModule: getLoggerModule,
+};
