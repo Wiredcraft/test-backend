@@ -1,0 +1,26 @@
+const path = require('path')
+    , cfg = require('../config/raw.es7');
+
+
+const generate = (moduleDirectory, moduleFileName) => {
+    const moduleFileNameWithoutExt = path.basename(moduleFileName, '.es7')
+        , modulePath = path.resolve(moduleDirectory, moduleFileNameWithoutExt)
+        , relativePath = path.relative(cfg.directory.root, modulePath);
+
+    return relativePath.replace(/\//g, '.');
+};
+
+
+const serverPrefix = 'server';
+
+const generateServer = (moduleDirectory, moduleFileName) => {
+    const result = generate(moduleDirectory, moduleFileName);
+
+    return result.slice(serverPrefix.length);
+}
+
+
+module.exports = {
+    generate: generate,
+    generateServer: generateServer,
+}
