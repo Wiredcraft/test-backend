@@ -1,0 +1,6 @@
+const injectQueryDateTime = (fn) => (...args) => fn(new Date(), ...args);
+
+
+module.exports = {
+    injectQueryDateTime: injectQueryDateTime,
+};
