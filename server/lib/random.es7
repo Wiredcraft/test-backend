@@ -1,0 +1,25 @@
+const _ = require('lodash')
+    , assert = require('assert')
+    , crypto = require('crypto');
+
+
+const hexadecimalLengthFromCharToByte = (charLength) => {
+    assert((charLength % 2) === 0, 'Invalid Hexadecimal Char Length');
+    return charLength / 2;
+};
+
+
+const getGeneratorStringHex = (charLength) => () =>
+    crypto.pseudoRandomBytes(hexadecimalLengthFromCharToByte(charLength)).toString('hex');
+
+
+const getValidateStringHex = (charLength) => (input) =>
+    _.isString(input) &&
+    (input.length === charLength) &&
+    /^[0-9a-f]+$/.test(input);
+
+
+module.exports = {
+    getValidateStringHex: getValidateStringHex,
+    getGeneratorStringHex: getGeneratorStringHex,
+};
