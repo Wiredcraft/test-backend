@@ -1,0 +1,12 @@
+//NOTICE
+//to make error sound, especially in compound query, stage and module/funcation name info should be record.
+const create = (crudOperation, crudResult, optionalMixin = {}) => ({
+    result: crudResult,
+    operation: crudOperation,
+    extra: optionalMixin,
+});
+
+
+module.exports = {
+    create: create,
+};
