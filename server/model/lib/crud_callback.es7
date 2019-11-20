@@ -1,0 +1,146 @@
+const _ = require('lodash')
+    , cfg = require('../../config.json')
+    , enm = require('../../lib/enum.es7')
+    , crudError = require('./crud_error.es7')
+    , logging = require('../../lib/logging.es7')
+    , modName = require('../../../lib/module_name.es7')
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const transformCallbackDocToObject = (callback) => (err, returnData) => {
+    if (err) return callback(err);
+    if (!returnData) return callback(err);
+
+    if (_.isArray(returnData)) {
+        callback(err, returnData.map((d) => d._doc))
+    }
+
+    callback(err, returnData._doc);
+};
+
+
+const transformCallbackSave = (callback) => (err, doc, numModified) => {
+    const op = enm.crudOperation.CREATE;
+
+    if (err) return callback(crudError.create(op, enm.crudResult.ERROR));
+    if (numModified === 0) return callback(crudError.create(op, enm.crudResult.FAIL));
+    if (numModified === 1) return callback(null, doc);
+
+    log.error('Save Unhandle Condition Branch');
+    callback(crudError.create(op, enm.crudResult.ERROR));
+};
+
+
+/*
+ update raw response:
+ {
+    ok: true,
+    n: 1,
+    nModified: 1,
+    updatedExisting: false
+ }
+ */
+
+const transformCallbackUpdate = (callback) => (err, response) => {
+    const op = enm.crudOperation.UPDATE;
+
+    if (err) return callback(crudError.create(op, enm.crudResult.ERROR));
+    if (0 === response.n) return callback(crudError.create(op, enm.crudResult.FAIL));
+    if (0 < response.n) return callback();
+
+    log.error('Update Unhandle Condition Branch');
+    callback(crudError.create(op, enm.crudResult.ERROR));
+};
+
+
+/*
+ update insert raw response:
+ {
+     lastErrorObject: {
+         updatedExisting: false,
+         n: 1,
+         upserted: <id>
+     },
+     value: {
+         _id: '',
+         __v: 0
+     },
+     ok: 1
+ }
+ */
+
+const transformCallbackUpdateInsert = (callback) => (err, response, document) => {
+    const op = enm.crudOperation.UPDATE_INSERT;
+
+    if (err) return callback(crudError.create(op, enm.crudResult.ERROR));
+    if (!response.ok) return callback(crudError.create(op, enm.crudResult.FAIL));
+
+    callback(null, document);
+};
+
+
+const transformCallbackFindOne = (callback) => (err, document) => {
+    const op = enm.crudOperation.READ;
+
+    if (err) return callback(crudError.create(op, enm.crudResult.ERROR));
+
+    callback(null, document);
+};
+
+
+const transformCallbackFind = (callback) => (err, documentList) => {
+    const op = enm.crudOperation.READ;
+
+    if (err) return callback(crudError.create(op, enm.crudResult.ERROR));
+
+    callback(null, documentList);
+};
+
+
+const transformCallbackFindOneAndUpdate = (callback) => (err, document) => {
+    const op = enm.crudOperation.READ;
+
+    if (err) return callback(crudError.create(op, enm.crudResult.ERROR));
+
+    callback(null, document);
+};
+
+
+const transformCallbackFindOneAndRemove = (callback) => (err, document) => {
+    const op = enm.crudOperation.DELETE;
+
+    if (err) return callback(crudError.create(op, enm.crudResult.ERROR));
+
+    callback(null, document);
+};
+
+
+const normalize = (log, fnName, transformSequence, callback) => {
+    const transformCallback = _.flowRight(transformSequence);
+
+    return (...args) => {
+        const [err, ...restArgs] = args;
+
+        err && log.error(`fn ${fnName} upstream error ${err}`);
+        transformCallback(callback)(...args);
+    };
+};
+
+
+module.exports = {
+    transform: {
+        find: transformCallbackFind,
+        save: transformCallbackSave,
+        update: transformCallbackUpdate,
+        findOne: transformCallbackFindOne,
+        predicate: transformCallbackPredicate,
+        update_insert: transformCallbackUpdateInsert,
+        docToObject: transformCallbackDocToObject,
+        findOneAndUpdate: transformCallbackFindOneAndUpdate,
+        findOneAndRemove: transformCallbackFindOneAndRemove,
+    },
+    normalize: normalize,
+};
