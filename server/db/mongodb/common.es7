@@ -1,0 +1,70 @@
+const assert = require('assert')
+    , cfg = require('../../config.json')
+    , logging = require('../../lib/logging.es7')
+    , shutdown = require('../../lib/shutdown.es7')
+    , modName = require('../../../lib/module_name.es7');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const initializeEntity = (entityName, connection) => {
+    const virtualHostUri = [
+        'mongodb://',
+        cfg.mongodb.server.profile.default.bindIp,
+        ':',
+        cfg.mongodb.server.profile.default.port,
+        '/',
+        entityName //NOTICE assume mongodb server name and database name(virtual host) name
+    ].join(''),
+
+    const shutdownHandler = (cb) => connection.close(cb);
+
+    const isConnected = () => connection.readState === 1;
+
+    const connect = (callback) => {
+        assert(!isConnected(), 'Already Connected');
+
+        connection.openUri(virtualHostUri, cfg.mongodb.client.connection.option)
+        .then(
+            (_conn) => {
+                shutdown.handler.add(shutdownHandler);
+                callback();
+            },
+            (err) => callback(err)
+        );
+    };
+
+    const disconnect = (callback) => {
+        assert(isConnected(), 'Already Disconnected');
+
+        shutdown.handler.remove(shutdownHandler);
+        connection.close(callback)
+    };
+
+    bindConnectionVariousEventHandler(entityName, connection);
+
+    return [isConnected, connect, disconnect];
+};
+
+
+const bindConnectionVariousEventHandler = (entityName, connection) => {
+    controller.connection
+    .on('open', () => { log.trace(`${entityName} connection established`)})
+    .on('close', () => { log.trace(`${entityName} connection closed`)})
+    .on('reconnected', () => { log.trace(`${entityName} connection reconnected`)})
+    .on('error', (err) => {
+        log.error({error: err}, `${entityName} connection caught error`);
+        shutdown.exit();
+    })
+    .on('reconnectFailed', () => {
+        log.error({error: err}, `${entityName} connection reconnect failed`);
+        shutdown.exit();
+    });
+};
+
+
+module.exports = {
+    initializeEntity: initializeEntity,
+};

@@ -1,0 +1,4 @@
+module.exports = {
+    common: require('./common.es7'),
+    entity: require('./entity.es7'),
+};

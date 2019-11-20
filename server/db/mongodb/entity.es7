@@ -1,0 +1,23 @@
+const _ = require('lodash')
+    , mongoose = require('mongoose')
+    , common = require('./common.es7');
+
+
+const exports = {
+    default: {
+        connection: mongoose.createConnection(),
+    }
+};
+
+
+_ .keys(exports)
+.forEach((key) => {
+    const [isConnected, connect, disconnect] = common.initializeEntity(key, exports[key].connection);
+
+    exports[key].connect = connect;
+    exports[key].disconnect = disconnect;
+    exports[key].isConnected = isConnected;
+});
+
+
+module.exports = exports;
