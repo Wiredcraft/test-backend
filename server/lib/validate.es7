@@ -1,0 +1,33 @@
+//TODO implement bypassed guard annotation function, which skipped due to limited time.
+
+
+const validateQueryDateTime = (input) => true;
+
+
+const validateDayIndex = (input) => true;
+
+
+const validateUserNickName = (input) => true;
+
+
+const validateUserHomeAddress = (input) => true;
+
+
+const validateUserNearbyDistance = (input) => true;
+
+
+const validateUserPointCoordinates = (input) => true;
+
+
+const validateUserDescription = (input) => true;
+
+
+module.exports = {
+    queryDateTime: validateQueryDateTime,
+    dayIndex: validateDayIndex,
+    userNickName: validateUserNickName,
+    userHomeAddress: validateUserHomeAddress,
+    userNearbyDistance: validateUserNearbyDistance,
+    userPointCoordinates: validateUserPointCoordinates,
+    userSelfDescription: validateUserSelfDescription,
+};
