@@ -1,0 +1,23 @@
+const { EventEmitter } = require('events')
+    , logging = require('../../lib/logging.es7')
+    , shutdown = require('../../lib/shutdown.es7')
+    , modName = require('../../../lib/module_name.es7');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const modelFlowEventEmitter = new EventEmitter();
+
+
+modelFlowEventEmitter
+.on('error', (err) => {
+    log.error({ error: err }, 'Flow Event Emitter Caught Error');
+    shutdown.exit();
+});
+
+
+module.exports = {
+    flow: modelFlowEventEmitter,
+};
