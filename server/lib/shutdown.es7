@@ -1,0 +1,65 @@
+const _ = require('lodash')
+    , assert = require('assert')
+    , logging = require('./logging.es7')
+    , modName = require('../module_name.es7');
+
+
+const moduleName = modName.generateServer(__diranem, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const state = {
+    handler: { sequence: [] },
+    signal: {
+        terminate: { enabled: false },
+        interrupt: { enabled: false },
+    },
+};
+
+
+const exports = {
+    handler: { add: null, remove: null },
+    enable: { signal: { terminate: null, interrupt: null } },
+    disable: { signal: { terminate: null, interrupt: null } },
+};
+
+
+exports.handler.add = (handler) => {
+    //NOTICE anonymous function may lead duplication
+    assert(!_.includes(state.handler.sequence, handler), 'Shutdown Handler Already Added');
+    state.handler.sequence = [...state.handler.sequence, handler];
+};
+
+exports.handler.remove = (handler) => {
+    assert(_.includes(state.handler.sequence, handler), 'Shutdown Handler Already Removed');
+    state.handler.sequence = state.handler.sequence
+        .filter((h) => h !== handler);
+};
+
+
+exports.enable.signal.terminate = () => {
+    assert(!state.signal.terminate.enabled, 'Shutdown Signal Terminate Already Enabled');
+    log.trace('shutdown signal terminate enable');
+    state.signal.terminate.enabled = true;
+};
+
+exports.enable.signal.interrupt = () => {
+    assert(!state.signal.interrupt.enabled, 'Shutdown Signal Interrupt Already Enabled');
+    log.trace('shutdown signal interrupt enable');
+    state.signal.interrupt.enabled = true;
+};
+
+exports.enable.signal.terminate = () => {
+    assert(!state.signal.terminate.enabled, 'Shutdown Signal Terminate Already Enabled');
+    log.trace('shutdown signal terminate enable');
+    state.signal.terminate.enabled = true;
+};
+
+exports.enable.signal.interrupt = () => {
+    assert(!state.signal.interrupt.enabled, 'Shutdown Signal Interrupt Already Enabled');
+    log.trace('shutdown signal interrupt enable');
+    state.signal.interrupt.enabled = true;
+};
+
+
+module.exports = exports;
