@@ -1,0 +1,40 @@
+const sw = require('./switch.es7')
+    , logging = require('../../lib/logging.es7')
+    , modName = require('../../../lib/module_name.es7')
+    , { flow: eventEmitter } = require('./event_emitter.es7');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const emitEvent = (eventName, ...args) => {
+    if (!sw.flow.on) return;
+
+    eventEmitter.emit(eventName, ...args);
+};
+
+
+const getOnEvent = (moduleName) => (eventName, fnName, handler) => {
+    eventEmitter.on(eventName, (args) =>
+        handler(...args)((err, ...restArgs) => {
+            err && log.error({ error: err }, `${moduleName} ${fnName} caught error`);
+
+            //NOTICE
+            //handle event handler callback error.
+            //which already write to logger in crud callback normalizer.
+            //assume flow logic is strict test, shutdown exit will not perform,
+            //as it may caused by inconsistency of database data.
+
+            //NOTICE
+            //here i choose use simple non-transaction solution.
+            //for those have requirement of data consistency, a transaction control is needed.
+        })
+    );
+};
+
+
+module.exports = {
+    emitEvent: emitEvent,
+    getOnEvent: getOnEvent,
+};
