@@ -6,6 +6,7 @@ const path = require('path');
 const entry = path.join(__dirname, 'entry.yml');
 const output = path.join(__dirname, 'api.json');
 const root = YAML.load(fs.readFileSync(entry).toString());
+// console.log(root);
 const options = {
   filter: ['relative', 'remote'],
   loaderOptions: {
@@ -15,5 +16,6 @@ const options = {
   }
 };
 resolve(root, options).then(results => {
+  console.log('-------', results.resolved);
   fs.writeFileSync(output, JSON.stringify(results.resolved, null, 2));
 });

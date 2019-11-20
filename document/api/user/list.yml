@@ -1,0 +1,51 @@
+get:
+  tags:
+    - User
+  security:
+    - Bearer: []
+  parameters:
+    - name: page
+      in: query
+      type: integer
+      description: current page number
+      required: false
+    - name: pageSize
+      in: query
+      type: integer
+      description: pagination size number
+      required: false
+  description: get user list
+  responses:
+    200:
+      description: Success
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          data:
+            type: object
+            properties:
+              list:
+                type: array
+                items:
+                  $ref: '#/definitions/User'
+              page:
+                type: integer
+              pageSize:
+                type: integer
+              total:
+                type: integer
+    400:
+      description: Client params error
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          code:
+            type: integer
+    default:
+      description: Unexcepted Error
+      schema:
+        $ref: '#/definitions/Error'

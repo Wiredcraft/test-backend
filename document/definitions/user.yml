@@ -1,0 +1,29 @@
+type: object
+properties:
+  _id:
+    type: string
+    description: Mongodb ObjectId
+  name:
+    type: string
+    description: username
+  dob:
+    type: string
+    description: date of birthday
+  password:
+    description: user password, encrypted char
+    type: string
+  salt:
+    description: auto genernate, password verify salt
+    type: string
+  status:
+    type: integer
+    description: user status. -1 mean user was deleted 
+  description:
+    type: string
+    description: user extra info description
+  location:
+    type: array
+    description: |
+      user location, array like: [lat, lnt]
+    items:
+      type: floot

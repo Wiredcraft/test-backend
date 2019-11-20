@@ -1,0 +1,215 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v0.1.1",
+    "title": "demo API",
+    "description": "API document for test-backend server。The API follow typical RESTful API design pattern. \nWithout special a response payload should be {\"message\": \"respnse description\", \"code\": \"error code\", \"[data]\": \"response data\" }.\nThe code refer to Code definition\n"
+  },
+  "host": "test-backend.sangsay.com",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "consumes": [
+    "application/json",
+    "multipart/form-data"
+  ],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "1. You can get token from api: `/login`\n2. Put 'Bearer: xxxxxx.yyyyyyy.zzzzzz' to the field `Authorization` of request header\n"
+    }
+  },
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "authorization module api"
+    },
+    {
+      "name": "Users",
+      "description": "user module"
+    }
+  ],
+  "parameters": {
+    "auth": {
+      "type": "object",
+      "required": [
+        "username",
+        "password",
+        "confirm"
+      ],
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "name of register user"
+        },
+        "password": {
+          "type": "string",
+          "description": "user password"
+        },
+        "confirm": {
+          "type": "string",
+          "description": "password confirm"
+        },
+        "birthday": {
+          "type": "string",
+          "description": "date of user birthdy, style format: YYYY-MM-DD HH:mm:ss\n"
+        },
+        "description": {
+          "type": "string",
+          "description": "user extra info description"
+        },
+        "location": {
+          "type": "array",
+          "description": "user location, array like: [lat, lnt]\n",
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer",
+            "description": "current page number",
+            "required": false
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "type": "integer",
+            "description": "pagination size number",
+            "required": false
+          }
+        ],
+        "description": "get user list",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/User"
+                      }
+                    },
+                    "page": {
+                      "type": "integer"
+                    },
+                    "pageSize": {
+                      "type": "integer"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Client params error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexcepted Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Mongodb ObjectId"
+        },
+        "name": {
+          "type": "string",
+          "description": "username"
+        },
+        "dob": {
+          "type": "string",
+          "description": "date of birthday"
+        },
+        "password": {
+          "description": "user password, encrypted char",
+          "type": "string"
+        },
+        "salt": {
+          "description": "auto genernate, password verify salt",
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "description": "user status. -1 mean user was deleted"
+        },
+        "description": {
+          "type": "string",
+          "description": "user extra info description"
+        },
+        "location": {
+          "type": "array",
+          "description": "user location, array like: [lat, lnt]\n",
+          "items": {
+            "type": "floot"
+          }
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "integer"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

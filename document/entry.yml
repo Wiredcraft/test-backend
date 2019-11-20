@@ -8,8 +8,8 @@ info:
   version: v0.1.1
   title: demo API
   description: |
-    API document for test-backend server。The API follow typical RESTful API design pattern. Without special response 
-    payload look like {"message": "respnse description", "code": "error code", "data": "response data" }
+    API document for test-backend server。The API follow typical RESTful API design pattern. 
+    Without special a response payload should be {"message": "respnse description", "code": "error code", "[data]": "response data" }.
     The code refer to Code definition
 ################################################################################
 #                  Host, Base Path, Schemes and Content Types                  #
@@ -33,7 +33,7 @@ securityDefinitions:
     in: header
     description: |
       1. You can get token from api: `/login`
-      2. Put 'Bearer: xxxxxx.yyyyyyy.zzzzzz' to field Authorization of request header
+      2. Put 'Bearer: xxxxxx.yyyyyyy.zzzzzz' to the field `Authorization` of request header
 ################################################################################
 #                                   Tags                                       #
 ################################################################################
@@ -43,8 +43,8 @@ tags:
   - name: Users
     description: user module
 parameters:
-  $ref: ./paramters.yaml
+  $ref: ./parameters/index.yml
 paths:
-  $ref: ./routers/index.yaml
+  $ref: ./api/index.yml
 definitions:
-  $ref: ./definitions/index.yaml
+  $ref: ./definitions/index.yml

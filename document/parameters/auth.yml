@@ -1,0 +1,28 @@
+type: object
+required:
+  - username
+  - password
+  - confirm
+properties:
+  username:
+    type: string
+    description: name of register user 
+  password:
+    type: string
+    description: user password
+  confirm:
+    type: string
+    description: password confirm
+  birthday:
+    type: string
+    description: |
+      date of user birthdy, style format: YYYY-MM-DD HH:mm:ss
+  description:
+    type: string
+    description: user extra info description
+  location:
+    type: array
+    description: |
+      user location, array like: [lat, lnt]
+    items:
+      type: number

@@ -55,7 +55,8 @@
     "prettier": "^1.19.1",
     "should": "^13.2.3",
     "sinon": "^7.5.0",
-    "swagger-ui-dist": "^3.24.2"
+    "swagger-ui-dist": "^3.24.2",
+    "yaml-js": "^0.2.3"
   },
   "lint-staged": {
     "server/**/*.js": [
