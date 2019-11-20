@@ -3,7 +3,7 @@ const config = require('config');
 
 mongoose.set('debug', config.get('mongoose.debug'));
 const db = mongoose.createConnection(config.mongoose.uri, {
-  autoIndex: false,
+  autoIndex: true,
   useNewUrlParser: true,
   useUnifiedTopology: true
 });

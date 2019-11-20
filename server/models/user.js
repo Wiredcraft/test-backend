@@ -4,13 +4,15 @@ const db = require('./index');
 
 const User = new Schema({
   name: { type: String, required: true, unique: true },
-  dob: { type: Number },
+  dob: { type: Date },
   address: { type: String, default: '' },
   description: { type: String, default: '' },
   updateAt: { type: Date, default: Date.now },
   password: { type: String },
   salt: { type: String },
-  location: { type: [Number], index: { type: '2dsphere', sparse: true } }
+  status: { type: Number },
+  location: { type: [Number], index: { type: '2dsphere', sparse: true } },
+  friends: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 }, { timestamps: { createdAt: 'created_at' } });
 
 User.options.toObject = {};
@@ -39,4 +41,4 @@ User.statics.addUser = async function(user) {
   return this.create(user);
 };
 
-module.exports = db.model('users', User);
+module.exports = db.model('User', User);

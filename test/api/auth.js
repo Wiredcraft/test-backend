@@ -193,59 +193,5 @@ describe('Auth api', () => {
           done();
         });
     });
-    // it('should response 400 with invalid username and password', done => {
-    //   agent
-    //     .post('/signin')
-    //     .type('json')
-    //     .send({ username: '', password: '' })
-    //     .expect(400)
-    //     .end((err, res) => {
-    //       if (err) {
-    //         return done(err);
-    //       }
-
-    //       assert.equal(res.status, 400);
-    //       res.body.should.be.json;
-    //       const body = res.body;
-    //       assert.equal(body.code, 10400);
-    //       done();
-    //     });
-    // });
-    // it('should response 400 with user not found', done => {
-    //   agent
-    //     .post('/signin')
-    //     .type('json')
-    //     .send({ username: 'somebody-xx', password: password })
-    //     .expect(400)
-    //     .end((err, res) => {
-    //       if (err) {
-    //         return done(err);
-    //       }
-
-    //       assert.equal(res.status, 400);
-    //       res.body.should.be.json;
-    //       const body = res.body;
-    //       assert.equal(body.code, 10404);
-    //       done();
-    //     });
-    // });
-    // it('should response 401 with invalid password', done => {
-    //   agent
-    //     .post('/signin')
-    //     .type('json')
-    //     .send({ username: user.name, password: 'somepassword' })
-    //     .expect(401)
-    //     .end((err, res) => {
-    //       if (err) {
-    //         return done(err);
-    //       }
-
-    //       assert.equal(res.status, 401);
-    //       res.body.should.be.json;
-    //       const body = res.body;
-    //       assert.equal(body.code, 10401);
-    //       done();
-    //     });
-    // });
   });
 });

@@ -25,6 +25,6 @@ module.exports = {
   },
   mongoose: {
     debug: true,
-    uri: 'mongodb://root:locahost:27017/demo?authSource=admin&authMechanism=SCRAM-SHA-1'
+    uri: 'mongodb://localhost:27017/demo'
   }
 };
