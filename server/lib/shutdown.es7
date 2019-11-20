@@ -17,7 +17,24 @@ const state = {
 };
 
 
+const exit = () => {
+    //NOTICE force process exit when timeout, time consuming task should not in handler
+    setTimeout(() => process.exit(2), 8000);
+
+    async.series(
+        state.handler.sequence,
+        (err) => {
+            if (err) throw err;
+
+            log.info('exit ok');
+            process.exit(1);
+        }
+    );
+};
+
+
 const exports = {
+    exit: exit,
     handler: { add: null, remove: null },
     enable: { signal: { terminate: null, interrupt: null } },
     disable: { signal: { terminate: null, interrupt: null } },
