@@ -1,0 +1,57 @@
+const _ = require('lodash')
+    , assert = require('assert')
+    , enm = require('../../lib/enum.es7')
+    , crudError = require('./crud_error.es7')
+    , logging = require('../../lib/logging.es7')
+    , modName = require('../../../lib/module_name.es7');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const create = (log) => (fn, fnName, annotationList) => (...args) => {
+    assert(!_.isEmpty(args), 'Empty Argument In Model Crud');
+
+    const callback = args[args.length -1];
+
+    assert(annotationList.length === args.length, 'Model Interface Guard Annotation Signature Length Check Fail');
+
+    let failIndex = null
+      , beResultOk = true;
+
+    annotationList.forEach((annotation, idx) => {
+        const arg = args[idx];
+
+        if (annotation === null) return;
+
+        if (_.isFunction(annotation)) {
+            try {
+                if (!annotation(arg)) {
+                    failIndex = idx;
+                    beResultOk = false;
+                }
+            } catch(err) {
+                failIndex = idx;
+                beResultOk = false;
+                callback(err);
+            }
+
+            return;
+        }
+
+        const errorInfo = { fnName: fnName, index: idx };
+
+        log.error(errorInfo, 'invalid annotation');
+        return callback(crudError.create(enm.crudOperation.NONE, enm.crudResult.ERROR_GUARD, errorInfo));
+    });
+
+    beResultOk
+    ? fn(...args)
+    : callback(crudError.create(enm.crudOperation.NONE, enm.crudResult.FAIL_GUARD, { index: failIndex }));
+};
+
+
+module.exports = {
+    create: create,
+};
