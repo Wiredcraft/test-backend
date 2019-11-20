@@ -1,0 +1,10 @@
+const cfg = require('../../../config.json')
+    , random = require('../../../lib/random.es7');
+
+
+const generateId = random.getGeneratorStringHex(cfg.random.hexadecimal.document.id.user.charLength);
+
+
+module.exports = {
+    generateId: generateId,
+}

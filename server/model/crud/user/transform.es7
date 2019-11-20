@@ -1,0 +1,17 @@
+const c = require('./common.es7');
+
+
+const injectArgumentCreateNameNick = (create) => (
+    queryDateTime, nickName, callback
+) =>
+    create(
+        queryDateTime,
+        c.generateId(),
+        nickName,
+        callback
+    );
+
+
+module.exports = {
+    injectArgumentCreateNameNick: injectArgumentCreateNameNick,
+}

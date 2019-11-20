@@ -1,0 +1,85 @@
+const s = require('./schema.es7')
+    , logging = require('../../../lib/logging.es7')
+    , modName = require('../../../../lib/module_name.es7')
+    , { normalize: ccn, transform: cct } = require('../../lib/crud_callback.js');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const User = s.model;
+
+
+const setDateBirthById = (queryDateTime, userId, birthDate, callback) =>
+    User.update(
+        {
+            '_id': userId,
+            'dateBirth': { $exists: false },
+        },
+        { $set: { 'dateBirth': birthDate } },
+        ccn(log, 'setDateBirthById', [cct.update], callback)
+    );
+
+
+const setDescriptionById = (queryDateTime, userId, description, callback) =>
+    User.update(
+        {
+            '_id': userId,
+            'description': { $exists: false },
+        },
+        { $set: { 'description': description } },
+        ccn(log, 'setDescriptionById', [cct.update], callback)
+    );
+
+
+const updateDescriptionById = (queryDateTime, userId, description, callback) =>
+    User.update(
+        {
+            '_id': userId,
+            'description': { $exists: true },
+        },
+        { $set: { 'description': description } },
+        ccn(log, 'setDescriptionById', [cct.update], callback)
+    );
+
+
+const setHomeAddressById = (queryDateTime, userId, address, callback) =>
+    User.update(
+        {
+            '_id': userId,
+            'homeAddress.text': { $exists: false },
+        },
+        { $set: {
+            'homeAddress.text': address,
+            'homeAddress.last.updateAt': queryDateTime,
+        } },
+        ccn(log, 'setHomeAddressById', [cct.update], callback)
+    );
+
+
+const updateHomeAddressById = (queryDateTime, userId, address, callback) =>
+    User.update(
+        {
+            '_id': userId,
+            'homeAddress.text': { $exists: true },
+            'homeAddress.last.updateAt': {
+                $lt: new Date(queryDateTime.getTime() - cfg.model.limit.user.addressUpdateIntervalTimeMin)
+            }
+
+        },
+        { $set: {
+            'homeAddress.text': address,
+            'homeAddress.last.updateAt': queryDateTime,
+        } },
+        ccn(log, 'setHomeAddressById', [cct.update], callback)
+    );
+
+
+module.exports = {
+    setDateBirthById: setDateBirthById,
+    setHomeAddressById: setHomeAddressById,
+    updateHomeAddressById: updateHomeAddressById,
+    setDescriptionById: setDescriptionById,
+    updateDescriptionById: updateDescriptionById,
+}

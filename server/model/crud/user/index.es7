@@ -1,0 +1,71 @@
+const c = require('./create.es7')
+    , r = require('./read.es7')
+    , u = require('./update.es7')
+    , d = require('./delete.es7')
+    , t = require('./transform.es7')
+    , a = require('./annotation.es7')
+    , s = require('./schema.es7')
+    , guard = require('../../lib/guard.es7')
+    , logging = require('../../../lib/logging.es7')
+    , modModule = require('../../../lib/module_name.es7')
+    , ciT = require('../../lib/crud_interface_transform.es7');
+
+
+const moduleName = modModule.generate(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const gd = guard.create(log);
+
+const rawExports = {
+    createNameNick: gd(
+        c.createNameNick, 'createNameNick',
+        [a.QueryDateTime, a.Id, a.NickName, null]
+    ),
+    findById: gd(
+        r.findById, 'findById',
+        [a.QueryDateTime, a.Id, null]
+    ),
+    setHomeAddressById: gd(
+        u.setHomeAddressById, 'setHomeAddressById',
+        [a.QueryDateTime, a.Id, a.HomeAddress, null]
+    ),
+    updateHomeAddressById: gd(
+        u.updateHomeAddressById, 'updateHomeAddressById',
+        [a.QueryDateTime, a.Id, a.HomeAddress, null]
+    ),
+    setDateBirthById: gd(
+        u.setDateBirthById, 'setDateBirthById',
+        [a.QueryDateTime, a.Id, a.BirthDate, null]
+    ),
+    setDescriptionById: gd(
+        u.setDescriptionById, 'setDescriptionById',
+        [a.QueryDateTime, a.Id, a.Description, null]
+    ),
+    updateDescriptionById: gd(
+        u.updateDescriptionById, 'updateDescriptionById',
+        [a.QueryDateTime, a.Id, a.Description, null]
+    ),
+    deleteById: gd(
+        d.deleteById, 'deleteById',
+        [a.QueryDateTime, a.Id, null]
+    )
+}
+
+
+const r = rawExports;
+
+module.exports = {
+    model: s.model,
+    raw: rawExports,
+    web: {
+        createNameNick: _.flowRight(ciT.injectQueryDateTime, t.injectArgumentCreateNameNick)(r.createNameNick),
+        findById: _.flowRight(ciT.injectQueryDateTime)(r.findById),
+        setHomeAddressById: _.flowRight(ciT.injectQueryDateTime)(r.setHomeAddressById),
+        updateHomeAddressById: _.flowRight(ciT.injectQueryDateTime)(r.updateHomeAddressById),
+        setDateBirthById: _.flowRight(ciT.injectQueryDateTime)(r.setDateBirthById),
+        setDescriptionById: _.flowRight(ciT.injectQueryDateTime)(r.setDescriptionById),
+        updateDescriptionById: _.flowRight(ciT.injectQueryDateTime)(r.updateDescriptionById),
+        deleteById: _.flowRight(ciT.injectQueryDateTime)(r.deleteById),
+    }
+}

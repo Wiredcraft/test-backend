@@ -1,0 +1,31 @@
+const cfg = require('../../../config.json')
+    , random = require('../../../lib/random.es7')
+    , validate = require('../../../lib/validate.es7');
+
+
+const Id = random.generateValidateStringHex(cfg.random.hexadecimal.charLength.document.id.user);
+
+
+const QueryDateTime = validate.queryDateTime;
+
+
+const NickName = validate.userNickName;
+
+
+const HomeAddress = validate.userHomeAddress;
+
+
+const BirthDate = validate.dayIndex;
+
+
+const Description = validate.userDescription;
+
+
+module.exports = {
+    Id: Id,
+    NickName: NickName,
+    BirthDate: BirthDate,
+    Description: Description,
+    HomeAddress: HomeAddress,
+    QueryDateTime: QueryDateTime,
+};
