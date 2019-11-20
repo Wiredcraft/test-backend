@@ -1,5 +1,6 @@
 const fs = require('fs')
-    , path = require('path');
+    , path = require('path')
+    , moment = require('moment');
 
 
 const beDevelopment = true
@@ -12,12 +13,12 @@ const rootDirectory = path.resolve(__dirname, '..')
 
 const projectConfig = {
     name: 'Karken',
-    domain: 'karken.com',
+    domain: 'karken.io',
 }
 
 
 const mongodbDatabaseNameConfig = {
-    user: 'user',
+    default: 'default',
 }
 
 const mongodbCollectionNameConfig = {
@@ -213,24 +214,61 @@ const mongodbServerProfileConfig = {
 }
 
 const mongodbClientConfig = {
-    connection: { option: {
-        fallback: {
-        }
-    } }
-}
+    connection: { option: { fallback: {
+        useMongoClient: true,
+        noDelay: true,
+        autoIndex: false,
+        autoReconnect: true,
+        reconnectTries: 16,
+        reconnectInterval: 5 * 1000,
+        poolSize: 2,
+        bufferMaxEntries: 64,
+        keepAlive: 30 * 1000
+    } } }
+};
 
 const mongooseConfig = {
     debug: false,
     document: { raw: { field: '_doc' } },
     option: {
+        schema: { fallback: {
+            id: false,
+            _id: false,
+            safe: true,
+            minimize: true,
+            strict: 'throw',
+            autoIndex: false,
+            versionKey: '__v',
+            bufferCommands: true,
+            validateBeforeSave:  true,
+        } },
+        toObject: { fallback: {
+            getters: false,
+            virtuals: false,
+        } },
+        updateOption: { fallback: {
+            safe: true,
+            upsert: false,
+            multi: false,
+            overwrite: false,
+        } }
     }
+};
+
+
+const modelLimitConfig = {
+    user: {
+        homeAddress: { min: 8, max: 80 },
+        description: { min: 1, max: 120 },
+        addressUpdateIntervalTimeMin: moment.duration(1, 'months').asMilliseconds(),
+    },
+    userPosition: {
+        queryNearbyLimitMax: 20,
+    },
 }
 
 
-const urlSliceConfig = {
-}
-
-
+//NOTICE hexadecimal char length should be multiple of 2
 const randomHexadecimalCharLengthConfig = {
     document: { id: {
         user: 8
@@ -247,12 +285,49 @@ const loggingConfig = {
 
 const expressSettingConfig = {
     fallback: {
+        etag: 'weak',
+        xPoweredBy: false,
+        viewEngine: 'pug',
+        //jsonSpaces: null,
+        //jsonReplacer: null,
+        queryParser: 'extended',
+        strictRouting: true,
+        viewCache: true,
+        caseSensitiveRouting: false,
+        trustProxy: false,
+        viewsDirectory: dir('var/views'),
+        subdomainOffset: 2,
+        jsonCallbackName: 'callback',
+        environment: beDevelopment ? 'development' : 'production',
     }
 }
 
 
 const expressMiddlewareConfig = {
-}
+    bodyParse: {
+        urlEncoded: { option: { fallback: {
+            limit: '10kb',
+            inflate: true,
+            extended: false,
+            parameterLimit: 4,
+            type: 'application/x-www-form-urlencoded',
+        } } },
+        json: { option: { fallback: {
+            inflate: true,
+            limit: '10kb',
+            //reviver: null,
+            strict: true,
+            type: 'application/json',
+            //verify: null,
+        } } }
+    }
+};
+
+
+const webConfig = {
+    bindIp: localhost,
+    port: 3000,
+};
 
 
 const directoryConfig = {
@@ -284,6 +359,7 @@ const filePathConfig = {
 
 
 exports = {
+    be: { development: beDevelopment },
     project: projectConfig,
     mongodb: {
         version: mongodbVersionConfig,
@@ -301,7 +377,8 @@ exports = {
         middleware: expressMiddlewareConfig,
     },
     random: { hexadecimal: { charLength: randomHexadecimalCharLengthConfig } },
-    url: { slice: urlSliceConfig },
+    model: { limit: modelLimitConfig },
+    web: webConfig,
 }
 
 
