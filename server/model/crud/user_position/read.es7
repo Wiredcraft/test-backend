@@ -1,0 +1,59 @@
+const s = require('./schema.es7')
+    , logging = require('../../../lib/logging.es7')
+    , modName = require('../../../../lib/module_name.es7')
+    , { normalize: ccn, transform: cct } = require('../../lib/crud_callback.js');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const UserPosition = s.model;
+
+
+const findById = (queryDateTime, userId, callback) =>
+    UserPosition.findOne(
+        { '_id': userId },
+        null,
+        { lean: true },
+        ccn(log, 'findById', [cct.findOne], callback)
+    );
+
+
+const findNearbyLimitedByPointCoordinates = (queryDateTime, pointCoordinates, maxDistance, callback) =>
+    UserPosition.find(
+        { 'last.record': { $nearSphere: {
+            $geometry: {
+                type: 'Point',
+                coordinates: pointCoordinates,
+            },
+            $minDistance: 0,
+            $maxDistance: maxDistance,
+        } } },
+        null,
+        { lean: true },
+        ccn(log, 'findNearbyLimitedById', [cct.find], callback)
+    );
+
+
+const findNearbyUnLimitedByPointCoordinates = (queryDateTime, pointCoordinates, maxDistance, callback) =>
+    UserPosition.find(
+        { 'last.record': { $nearSphere: {
+            $geometry: {
+                type: 'Point',
+                coordinates: pointCoordinates,
+            },
+            $minDistance: 0,
+            $maxDistance: maxDistance,
+        } } },
+        null,
+        { lean: true },
+        ccn(log, 'findNearbyLimitedById', [cct.find], callback)
+    );
+
+
+module.exports = {
+    findById: findById,
+    findNearbyLimitedByPointCoordinates: findNearbyLimitedByPointCoordinates,
+    findNearbyUnLimitedByPointCoordinates: findNearbyUnLimitedByPointCoordinates,
+}

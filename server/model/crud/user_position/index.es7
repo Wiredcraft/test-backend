@@ -1,0 +1,58 @@
+const c = require('./create.es7')
+    , r = require('./read.es7')
+    , u = require('./update.es7')
+    , d = require('./delete.es7')
+    , a = require('./annotation.es7')
+    , s = require('./schema.es7')
+    , guard = require('../../lib/guard.es7')
+    , logging = require('../../../lib/logging.es7')
+    , modModule = require('../../../lib/module_name.es7')
+    , ciT = require('../../lib/crud_interface_transform.es7');
+
+
+const moduleName = modModule.generate(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const gd = guard.create(log);
+
+const rawExports = {
+    create: gd(
+        c.create, 'create',
+        [a.QueryDateTime, a.Id, null]
+    ),
+    findById: gd(
+        r.findById, 'findById',
+        [a.QueryDateTime, a.Id, null]
+    ),
+    findNearbyLimitedByPointCoordinates: gd(
+        r.findNearbyLimitedByPointCoordinates, 'findNearbyLimitedByPointCoordinates',
+        [a.QueryDateTime, a.PointCoordinates, a.Distance, null]
+    ),
+    findNearbyUnLimitedByPointCoordinates: gd(
+        r.findNearbyUnLimitedByPointCoordinates, 'findNearbyUnLimitedByPointCoordinates',
+        [a.QueryDateTime, a.PointCoordinates, a.Distance, null]
+    ),
+    overwritePositionById: gd(
+        u.overwritePositionById, 'overwritePositionById',
+        [a.QueryDateTime, a.PointCoordinates, a.Id, null]
+    ),
+    delete: gd(
+        d.deleteById, 'deleteById',
+        [a.QueryDateTime, a.Id, null]
+    ),
+};
+
+
+const r = rawExports;
+
+module.exports = {
+    model: s.model,
+    raw: rawExports,
+    web: {
+        findNearbyLimitedByPointCoordinates:
+            _.flowRight(ciT.injectQueryDateTime)(r.findNearbyLimitedByPointCoordinates),
+        overwritePositionById:
+            _.flowRight(ciT.injectQueryDateTime)(u.overwritePositionById),
+    }
+}

@@ -1,0 +1,28 @@
+const s = require('./schema.es7')
+    , logging = require('../../../lib/logging.es7')
+    , modName = require('../../../../lib/module_name.es7')
+    , { normalize: ccn, transform: cct } = require('../../lib/crud_callback.js');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const UserPosition = s.model;
+
+
+const overwritePositionById = (queryDateTime, positionCoordinates, userId, callback) =>
+    UserPosition.update(
+        { '_id': userId },
+        { $set: {
+            'last.update_at': queryDateTime,
+            'last.record.type': 'Point',
+            'last.record.coordinates': positionCoordinates,
+        } },
+        ccn(log, 'overwritePositionById', [cct.update], callback)
+    );
+
+
+module.exports = {
+    overwritePositionById: overwritePositionById,
+};

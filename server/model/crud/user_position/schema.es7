@@ -1,0 +1,40 @@
+const mongoose = require('mongoose')
+    , binding = require('./binding.es7')
+    , cfg = require('../../../config.json')
+    , logging = require('../../../lib/logging.es7')
+    , modName = require('../../../lib/module_name.es7');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const userPositionModelName = 'UserPosition';
+
+
+const userPositionSchemaPrototype = {
+    _id: { type: String, require: true },
+    last: {
+        updateAt: { type: Date, required: false },
+        //INFO according geo json standard, [longitude, latitude]
+        record: {
+            type: { type: String, required: false },
+            coordinates: { type: [Number], required: false },
+        }
+    }
+}
+
+
+const userPositionSchema = new mongoose.Schema(
+    userPositionSchemaPrototype, cfg.mongoose.option.schema.fallback
+);
+
+
+const userPositionModel = binding.db.connection.model(
+    userPositionModelName, userPositionSchema, cfg.mongodb.collection.name.userPosition
+);
+
+
+module.exports = {
+    model: userPositionModel,
+}

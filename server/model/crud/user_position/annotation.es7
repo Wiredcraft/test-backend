@@ -1,0 +1,19 @@
+const cfg = require('../../../config.json')
+    , random = require('../../../lib/random.es7')
+    , validate = require('../../../lib/validate.es7');
+
+
+const Id = random.generateValidateStringHex(cfg.random.hexadecimal.charLength.document.id.user);
+
+
+const PointCoordinates = validate.pointCoordinates;
+
+
+const Distance = validate.userNearbyDistance;
+
+
+module.exports = {
+    Id: Id,
+    Distance: Distance,
+    PointCoordinates: PointCoordinates,
+};
