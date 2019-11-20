@@ -1,0 +1,10 @@
+const cfg = require('../../../config.json')
+    , random = require('../../../lib/random.es7');
+
+
+const Id = random.generateValidateStringHex(cfg.random.hexadecimal.charLength.document.id.user);
+
+
+module.exports = {
+    Id: Id,
+};

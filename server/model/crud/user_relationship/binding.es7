@@ -1,0 +1,13 @@
+const assert = require('assert')
+    , db = require('../../../db/index.es7');
+
+
+const dbEntity = db.mongodb.entity.default;
+
+
+assert(dbEntity.isConnected(), 'DB Mongodb Not Connected');
+
+
+module.exports = {
+    db: dbEntity,
+};

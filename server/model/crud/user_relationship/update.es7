@@ -1,0 +1,114 @@
+const s = require('./schema.es7')
+    , logging = require('../../../lib/logging.es7')
+    , modName = require('../../../../lib/module_name.es7')
+    , { flowEvent } = require('../../lib/flow_event_meta.es7')
+    , flowController = require('../../lib/flow_controller.es7')
+    , { normalize: ccn, transform: cct } = require('../../lib/crud_callback.js');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName)
+    , onEvent = flowController.getOnEvent(moduleName);
+
+
+const UserRelationship = s.model;
+
+
+const addActiveFollowingById = (queryDateTime, followingUserId, userId, callback) =>
+    UserRelationship.update(
+        {
+            '_id': userId,
+            'active.following.user.list': { $not: { $elemMatch: { id: followingUserId } } },
+        },
+        {
+            $inc: { 'active.following.user.count.total': 1 },
+            $push: {
+                'active.following.user.list': {
+                    $position: 0,
+                    $each: [{ id: followingUserId }],
+                }
+            }
+        },
+        ccn(log, 'addActiveFollowingById', [cct.update], (err) => {
+            err || emitEvent(
+                flowEvent.USER_RELATIONSHIP_USER_FOLLOWING_ADDED,
+                queryDateTime, followingUserId, userId
+            );
+            callback(err);
+        })
+    );
+
+
+const removeActiveFollowingById = (queryDateTime, followingUserId, userId, callback) =>
+    UserRelationship.update(
+        {
+            '_id': userId,
+            'active.following.user.list': { $elemMatch: { id: followingUserId } }
+        },
+        {
+            $inc: { 'active.following.user.count.total': -1 },
+            $pull: { 'active.following.user.list': { id: followingUserId } },
+        },
+        ccn(log, 'removeActiveFollowingById', [cct.update], (err) => {
+            err || emitEvent(
+                flowEvent.USER_RELATIONSHIP_USER_FOLLOWING_REMOVED,
+                queryDateTime, followingUserId, userId
+            );
+            callback(err);
+        })
+    );
+
+
+const addPassiveFollowingById = (queryDateTime, followerId, userId, callback) =>
+    UserRelationship.update(
+        {
+            '_id': userId,
+            'passive.following.user.list': { $not: { $elemMatch: { id: followerId } } },
+        },
+        {
+            $inc: { 'passive.following.user.count.total': 1 },
+            $push: {
+                'passive.following.user.list': {
+                    $position: 0,
+                    $each: [{ id: followerId }],
+                }
+            }
+        },
+        ccn(log, 'addPassiveFollowingById', [cct.update], callback)
+    );
+
+onEvent(
+    flowEvent.USER_RELATIONSHIP_USER_FOLLOWING_ADDED,
+    'addPassiveFollowingById',
+    (queryDateTime, followingUserId, userId) => (cb) =>
+        addPassiveFollowingById(queryDateTime, userId, followingUserId, cb)
+);
+
+
+const removePassiveFollowingById = (queryDateTime, followerId, userId, callback) =>
+    UserRelationship.update(
+        {
+            '_id': userId,
+            'passive.following.user.list': { $elemMatch: { id: followerId } },
+        },
+        {
+            $inc: { 'passive.following.user.count.total': 1 },
+            $pull: { 'passive.following.user.list': { id: followerId } },
+        },
+        ccn(log, 'removePassiveFollowingById', [cct.update], callback)
+    );
+
+onEvent(
+    flowEvent.USER_RELATIONSHIP_USER_FOLLOWING_REMOVED,
+    'removePassiveFollowingById',
+    (queryDateTime, followingUserId, userId) => (cb) =>
+        removePassiveFollowingById(queryDateTime, userId, followingUserId, cb)
+);
+
+
+module.exports = {
+    addActiveFollowingById: addActiveFollowingById,
+    addPassiveFollowingById: addPassiveFollowingById,
+    removeActiveFollowingById: removeActiveFollowingById,
+    removePassiveFollowingById: removePassiveFollowingById,
+};

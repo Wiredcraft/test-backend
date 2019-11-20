@@ -1,0 +1,40 @@
+const mongoose = require('mongoose')
+    , binding = require('./binding.es7')
+    , cfg = require('../../../config.json');
+
+
+const userRelationshipModelName = 'UserRelationship';
+
+
+const relationshipRecordPrototype = {
+    _id: false,
+    id: { type: String, required: true },
+};
+
+
+const userRelationshipSchemaPrototype = {
+    _id: { type: String, required: true },
+    active: { following: { user: {
+        list: { type: [relationshipRecordPrototype], required: false},
+        count: { total: { type: Number, required: true, 'default': 0 } },
+    } } },
+    passive: { following: { user: {
+        list: { type: [relationshipRecordPrototype], required: false},
+        count: { total: { type: Number, required: true, 'default': 0 } },
+    } } }
+}
+
+
+const userRelationshipSchema = new mongoose.Schema(
+    userRelationshipSchemaPrototype, cfg.mongoose.options.schema.fallback
+);
+
+
+const userRelationshipModel = binding.db.collection.model(
+    userRelationshipModelName, userRelationshipSchema, cfg.mongodb.collection.name.userRelationship
+);
+
+
+module.exports = {
+    model: userRelationshipModel,
+};

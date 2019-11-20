@@ -7,11 +7,11 @@ const c = require('./create.es7')
     , s = require('./schema.es7')
     , guard = require('../../lib/guard.es7')
     , logging = require('../../../lib/logging.es7')
-    , modModule = require('../../../lib/module_name.es7')
+    , modName = require('../../../lib/module_name.es7')
     , ciT = require('../../lib/crud_interface_transform.es7');
 
 
-const moduleName = modModule.generate(__dirname, __filename)
+const moduleName = modName.generateServer(__dirname, __filename)
     , log = logging.getLoggerModule(moduleName);
 
 
@@ -67,5 +67,5 @@ module.exports = {
         setDescriptionById: _.flowRight(ciT.injectQueryDateTime)(r.setDescriptionById),
         updateDescriptionById: _.flowRight(ciT.injectQueryDateTime)(r.updateDescriptionById),
         deleteById: _.flowRight(ciT.injectQueryDateTime)(r.deleteById),
-    }
-}
+    },
+};

@@ -25,19 +25,23 @@ const rawExports = {
         r.findById, 'findById',
         [a.QueryDateTime, a.Id, null]
     ),
-    findNearbyLimitedByPointCoordinates: gd(
-        r.findNearbyLimitedByPointCoordinates, 'findNearbyLimitedByPointCoordinates',
-        [a.QueryDateTime, a.PointCoordinates, a.Distance, null]
+    addActiveFollowingById: gd(
+        u.addActiveFollowingById, 'addActiveFollowingById',
+        [a.QueryDateTime, a.Id, a.Id, null]
     ),
-    findNearbyUnLimitedByPointCoordinates: gd(
-        r.findNearbyUnLimitedByPointCoordinates, 'findNearbyUnLimitedByPointCoordinates',
-        [a.QueryDateTime, a.PointCoordinates, a.Distance, null]
+    removeActiveFollowingById: gd(
+        u.removeActiveFollowingById, 'removeActiveFollowingById',
+        [a.QueryDateTime, a.Id, a.Id, null]
     ),
-    overwritePositionById: gd(
-        u.overwritePositionById, 'overwritePositionById',
-        [a.QueryDateTime, a.PointCoordinates, a.Id, null]
+    addPassiveFollowingById: gd(
+        u.addPassiveFollowingById, 'addPassiveFollowingById',
+        [a.QueryDateTime, a.Id, a.Id, null]
     ),
-    delete: gd(
+    addPassiveFollowingById: gd(
+        u.addPassiveFollowingById, 'addPassiveFollowingById',
+        [a.QueryDateTime, a.Id, a.Id, null]
+    ),
+    deleteById: gd(
         d.deleteById, 'deleteById',
         [a.QueryDateTime, a.Id, null]
     ),
@@ -48,11 +52,9 @@ const r = rawExports;
 
 module.exports = {
     model: s.model,
-    raw: rawExports,
+    raw: rawExportspo,
     web: {
-        findNearbyLimitedByPointCoordinates:
-            _.flowRight(ciT.injectQueryDateTime)(r.findNearbyLimitedByPointCoordinates),
-        overwritePositionById:
-            _.flowRight(ciT.injectQueryDateTime)(u.overwritePositionById),
+        addActiveFollowingById: _.flowRight(ciT.injectQueryDateTime)(u.addActiveFollowingById),
+        removeActiveFollowingById: _.flowRight(ciT.injectQueryDateTime)(u.removeActiveFollowingById),
     },
 };

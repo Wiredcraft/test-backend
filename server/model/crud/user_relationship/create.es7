@@ -1,0 +1,32 @@
+const s = require('./schema.es7')
+    , logging = require('../../../lib/logging.es7')
+    , modName = require('../../../../lib/module_name.es7')
+    , { flowEvent } = require('../../lib/flow_event_meta.es7')
+    , flowController = require('../../lib/flow_controller.es7')
+    , { normalize: ccn, transform: cct } = require('../../lib/crud_callback.js');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName)
+    , onEvent = flowController.getOnEvent(moduleName);
+
+
+const UserRelationship = s.model;
+
+
+const create = (queryDateTime, userId, callback) =>
+    new UserRelationship({
+        '_id': userId
+    }).save(ccn(log, 'create', [cct.save, cct.docToObject], callback));
+
+onEvent(
+    flowEvent.USER_NAME_NICK_REGISTERED,
+    'create',
+    (queryDateTime, newUser) => (cb) =>
+        create(queryDateTime, newUser.id, cb)
+);
+
+
+module.exports = {
+    create: create,
+};

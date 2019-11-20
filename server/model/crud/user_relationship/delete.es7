@@ -1,0 +1,32 @@
+const s = require('./schema.es7')
+    , logging = require('../../../lib/logging.es7')
+    , modName = require('../../../../lib/module_name.es7')
+    , { flowEvent } = require('../../lib/flow_event_meta.es7')
+    , { normalize: ccn, transform: cct } = require('../../lib/crud_callback.js');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName)
+    , onEvent = flowEventController.getOnEvent(moduleName);
+
+
+const UserRelationship = s.model;
+
+
+const deleteById = (queryDateTime, userId, callback) =>
+    UserRelationship.findOneAndRemove(
+        { '_id': userId },
+        ccn(log, 'deleteById', [cct.findOneAndRemove, cct.docToObject], callback)
+    );
+
+onEvent(
+    flowEvent.USER_DELETED,
+    'deleteById',
+    (queryDateTime, deletedUser) => (cb) =>
+        deleteById(queryDateTime, deletedUser.id, cb)
+);
+
+
+module.exports = {
+    deleteById: deleteById,
+};

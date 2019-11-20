@@ -1,0 +1,25 @@
+const s = require('./schema.es7')
+    , logging = require('../../../lib/logging.es7')
+    , modName = require('../../../../lib/module_name.es7')
+    , { normalize: ccn, transform: cct } = require('../../lib/crud_callback.js');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const UserRelationship = s.model;
+
+
+const findById = (queryDateTime, userId, callback) =>
+    UserRelationship.findOne(
+        { '_id': userId },
+        null,
+        { lean: true },
+        ccn(log, 'findById', [cct.findOne], callback)
+    );
+
+
+module.exports = {
+    findById: findById,
+};
