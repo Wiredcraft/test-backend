@@ -1,0 +1,18 @@
+module.exports = {
+    crudOperation: {
+        READ: 'READ',
+        CREATE: 'CREATE',
+        DELETE: 'DELETE',
+        UPDATE: 'UPDATE',
+        UPDATE_INSERT: 'UPDATE_INSERT',
+        PREDICATE: 'PREDICATE',
+        CURSOR: 'CURSOR',
+        NONE: 'NONE',
+    },
+    crudResult: {
+        ERROR_UPSTREAM: 'ERROR_UPSTREAM',
+        ERROR_GUARD: 'ERROR_GUARD',
+        FAIL_GUARD: 'FAIL_GUARD',
+        FAIL_FALLBACK: 'FAIL_FALLBACK',
+    },
+};
