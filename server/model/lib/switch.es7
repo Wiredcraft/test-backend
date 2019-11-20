@@ -1,0 +1,10 @@
+exports = {
+    flow: { on: false, turnOn: null, turnOff: null }
+};
+
+
+exports.flow.turnOn = () => { exports.flow.on = true; };
+exports.flow.turnOff = () => { exports.flow.on = false; };
+
+
+module.exports = exports;
