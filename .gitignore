@@ -3,3 +3,5 @@
 node_modules/
 *.log
 config/development.js
+.nyc_*
+coverage
