@@ -11,8 +11,7 @@ const User = new Schema({
   password: { type: String },
   salt: { type: String },
   status: { type: Number },
-  location: { type: [Number], index: { type: '2dsphere', sparse: true } },
-  friends: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+  location: { type: [Number], index: { type: '2dsphere', sparse: true } }
 }, { timestamps: { createdAt: 'created_at' } });
 
 User.options.toObject = {};

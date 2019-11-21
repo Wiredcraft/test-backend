@@ -4,14 +4,9 @@ const should = require('should');
 const app = require('../server/app');
 const sinon = require('sinon');
 const logger = require('../server/lib/logger');
-const db = require('../server/models');
 
 const agent = request.agent(app);
 describe('app.js', function() {
-  after(done => {
-    db.close(done);
-  });
-
   it('should mount jwt middleware', function(done) {
     assert.ok(1);
     done();

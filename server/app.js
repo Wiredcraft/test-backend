@@ -4,10 +4,13 @@ const middleware = require('./middleware');
 const logger = require('./lib/logger');
 const router = require('./api');
 const bodyParser = require('body-parser');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../document/api.json');
 
 const env = process.env.NODE_ENV;
 const app = express();
 app.use(helmet());
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(middleware.jwt);
 app.use(middleware.pagination);
 app.use(bodyParser.json({ limit: '5mb' }));

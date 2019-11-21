@@ -3,7 +3,6 @@ const config = require('config');
 const logger = require('./server/lib/logger');
 const app = require('./server/app');
 
-console.log(logger.transports);
 const server = http.createServer(app);
 server.listen(config.port, config.host);
 server.on('error', err => {

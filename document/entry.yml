@@ -40,7 +40,7 @@ securityDefinitions:
 tags:
   - name: Auth
     description: authorization module api
-  - name: Users
+  - name: User
     description: user module
 parameters:
   $ref: ./parameters/index.yml

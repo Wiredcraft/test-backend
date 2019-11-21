@@ -16,6 +16,5 @@ const options = {
   }
 };
 resolve(root, options).then(results => {
-  console.log('-------', results.resolved);
   fs.writeFileSync(output, JSON.stringify(results.resolved, null, 2));
 });

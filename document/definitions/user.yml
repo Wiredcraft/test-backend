@@ -9,12 +9,6 @@ properties:
   dob:
     type: string
     description: date of birthday
-  password:
-    description: user password, encrypted char
-    type: string
-  salt:
-    description: auto genernate, password verify salt
-    type: string
   status:
     type: integer
     description: user status. -1 mean user was deleted 
@@ -26,4 +20,4 @@ properties:
     description: |
       user location, array like: [lat, lnt]
     items:
-      type: floot
+      type: number

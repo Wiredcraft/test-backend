@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "debug=test-backend:* NODE_ENV=development nodemon server.js",
-    "test": "NODE_ENV=test mocha --recursive",
+    "test": "NODE_ENV=test mocha --recursive --exit",
     "prettier": "prettier --write 'server/**/*.js'",
     "precommit": "lint-staged",
-    "lint": "eslint --fix --ext .js server"
+    "lint": "eslint --fix --ext .js server",
+    "doc": "cd document && node index.js"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,7 @@
     "pbkdf2": "^3.0.17",
     "pwd": "^1.1.0",
     "supertest": "^4.0.2",
+    "swagger-ui-express": "^4.1.2",
     "winston": "^3.2.1"
   },
   "devDependencies": {

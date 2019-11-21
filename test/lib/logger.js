@@ -1,7 +1,6 @@
 const os = require('os');
 const assert = require('assert');
 const sinon = require('sinon');
-const config = require('config');
 const winston = require('winston');
 const logger = require('../../server/lib/logger');
 

@@ -1,3 +1,17 @@
-#================= auth =================#
+#================= login && register =================#
+/signup:
+  $ref: ./auth/signup.yml
+/signin:
+  $ref: ./auth/signin.yml
+
+#================= user module =================#
 /users:
   $ref: ./user/list.yml
+/users/{userId}:
+  $ref: ./user/userId.yml
+
+#================= frined module =================#
+/friends:
+  $ref: ./friend/index.yml
+/frineds/{username}:
+  $ref: ./friend/friends.yml

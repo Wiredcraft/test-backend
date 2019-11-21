@@ -31,7 +31,7 @@
       "description": "authorization module api"
     },
     {
-      "name": "Users",
+      "name": "User",
       "description": "user module"
     }
   ],
@@ -75,6 +75,190 @@
     }
   },
   "paths": {
+    "/signup": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "register",
+            "description": "signup params",
+            "schema": {
+              "type": "object",
+              "required": [
+                "username",
+                "password",
+                "confirm"
+              ],
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "username"
+                },
+                "dob": {
+                  "type": "string",
+                  "description": "date of birthday"
+                },
+                "password": {
+                  "description": "user password, encrypted char",
+                  "type": "string"
+                },
+                "confirm": {
+                  "type": "string",
+                  "description": "password confirm"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "user extra info description"
+                },
+                "location": {
+                  "type": "array",
+                  "description": "user location, array like: [lat, lnt]\n",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "description": "user register api",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "integer"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Client params error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexcepted Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/signin": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "login",
+            "description": "login params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "username"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "user password"
+                }
+              }
+            }
+          }
+        ],
+        "description": "user login and get jwt token",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "integer"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Client params error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexcepted Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/users": {
       "get": {
         "tags": [
@@ -156,6 +340,344 @@
           }
         }
       }
+    },
+    "/users/{userId}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "type": "string",
+            "description": "user ID",
+            "required": true
+          }
+        ],
+        "description": "get user list",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "data": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Client params error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexcepted Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "type": "string",
+            "description": "user ID",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "userInfo",
+            "description": "update user info",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "dob": {
+                  "type": "string",
+                  "description": "date of birthday, date string"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "user info description"
+                },
+                "location": {
+                  "type": "array",
+                  "description": "user location, [lat, lnt]",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "description": "update user info",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Client params error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexcepted Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "type": "string",
+            "description": "user ID",
+            "required": true
+          }
+        ],
+        "description": "delete user.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Client params error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexcepted Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/friends": {
+      "post": {
+        "tags": [
+          "Friend"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "login",
+            "description": "login params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "friendIds": {
+                  "type": "array",
+                  "description": "user id list",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "description": "add friends for current login user",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Client params error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexcepted Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/frineds/{username}": {
+      "get": {
+        "tags": [
+          "Friend"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "type": "string",
+            "description": "name of user",
+            "required": true
+          }
+        ],
+        "description": "get user list",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "limit": {
+                      "type": "integer"
+                    },
+                    "meter": {
+                      "type": "integer"
+                    },
+                    "user": {
+                      "$ref": "#/definitions/User"
+                    },
+                    "friends": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/Friend"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Client params error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexcepted Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -174,14 +696,6 @@
           "type": "string",
           "description": "date of birthday"
         },
-        "password": {
-          "description": "user password, encrypted char",
-          "type": "string"
-        },
-        "salt": {
-          "description": "auto genernate, password verify salt",
-          "type": "string"
-        },
         "status": {
           "type": "integer",
           "description": "user status. -1 mean user was deleted"
@@ -194,7 +708,7 @@
           "type": "array",
           "description": "user location, array like: [lat, lnt]\n",
           "items": {
-            "type": "floot"
+            "type": "number"
           }
         }
       }
@@ -208,6 +722,23 @@
         },
         "message": {
           "type": "string"
+        }
+      }
+    },
+    "Friend": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "location": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
         }
       }
     }

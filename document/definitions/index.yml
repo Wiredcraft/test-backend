@@ -2,3 +2,5 @@ User:
   $ref: ./user.yml
 Error:
   $ref: ./error.yml
+Friend:
+  $ref: ./friend.yml

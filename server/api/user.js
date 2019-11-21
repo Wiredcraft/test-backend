@@ -100,7 +100,7 @@ module.exports = {
   },
   /**
    * delete user. It is not safety to drop user from db.
-   * In this case, we just set the user status to -1
+   * In this case, I just set the user status to -1
    * @param {Object} req Request Instance
    * @param {Object} res Response
    * @param {Function} next
@@ -110,6 +110,13 @@ module.exports = {
       const user = req.user;
       const userId = req.params.userId;
       const record = await User.findById(userId);
+      if (!record) {
+        return res.status(404).json({
+          message: 'message not found',
+          code: 10404
+        });
+      }
+
       if (record.name !== user.username && !user.isAdmin) {
         return res.status(401).json({
           message: 'permission deny',

@@ -11,14 +11,13 @@ describe('Auth api', () => {
   const password = 'xpassword';
   const user = {
     isAdmin: false,
-    'address': 'earth',
-    'description': 'I am one punch man',
-    'name': 'tester-xxx1',
-    'password': password,
-    'salt': 'xsalt',
-    'dob': new Date('2019-11-15T00:00:00.000Z'),
-    'createdAt': parseInt(Date.now() / 1000),
-    'location': [
+    address: 'earth',
+    description: 'I am one punch man',
+    name: 'tester-xxx1',
+    password: password,
+    salt: 'xsalt',
+    dob: new Date('2019-11-15T00:00:00.000Z'),
+    location: [
       108.0221,
       24.74928
     ]

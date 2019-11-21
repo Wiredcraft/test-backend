@@ -14,28 +14,26 @@ describe('Friend api: api/friend.js', () => {
   let users = [
     {
       isAdmin: false,
-      "address" : "earth",
-      "description" : "I am one punch man",
-      "name" : "tester-xxxxxxxxx1",
-      "password" : "xpassword",
-      "salt" : "xsalt",
-      "dob" : new Date("2019-11-15T00:00:00.000Z"),
-      "createdAt" : parseInt(Date.now() / 1000),
-      "location" : [ 
-          108.0221, 
-          24.74928
+      address: 'earth',
+      description: 'I am one punch man',
+      name: 'tester-xxx1',
+      password: 'somepassword',
+      salt: 'xsalt',
+      dob: new Date('2019-11-15T00:00:00.000Z'),
+      location: [
+        108.0221,
+        24.74928
       ]
     },
     {
       isAdmin: false,
-      "address" : "earth",
-      "description" : "I am one punch man",
-      "name" : "tester-xxxxxxxxx2",
-      "password" : "xpassword",
-      "salt" : "xsalt",
-      "dob" : new Date("2019-11-15T00:00:00.000Z"),
-      "createdAt" : parseInt(Date.now() / 1000),
-      "location" : [ 
+      address: 'earth',
+      description: 'I am one punch man',
+      name: 'tester-xxx2',
+      password: 'somepassword',
+      salt: 'xsalt',
+      dob: new Date('2019-11-15T00:00:00.000Z'),
+      location : [ 
           108.0222, 
           24.74929
       ]
