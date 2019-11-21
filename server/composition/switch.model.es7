@@ -1,0 +1,9 @@
+const modelSwitch = require('../model/lib/switch.es7');
+
+
+module.exports = {
+    flow: {
+        turnOn: () => modelSwitch.flow.turnOn(),
+        turnOff: () => modelSwitch.flow.turnOff(),
+    },
+};
