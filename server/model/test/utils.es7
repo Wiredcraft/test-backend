@@ -1,0 +1,47 @@
+const _ = require('lodash');
+
+
+const generateDropCollection = (dbEntity, collectionName) => (callback) =>
+    dbEntity.connection.collections[collectionName].drop((err) => {
+        err && err.should.have.property('message', 'ns not found');
+        callback();
+    });
+
+
+const getFromSeedOperationGroup = (Model) => {
+    const generateFromSeed = (seed, callback) =>
+        new Model(seed).save((err, newDocument, numModified) => {
+            should.not.exist(err);
+            should.exist(newDocument);
+            numModified.should.equal(1);
+            callback(null, newDocument);
+        });
+
+    const generateFromSeedList = (seedList, callback) => {
+        if (_.isEmpty(seedList)) return callback();
+
+        const [firstSeed, ...restSeedList] = seedList;
+
+        generateFromSeed(firstSeed, () => generateFromSeedList(restSeedList, callback));
+    };
+
+    return [generateFromSeed, generateFromSeedList];
+};
+
+
+const createFlowShould = (delayTime) => (initialEntry, sideEffectValidationTask, callback) =>
+    async.series(
+        [
+            (cb) => initialEntry(cb),
+            (cb) => setTimeout(cb, delayTime),
+            ...sideEffectValidationTask,
+        ],
+        callback
+    );
+
+
+module.exports = {
+    createFlowShould: createFlowShould,
+    generateDropCollection: generateDropCollection,
+    getFromSeedOperationGroup: getFromSeedOperationGroup,
+};
