@@ -1,0 +1,68 @@
+const should = require('chai').should()
+    , { createFlowShould } = require('../../test/utils.es7')
+    , userRelationshipCrud = require('../../crud/user_relationship/index.es7').raw;
+
+
+const maxFlowDelayTime = 100
+    , flowShould = createFlowShould(maxFlowDelayTime);
+
+
+describe('Model Flow Source User Relationship', () => {
+    before((done) => tD.reset(done));
+
+    describe('User Relationship User Following Added', () => {
+        it('should pass if everything ok', (done) => {
+            flowShould(
+                (cb) => userRelationshipCrud.addActiveFollowingById(
+                    tD.dt.justNow,
+                    tD.userRelationship.toFollow.followee.id,
+                    tD.userRelationship.toFollow.follower.id,
+                    (err) => {
+                        should.not.exist(err);
+                        cb();
+                    }
+                ),
+                [
+                    (cb) => userRelationshipCrud.findById(
+                        tD.dt.justNow,
+                        tD.userRelationship.toFollow.followee.id,
+                        (err, userRelationship) => {
+                            should.not.exist(err);
+                            userRelationship.have.property('passive.following.user.count.total', 1);
+                            cb();
+                        }
+                    ),
+                ],
+                done
+            );
+        });
+    });
+
+    describe('User Relationship User Following Removed', () => {
+        it('should pass if everything ok', (done) => {
+            flowShould(
+                (cb) => userRelationshipCrud.removeActiveFollowingById(
+                    tD.dt.justNow,
+                    tD.userRelationship.unFollow.followee.id,
+                    tD.userRelationship.unFollow.follower.id,
+                    (err) => {
+                        should.not.exist(err);
+                        cb();
+                    }
+                ),
+                [
+                    (cb) => userRelationshipCrud.findById(
+                        tD.dt.justNow,
+                        tD.userRelationship.unFollow.followee.id,
+                        (err, userRelationship) => {
+                            should.not.exist(err);
+                            userRelationship.have.property('passive.following.user.count.total', 0);
+                            cb();
+                        }
+                    ),
+                ],
+                done
+            );
+        });
+    });
+});

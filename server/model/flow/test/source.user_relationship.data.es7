@@ -1,0 +1,56 @@
+const prepare = require('../../test/prepare.es7')
+    , operation = require('./source.user_relationship.operation.es7');
+
+
+const baseTime = Date.now()
+    , dtT = prepare.dateTime(baseTime);
+
+
+const userRelationshipT = {
+    toFollow: {
+        followee: {
+            id: 'ff42a73091bf31d1',
+        },
+        follower: {
+            id: 'f16237f088c06a23',
+        }
+    },
+    unFollow: {
+        followee: {
+            id: 'd55efb24fb83c59b',
+        },
+        follower: {
+            id: '4071a9846a040ba1',
+        }
+    }
+};
+
+
+const urT = userRelationshipT;
+
+const userRelationshipSeedList = [
+    ...[
+        urT.toFollow.followee,
+        urT.toFollow.follower,
+    ].map((i) => ({ '_id': i.id })),
+    {
+        '_id': urT.unFollow.followee.id,
+        'passive.following.user.list': [{ 'id': urT.unFollow.follower.id }],
+        'passive.following.user.count.total': 1,
+    },
+    {
+        '_id': urT.unFollow.follower.id,
+        'active.following.user.list': [{ 'id': urT.unFollow.followee.id }],
+        'active.following.user.count.total': 1,
+    },
+];
+
+
+const reset = operation.reset(userRelationshipSeedList);
+
+
+module.exports = {
+    dt: dtT,
+    userRelationship: userRelationshipT,
+    reset: reset,
+};

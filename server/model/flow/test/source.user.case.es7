@@ -1,0 +1,88 @@
+const should = require('chai').should()
+    , { createFlowShould } = require('../../test/utils.es7')
+    , userCrud = require('../../crud/user/index.es7').raw
+    , userPositionCrud = require('../../crud/user_position/index.es7').raw
+    , userRelationshipCrud = require('../../crud/user_relationship/index.es7').raw;
+
+
+const maxFlowDelayTime = 100
+    , flowShould = createFlowShould(maxFlowDelayTime);
+
+
+describe('Model Flow Source User', () => {
+    before((done) => tD.reset(done));
+
+    describe('User Name Nick Registered', () => {
+        it('should pass if everything ok', (done) => {
+            flowShould(
+                (cb) => userCrud.createNameNick(
+                    tD.dt.justNow,
+                    tD.user.unRegistered.id,
+                    (err, user) => {
+                        should.not.exist(err);
+                        should.exist(user);
+                        cb();
+                    }
+                ),
+                [
+                    (cb) => userPositionCrud.findById(
+                        tD.dt.justNow,
+                        tD.user.unRegistered.id,
+                        (err, userPosition) => {
+                            should.not.exist(err);
+                            should.exist(userPosition);
+                            cb();
+                        }
+                    ),
+                    (cb) => userRelationshipCrud.findById(
+                        tD.dt.justNow,
+                        tD.user.unRegistered.id,
+                        (err, userPosition) => {
+                            should.not.exist(err);
+                            should.exist(userPosition);
+                            cb();
+                        }
+                    ),
+                ],
+                done
+            );
+        });
+    });
+
+    describe('User Deleted', () => {
+        it('should pass if everything ok', (done) => {
+            flowShould(
+                (cb) => userCrud.deleteById(
+                    tD.dt.justNow,
+                    tD.user.registered.id,
+                    (err, _user) => {
+                        should.not.exist(err);
+                        should.exist(err);
+                        cb();
+                    }
+                ),
+                [
+                    (cb) => userPositionCrud.findById(
+                        tD.dt.justNow,
+                        tD.user.registered.id,
+                        (err, userPosition) => {
+                            should.not.exist(err);
+                            should.not.exist(userPosition);
+                            cb();
+                        }
+                    ),
+                    (cb) => userRelationshipCrud.findById(
+                        tD.dt.justNow,
+                        tD.user.registered.id,
+                        (err, userRelationship) => {
+                            should.not.exist(err);
+                            should.not.exist(userRelationship);
+                            cb();
+                        }
+                    ),
+                ],
+                done
+            );
+        });
+    });
+});

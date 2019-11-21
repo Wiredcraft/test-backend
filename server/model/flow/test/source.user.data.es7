@@ -1,0 +1,49 @@
+const prepare = require('../../test/prepare.es7')
+    , operation = require('./source.user_relationship.operation.es7');
+
+
+const baseTime = Date.now()
+    , dtT = prepare.dateTime(baseTime);
+
+
+const userT = {
+    unRegistered: {
+        id: '799326762843c9e6',
+        nameNick: 'Nick Name Un Registered',
+    },
+    registered: {
+        id: 'abce9d938e74facf',
+        nameNick: 'Nick Name Registered',
+    },
+};
+
+
+const uT = userT;
+
+const userSeedList = [
+    {
+        '_id': uT.registered.id,
+    },
+];
+
+const userPositionSeedList = [
+    {
+        '_id': uT.registered.id,
+    }
+];
+
+const userRelationshipSeedList = [
+    {
+        '_id': uT.registered.id
+    }
+];
+
+
+const reset = operation.reset(userSeedList, userPositionSeedList, userRelationshipSeedList);
+
+
+module.exports = {
+    dt: dtT,
+    user: userT,
+    reset: reset,
+};

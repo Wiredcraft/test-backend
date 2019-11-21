@@ -1,0 +1,6 @@
+const testOpUserRelationship = require('../../crud/test/user_relationship.operation.es7');
+
+
+module.exports = {
+    reset: testOpUserRelationship.reset,
+};

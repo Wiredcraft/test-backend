@@ -1,0 +1,19 @@
+const testOpUser = require('../../crud/test/user.operation.es7')
+    , testOpUserPosition = require('../../crud/test/user_position.operation.es7')
+    , testOpUserRelationship = require('../../crud/test/user_relationship.operation.es7');
+
+
+const reset = (userSeedList, userPositionSeedList, userRelationshipSeedList) => (callback) =>
+    async.series(
+        [
+            (cb) => testOpUser.reset(userSeedList)(cb),
+            (cb) => testOpUserPosition.reset(userPositionSeedList)(cb),
+            (cb) => testOpUserRelationship.reset(userRelationshipSeedList)(cb),
+        ],
+        callback
+    );
+
+
+module.exports = {
+    reset: reset,
+};
