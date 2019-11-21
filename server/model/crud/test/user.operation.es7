@@ -1,0 +1,35 @@
+const utils = require('../../test/utils.es7')
+    , userCrud = require('../user/index.es7')
+    , cfg = require('../../../config.json');
+
+
+const User = userCrud.schema.model;
+
+
+const dropCollection = utils.generateDropCollection(userCrud.binding.db, cfg.mongodb.collection.name.user);
+
+
+const [generateFromSeed, generateFromSeedList] = utils.generateFromSeedOperationList(User);
+
+
+const ensureIndexes = (callback) => User.ensureIndexes(callback);
+
+
+const reset = (userSeedList) => (callback) =>
+    async.series(
+        [
+            (cb) => operation.dropCollection(cb),
+            (cb) => operation.ensureIndexes(cb),
+            (cb) => operation.generateFromSeedList(userSeedList, cb),
+        ],
+        callback
+    );
+
+
+module.exports = {
+    model: User,
+    reset: reset,
+    ensureIndexes: ensureIndexes,
+    dropCollection: dropCollection,
+    generateFromSeed, generateFromSeedList,
+};

@@ -1,0 +1,121 @@
+const assert = require('assert')
+    , cfg = require('../../../config.json')
+    , prepare = require('../../test/prepare.es7')
+    , operation = require('./user_position.operation.es7');
+
+
+const baseTime = Date.now()
+    , dtT = prepare.dateTime(baseTime);
+
+
+const userPositionIdPool = [
+    'ac37964abb72eb47', '00020d6882b95c8e', '2613220ae5d2b4fd', 'da27f289b6e6a106',
+    '97dec4b4cdab8244', '7b940e5d0508f0c9', '80e14102091a04fc', '657e15b96db4d7be',
+    '34cfc08f688f595c', '66e8b3ae045a70d5', '9b8e8f83018806f5', '9eadb644570099a9',
+    '2dac4992223a75a3', '5eb4a5d643e7a435', 'c9aafb68cb3406be', '8d6ffabc9c3bd0a4',
+    'eef786a5a319cbc1', '832bfacb81379600', '36a7473f84426394', 'ed1581ac9d968f2b',
+    'f6b3311311147cb2', '6d034a171b376d93', 'd1fb406425a618f2', '61c3c9a12050442b',
+    'e8497c2e2ab01aa7', '6c54404568b81320', '49b9b0b38050deef', '2d542dcd43e4cff3',
+    'c1710e97cfb69806', '81ed2a81c5a3c07d', 'd9ac43fa1593f879', '831e5122b09e44c3',
+];
+
+assert(
+    cfg.model.limit.userPosition.queryNearbyLimitMax + 1 <= userPositionIdPool.length,
+    'No Enough User Position Id In Pool'
+);
+
+const userPositionNearbyHugeGroupCoordinatesCenter = [30.000, 30.000];
+
+const userPositionNearbyHugeGroupEntityList =
+    _.range(cfg.model.limit.userPosition.queryNearbyLimitMax + 1)
+    .map((index) => {
+        const roundOffsetList = [
+            [+0, +1], [+1, +1], [+1, +0], [+1, -1],
+            [+0, -1], [-1, -1], [-1, +0], [-1, +1],
+        ];
+
+        const idx = index % roundOffsetList.length;
+
+        const coordinates = [
+            30.000 + (0.001 * roundOffsetList[idx][0]),
+            30.000 + (0.001 * roundOffsetList[idx][1]),
+        ];
+
+        return {
+            id: userPositionIdPool[index],
+            last: { coordinates: coordinates }
+        };
+    });
+
+
+const metricT = {
+    nearbyDistance: {
+        min: 200,
+        medium: 400,
+        max: 800,
+    }
+};
+
+
+const userPositionT = {
+    notExist: {
+        id: '5285278859e1f3e2',
+        last: { coordinates: [0.000, 0.000] },
+    },
+    single: {
+        id: '6cc10aacb3fbb060',
+        last: { coordinates: [-120.000, -30.000] },
+    },
+    nearbyGroup: {
+        normal: {
+            a: {
+                id: 'f350213f0af6a01d',
+                last: { coordinates: [120.000, 30.000] },
+            },
+            b: {
+                id: 'a99a6c7427fa27d8',
+                last: { coordinates: [120.000, 30.001] },
+            },
+            c: {
+                id: 'a232b78b9a25ac78',
+                last: { coordinates: [120.001, 30.000] },
+            },
+        },
+        huge: {
+            center: {
+                id: '4bc4048a44a4bee7',
+                last: { coordinates: userPositionNearbyHugeGroupCoordinatesCenter },
+            },
+            list: userPositionNearbyHugeGroupEntityList,
+        }
+    },
+};
+
+
+const upT = userPositionT;
+
+
+const userPositionSeedList = [
+    upT.single,
+    upT.nearbyGroup.normal.a,
+    upT.nearbyGroup.normal.b,
+    upT.nearbyGroup.normal.c,
+    upT.nearbyGroup.huge.center,
+    ...upT.nearbyGroup.huge.list
+].map((i) => ({
+    '_id': i.id,
+    'last.updateAt': dtT.past.a,
+    'last.record.type': 'Point',
+    'last.record.coordinates': i.last.coordinates,
+}));
+
+
+const reset = operation.reset(userPositionSeedList);
+
+
+module.exports = {
+    dt: dtT,
+    metric: metricT,
+    userPosition: userPositionT,
+    reset: reset,
+};

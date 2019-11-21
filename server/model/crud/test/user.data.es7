@@ -1,0 +1,94 @@
+const preparation = require('../../test/preparation.es7')
+    , operation = require('./user.operation.es7')
+    , cfg = require('../../../config.json');
+
+
+const baseTime = Date.now()
+    , dtT = preparation.generateDateTimeTable(baseTime);
+
+
+const userT = {
+    notExist: {
+        id: '',
+        nickName: 'Nick Name Not Exist',
+        birthDate: { year: 2001, month: 1, day: 1 },
+        description: 'Description Not Exist',
+        homeAddress: { text: 'Home Address Not Exist' },
+    },
+    unRegistered: {
+        id: '67e54af5cbeebde2',
+        createAt: dtT.future.a,
+        nickName: 'Nick Name Un Registered',
+    },
+    registeredJustNow: {
+        id: '3f84d8cb7e651c6d',
+        createAt: dtT.justNow,
+        nickName: 'Nick Name Registered Just Now',
+        homeAddress: { text: 'Home Address Registered Just Now' },
+    },
+    profileFullFilledJustNow: {
+        id: '',
+        createAt: dtT.past.c,
+        nickName: 'Nick Name Profile FullFilled Just Now',
+    },
+    profileFullFilledLongAgo: {
+        id: '077840f98367438c',
+        createAt: dtT.past.b,
+        nickName: 'Nick Name Profile FullFilled Long Ago',
+        new: { homeAddress: { text: 'Home Address Profile FullFilled Long Ago New' } },
+    },
+    toDelete: {
+        id: '028d66134617f33b',
+        createAt: dtT.past.z,
+        nickName: 'Nick Name To Delete',
+    }
+}
+
+
+const uT = userT;
+
+const userSeedList = [
+    {
+        '_id': uT.registeredJustNow.id,
+        'createAt': uT.registeredJustNow.createAt,
+        'nameNick': uT.registeredJustNow.nickName,
+    },
+    {
+        '_id': uT.profileFullFilledJustNow.id,
+        'createAt': uT.profileFullFilledJustNow.createAt,
+        'nameNick': uT.profileFullFilledJustNow.nickName,
+        'dateBirth.year': 2000,
+        'dateBirth.month': 1,
+        'dateBirth.day': 1,
+        'homeAddress.text': 'Home Address Profile FullFilled Just Now',
+        'homeAddress.last.updateAt': dtT.justNow,
+        'description': 'Description Profile FullFilled Just Now',
+    },
+    {
+        '_id': uT.profileFullFilledLongAgo.id,
+        'createAt': uT.profileFullFilledLongAgo.createAt,
+        'nameNick': uT.profileFullFilledLongAgo.nickName,
+        'dateBirth.year': 1999,
+        'dateBirth.month': 1,
+        'dateBirth.day': 1,
+        'homeAddress.text': 'Home Address Profile FullFilled Long Ago',
+        'homeAddress.last.updateAt':
+            new Date(dtT.past.z.getTime() - cfg.model.limit.user.addressUpdateIntervalTimeMin),
+        'description': 'Description Profile FullFilled Long Ago',
+    },
+    {
+        '_id': uT.toDelete.id,
+        'createAt': uT.toDelete.createAt,
+        'nameNick': uT.toDelete.nickName,
+    }
+]
+
+
+const reset = operation.reset(userSeedList);
+
+
+module.exports = {
+    dt: dtT,
+    user: userT,
+    reset: reset,
+}

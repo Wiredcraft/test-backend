@@ -1,0 +1,281 @@
+const should = require('chai').should()
+    , tD = require('./user_relationship.data.es7')
+    , userRelationshipCrud = require('../user_relationship/index.es7').raw;
+
+
+describe('Model Crud User Relationship', () => {
+    before((done) => tD.reset(done));
+
+    describe('Read', () => {
+        describe('Find By Id', () => {
+            const { findById } = userRelationshipCrud;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should return none if not exist', (done) => {
+                findById(
+                    tD.dt.justNow,
+                    tD.userRelationship.notExist.id,
+                    (err, userRelationship) => {
+                        should.not.exist(err);
+                        should.not.exist(userRelationship);
+                        done();
+                    }
+                );
+            });
+
+            it('should return document if exist', (done) => {
+                findById(
+                    tD.dt.justNow,
+                    tD.userRelationship.empty.id,
+                    (err, userRelationship) => {
+                        should.not.exist(err);
+                        should.exist(userRelationship);
+                        done();
+                    }
+                );
+            });
+        });
+    });
+
+    describe('Create', () => {
+        describe('Create', () => {
+            const { create } = userRelationshipCrud;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should fail if id exist', (done) => {
+                create(
+                    tD.dt.justNow,
+                    tD.userRelationship.toCreate.id,
+                    (err, userRelationship) => {
+                        should.exist(err);
+                        should.not.exist(userRelationshipCrud);
+                        done();
+                    }
+                );
+            });
+
+            it('should return document if everything ok', (done) => {
+                create(
+                    tD.dt.justNow,
+                    tD.userRelationship.toCreate.id,
+                    (err, userRelationship) => {
+                        should.not.exist(err);
+                        should.exist(userRelationship);
+                        done();
+                    }
+                );
+            });
+        });
+    });
+
+    describe('Delete', () => {
+        describe('Delete By Id', () => {
+            const { deleteById } = userRelationshipCrud;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should fail if document not exist', (done) => {
+                deleteById(
+                    tD.dt.justNow,
+                    tD.userRelationship.notExist.id,
+                    (err, userRelationship) => {
+                        should.exist(err);
+                        should.not.exist(userRelationshipCrud);
+                        done();
+                    }
+                );
+            });
+
+            it('should pass if everything ok', (done) => {
+                deleteById(
+                    tD.dt.justNow,
+                    tD.userRelationship.toDelete.id,
+                    (err, userRelationship) => {
+                        should.not.exist(err);
+                        should.exist(userRelationshipCrud);
+                        done();
+                    }
+                );
+            });
+        });
+    });
+
+    describe('Update', () => {
+        describe('Add Active Following By Id', () => {
+            const { addActiveFollowingById } = userRelationshipCrud;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should fail if document not exist', (done) => {
+                addActiveFollowingById(
+                    tD.dt.justNow,
+                    tD.userRelationship.alone.a.id,
+                    tD.userRelationship.notExist.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should fail if already added', (done) => {
+                addActiveFollowingById(
+                    tD.dt.justNow,
+                    tD.userRelationship.pair.followee.id,
+                    tD.userRelationship.pair.follower.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should pass if everything ok', (done) => {
+                addActiveFollowingById(
+                    tD.dt.justNow,
+                    tD.userRelationship.alone.b.id,
+                    tD.userRelationship.alone.a.id,
+                    (err) => {
+                        should.not.exist(err);
+                        done();
+                    }
+                );
+            });
+        });
+
+        describe('Remove Active Following By Id', () => {
+            const { removeActiveFollowingById } = userRelationshipCrud;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should fail if document not exist', (done) => {
+                removeActiveFollowingById(
+                    tD.dt.justNow,
+                    tD.userRelationship.pair.followee.id,
+                    tD.userRelationship.pair.notExist.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should fail if not added', (done) => {
+                removeActiveFollowingById(
+                    tD.dt.justNow,
+                    tD.userRelationship.alone.d.id,
+                    tD.userRelationship.alone.c.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should pass if everything ok', (done) => {
+                removeActiveFollowingById(
+                    tD.dt.justNow,
+                    tD.userRelationship.pair.followee.id,
+                    tD.userRelationship.pair.follower.id,
+                    (err) => {
+                        should.not.exist(err);
+                        done();
+                    }
+                );
+            });
+        });
+
+        describe('Add Passive Following By Id', () => {
+            const { addPassiveFollowingById } = userRelationshipCrud;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should fail if document not exist', (done) => {
+                addPassiveFollowingById(
+                    tD.dt.justNow,
+                    tD.userRelationship.alone.a.id,
+                    tD.userRelationship.alone.notExist.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should fail if already added', (done) => {
+                addPassiveFollowingById(
+                    tD.dt.justNow,
+                    tD.userRelationship.pair.follower.id,
+                    tD.userRelationship.pair.followee.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should pass if everything ok', (done) => {
+                addPassiveFollowingById(
+                    tD.dt.justNow,
+                    tD.userRelationship.alone.a.id,
+                    tD.userRelationship.alone.b.id,
+                    (err) => {
+                        should.not.exist(err);
+                        done();
+                    }
+                );
+            });
+        });
+
+        describe('Remove Passive Following By Id', () => {
+            const { removePassiveFollowingById } = userRelationshipCrud;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should fail if document not exist', (done) => {
+                removePassiveFollowingById(
+                    tD.dt.justNow,
+                    tD.userRelationship.alone.a.id,
+                    tD.userRelationship.notExist.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should fail if not added', (done) => {
+                removePassiveFollowingById(
+                    tD.dt.justNow,
+                    tD.userRelationship.alone.b.id,
+                    tD.userRelationship.alone.c.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should pass if everything ok', (done) => {
+                removePassiveFollowingById(
+                    tD.dt.justNow,
+                    tD.userRelationship.pair.follower.id,
+                    tD.userRelationship.pair.followee.id,
+                    (err) => {
+                        should.not.exist(err);
+                        done();
+                    }
+                );
+            });
+        });
+    });
+});

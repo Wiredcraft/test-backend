@@ -1,0 +1,175 @@
+const should = require('chai').should()
+    , tD = require('./user_position.data.es7')
+    , userPositionCrud = require('../user_position/index.es7').raw;
+
+
+describe('Model Crud User Position', () => {
+    before((done) => tD.reset(done));
+
+    describe('Read', () => {
+        describe('Find By Id', () => {
+            const { findById } = userPositionCrud;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should return none if not exist', (done) => {
+                findById(
+                    tD.dt.justNow,
+                    tD.userPosition.notExist.id,
+                    (err, document) => {
+                        should.exist(err);
+                        should.not.exist(document);
+                        done();
+                    }
+                );
+            });
+
+            it('should return document if exist', (done) => {
+                findById(
+                    tD.dt.justNow,
+                    tD.userPosition.single.id,
+                    (err, document) => {
+                        should.not.exist(err);
+                        should.exist(document);
+                        done();
+                    }
+                );
+            });
+        });
+
+        describe('Find Nearby Limited By Position Coordinates', () => {
+            const { findNearbyLimitedByPositionCoordinates } = findNearbyLimitedByPositionCoordinates;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should return none if no nearby record exist', (done) => {
+                findNearbyLimitedByPositionCoordinates(
+                    tD.dt.justNow,
+                    tD.userPosition.notExist.last.coordinates,
+                    tD.metric.nearbyDistance.max,
+                    (err, userPositionList) => {
+                        should.not.exist(err);
+                        _.isArray(userPositionList).should.be.true;
+                        _.isEmpty(userPositionList).should.be.true;
+                        done();
+                    }
+                );
+            });
+
+            it('should return result if nearby record amount in limit', (done) => {
+                findNearbyLimitedByPositionCoordinates(
+                    tD.dt.justNow,
+                    tD.userPosition.nearbyGroup.normal.a.last.coordinates,
+                    tD.metric.nearbyDistance.max,
+                    (err, userPositionList) => {
+                        should.not.exist(err);
+                        _.isArray(userPositionList).should.be.true;
+                        userPositionList.should.have.property(
+                            'length', tD.userPosition.nearbyGroup.normal.keys.length - 1
+                        );
+                        done();
+                    }
+                );
+            });
+
+            it('should return truncated result if nearby record amount over limit', (done) => {
+                findNearbyLimitedByPositionCoordinates(
+                    tD.dt.justNow,
+                    tD.userPosition.nearbyGroup.huge.center.last.coordinates,
+                    tD.metric.nearbyDistances.max,
+                    (err, userPositionList) => {
+                        should.not.exist(err);
+                        _.isArray(userPositionList).should.be.true;
+                        userPositionList.should.have.property(
+                            'length', tD.userPosition.nearbyGroup.huge.list.length - 1
+                        );
+                        done();
+                    }
+                );
+            });
+        });
+
+        describe('Find Nearby Un Limited By Position Coordinates', () => {
+            const { findNearbyLimitedByPositionCoordinates } = userPositionCrud;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should return none if no nearby record exist', (done) => {
+                findNearbyLimitedByPositionCoordinates(
+                    tD.dt.justNow,
+                    tD.userPosition.notExist.last.coordinates,
+                    tD.metric.nearbyDistance.max,
+                    (err, userPositionList) => {
+                        should.not.exist(err);
+                        _.isArray(userPositionList).should.be.true;
+                        _.isEmpty(userPositionList).should.be.true;
+                        done();
+                    }
+                );
+            });
+
+            it('should return result if nearby record amount little', (done) => {
+                findNearbyLimitedByPositionCoordinates(
+                    tD.dt.justNow,
+                    tD.userPosition.nearbyGroup.normal.a.last.coordinates,
+                    tD.metric.nearbyDistance.max,
+                    (err, userPositionList) => {
+                        should.not.exist(err);
+                        _.isArray(userPositionList).should.be.true;
+                        userPositionList.should.have.property(
+                            'length', tD.userPosition.nearbyGroup.normal.keys.length - 1
+                        );
+                        done();
+                    }
+                );
+            });
+
+            it('should return result if nearby record amount huge', (done) => {
+                findNearbyLimitedByPositionCoordinates(
+                    tD.dt.justNow,
+                    tD.userPosition.nearbyGroup.huge.center.last.coordinates,
+                    tD.metric.nearbyDistances.max,
+                    (err, userPositionList) => {
+                        should.not.exist(err);
+                        _.isArray(userPositionList).should.be.true;
+                        userPositionList.should.have.property(
+                            'length', tD.userPosition.nearbyGroup.huge.list.length
+                        );
+                        done();
+                    }
+                );
+            });
+        });
+    });
+
+    describe('Create', () => {
+        describe('Create', () => {
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+            it('should fail if id exist');
+            it('should pass if everything ok');
+        });
+    });
+
+    describe('Delete', () => {
+        describe('Delete By Id', () => {
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+            it('should reject if guard fail');
+            it('should fail if id not exist');
+            it('should pass if id exist');
+        });
+    });
+
+    describe('Update', () => {
+        describe('Overwrite Position By Id', () => {
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+            it('should pass if position not exist');
+            it('should pass if position exist');
+        });
+    });
+});

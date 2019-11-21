@@ -1,0 +1,345 @@
+const should = require('chai').should()
+    , tD = require('./user.data.es7')
+    , userCrud = require('../user/index.es7').raw;
+
+
+describe('Model Crud User', () => {
+    before((done) => tD.reset(done));
+
+    describe('Read', () => {
+        describe('Find By Id', () => {
+            const { findById } = userCrud;
+
+            it('should return error if upstream caught error');
+            it('should return error if guard reject');
+
+            it('should return none if not exist', (done) => {
+                findById(
+                    tD.dt.justNow,
+                    tD.user.notExist.id,
+                    (err, user) => {
+                        should.not.exist(err);
+                        should.not.exist(user);
+                        done();
+                    }
+                )
+            });
+
+            it('should return document if exist', (done) => {
+                findById(
+                    tD.dt.justNow,
+                    tD.user.reigsteredJustNow.id,
+                    (err, user) => {
+                        should.not.exist(err);
+                        should.exist(user);
+                        user.should.have.property('id', tD.user.reigsteredJustNow.id);
+                        done();
+                    }
+                );
+            });
+        });
+    });
+
+    describe('Create', () => {
+        describe('Create Name Nick', () => {
+            const { createNameNick } = userCrud;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should fail if id exist', (done) => {
+                createNameNick(
+                    tD.dt.justNow,
+                    tD.user.notExist.nickName.
+                    tD.user.reigsteredJustNow.id,
+                    (err, user) => {
+                        should.exist(err);
+                        should.not.exist(user);
+                        done();
+                    }
+                );
+            });
+
+            it('should pass if everything ok', (done) => {
+                createNameNick(
+                    tD.dt.justNow,
+                    tD.user.unRegistered.nickName,
+                    tD.user.unRegistered.id,
+                    (err, user) => {
+                        should.not.exist(err);
+                        should.exist(user);
+                        user.should.have.property('id', tD.user.unRegistered.id);
+                        done();
+                    }
+                );
+            });
+        });
+    });
+
+    describe('Delete', () => {
+        describe('Delete By Id', () => {
+            const { deleteById } = userCrud;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should fail if document not exist', (done) => {
+                deleteById(
+                    tD.dt.justNow,
+                    tD.user.notExist.id,
+                    (err, user) => {
+                        should.exist(err);
+                        should.not.exist(user);
+                        done();
+                    }
+                )
+            });
+
+            it('should pass if everything ok', (done) => {
+                deleteById(
+                    tD.dt.justNow,
+                    tD.user.toDelete.id,
+                    (err, user) => {
+                        should.not.exist(err);
+                        should.exist(user);
+                        user.should.have.property('id', tD.user.toDelete.id);
+                        done();
+                    }
+                );
+            });
+        });
+    });
+
+    describe('Update', () => {
+        //NOTICE update/set sequence matters
+        describe('Update Address By Id', () => {
+            const { updateAddressById } = userCrud;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should fail if document not exist', (done) => {
+                updateAddressById(
+                    tD.dt.justNow,
+                    tD.user.notExist.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should fail if address not set', (done) => {
+                updateAddressById(
+                    tD.dt.justNow,
+                    tD.user.notExist.homeAddress.text,
+                    tD.user.registeredJustNow,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should fail if address just updated', (done) => {
+                updateAddressById(
+                    tD.dt.justNow,
+                    tD.user.notExist.homeAddress.text,
+                    tD.user.profileFullFilledJustNow.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            //it('should fail if new address same with old one');
+
+            it('should pass if address recent no update', (done) => {
+                updateAddressById(
+                    tD.dt.justNow,
+                    tD.user.profileFullFilledLongAgo.new.homeAddress.text,
+                    tD.user.profileFullFilledLongAgo.id,
+                    (err) => {
+                        should.not.exist(err);
+                        done();
+                    }
+                );
+            });
+        });
+
+        describe('Set Address By Id', () => {
+            const { setAddressById } = userCrud;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should fail if document not exist', (done) => {
+                setAddressById(
+                    tD.dt.justNow,
+                    tD.user.notExist.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should fail if address set', (done) => {
+                setAddressById(
+                    tD.dt.justNow,
+                    tD.user.notExist.homeAddress.text,
+                    tD.user.profileFullFilledLongAgo.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should pass if address not set', (done) => {
+                setAddressById(
+                    tD.dt.justNow,
+                    tD.user.registeredJustNow.homeAddress.text,
+                    tD.user.registeredJustNow.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+        });
+
+        describe('Set Date Birth By Id', () => {
+            const { setDateBirthById } = userCrud;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should fail if document not exist', (done) => {
+                setDateBirthById(
+                    tD.dt.justNow,
+                    tD.user.notExist.birthDate,
+                    tD.user.notExist.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should fail if birth date already set', (done) => {
+                setDateBirthById(
+                    tD.dt.justNow,
+                    tD.user.notExist.birthDate,
+                    tD.user.profileFullFilledLongAgo.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should pass if everything ok', (done) => {
+                setDateBirthById(
+                    tD.dt.justNow,
+                    tD.user.notExist.birthDate,
+                    tD.user.registeredJustNow.id,
+                    (err) => {
+                        should.not.exist(err);
+                        done();
+                    }
+                );
+            });
+        });
+
+        //NOTICE update/set sequence matters
+        describe('Update Description By Id', () => {
+            const { updateDescriptionById } = userCrud;
+
+            it('should return error if upstream caught error');
+            it('should fail if guard fail');
+
+            it('should fail if document not exist', (done) => {
+                updateDescriptionById(
+                    tD.dt.justNow,
+                    tD.user.notExist.description,
+                    tD.user.notExist.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should fail if description not set', (done) => {
+                updateDescriptionById(
+                    tD.dt.justNow,
+                    tD.user.notExist.description,
+                    tD.user.registeredJustNow.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            //it('should fail if new description same with old one');
+
+            it('should pass if description already set', (done) => {
+                updateDescriptionById(
+                    tD.dt.justNow,
+                    tD.user.notExist.description,
+                    tD.user.profileFullFilledJustNow,
+                    (err) => {
+                        should.not.exist(err);
+                        done();
+                    }
+                );
+            });
+        });
+
+        describe('Set Description By Id', () => {
+            const { setDescriptionById } = userCrud;
+
+            it('should return error if upstream caught error');
+            it('should reject if guard fail');
+
+            it('should fail if document not exist', (done) => {
+                setDescriptionById(
+                    tD.dt.justNow,
+                    tD.user.notExist.description,
+                    tD.user.notExist.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should fail if description already set', (done) => {
+                setDescriptionById(
+                    tD.dt.justNow,
+                    tD.user.notExist.description,
+                    tD.user.profileFullFilledJustNow.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should pass if description not set', (done) => {
+                setDescriptionById(
+                    tD.dt.justNow,
+                    tD.user.notExist.description,
+                    tD.user.registeredJustNow.id,
+                    (err) => {
+                        should.not.exist(err);
+                        done();
+                    }
+                );
+            });
+        });
+    });
+});

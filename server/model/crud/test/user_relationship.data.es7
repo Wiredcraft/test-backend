@@ -1,0 +1,79 @@
+const prepare = require('../../test/prepare.es7')
+    , operation = require('./user_relationship.operation.es7');
+
+
+const baseTime = Date.now()
+    , dtT = prepare.dateTime(baseTime);
+
+
+const userRelationshipT = {
+    notExist: {
+        id: '3824f28e64d4969c',
+    },
+    toCreate: {
+        id: '070404c0a36cf871',
+    },
+    toDelete: {
+        id: '496b5f927f6333f1',
+    },
+    alone: {
+        a: {
+            id: '7403ce1ae2bedcc9',
+        },
+        b: {
+            id: '81fc8901cd8985ba',
+        },
+        c: {
+            id: '0703b81fdecf84e8',
+        },
+        d: {
+            id: '86bd821f4f54aa1c',
+        },
+    },
+    pair: {
+        follower: {
+            id: 'fb4cc51c1f8997e5',
+        },
+        followee: {
+            id: 'a76bc6435f596566',
+        }
+    }
+};
+
+
+const urT = userRelationshipT;
+
+const userRelationshipSeedList = [
+    ...[
+        urT.toCreate,
+        urT.toDelete,
+        urT.alone.a,
+        urT.alone.b,
+        urT.alone.c,
+        urT.alone.d,
+    ].map((i) => ({ '_id': i.id })),
+    {
+        '_id': urT.pair.follower.id,
+        'active.following.user.list': [{ 'id': urT.pair.followee.id }],
+        'active.following.user.count.total': 1,
+        'passive.following.user.list': [],
+        'passive.following.user.count.total': 0,
+    },
+    {
+        '_id': urT.pair.followee.id,
+        'active.following.user.list': [],
+        'active.following.user.count.total': 0,
+        'passive.following.user.list': [{ 'id': urT.pair.follower.id }],
+        'passive.following.user.count.total': 1,
+    },
+];
+
+
+const reset = operation.reset(userRelationshipSeedList);
+
+
+module.exports = {
+    dt: dtT,
+    userRelationship: userRelationshipT,
+    reset: reset,
+}
