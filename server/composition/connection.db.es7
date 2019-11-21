@@ -1,0 +1,34 @@
+const db = require('../db/index.es7')
+    , logging = require('../lib/logging.es7')
+    , shutdown = require('../lib/shutdown.es7')
+    , modName = require('../../lib/module_name.es7');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const connectMongodbDefault = (callback) =>
+    db.mongodb.entity.default.connect((err) => {
+        if (err) return callback(err);
+
+        log.trace('connect to mongodb default ok');
+        callback();
+    });
+
+
+const disconnectMongodbDefault = (callback) =>
+    db.mongodb.entity.default.disconnect((err) => {
+        if (err) return callback(err);
+
+        log.trace('disconnect from mongodb default ok');
+        callback();
+    });
+
+
+module.exports = {
+    mongodb: { default: {
+        connect: connectMongodbDefault,
+        disconnect: disconnectMongodbDefault,
+    } },
+};
