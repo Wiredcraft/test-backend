@@ -21,7 +21,7 @@ describe('app.js', function() {
   });
   it('should be response 500', function(done) {
     var mock = sinon.mock(logger);
-    mock.expects('log').atLeast(1);
+    mock.expects('log').never();
     app.get('/testing', function(req, res, next) {
       return next(new Error('Faker Server Error'));
     });

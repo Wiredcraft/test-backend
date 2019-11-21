@@ -1,0 +1,21 @@
+{
+  "apps": [{
+    "name": "test-backend",
+    "script": "server.js",
+    "exec_mode": "cluster",
+    "watch": false,
+    "instances": 1,
+    "instance_var": "INSTANCE_ID",
+    "autorestart": true,
+    "max_memory_restart": "200M",
+    "restart_delay": 3000,
+    "min_uptime": "200s",
+    "env": {
+      "NODE_ENV": "production"
+    },
+    "error_file": "/dev/null",
+    "out_file": "/dev/null",
+    "listen_timeout": 20000,
+    "kill_timeout": 20000
+  }]
+}

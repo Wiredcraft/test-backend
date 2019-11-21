@@ -4,6 +4,7 @@
   "description": "demo for Wiredcraft backend test",
   "main": "index.js",
   "scripts": {
+    "server": "pm2 start pm2.json",
     "start": "debug=test-backend:* NODE_ENV=development nodemon server.js",
     "test": "NODE_ENV=test mocha --recursive --exit",
     "cover": "NODE_ENV=test nyc --reporter=cobertura mocha  --recursive --exit",

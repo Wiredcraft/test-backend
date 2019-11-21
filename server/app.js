@@ -41,10 +41,12 @@ app.use((err, req, res, next) => {
       user: user || ''
     };
     if (env === 'development') {
+      throw err;
+    } else if (env === 'production') {
       detail.stack = stack;
+      logger.log('error', err.message, detail);
     }
 
-    logger.log('error', err.message, detail);
     res.status(err.status).json({
       message: 'Server Error',
       code: err.code || 10500

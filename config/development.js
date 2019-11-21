@@ -1,6 +1,6 @@
 module.exports = {
   mongoose: {
-    debug: true,
+    debug: false,
     uri: 'mongodb://localhost:27017/demo'
   }
 };
