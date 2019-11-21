@@ -7,8 +7,8 @@ fork from [test-backend](https://github.com/Wiredcraft/test-backend)
 </p>
 
 ### demo
-  [document](http://node-demo.sangsay.com/docs)
-  [api](http://node-demo.sangsay.com)
+  - [document](http://node-demo.sangsay.com/docs)
+  - [api](http://node-demo.sangsay.com)
 
 ### get-started
 - `npm run start` start server in development env.
