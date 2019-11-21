@@ -6,7 +6,7 @@
   "scripts": {
     "start": "debug=test-backend:* NODE_ENV=development nodemon server.js",
     "test": "NODE_ENV=test mocha --recursive --exit",
-    "cover": "NODE_ENV=test nyc --reporter=html mocha  --recursive --exit",
+    "cover": "NODE_ENV=test nyc --reporter=cobertura mocha  --recursive --exit",
     "prettier": "prettier --write 'server/**/*.js'",
     "precommit": "lint-staged",
     "lint": "eslint --fix --ext .js server",
