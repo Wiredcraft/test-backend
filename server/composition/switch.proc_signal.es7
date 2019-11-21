@@ -1,0 +1,13 @@
+const shutdown = require('../lib/shutdown.es7');
+
+
+module.exports = {
+    interrupt: { shutdown: {
+        enable: () => shutdown.signal.interrupt.enable(),
+        disable: () => shutdown.signal.interrupt.disable(),
+    } },
+    terminate: { shutdown: {
+        enable: () => shutdown.signal.terminate.enable(),
+        disable: () => shutdown.signal.terminate.disable(),
+    } },
+};
