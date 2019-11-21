@@ -1,0 +1,192 @@
+const _ = require('lodash')
+    , logging = require('../../../lib/logging.es7')
+    , modName = require('../../../../lib/module_name.es7')
+    , { isErrorCommon, handleErrorCommon, handleErrorUnhandled } = require('../lib/common.es7');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const getMyProfile = {
+    method: 'get',
+    path: '/my/profile',
+    middleware: [],
+    handle: (req, res) => {
+        const routeName = 'getMyProfile';
+
+        //TODO
+        //const user = req[cfg.jwt.middleware.requestMountField];
+
+        return res.status(200).end();
+
+        //SAMEPLE
+        b.model.crud.user.findById(
+            null, //user.id
+            (err, user) => {
+                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                //
+                if (err) return handleErrorUnhandled(routeName, err, res);
+
+                res.status(200).json({ data: { me: {
+                    createAt: user.createAt,
+                    birthDay: user.dateBirth,
+                    description: user.description,
+                    homeAddress: user.homeAddress.text,
+                } } });
+            }
+        );
+    },
+};
+
+
+const setMyProfileHomeAddress = {
+    method: 'post',
+    //path: '/my/profile/home/address',
+    path: '/my/profile/address',
+    middleware: [],
+    handle: (req, res) => {
+        const routeName = 'setMyProfileHomeAddress';
+
+        //TODO
+        //const user = req[cfg.jwt.middleware.requestMountField];
+
+        if (!req.body || !_.get(req.body, 'new.homeAddress'))
+            return res.status(400).end();
+
+        b.crud.user.setHomeAddressById(
+            req.body.new.homeAddress,
+            null, //user.id
+            (err) => {
+                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                //
+                if (err) return handleErrorUnhandled(routeName, err, res);
+
+                res.status(200).end();
+            }
+        );
+    },
+};
+
+
+const updateMyProfileHomeAddress = {
+    method: 'put',
+    //path: '/my/profile/home/address',
+    path: '/my/profile/address',
+    middleware: [],
+    handle: (req, res) => {
+        const routeName = 'updateMyProfileHomeAddress';
+
+        //TODO
+        //const user = req[cfg.jwt.middleware.requestMountField];
+
+        if (!req.body || !_.get(req.body, 'new.homeAddress'))
+            return res.status(400).end();
+
+        b.crud.user.updateHomeAddressById(
+            req.body.new.homeAddress,
+            null, //user.id
+            (err) => {
+                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                //
+                if (err) return handleErrorUnhandled(routeName, err, res);
+
+                res.status(200).end();
+            }
+        );
+    },
+};
+
+
+const setMyProfileBirthDay = {
+    method: 'post',
+    path: '/my/profile/birth_day',
+    middleware: [],
+    handle: (req, res) => {
+        const routeName = 'setMyProfileBirthDay';
+
+        //TODO
+        //const user = req[cfg.jwt.middleware.requestMountField];
+
+        if (!req.body || !_.get(req.body, 'new.dateBirth'))
+            return res.status(400).end();
+
+        b.crud.user.setDateBirthById(
+            req.body.new.dateBirth,
+            null, //user.id
+            (err) => {
+                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                //
+                if (err) return handleErrorUnhandled(routeName, err, res);
+
+                res.status(200).end();
+            }
+        );
+    },
+};
+
+
+const setMyProfileDescription = {
+    method: 'post',
+    path: '/my/profile/description',
+    middleware: [],
+    handle: (req, res) => {
+        const routeName = 'setMyProfileDescription';
+
+        //TODO
+        //const user = req[cfg.jwt.middleware.requestMountField];
+
+        if (!req.body || !_.get(req.body, 'new.description'))
+            return res.status(400).end();
+
+        b.crud.user.setDescriptionById(
+            req.body.new.description,
+            null, //user.id
+            (err) => {
+                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                //
+                if (err) return handleErrorUnhandled(routeName, err, res);
+
+                res.status(200).end();
+            }
+        );
+    },
+};
+
+
+const updateMyProfileDescription = {
+    method: 'put',
+    path: '/my/profile/description',
+    middleware: [],
+    handle: (req, res) => {
+        const routeName = 'updateMyProfileDescription';
+
+        //TODO
+        //const user = req[cfg.jwt.middleware.requestMountField];
+
+        if (!req.body || !_.get(req.body, 'new.description'))
+            return res.status(400).end();
+
+        b.crud.user.updateDescriptionById(
+            req.body.new.description,
+            null, //user.id
+            (err) => {
+                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                //
+                if (err) return handleErrorUnhandled(routeName, err, res);
+
+                res.status(200).end();
+            }
+        );
+    },
+};
+
+
+module.exports = {
+    getMyProfile: getMyProfile,
+    setMyProfileBirthDay: setMyProfileBirthDay,
+    setMyProfileHomeAddress: setMyProfileHomeAddress,
+    updateMyProfileHomeAddress: updateMyProfileHomeAddress,
+    setMyProfileDescription: setMyProfileDescription,
+    updateMyProfileDescription: updateMyProfileDescription,
+};

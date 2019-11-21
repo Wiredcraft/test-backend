@@ -1,0 +1,76 @@
+const _ = require('lodash')
+    , logging = require('../../../lib/logging.es7')
+    , modName = require('../../../../lib/module_name.es7')
+    , { isErrorCommon, handleErrorCommon, handleErrorUnhandled } = require('../lib/common.es7');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const uploadMyPositionRoute = {
+    method: 'post',
+    path: '/my/position',
+    middleware: [],
+    handle: (req, res) => {
+        const routeName = 'uploadMyPosition';
+
+        //TODO
+        //const user = req[cfg.jwt.middleware.requestMountField];
+
+        if (!req.body || !_.get(req.body, 'new.coordinates'))
+            return res.status(400).end();
+
+        b.crud.userPosition.overwritePositionById(
+            req.body.new.coordinates,
+            null, //user.id
+            (err) => {
+                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                //
+                if (err) return handleErrorUnhandled(routeName, err, res);
+
+                res.status(200).end();
+            }
+        );
+    },
+};
+
+
+const findMyPositionNearbyUserListRoute = {
+    method: 'get',
+    //path: '/my/position/nearby/:distance/user/list',
+    path: '/my/nearby/:distance',
+    middleware: [],
+    handle: (req, res) => {
+        const routeName = 'findMyPositionNearbyUserList';
+
+        //TODO
+        //const user = req[cfg.jwt.middleware.requestMountField];
+        const nearbyDistance = parseInt(req.params.distance);
+
+        if (_.isNaN(nearbyDistance))
+            return res.status(400).json();
+
+        c.accountPosition.findNearbyLimitedByCoordinates(
+            nearbyDistance,
+            null, //user.id,
+            (err, userList) => {
+                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err) return handleErrorUnhandled(routeName, err, res);
+
+                res.status(200).json({ data: { nearby: { user: {
+                    list: userList.map((u) => ({
+                        id: u.id,
+                        nameNick: u.nameNick,
+                    }))
+                } } } });
+            }
+        );
+    },
+};
+
+
+module.exports = {
+    uploadMyPositionRoute: uploadMyPositionRoute,
+    findMyPositionNearbyUserList: findMyPositionNearbyUserListRoute,
+};

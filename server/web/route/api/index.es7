@@ -1,0 +1,7 @@
+module.exports = {
+    accountAuthentication: require('./account_authentication.es7'),
+    accountPosition: require('./account_position.es7'),
+    accountProfile: require('./account_profile.es7'),
+    accountRegistration: require('./account_registration.es7'),
+    accountRelationship: require('./account_relationship.es7'),
+};

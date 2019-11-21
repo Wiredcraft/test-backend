@@ -1,0 +1,56 @@
+const _ = require('lodash')
+    , logging = require('../../../lib/logging.es7')
+    , modName = require('../../../../lib/module_name.es7')
+    , { isErrorCommon, handleErrorCommon, handleErrorUnhandled } = require('../lib/common.es7');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const signOutRoute = {
+    method: 'put',
+    path: '/sign_out',
+    middleware: [],
+    handle: (req, res) => {
+        const routeName = 'signOut';
+
+        //TODO authenticate user in middleware, if any.
+        //NOTICE session not implemented, trust client to clear access token.
+        res.status(200).end();
+    },
+};
+
+
+const signInRoute = {
+    method: 'put',
+    path: '/sign_in',
+    middleware: [],
+    handle: (req, res) => {
+        const routeName = 'signIn';
+
+        if (!req.body || !_.get(req.body, 'auth.nameNick'))
+            return res.status(400).end();
+
+        b.crud.user.findById(
+            req.body.auth.name_nick,
+            (err, user) => {
+                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err && !user) return res.status(404).end();
+                if (err) return handleErrorUnhandled(routeName, err, res);
+
+                //TODO generate json web token and return in data payload
+                res.status(200).json({ data: { me: {
+                    id: user.id,
+                    nameNick: user.nameNick,
+                } } });
+            }
+        );
+    },
+};
+
+
+module.exports = {
+    signInRoute: signInRoute,
+    signOutRoute: signOutRoute,
+};

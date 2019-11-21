@@ -1,0 +1,64 @@
+const _ = require('lodash')
+    , logging = require('../../../lib/logging.es7')
+    , modName = require('../../../../lib/module_name.es7')
+    , { isErrorCommon, handleErrorCommon, handleErrorUnhandled } = require('../lib/common.es7');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const signUpNameNickRoute = {
+    method: 'post',
+    //path: '/sign_up/name_nick',
+    path: '/sign_up',
+    middleware: [],
+    handle: (req, res) => {
+        const routeName = 'signUpNameNick';
+
+        if (!req.body || !_.get(req.body, 'reg.nickName'))
+            return res.status(400).end();
+
+        b.crud.user.createNameNick(
+            req.body.nickName,
+            (err) => {
+                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                //
+                if (err) return handleErrorUnhandled(routeName, err, res);
+
+                res.status(200).end();
+            }
+        );
+    },
+};
+
+
+const deleteAccountRoute = {
+    method: 'delete',
+    path: '/account',
+    middleware: [],
+    handle: (req, res) => {
+        const routeName = 'deleteAccount';
+
+        //TODO
+        //const user = req[cfg.jwt.middleware.requestMountField];
+
+        //SAMPLE
+        b.crud.user.deleteById(
+            null, //user.id,
+            (err, deletedUser) => {
+                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                //
+                if (err) return handleErrorUnhandled(routeName, err, res);
+
+                res.status(200).end();
+            }
+        );
+    },
+};
+
+
+module.exports = {
+    deleteAccount: deleteAccountRoute,
+    signUpNameNick: signUpNameNickRoute,
+};

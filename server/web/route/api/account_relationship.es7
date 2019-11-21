@@ -1,0 +1,95 @@
+const _ = require('lodash')
+    , logging = require('../../../lib/logging.es7')
+    , modName = require('../../../../lib/module_name.es7')
+    , { isErrorCommon, handleErrorCommon, handleErrorUnhandled } = require('../lib/common.es7');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const getMyRelationshipRoute = {
+    method: 'get',
+    path: '/my/relationship',
+    middleware: [],
+    handle: (req, res) => {
+        const routeName = 'getMyRelationship';
+
+        //TODO
+        //const user = req[cfg.jwt.middleware.requestMountField];
+
+        b.crud.userRelationship.findById(
+            null, //user.id
+            (err, userRelationship) => {
+                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                //
+                if (err) return handleErrorUnhandled(routeName, err, res);
+
+                res.status(200).end();
+            }
+        );
+    },
+};
+
+
+const addMyRelationshipUserFollowingRoute = {
+    method: 'patch',
+    path: '/my/relationship/user/following/list',
+    middleware: [],
+    handle: (req, res) => {
+        const routeName = 'addMyRelationshipUserFollowing';
+
+        //TODO
+        //const user = req[cfg.jwt.middleware.requestMountField];
+
+        if (!req.body || !_.get(req.body, 'user.id'))
+            return res.status(400).end();
+
+        b.crud.userRelationship.addActiveFollowingById(
+            req.body.user.id,
+            null, //user.id
+            (err) => {
+                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                //
+                if (err) return handleErrorUnhandled(routeName, err, res);
+
+                res.status(200).end();
+            }
+        );
+    },
+};
+
+
+const removeMyRelationshipUserFollowingRoute = {
+    method: 'delete',
+    path: '/my/relationship/user/following/list',
+    middleware: [],
+    handle: (req, res) => {
+        const routeName = 'removeMyRelationshipUserFollowing';
+
+        //TODO
+        //const user = req[cfg.jwt.middleware.requestMountField];
+
+        if (!req.body || !_.get(req.body, 'user.id'))
+            return res.status(400).end();
+
+        b.crud.userRelationship.removeActiveFollowingById(
+            req.body.user.id,
+            null, //user.id
+            (err) => {
+                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                //
+                if (err) return handleErrorUnhandled(routeName, err, res);
+
+                res.status(200).end();
+            }
+        );
+    },
+};
+
+
+module.exports = {
+    getMyRelationship: getMyRelationshipRoute,
+    addMyRelationshipUserFollowing: addMyRelationshipUserFollowingRoute,
+    removeMyRelationshipUserFollowing: removeMyRelationshipUserFollowingRoute,
+};
