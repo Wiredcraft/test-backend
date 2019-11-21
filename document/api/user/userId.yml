@@ -1,0 +1,122 @@
+get:
+  tags:
+    - User
+  security:
+    - Bearer: []
+  parameters:
+    - name: userId
+      in: path
+      type: string
+      description: user ID
+      required: true
+  description: get user list
+  responses:
+    200:
+      description: Success
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          data:
+            $ref: '#/definitions/User'
+    400:
+      description: Client params error
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          code:
+            type: integer
+    default:
+      description: Unexcepted Error
+      schema:
+        $ref: '#/definitions/Error'
+put:
+  tags:
+    - User
+  security:
+    - Bearer: []
+  parameters:
+    - name: userId
+      in: path
+      type: string
+      description: user ID
+      required: true
+    - in: body
+      name: userInfo
+      description: update user info
+      schema:
+        type: object
+        properties:
+          dob:
+            type: string
+            description: date of birthday, date string
+          description:
+            type: string
+            description: user info description
+          location:
+            type: array
+            description: user location, [lat, lnt]
+            items:
+              type: number
+  description: update user info
+  responses:
+    200:
+      description: Success
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          code:
+            type: integer
+    400:
+      description: Client params error
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          code:
+            type: integer
+    default:
+      description: Unexcepted Error
+      schema:
+        $ref: '#/definitions/Error'
+delete:
+  tags:
+    - User
+  security:
+    - Bearer: []
+  parameters:
+    - name: userId
+      in: path
+      type: string
+      description: user ID
+      required: true
+  description: delete user.
+  responses:
+    200:
+      description: Success
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          code:
+            type: integer
+    400:
+      description: Client params error
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          code:
+            type: integer
+    default:
+      description: Unexcepted Error
+      schema:
+        $ref: '#/definitions/Error'

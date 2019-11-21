@@ -1,0 +1,41 @@
+post:
+  tags:
+    - Friend
+  security:
+    - Bearer: []
+  parameters:
+    - in: body
+      name: login
+      description: login params
+      schema:
+        type: object
+        properties:
+          friendIds:
+            type: array
+            description: user id list
+            items:
+              type: string
+  description: add friends for current login user
+  responses:
+    200:
+      description: Success
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          code:
+            type: integer
+    400:
+      description: Client params error
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          code:
+            type: integer
+    default:
+      description: Unexcepted Error
+      schema:
+        $ref: '#/definitions/Error'

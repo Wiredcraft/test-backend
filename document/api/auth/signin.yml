@@ -1,0 +1,49 @@
+post:
+  tags:
+    - Auth
+  security:
+    - Bearer: []
+  parameters:
+    - in: body
+      name: login
+      description: login params
+      schema:
+        type: object
+        properties:
+          username:
+            type: string
+            description: username
+          password:
+            type: string
+            description: user password
+  description: user login and get jwt token
+  responses:
+    200:
+      description: Success
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          code:
+            type: integer
+          data:
+            type: object
+            properties:
+              token:
+                type: string
+              username:
+                type: string
+    400:
+      description: Client params error
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          code:
+            type: integer
+    default:
+      description: Unexcepted Error
+      schema:
+        $ref: '#/definitions/Error'

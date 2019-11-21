@@ -1,0 +1,68 @@
+post:
+  tags:
+    - Auth
+  security:
+    - Bearer: []
+  parameters:
+    - in: body
+      name: register
+      description: signup params
+      schema:
+        type: object
+        required:
+          - username
+          - password
+          - confirm
+        properties:
+          username:
+            type: string
+            description: username
+          dob:
+            type: string
+            description: date of birthday
+          password:
+            description: user password, encrypted char
+            type: string
+          confirm:
+            type: string
+            description: password confirm
+          description:
+            type: string
+            description: user extra info description
+          location:
+            type: array
+            description: |
+              user location, array like: [lat, lnt]
+            items:
+              type: number
+  description: user register api
+  responses:
+    200:
+      description: Success
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          code:
+            type: integer
+          data:
+            type: object
+            properties:
+              token:
+                type: string
+              username:
+                type: string
+    400:
+      description: Client params error
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          code:
+            type: integer
+    default:
+      description: Unexcepted Error
+      schema:
+        $ref: '#/definitions/Error'

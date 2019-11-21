@@ -1,0 +1,46 @@
+get:
+  tags:
+    - Friend
+  security:
+    - Bearer: []
+  parameters:
+    - name: username
+      in: path
+      type: string
+      description: name of user
+      required: true
+  description: get user list
+  responses:
+    200:
+      description: Success
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          data:
+            type: object
+            properties:
+              limit:
+                type: integer
+              meter:
+                type: integer
+              user:
+                $ref: '#/definitions/User'
+              friends:
+                type: array
+                items:
+                  $ref: '#/definitions/Friend'
+    400:
+      description: Client params error
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+          code:
+            type: integer
+    default:
+      description: Unexcepted Error
+      schema:
+        $ref: '#/definitions/Error'
