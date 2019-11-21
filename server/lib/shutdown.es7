@@ -87,4 +87,15 @@ exports.enable.signal.interrupt = () => {
 };
 
 
+process.on('SIGINT', (signalName) => {
+    log.info(`received signal ${signalName}`);
+    state.signal.interrupt.enabled && exit();
+});
+
+process.on('SIGTERM', (signalName) => {
+    log.info(`received signal ${signalName}`);
+    state.signal.terminate.enabled && exit();
+});
+
+
 module.exports = exports;
