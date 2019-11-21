@@ -74,16 +74,16 @@ exports.enable.signal.interrupt = () => {
     state.signal.interrupt.enabled = true;
 };
 
-exports.enable.signal.terminate = () => {
-    assert(!state.signal.terminate.enabled, 'Shutdown Signal Terminate Already Enabled');
-    log.trace('shutdown signal terminate enable');
-    state.signal.terminate.enabled = true;
+exports.disable.signal.terminate = () => {
+    assert(state.signal.terminate.enabled, 'Shutdown Signal Terminate Already Disabled');
+    log.trace('shutdown signal terminate disable');
+    state.signal.terminate.enabled = false;
 };
 
-exports.enable.signal.interrupt = () => {
-    assert(!state.signal.interrupt.enabled, 'Shutdown Signal Interrupt Already Enabled');
-    log.trace('shutdown signal interrupt enable');
-    state.signal.interrupt.enabled = true;
+exports.disable.signal.interrupt = () => {
+    assert(state.signal.interrupt.enabled, 'Shutdown Signal Interrupt Already Disabled');
+    log.trace('shutdown signal interrupt disable');
+    state.signal.interrupt.enabled = false;
 };
 
 
