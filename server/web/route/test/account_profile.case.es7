@@ -1,0 +1,76 @@
+describe('Web Route Api Account Profile', () => {
+    describe('Get My Profile', () => {
+        it('should res 400 if req token illegal');
+        it('should res 401 if req token invalid');
+        it('should res 500 if error unhandled');
+
+        //
+        it('should res 404 if upstream user profile record not found');
+        it('should res 200 if everything ok');
+    });
+
+    describe('Set My Profile Home Address', () => {
+        it('should res 400 if req token illegal');
+        it('should res 401 if req token invalid');
+        it('should res 500 if error unhandled');
+
+        //
+        it('should res 400 if req payload illegal');
+        it('should res 400 if upstream param home address invalid');
+        it('should res 404 if upstream user profile record not found');
+        it('should res 403 if upstream address already set');
+        it('should res 200 if everything ok');
+    });
+
+    describe('Update My Profile Home Address', () => {
+        it('should res 400 if req token illegal');
+        it('should res 401 if req token invalid');
+        it('should res 500 if error unhandled');
+
+        //
+        it('should res 400 if req payload illegal');
+        it('should res 400 if upstream param home address invalid');
+        it('should res 404 if upstream user profile record not found');
+        it('should res 403 if upstream address recent set');
+        it('should res 200 if everything ok');
+    });
+
+    describe('Set My Profile Birth Day', () => {
+        it('should res 400 if req token illegal');
+        it('should res 401 if req token invalid');
+        it('should res 500 if error unhandled');
+
+        //
+        it('should res 400 if req payload illegal');
+        it('should res 400 if upstream param birth date invalid');
+        it('should res 404 if upstream user profile record not found');
+        it('should res 403 if upstream birth date already set');
+        it('should res 200 if everything ok');
+    });
+
+    describe('Set My Profile Description', () => {
+        it('should res 400 if req token illegal');
+        it('should res 401 if req token invalid');
+        it('should res 500 if error unhandled');
+
+        //
+        it('should res 400 if req payload illegal');
+        it('should res 400 if upstream param description invalid');
+        it('should res 404 if upstream user profile record not found');
+        it('should res 403 if upstream description already set');
+        it('should res 200 if everything ok');
+    });
+
+    describe('Update My Profile Description', () => {
+        it('should res 400 if req token illegal');
+        it('should res 401 if req token invalid');
+        it('should res 500 if error unhandled');
+
+        //
+        it('should res 400 if req payload illegal');
+        it('should res 400 if upstream param description invalid');
+        it('should res 404 if upstream user profile record not found');
+        it('should res 403 if upstream description not set');
+        it('should res 200 if everything ok');
+    });
+});

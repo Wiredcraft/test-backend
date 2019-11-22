@@ -1,0 +1,23 @@
+describe('Web Route Api Account Registration', () => {
+    describe('Sign Up Name Nick', () => {
+        it('should res 400 if req token illegal');
+        it('should res 401 if req token invalid');
+        it('should res 500 if error unhandled');
+
+        //
+        it('should res 400 if req payload illegal');
+        it('should res 400 if upstream param nick name invalid');
+        it('should res 403 if upstream nick name already registered');
+        it('should res 200 if everything ok');
+    });
+
+    describe('Delete Acount', () => {
+        it('should res 400 if req token illegal');
+        it('should res 401 if req token invalid');
+        it('should res 500 if error unhandled');
+
+        //
+        it('should res 404 if upstream account not found');
+        it('should res 200 if everything ok');
+    });
+});

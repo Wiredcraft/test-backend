@@ -1,0 +1,35 @@
+describe('Web Route Api Account Relationship', () => {
+    describe('Get My Relationship', () => {
+        it('should res 400 if req token illegal');
+        it('should res 401 if req token invalid');
+        it('should res 500 if error unhandled');
+
+        //
+        it('should res 404 if upstream user relationship not found');
+        it('should res 200 if everything ok');
+    });
+
+    describe('Add My Relationship User Following', () => {
+        it('should res 400 if req token illegal');
+        it('should res 401 if req token invalid');
+        it('should res 500 if error unhandled');
+
+        //
+        it('should res 400 if req payload illegal');
+        it('should res 400 if upstream param user id invalid');
+        it('should res 403 if upstream user already following');
+        it('should res 200 if everything ok')
+    });
+
+    describe('Remove My Relationship User Following', () => {
+        it('should res 400 if req token illegal');
+        it('should res 401 if req token invalid');
+        it('should res 500 if error unhandled');
+
+        //
+        it('should res 400 if req payload illegal');
+        it('should res 400 if upstream param user id invalid');
+        it('should res 403 if upstream user not following');
+        it('should res 200 if everything ok');
+    });
+});

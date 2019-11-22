@@ -1,0 +1,19 @@
+describe('Web Route Api Account Authentication', () => {
+    describe('Sign Out', () => {
+        it('should res 400 if req auth token illegal');
+        it('should res 401 if req auth token invalid');
+        it('should res 500 if error unhandled');
+
+        //
+        it('should res 200 if everything ok');
+    });
+
+    describe('Sign In', () => {
+        it('should res 500 if error unhandled');
+
+        //
+        it('should res 400 if req payload illegal');
+        it('should res 403 if upstream account already registered');
+        it('should res 200 if everything ok');
+    });
+});

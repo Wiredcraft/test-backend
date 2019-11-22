@@ -1,0 +1,24 @@
+describe('Web Route Api Account Position', () => {
+    describe('Upload My Position', () => {
+        it('should res 400 if req token illegal');
+        it('should res 401 if req token invalid');
+        it('should res 500 if error unhandled');
+
+        //
+        it('should res 400 if req payload illegal');
+        it('should res 404 if upstream user position record not found');
+        it('should res 200 if everything ok');
+    });
+
+    describe('Find My Position Nearby User List', () => {
+        it('should res 400 if req token illegal');
+        it('should res 401 if req token invalid');
+        it('should res 500 if error unhandled');
+
+        //
+        it('should res 400 if req payload illegal');
+        it('should res 400 if upstream param distance invalid');
+        it('should res 200 if upstream no user found');
+        it('should res 200 if upstream some user found');
+    });
+});
