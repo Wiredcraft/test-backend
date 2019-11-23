@@ -12,9 +12,7 @@ const signOutRoute = {
     method: 'put',
     path: '/sign_out',
     middleware: [],
-    handle: (req, res) => {
-        const routeName = 'signOut';
-
+    handle: (routeName) => (req, res) => {
         //TODO authenticate user in middleware, if any.
         //NOTICE session not implemented, trust client to clear access token.
         res.status(200).end();
@@ -26,9 +24,7 @@ const signInRoute = {
     method: 'put',
     path: '/sign_in',
     middleware: [],
-    handle: (req, res) => {
-        const routeName = 'signIn';
-
+    handle: (routeName) => (req, res) => {
         if (!req.body || !_.get(req.body, 'auth.nameNick'))
             return res.status(400).end();
 

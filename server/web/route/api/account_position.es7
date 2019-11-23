@@ -12,9 +12,7 @@ const uploadMyPositionRoute = {
     method: 'post',
     path: '/my/position',
     middleware: [],
-    handle: (req, res) => {
-        const routeName = 'uploadMyPosition';
-
+    handle: (routeName) => (req, res) => {
         //TODO
         //const user = req[cfg.jwt.middleware.requestMountField];
 
@@ -41,9 +39,7 @@ const findMyPositionNearbyUserListRoute = {
     //path: '/my/position/nearby/:distance/user/list',
     path: '/my/nearby/:distance',
     middleware: [],
-    handle: (req, res) => {
-        const routeName = 'findMyPositionNearbyUserList';
-
+    handle: (routeName) => (req, res) => {
         //TODO
         //const user = req[cfg.jwt.middleware.requestMountField];
         const nearbyDistance = parseInt(req.params.distance);

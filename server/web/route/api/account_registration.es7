@@ -13,9 +13,7 @@ const signUpNameNickRoute = {
     //path: '/sign_up/name_nick',
     path: '/sign_up',
     middleware: [],
-    handle: (req, res) => {
-        const routeName = 'signUpNameNick';
-
+    handle: (routeName) => (req, res) => {
         if (!req.body || !_.get(req.body, 'reg.nickName'))
             return res.status(400).end();
 
@@ -37,7 +35,7 @@ const deleteAccountRoute = {
     method: 'delete',
     path: '/account',
     middleware: [],
-    handle: (req, res) => {
+    handle: (routeName) => (req, res) => {
         const routeName = 'deleteAccount';
 
         //TODO

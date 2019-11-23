@@ -12,9 +12,7 @@ const getMyRelationshipRoute = {
     method: 'get',
     path: '/my/relationship',
     middleware: [],
-    handle: (req, res) => {
-        const routeName = 'getMyRelationship';
-
+    handle: (routeName) => (req, res) => {
         //TODO
         //const user = req[cfg.jwt.middleware.requestMountField];
 
@@ -36,9 +34,7 @@ const addMyRelationshipUserFollowingRoute = {
     method: 'patch',
     path: '/my/relationship/user/following/list',
     middleware: [],
-    handle: (req, res) => {
-        const routeName = 'addMyRelationshipUserFollowing';
-
+    handle: (routeName) => (req, res) => {
         //TODO
         //const user = req[cfg.jwt.middleware.requestMountField];
 
@@ -64,9 +60,7 @@ const removeMyRelationshipUserFollowingRoute = {
     method: 'delete',
     path: '/my/relationship/user/following/list',
     middleware: [],
-    handle: (req, res) => {
-        const routeName = 'removeMyRelationshipUserFollowing';
-
+    handle: (routeName) => (req, res) => {
         //TODO
         //const user = req[cfg.jwt.middleware.requestMountField];
 

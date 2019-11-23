@@ -12,9 +12,7 @@ const getMyProfile = {
     method: 'get',
     path: '/my/profile',
     middleware: [],
-    handle: (req, res) => {
-        const routeName = 'getMyProfile';
-
+    handle: (routeName) => (req, res) => {
         //TODO
         //const user = req[cfg.jwt.middleware.requestMountField];
 
@@ -45,9 +43,7 @@ const setMyProfileHomeAddress = {
     //path: '/my/profile/home/address',
     path: '/my/profile/address',
     middleware: [],
-    handle: (req, res) => {
-        const routeName = 'setMyProfileHomeAddress';
-
+    handle: (routeName) => (req, res) => {
         //TODO
         //const user = req[cfg.jwt.middleware.requestMountField];
 
@@ -74,9 +70,7 @@ const updateMyProfileHomeAddress = {
     //path: '/my/profile/home/address',
     path: '/my/profile/address',
     middleware: [],
-    handle: (req, res) => {
-        const routeName = 'updateMyProfileHomeAddress';
-
+    handle: (routeName) => (req, res) => {
         //TODO
         //const user = req[cfg.jwt.middleware.requestMountField];
 
@@ -102,9 +96,7 @@ const setMyProfileBirthDay = {
     method: 'post',
     path: '/my/profile/birth_day',
     middleware: [],
-    handle: (req, res) => {
-        const routeName = 'setMyProfileBirthDay';
-
+    handle: (routeName) => (req, res) => {
         //TODO
         //const user = req[cfg.jwt.middleware.requestMountField];
 
@@ -130,9 +122,7 @@ const setMyProfileDescription = {
     method: 'post',
     path: '/my/profile/description',
     middleware: [],
-    handle: (req, res) => {
-        const routeName = 'setMyProfileDescription';
-
+    handle: (routeName) => (req, res) => {
         //TODO
         //const user = req[cfg.jwt.middleware.requestMountField];
 
@@ -158,9 +148,7 @@ const updateMyProfileDescription = {
     method: 'put',
     path: '/my/profile/description',
     middleware: [],
-    handle: (req, res) => {
-        const routeName = 'updateMyProfileDescription';
-
+    handle: (routeName) => (req, res) => {
         //TODO
         //const user = req[cfg.jwt.middleware.requestMountField];
 
