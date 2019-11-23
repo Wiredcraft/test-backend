@@ -1,0 +1,79 @@
+const cfg = require('../config.json')
+    , logging = require('../lib/logging.es7')
+    , modName = require('../lib/module_name.es7')
+    , webRoute = require('../web/route/index.es7');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const loadRoute = (route) => {
+    const { method, path, middleware, handle } = route;
+
+    app[method](path, ...middleware, handle(path));
+};
+
+
+let appAll = null;
+
+const bindAll = (listenPort, callback) => {
+    const accessLogFilePath = cfg.file.name.log.node.web.all.express_http_access
+        , accessLogStream = fs.createWriteStream(accessLogFilePath, { flags: 'a' });
+
+    const app = express();
+
+    appAll = app;
+
+    app.use(morgan({ stream: accessLogStream }));
+    app.use(bodyParser.json(cfg.express.middleware.bodyParser.json.options.fallback));
+    app.use(bodyParser.urlencoded(cfg.express.middleware.bodyParser.urlEncoded.options.fallback));
+
+    const wR = webRoute;
+
+    [
+        wR.api.accountAuthentication.signIn,
+        wR.api.accountAuthentication.signOut,
+        wR.api.accountPosition.uploadMyPosition,
+        wR.api.accountPosition.findMyPositionNearbyUserList,
+        wR.api.accountProfile.getMyProfile,
+        wR.api.accountProfile.setMyProfileBirthDay,
+        wR.api.accountProfile.setMyProfileHomeAddress,
+        wR.api.accountProfile.updateMyProfileHomeAddress,
+        wR.api.accountProfile.setMyProfileDescription,
+        wR.api.accountProfile.updateMyProfileDescription,
+        wR.api.accountRegistration.deleteAccount,
+        wR.api.accountRegistration.signUpNameNick,
+        wR.api.accountRegistration.signUpNameNick,
+        wR.api.accountRelationship.getMyRelationship,
+        wR.api.accountRelationship.addMyRelationshipUserFollowing,
+        wR.api.accountRelationship.removeMyRelationshipUserFollowing,
+    ].forEach((route) => loadRoute(route));
+
+    app.use((req, res) => {
+        res.status(400).end();
+    });
+
+    app.use((err, req, res, next) => {
+        res.status(500).end();
+    });
+
+    app.listen(listenPort);
+    log.info('web scope all listening ...');
+    callback();
+};
+
+
+const unbindAll = (callback) => {
+    log.info('web scope all closing ...');
+    appAll.close(callback);
+    appAll = null;
+};
+
+
+module.exports = {
+    all: {
+        bind: bindAll,
+        unbind: unbindAll,
+    },
+};
