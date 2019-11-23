@@ -1,0 +1,84 @@
+const _ = require('lodash')
+    , assert = require('assert')
+    , enm = require('../../../lib/enum.es7')
+    , logging = require('../../../lib/logging.es7')
+    , modName = require('../../../../lib/module_name.es7');
+
+
+const moduleName = modName.generateServer(__driname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+const isErrorUnwrapped = (err) =>
+    !_.has(err, 'operation') ||
+    !_.has(err, 'result');
+
+
+const isErrorWrappedNoneFailGuard = (err) =>
+    (err.operation === enm.crudOperation.NONE) &&
+    (err.result === enm.crudResult.FAIL_GUARD);
+
+
+const isErrorWrappedNoneErrorGuard = (err) =>
+    (err.operation === enm.crudOperation.NONE) &&
+    (err.result === enm.crudResult.ERROR_GUARD);
+
+
+const isErrorWrappedGenericErrorUpstream = (err) =>
+    (err.result === enm.crudResult.ERROR_UPSTREAM);
+
+
+const isErrorWrappedGenericFailFallback = (err) =>
+    (err.result === enm.crudResult.FAIL_FALLBACK);
+
+
+const isErrorCommon = (err) =>
+    isErrorUnwrapped(err) ||
+    isErrorWrappedNoneFailGuard(err) ||
+    isErrorWrappedNoneErrorGuard(err) ||
+    isErrorWrappedGenericFailFallback(err) ||
+    isErrorWrappedGenericErrorUpstream(err);
+
+
+const handleErrorCommon = (routeName, err, res) => {
+    if (isErrorUnwrapped) {
+        log.debug(`route ${routeName} caught error unwrapped`);
+        return res.status(500).end();
+    }
+
+    if (isErrorWrappedNoneFailGuard) {
+        log.debug(`route ${routeName} fail guard`);
+        return res.status(400).end();
+    }
+
+    if (isErrorWrappedNoneErrorGuard) {
+        log.debug(`route ${routeName} error guard`);
+        return res.status(400).end();
+    }
+
+    if (isErrorWrappedGenericFailFallback) {
+        log.debug(`route ${routeName} fail fallback`);
+        return res.status(400).end();
+    }
+
+    if (isErrorWrappedGenericErrorUpstream) {
+        log.debug(`route ${routeName} error upstream`);
+        return res.status(500).end();
+    }
+
+    log.fatal(`route ${routeName} handle common error in unreached condition`);
+    assert(false, 'Unreachable branch');
+};
+
+
+const handleErrorUnhandled = (routeName, res) => {
+    log.error(`route ${routeName} error unhandled`);
+    res.status(500).end();
+};
+
+
+module.exports = {
+    isErrorCommon: isErrorCommon,
+    handleErrorCommon: handleErrorCommon,
+    handleErrorUnhandled: handleErrorUnhandled,
+};
