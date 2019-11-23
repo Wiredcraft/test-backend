@@ -1,8 +1,8 @@
 const axios = require('axios')
-    , mock = require('../../test/mock.es7')
-    , enm = require('../../../lib/enum.es7')
-    , { markFail } = require('../../../lib/test.es7')
-    , crudError = require('../../../lib/crud_error.es7');
+    , mock = require('../../../test/mock.es7')
+    , enm = require('../../../../lib/enum.es7')
+    , { markFail } = require('../../../../lib/test.es7')
+    , crudError = require('../../../../lib/crud_error.es7');
 
 
 describe('Web Route Api Account Authentication', () => {
