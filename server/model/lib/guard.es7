@@ -1,8 +1,8 @@
 const _ = require('lodash')
     , assert = require('assert')
     , enm = require('../../lib/enum.es7')
-    , crudError = require('./crud_error.es7')
     , logging = require('../../lib/logging.es7')
+    , crudError = require('../../lib/crud_error.es7')
     , modName = require('../../../lib/module_name.es7');
 
 
