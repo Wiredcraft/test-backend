@@ -1,0 +1,58 @@
+const async = require('async')
+    , cfg = require('../config.json')
+    , should = require('chai').should()
+    , composition = require('../composition/index.es7');
+
+
+const prepareTestModelCrud = (callback) =>
+    async.series(
+        [
+            (cb) => { composition.switch.proc_signal.interrupt.shutdown.enable(); cb(); },
+            (cb) => { composition.switch.proc_signal.terminate.shutdown.enable(); cb(); },
+            (cb) => { composition.switch.model.flow.disable(); cb(); },
+            (cb) => composition.connection.db.mongodb.default.connect(cb),
+        ],
+        (err) => {
+            should.not.exist(err);
+            callback();
+        }
+    );
+
+
+const prepareTestModelFlow = (callback) =>
+    async.series(
+        [
+            (cb) => { composition.switch.proc_signal.interrupt.shutdown.enable(); cb(); },
+            (cb) => { composition.switch.proc_signal.terminate.shutdown.enable(); cb(); },
+            (cb) => { composition.switch.model.flow.enable(); cb(); },
+            (cb) => composition.connection.db.mongodb.default.connect(cb),
+        ],
+        (err) => {
+            should.not.exist(err);
+            callback();
+        }
+    );
+
+
+const prepareTestWeb = (callback) =>
+    async.series(
+        [
+            (cb) => { composition.switch.proc_signal.interrupt.shutdown.enable(); cb(); },
+            (cb) => { composition.switch.proc_signal.terminate.shutdown.enable(); cb(); },
+            (cb) => { composition.binding.webCrud.test.bind(); cb(); },
+            (cb) => composition.binding.webListen.test.all.bind(cfg.port, cb),
+        ],
+        (err) => {
+            should.not.exist(err);
+            callback();
+        }
+    );
+
+
+module.exports = {
+    model: {
+        crud: prepareTestModelCrud,
+        flow: prepareTestModelFlow,
+    },
+    web: prepareTestWeb,
+};

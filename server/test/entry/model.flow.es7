@@ -1,0 +1,17 @@
+const path = require('path')
+    , cfg = require('../../config.json')
+    , prepare = require('../prepare.es7')
+
+
+const d = (...args) => path.resolve(cfg.directory.root, 'server/', ...args);
+
+
+const runCase = () => [
+    //TODO add file system blob match support
+    d('model/flow/test/source.user.case.es7'),
+    d('model/flow/test/source.user_position.case.es7'),
+    d('model/flow/test/source.user_relationship.case.es7'),
+].forEach((filePath) => require(filePath));
+
+
+prepare.model.crud(runCase);
