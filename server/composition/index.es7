@@ -1,0 +1,13 @@
+module.exports = {
+    binding: {
+        webCrud: require('./binding.web_crud.es7'),
+        webListen: require('./binding.web_listen.es7'),
+    },
+    connection: {
+        db: require('./connection.db.es7'),
+    },
+    switch: {
+        model: require('./switch.model.es7'),
+        procSignal: require('./switch.proc_signal.es7'),
+    },
+};
