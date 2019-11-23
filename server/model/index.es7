@@ -1,0 +1,10 @@
+const crudOrientedWeb = {
+    user: require('./crud/user/index.es7').web,
+    userPosition: require('./crud/user_position/index.es7').web,
+    userRelationship: require('./crud/user_relationship/index.es7').web,
+};
+
+
+module.exports = {
+    crud: { web: orientedWeb }
+};
