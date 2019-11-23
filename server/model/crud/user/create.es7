@@ -3,7 +3,7 @@ const s = require('./schema.es7')
     , modName = require('../../../lib/module_name.es7')
     , flowEvent = require('../../lib/flow_event_meta.es7')
     , { emitEvent } = require('../../lib/flow_controller.es7')
-    , { normalize: ccn, transform: cct } = require('../../lib/crud_callback.js');
+    , { normalize: ccn, transform: cct } = require('../../lib/crud_callback.es7');
 
 
 const moduleName = modName.generateServer(__dirname, __filename)
