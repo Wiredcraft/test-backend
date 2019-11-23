@@ -1,0 +1,3 @@
+module.exports = {
+    accountPosition: require('./account_position.es7'),
+};

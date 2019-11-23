@@ -1,0 +1,59 @@
+const _ = require('lodash')
+    , enm = require('../../lib/enum.es7')
+    , crudError = require('../../lib/crud_error.es7');
+
+
+const findNearbyLimitedByPointCoordinates = (nearbyDistance, userId, callback) => {
+    const get_user_list_iter = (remainingUserList, result) => {
+        if (_.isEmpty(remainingUserList)) return callback(null, result);
+
+        const [firstUser, ...restUserList] = remainingUserList;
+
+        b.crud.user.findById(
+            firstUser.id,
+            (err, user) => {
+                if (err) return callback(err);
+                if (!user)
+                    return callback(crudError.create(enm.crudOperation.READ, enm.crudResult.FAIL_DOC_NOT_EXIST));
+
+                get_user_list_iter(
+                    restUserList,
+                    [...result, { id: user.id, nameNick: user.nameNick }]
+                );
+            }
+        );
+    };
+
+    const get_user_list = (userList) =>
+        get_user_list_iter(userList, []);
+
+    const get_nearby_user_id_list = (coordinates) =>
+        b.crud.userPosition.findNearbyLimitedByPointCoordinates(
+            coordinates,
+            nearbyDistance,
+            (err, userList) => {
+                if (err) return callback(err);
+
+                get_user_list(userList);
+            }
+        );
+
+    const get_user_position = () =>
+        b.crud.userPosition.findById(
+            userId,
+            (err, userPosition) => {
+                if (err) return callback(err);
+                if (!userPosition)
+                    return callback(crudError.create(enm.crudOperation.READ, enm.crudResult.FAIL_DOC_NOT_EXIST));
+
+                get_nearby_user_id_list(userPosition.last.coordinates);
+            }
+        );
+
+    get_user_position();
+};
+
+
+module.exports = {
+    findNearbyLimitedByPointCoordinates: findNearbyLimitedByPointCoordinates,
+};
