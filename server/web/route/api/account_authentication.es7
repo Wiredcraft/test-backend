@@ -25,7 +25,7 @@ const signInRoute = {
     path: '/sign-in',
     middleware: [],
     handle: (routeName) => (req, res) => {
-        if (!req.body || !_.get(req.body, 'auth.nameNick'))
+        if (!req.body || !_.get(req.body, 'credentials.nameNick'))
             return res.status(400).end();
 
         b.crud.user.findById(
