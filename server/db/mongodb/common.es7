@@ -21,14 +21,15 @@ const initializeEntity = (entityName, connection) => {
 
     const shutdownHandler = (cb) => connection.close(cb);
 
-    const isConnected = () => connection.readState === 1;
+    const isConnected = () => connection.readyState === 1;
 
     const connect = (callback) => {
         assert(!isConnected(), 'Already Connected');
 
-        connection.openUri(virtualHostUri, cfg.mongodb.client.connection.option)
+        connection
+        .openUri(virtualHostUri, cfg.mongodb.client.connection.option.fallback)
         .then(
-            (_conn) => {
+            (conn) => {
                 shutdown.handler.add(shutdownHandler);
                 callback();
             },
@@ -40,7 +41,7 @@ const initializeEntity = (entityName, connection) => {
         assert(isConnected(), 'Already Disconnected');
 
         shutdown.handler.remove(shutdownHandler);
-        connection.close(callback)
+        connection.close(callback);
     };
 
     bindConnectionVariousEventHandler(entityName, connection);
@@ -50,7 +51,7 @@ const initializeEntity = (entityName, connection) => {
 
 
 const bindConnectionVariousEventHandler = (entityName, connection) => {
-    controller.connection
+    connection
     .on('open', () => { log.trace(`${entityName} connection established`)})
     .on('close', () => { log.trace(`${entityName} connection closed`)})
     .on('reconnected', () => { log.trace(`${entityName} connection reconnected`)})

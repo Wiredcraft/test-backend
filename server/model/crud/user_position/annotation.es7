@@ -3,7 +3,7 @@ const cfg = require('../../../config.json')
     , validate = require('../../../lib/validate.es7');
 
 
-const Id = random.generateValidateStringHex(cfg.random.hexadecimal.charLength.document.id.user);
+const Id = random.getValidateStringHex(cfg.random.hexadecimal.charLength.document.id.user);
 
 
 const PointCoordinates = validate.pointCoordinates;

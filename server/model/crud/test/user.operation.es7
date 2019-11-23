@@ -1,15 +1,15 @@
-const utils = require('../../test/utils.es7')
-    , userCrud = require('../user/index.es7')
-    , cfg = require('../../../config.json');
+const cfg = require('../../../config.json')
+    , utils = require('../../test/utils.es7')
+    , userCrud = require('../user/index.es7');
 
 
-const User = userCrud.schema.model;
+const User = userCrud.model;
 
 
-const dropCollection = utils.generateDropCollection(userCrud.binding.db, cfg.mongodb.collection.name.user);
+const dropCollection = utils.getDropCollection(userCrud.binding.db, cfg.mongodb.collection.name.user);
 
 
-const [generateFromSeed, generateFromSeedList] = utils.generateFromSeedOperationList(User);
+const [generateFromSeed, generateFromSeedList] = utils.getFromSeedOperationGroup(User);
 
 
 const ensureIndexes = (callback) => User.ensureIndexes(callback);

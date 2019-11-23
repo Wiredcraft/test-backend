@@ -6,7 +6,8 @@ const _ = require('lodash')
 exports = {
     default: {
         connection: mongoose.createConnection(),
-    }
+        isConnected: null, connect: null, disconnect: null
+    },
 };
 
 

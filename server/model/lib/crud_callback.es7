@@ -136,7 +136,6 @@ module.exports = {
         save: transformCallbackSave,
         update: transformCallbackUpdate,
         findOne: transformCallbackFindOne,
-        predicate: transformCallbackPredicate,
         update_insert: transformCallbackUpdateInsert,
         docToObject: transformCallbackDocToObject,
         findOneAndUpdate: transformCallbackFindOneAndUpdate,

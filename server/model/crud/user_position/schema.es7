@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
     , binding = require('./binding.es7')
     , cfg = require('../../../config.json')
     , logging = require('../../../lib/logging.es7')
-    , modName = require('../../../lib/module_name.es7');
+    , modName = require('../../../../lib/module_name.es7');
 
 
 const moduleName = modName.generateServer(__dirname, __filename)

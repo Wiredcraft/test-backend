@@ -1,4 +1,6 @@
-const c = require('./create.es7')
+const _ = require('lodash')
+    , b = require('./binding.es7')
+    , c = require('./create.es7')
     , r = require('./read.es7')
     , u = require('./update.es7')
     , d = require('./delete.es7')
@@ -7,7 +9,7 @@ const c = require('./create.es7')
     , s = require('./schema.es7')
     , guard = require('../../lib/guard.es7')
     , logging = require('../../../lib/logging.es7')
-    , modName = require('../../../lib/module_name.es7')
+    , modName = require('../../../../lib/module_name.es7')
     , ciT = require('../../lib/crud_interface_transform.es7');
 
 
@@ -53,19 +55,20 @@ const rawExports = {
 }
 
 
-const r = rawExports;
+const rE = rawExports;
 
 module.exports = {
+    binding: b,
     model: s.model,
     raw: rawExports,
     web: {
-        createNameNick: _.flowRight(ciT.injectQueryDateTime, t.injectArgumentCreateNameNick)(r.createNameNick),
-        findById: _.flowRight(ciT.injectQueryDateTime)(r.findById),
-        setHomeAddressById: _.flowRight(ciT.injectQueryDateTime)(r.setHomeAddressById),
-        updateHomeAddressById: _.flowRight(ciT.injectQueryDateTime)(r.updateHomeAddressById),
-        setDateBirthById: _.flowRight(ciT.injectQueryDateTime)(r.setDateBirthById),
-        setDescriptionById: _.flowRight(ciT.injectQueryDateTime)(r.setDescriptionById),
-        updateDescriptionById: _.flowRight(ciT.injectQueryDateTime)(r.updateDescriptionById),
-        deleteById: _.flowRight(ciT.injectQueryDateTime)(r.deleteById),
+        createNameNick: _.flowRight(ciT.injectQueryDateTime, t.injectArgumentCreateNameNick)(rE.createNameNick),
+        findById: _.flowRight(ciT.injectQueryDateTime)(rE.findById),
+        setHomeAddressById: _.flowRight(ciT.injectQueryDateTime)(rE.setHomeAddressById),
+        updateHomeAddressById: _.flowRight(ciT.injectQueryDateTime)(rE.updateHomeAddressById),
+        setDateBirthById: _.flowRight(ciT.injectQueryDateTime)(rE.setDateBirthById),
+        setDescriptionById: _.flowRight(ciT.injectQueryDateTime)(rE.setDescriptionById),
+        updateDescriptionById: _.flowRight(ciT.injectQueryDateTime)(rE.updateDescriptionById),
+        deleteById: _.flowRight(ciT.injectQueryDateTime)(rE.deleteById),
     },
 };

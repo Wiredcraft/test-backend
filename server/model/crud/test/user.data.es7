@@ -1,10 +1,10 @@
-const preparation = require('../../test/preparation.es7')
+const prepare = require('../../test/prepare.es7')
     , operation = require('./user.operation.es7')
     , cfg = require('../../../config.json');
 
 
 const baseTime = Date.now()
-    , dtT = preparation.generateDateTimeTable(baseTime);
+    , dtT = prepare.dateTime(baseTime);
 
 
 const userT = {

@@ -41,7 +41,7 @@ describe('Model Crud User Position', () => {
         });
 
         describe('Find Nearby Limited By Position Coordinates', () => {
-            const { findNearbyLimitedByPositionCoordinates } = findNearbyLimitedByPositionCoordinates;
+            const { findNearbyLimitedByPositionCoordinates } = userPositionCrud;
 
             it('should return error if upstream caught error');
             it('should reject if guard fail');

@@ -12,14 +12,14 @@ const prepareDateTimeTable = (baseTime) => {
         .range(- alphabet.length, alphabet + 1)
         .map((offset) => new Date(baseTime + (offset * moment.duration(4, 'hours').asMilliseconds())));
 
-    _.range(alphabet).forEach((idx) => {
-        data.post[alphabet[idx]] = dateSequence[idx];
+    _.range(alphabet.length).forEach((idx) => {
+        data.past[alphabet[idx]] = dateSequence[idx];
     });
 
     data.justNow = dateSequence[alphabet.length];
 
-    _.range(26).forEach((idx) => {
-        data.future[alphabet[idx]] = dateSequencee[alphabet.length + 1 + idx];
+    _.range(alphabet.length).forEach((idx) => {
+        data.future[alphabet[idx]] = dateSequence[alphabet.length + 1 + idx];
     });
 
     return data;

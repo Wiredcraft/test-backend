@@ -1,7 +1,7 @@
 const s = require('./schema.es7')
     , logging = require('../../../lib/logging.es7')
+    , flowEvent = require('../../lib/flow_event.es7')
     , modName = require('../../../../lib/module_name.es7')
-    , { flowEvent } = require('../../lib/flow_event_meta.es7')
     , flowController = require('../../lib/flow_controller.es7')
     , { normalize: ccn, transform: cct } = require('../../lib/crud_callback.es7');
 

@@ -26,11 +26,11 @@ const userRelationshipSchemaPrototype = {
 
 
 const userRelationshipSchema = new mongoose.Schema(
-    userRelationshipSchemaPrototype, cfg.mongoose.options.schema.fallback
+    userRelationshipSchemaPrototype, cfg.mongoose.option.schema.fallback
 );
 
 
-const userRelationshipModel = binding.db.collection.model(
+const userRelationshipModel = binding.db.connection.model(
     userRelationshipModelName, userRelationshipSchema, cfg.mongodb.collection.name.userRelationship
 );
 

@@ -1,10 +1,11 @@
 const _ = require('lodash')
+    , async = require('async')
     , assert = require('assert')
     , logging = require('./logging.es7')
-    , modName = require('../module_name.es7');
+    , modName = require('../../lib/module_name.es7');
 
 
-const moduleName = modName.generateServer(__diranem, __filename)
+const moduleName = modName.generateServer(__dirname, __filename)
     , log = logging.getLoggerModule(moduleName);
 
 
@@ -44,8 +45,10 @@ const exit = () => {
 exports = {
     exit: exit,
     handler: { add: null, remove: null },
-    enable: { signal: { terminate: null, interrupt: null } },
-    disable: { signal: { terminate: null, interrupt: null } },
+    signal: {
+        interrupt: { enable: null, disable: null },
+        terminate: { enable: null, disable: null },
+    },
 };
 
 
@@ -62,25 +65,25 @@ exports.handler.remove = (handler) => {
 };
 
 
-exports.enable.signal.terminate = () => {
+exports.signal.terminate.enable = () => {
     assert(!state.signal.terminate.enabled, 'Shutdown Signal Terminate Already Enabled');
     log.trace('shutdown signal terminate enable');
     state.signal.terminate.enabled = true;
 };
 
-exports.enable.signal.interrupt = () => {
+exports.signal.interrupt.enable = () => {
     assert(!state.signal.interrupt.enabled, 'Shutdown Signal Interrupt Already Enabled');
     log.trace('shutdown signal interrupt enable');
     state.signal.interrupt.enabled = true;
 };
 
-exports.disable.signal.terminate = () => {
+exports.signal.terminate.disable = () => {
     assert(state.signal.terminate.enabled, 'Shutdown Signal Terminate Already Disabled');
     log.trace('shutdown signal terminate disable');
     state.signal.terminate.enabled = false;
 };
 
-exports.disable.signal.interrupt = () => {
+exports.signal.interrupt.disable = () => {
     assert(state.signal.interrupt.enabled, 'Shutdown Signal Interrupt Already Disabled');
     log.trace('shutdown signal interrupt disable');
     state.signal.interrupt.enabled = false;

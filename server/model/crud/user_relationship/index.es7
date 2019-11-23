@@ -1,4 +1,6 @@
-const c = require('./create.es7')
+const _ = require('lodash')
+    , b = require('./binding.es7')
+    , c = require('./create.es7')
     , r = require('./read.es7')
     , u = require('./update.es7')
     , d = require('./delete.es7')
@@ -6,7 +8,7 @@ const c = require('./create.es7')
     , s = require('./schema.es7')
     , guard = require('../../lib/guard.es7')
     , logging = require('../../../lib/logging.es7')
-    , modName = require('../../../lib/module_name.es7')
+    , modName = require('../../../../lib/module_name.es7')
     , ciT = require('../../lib/crud_interface_transform.es7');
 
 
@@ -48,13 +50,14 @@ const rawExports = {
 };
 
 
-const r = rawExports;
+const rE = rawExports;
 
 module.exports = {
+    binding: b,
     model: s.model,
-    raw: rawExportspo,
+    raw: rawExports,
     web: {
-        addActiveFollowingById: _.flowRight(ciT.injectQueryDateTime)(u.addActiveFollowingById),
-        removeActiveFollowingById: _.flowRight(ciT.injectQueryDateTime)(u.removeActiveFollowingById),
+        addActiveFollowingById: _.flowRight(ciT.injectQueryDateTime)(rE.addActiveFollowingById),
+        removeActiveFollowingById: _.flowRight(ciT.injectQueryDateTime)(rE.removeActiveFollowingById),
     },
 };

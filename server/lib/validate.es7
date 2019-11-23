@@ -19,7 +19,7 @@ const validateUserNearbyDistance = (input) => true;
 const validateUserPointCoordinates = (input) => true;
 
 
-const validateUserDescription = (input) => true;
+const validateUserSelfDescription = (input) => true;
 
 
 module.exports = {

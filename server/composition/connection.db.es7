@@ -1,6 +1,5 @@
 const db = require('../db/index.es7')
     , logging = require('../lib/logging.es7')
-    , shutdown = require('../lib/shutdown.es7')
     , modName = require('../../lib/module_name.es7');
 
 

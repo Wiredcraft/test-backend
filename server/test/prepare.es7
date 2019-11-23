@@ -7,9 +7,9 @@ const async = require('async')
 const prepareTestModelCrud = (callback) =>
     async.series(
         [
-            (cb) => { composition.switch.proc_signal.interrupt.shutdown.enable(); cb(); },
-            (cb) => { composition.switch.proc_signal.terminate.shutdown.enable(); cb(); },
-            (cb) => { composition.switch.model.flow.disable(); cb(); },
+            (cb) => { composition.switch.procSignal.interrupt.shutdown.enable(); cb(); },
+            (cb) => { composition.switch.procSignal.terminate.shutdown.enable(); cb(); },
+            (cb) => { composition.switch.model.flow.turnOff(); cb(); },
             (cb) => composition.connection.db.mongodb.default.connect(cb),
         ],
         (err) => {
@@ -22,9 +22,9 @@ const prepareTestModelCrud = (callback) =>
 const prepareTestModelFlow = (callback) =>
     async.series(
         [
-            (cb) => { composition.switch.proc_signal.interrupt.shutdown.enable(); cb(); },
-            (cb) => { composition.switch.proc_signal.terminate.shutdown.enable(); cb(); },
-            (cb) => { composition.switch.model.flow.enable(); cb(); },
+            (cb) => { composition.switch.procSignal.interrupt.shutdown.enable(); cb(); },
+            (cb) => { composition.switch.procSignal.terminate.shutdown.enable(); cb(); },
+            (cb) => { composition.switch.model.flow.turnOff(); cb(); },
             (cb) => composition.connection.db.mongodb.default.connect(cb),
         ],
         (err) => {
@@ -37,8 +37,8 @@ const prepareTestModelFlow = (callback) =>
 const prepareTestWeb = (callback) =>
     async.series(
         [
-            (cb) => { composition.switch.proc_signal.interrupt.shutdown.enable(); cb(); },
-            (cb) => { composition.switch.proc_signal.terminate.shutdown.enable(); cb(); },
+            (cb) => { composition.switch.procSignal.interrupt.shutdown.enable(); cb(); },
+            (cb) => { composition.switch.procSignal.terminate.shutdown.enable(); cb(); },
             (cb) => { composition.binding.webCrud.test.bind(); cb(); },
             (cb) => composition.binding.webListen.test.all.bind(cfg.port, cb),
         ],

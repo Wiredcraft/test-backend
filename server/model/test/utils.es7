@@ -1,7 +1,7 @@
 const _ = require('lodash');
 
 
-const generateDropCollection = (dbEntity, collectionName) => (callback) =>
+const getDropCollection = (dbEntity, collectionName) => (callback) =>
     dbEntity.connection.collections[collectionName].drop((err) => {
         err && err.should.have.property('message', 'ns not found');
         callback();
@@ -42,6 +42,6 @@ const createFlowShould = (delayTime) => (initialEntry, sideEffectValidationTask,
 
 module.exports = {
     createFlowShould: createFlowShould,
-    generateDropCollection: generateDropCollection,
+    getDropCollection: getDropCollection,
     getFromSeedOperationGroup: getFromSeedOperationGroup,
 };
