@@ -147,29 +147,105 @@ describe('Model Crud User Position', () => {
 
     describe('Create', () => {
         describe('Create', () => {
+            const { create } = userPositionCrud;
+
             it('should return error if upstream caught error');
             it('should reject if guard fail');
-            it('should fail if id exist');
-            it('should pass if everything ok');
+
+            it('should fail if id exist', (done) => {
+                create(
+                    tD.dt.justNow,
+                    tD.userPositionn.notExist.id,
+                    (err, newUserPosition) => {
+                        should.not.exist(err);
+                        should.not.exist(newUserPosition);
+                        done();
+                    }
+                );
+            });
+
+            it('should pass if everything ok', (done) => {
+                create(
+                    tD.dt.justNow,
+                    tD.userPosition.toCreate.id,
+                    (err, newUserPosition) => {
+                        should.not.exist(err);
+                        should.exist(newUserPosition);
+                        done();
+                    }
+                );
+            });
         });
     });
 
     describe('Delete', () => {
         describe('Delete By Id', () => {
+            const { deleteById } = userPositionCrud;
+
             it('should return error if upstream caught error');
             it('should reject if guard fail');
-            it('should reject if guard fail');
-            it('should fail if id not exist');
-            it('should pass if id exist');
+
+            it('should fail if id not exist', (done) => {
+                deleteById(
+                    tD.dt.justNow,
+                    tD.userPosition.notExist.id,
+                    (err, deletedUserPosition) => {
+                        should.exist(err);
+                        should.not.exist(deletedUserPosition);
+                        done();
+                    }
+                );
+            });
+
+            it('should pass if id exist', (done) => {
+                deleteById(
+                    tD.dt.justNow,
+                    tD.userPosition.toDelete.id,
+                    (err, deletedUserPosition) => {
+                        should.not.exist(err);
+                        should.exist(deletedUserPosition);
+                        done();
+                    }
+                );
+            });
         });
     });
 
     describe('Update', () => {
         describe('Overwrite Position By Id', () => {
+            const { overwritePositionById } = userPositionCrud;
+
             it('should return error if upstream caught error');
             it('should reject if guard fail');
-            it('should pass if position not exist');
-            it('should pass if position exist');
+
+            it('should pass if position not exist', (done) => {
+                overwritePositionById(
+                    tD.dt.justNow,
+                    tD.userPosition.single.last.coordinates,
+                    tD.userPosition.notExist.id,
+                    (err) => {
+                        should.exist(err);
+                        done();
+                    }
+                );
+            });
+
+            it('should pass if position exist', (done) => {
+                const newCoordinates = [
+                    tD.userPosition.single.last.coordinates[0] - 0.001,
+                    tD.userPosition.single.last.coordinates[1],
+                ];
+
+                overwritePositionById(
+                    tD.dt.justNow,
+                    newCoordinates,
+                    tD.userPosition.single.id,
+                    (err) => {
+                        should.not.exist(err);
+                        done();
+                    }
+                );
+            });
         });
     });
 });

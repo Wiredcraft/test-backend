@@ -62,6 +62,12 @@ const userPositionT = {
         id: '5285278859e1f3e2',
         last: { coordinates: [0.000, 0.000] },
     },
+    toCreate: {
+        id: '6953a417791f310f',
+    },
+    toDelete: {
+        id: '3bf36700b8f2bb10',
+    },
     single: {
         id: '6cc10aacb3fbb060',
         last: { coordinates: [-120.000, -30.000] },
@@ -96,18 +102,26 @@ const upT = userPositionT;
 
 
 const userPositionSeedList = [
-    upT.single,
-    upT.nearbyGroup.normal.a,
-    upT.nearbyGroup.normal.b,
-    upT.nearbyGroup.normal.c,
-    upT.nearbyGroup.huge.center,
-    ...upT.nearbyGroup.huge.list
-].map((i) => ({
-    '_id': i.id,
-    'last.updateAt': dtT.past.a,
-    'last.record.type': 'Point',
-    'last.record.coordinates': i.last.coordinates,
-}));
+    ...[
+        upT.toCreate,
+        upT.toDelete,
+    ].map((i) => ({
+        '_id': i.id,
+    })),
+    ...[
+        upT.single,
+        upT.nearbyGroup.normal.a,
+        upT.nearbyGroup.normal.b,
+        upT.nearbyGroup.normal.c,
+        upT.nearbyGroup.huge.center,
+        ...upT.nearbyGroup.huge.list
+    ].map((i) => ({
+        '_id': i.id,
+        'last.updateAt': dtT.past.a,
+        'last.record.type': 'Point',
+        'last.record.coordinates': i.last.coordinates,
+    })),
+];
 
 
 const reset = operation.reset(userPositionSeedList);
