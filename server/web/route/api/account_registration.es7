@@ -11,7 +11,7 @@ const moduleName = modName.generateServer(__dirname, __filename)
 const signUpNameNickRoute = {
     method: 'post',
     //path: '/sign_up/name_nick',
-    path: '/sign_up',
+    path: '/sign-up',
     middleware: [],
     handle: (routeName) => (req, res) => {
         if (!req.body || !_.get(req.body, 'reg.nickName'))

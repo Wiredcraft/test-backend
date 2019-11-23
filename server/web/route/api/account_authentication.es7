@@ -10,7 +10,7 @@ const moduleName = modName.generateServer(__dirname, __filename)
 
 const signOutRoute = {
     method: 'put',
-    path: '/sign_out',
+    path: '/sign-out',
     middleware: [],
     handle: (routeName) => (req, res) => {
         //TODO authenticate user in middleware, if any.
@@ -22,7 +22,7 @@ const signOutRoute = {
 
 const signInRoute = {
     method: 'put',
-    path: '/sign_in',
+    path: '/sign-in',
     middleware: [],
     handle: (routeName) => (req, res) => {
         if (!req.body || !_.get(req.body, 'auth.nameNick'))
