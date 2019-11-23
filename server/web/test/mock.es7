@@ -1,0 +1,15 @@
+const _ = require('lodash')
+    , assert = require('assert')
+    , binding = require('../binding.es7');
+
+
+const mockCrud = (nestedDotField, crudFn) => {
+    assert(binding.crud, 'Web Binding Crud Not Bound');
+
+    _.set(nestedDotField, crudFn);
+};
+
+
+module.exports = {
+    crud: mockCrud,
+};
