@@ -17,7 +17,7 @@ const initializeEntity = (entityName, connection) => {
         cfg.mongodb.server.profile.default.port,
         '/',
         entityName //NOTICE assume mongodb server name and database name(virtual host) name
-    ].join(''),
+    ].join('');
 
     const shutdownHandler = (cb) => connection.close(cb);
 

@@ -41,7 +41,7 @@ const exit = () => {
 };
 
 
-const exports = {
+exports = {
     exit: exit,
     handler: { add: null, remove: null },
     enable: { signal: { terminate: null, interrupt: null } },

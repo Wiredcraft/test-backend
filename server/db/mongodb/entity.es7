@@ -3,7 +3,7 @@ const _ = require('lodash')
     , common = require('./common.es7');
 
 
-const exports = {
+exports = {
     default: {
         connection: mongoose.createConnection(),
     }

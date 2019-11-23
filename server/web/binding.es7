@@ -7,7 +7,7 @@ const moduleName = modName.generateModule(__dirname, __filename)
     , log = logging.getLoggerModule(moduleName);
 
 
-const exports = {
+exports = {
     crud: null,
     bind: {
         crud: null,
