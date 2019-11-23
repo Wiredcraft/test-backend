@@ -1,0 +1,26 @@
+const async = require('async')
+    , cfg = require('../config.json')
+    , logging = require('../lib/logging.es7')
+    , modName = require('../lib/module_name.es7')
+    , composition = require('../composition/index.es7');
+
+
+const moduleName = modName.generate(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
+async.series(
+    [
+        (cb) => { composition.switch.proc_signal.interrupt.shutdown.enable(); cb(); },
+        (cb) => { composition.switch.proc_signal.terminate.shutdown.enable(); cb(); },
+        (cb) => { composition.switch.model.flow.enable(); cb(); },
+        (cb) => composition.connection.db.mongodb.default.connect(cb),
+        (cb) => { composition.binding.webCrud.default.bind(); cb(); },
+        (cb) => composition.webListen.test.all.bind(cfg.port, cb),
+    ],
+    (err) => {
+        if (err) throw err;
+
+        log.info('now running ...');
+    }
+);
