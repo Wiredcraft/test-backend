@@ -32,8 +32,8 @@ const signInRoute = {
             req.body.auth.name_nick,
             (err, user) => {
                 if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
-                if (err && !user) return res.status(404).end();
-                if (err) return handleErrorUnhandled(routeName, err, res);
+                if (err) return handleErrorUnhandled(routeName, res);
+                if (!user) return res.status(404).end();
 
                 //TODO generate json web token and return in data payload
                 res.status(200).json({ data: { me: {

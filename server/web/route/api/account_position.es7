@@ -1,4 +1,5 @@
 const _ = require('lodash')
+    , enm = require('../../../lib/enum.es7')
     , logging = require('../../../lib/logging.es7')
     , modName = require('../../../../lib/module_name.es7')
     , { isErrorCommon, handleErrorCommon, handleErrorUnhandled } = require('../lib/common.es7');
@@ -24,8 +25,11 @@ const uploadMyPositionRoute = {
             null, //user.id
             (err) => {
                 if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
-                //
-                if (err) return handleErrorUnhandled(routeName, err, res);
+                if (err &&
+                    (err.operation === enm.crudOperation.UPDATE) &&
+                    (err.result === enm.crudResult.FAIL_ID_NOT_EXIST))
+                    return res.status(404).end();
+                if (err) return handleErrorUnhandled(routeName, res);
 
                 res.status(200).end();
             }
@@ -52,7 +56,7 @@ const findMyPositionNearbyUserListRoute = {
             null, //user.id,
             (err, userList) => {
                 if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
-                if (err) return handleErrorUnhandled(routeName, err, res);
+                if (err) return handleErrorUnhandled(routeName, res);
 
                 res.status(200).json({ data: { nearby: { user: {
                     list: userList.map((u) => ({

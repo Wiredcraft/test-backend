@@ -21,7 +21,10 @@ const signUpNameNickRoute = {
             req.body.nickName,
             (err) => {
                 if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
-                //
+                if (err &&
+                    (err.operation === enm.crudOperation.CREATE) &&
+                    (err.result === enm.crudResult.FAIL_DOC_ALREADY_CREATED))
+                    return res.status(403).end();
                 if (err) return handleErrorUnhandled(routeName, err, res);
 
                 res.status(200).end();
@@ -46,7 +49,10 @@ const deleteAccountRoute = {
             null, //user.id,
             (err, deletedUser) => {
                 if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
-                //
+                if (err &&
+                    (err.operation === enm.crudOperation.DELETE) &&
+                    (err.result === enm.crudResult.FAIL_DOC_ALREADY_DELETED))
+                    return res.status(404).end();
                 if (err) return handleErrorUnhandled(routeName, err, res);
 
                 res.status(200).end();
