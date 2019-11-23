@@ -1,5 +1,7 @@
 const should = require('chai').should()
+    , enm = require('../../../lib/enum.es7')
     , tD = require('./user_position.data.es7')
+    , crudError = require('../../../lib/crud_error.es7')
     , userPositionCrud = require('../user_position/index.es7').raw;
 
 
@@ -17,9 +19,9 @@ describe('Model Crud User Position', () => {
                 findById(
                     tD.dt.justNow,
                     tD.userPosition.notExist.id,
-                    (err, document) => {
-                        should.exist(err);
-                        should.not.exist(document);
+                    (err, userPosition) => {
+                        should.not.exist(err);
+                        should.not.exist(userPosition);
                         done();
                     }
                 );
@@ -29,9 +31,9 @@ describe('Model Crud User Position', () => {
                 findById(
                     tD.dt.justNow,
                     tD.userPosition.single.id,
-                    (err, document) => {
+                    (err, userPosition) => {
                         should.not.exist(err);
-                        should.exist(document);
+                        should.exist(userPosition);
                         done();
                     }
                 );
@@ -157,8 +159,11 @@ describe('Model Crud User Position', () => {
                     tD.dt.justNow,
                     tD.userPositionn.notExist.id,
                     (err, newUserPosition) => {
-                        should.not.exist(err);
+                        should.exist(err);
                         should.not.exist(newUserPosition);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.CREATE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 );
@@ -192,6 +197,9 @@ describe('Model Crud User Position', () => {
                     (err, deletedUserPosition) => {
                         should.exist(err);
                         should.not.exist(deletedUserPosition);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.DELETE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 );
@@ -225,6 +233,9 @@ describe('Model Crud User Position', () => {
                     tD.userPosition.notExist.id,
                     (err) => {
                         should.exist(err);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.UPDATE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 );

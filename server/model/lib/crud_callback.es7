@@ -25,12 +25,12 @@ const transformCallbackDocToObject = (callback) => (err, returnData) => {
 const transformCallbackSave = (callback) => (err, doc, numModified) => {
     const op = enm.crudOperation.CREATE;
 
-    if (err) return callback(crudError.create(op, enm.crudResult.ERROR));
-    if (numModified === 0) return callback(crudError.create(op, enm.crudResult.FAIL));
+    if (err) return callback(crudError.create(op, enm.crudResult.ERROR_UPSTREAM));
+    if (numModified === 0) return callback(crudError.create(op, enm.crudResult.FAIL_FALLBACK));
     if (numModified === 1) return callback(null, doc);
 
     log.error('Save Unhandle Condition Branch');
-    callback(crudError.create(op, enm.crudResult.ERROR));
+    callback(crudError.create(op, enm.crudResult.ERROR_UPSTREAM));
 };
 
 
@@ -47,12 +47,12 @@ const transformCallbackSave = (callback) => (err, doc, numModified) => {
 const transformCallbackUpdate = (callback) => (err, response) => {
     const op = enm.crudOperation.UPDATE;
 
-    if (err) return callback(crudError.create(op, enm.crudResult.ERROR));
-    if (0 === response.n) return callback(crudError.create(op, enm.crudResult.FAIL));
+    if (err) return callback(crudError.create(op, enm.crudResult.ERROR_UPSTREAM));
+    if (0 === response.n) return callback(crudError.create(op, enm.crudResult.FAIL_FALLBACK));
     if (0 < response.n) return callback();
 
     log.error('Update Unhandle Condition Branch');
-    callback(crudError.create(op, enm.crudResult.ERROR));
+    callback(crudError.create(op, enm.crudResult.ERROR_UPSTREAM));
 };
 
 
@@ -75,8 +75,8 @@ const transformCallbackUpdate = (callback) => (err, response) => {
 const transformCallbackUpdateInsert = (callback) => (err, response, document) => {
     const op = enm.crudOperation.UPDATE_INSERT;
 
-    if (err) return callback(crudError.create(op, enm.crudResult.ERROR));
-    if (!response.ok) return callback(crudError.create(op, enm.crudResult.FAIL));
+    if (err) return callback(crudError.create(op, enm.crudResult.ERROR_UPSTREAM));
+    if (!response.ok) return callback(crudError.create(op, enm.crudResult.FAIL_FALLBACK));
 
     callback(null, document);
 };
@@ -85,7 +85,7 @@ const transformCallbackUpdateInsert = (callback) => (err, response, document) =>
 const transformCallbackFindOne = (callback) => (err, document) => {
     const op = enm.crudOperation.READ;
 
-    if (err) return callback(crudError.create(op, enm.crudResult.ERROR));
+    if (err) return callback(crudError.create(op, enm.crudResult.ERROR_UPSTREAM));
 
     callback(null, document);
 };
@@ -94,7 +94,7 @@ const transformCallbackFindOne = (callback) => (err, document) => {
 const transformCallbackFind = (callback) => (err, documentList) => {
     const op = enm.crudOperation.READ;
 
-    if (err) return callback(crudError.create(op, enm.crudResult.ERROR));
+    if (err) return callback(crudError.create(op, enm.crudResult.ERROR_UPSTREAM));
 
     callback(null, documentList);
 };
@@ -103,7 +103,7 @@ const transformCallbackFind = (callback) => (err, documentList) => {
 const transformCallbackFindOneAndUpdate = (callback) => (err, document) => {
     const op = enm.crudOperation.READ;
 
-    if (err) return callback(crudError.create(op, enm.crudResult.ERROR));
+    if (err) return callback(crudError.create(op, enm.crudResult.ERROR_UPSTREAM));
 
     callback(null, document);
 };
@@ -112,7 +112,7 @@ const transformCallbackFindOneAndUpdate = (callback) => (err, document) => {
 const transformCallbackFindOneAndRemove = (callback) => (err, document) => {
     const op = enm.crudOperation.DELETE;
 
-    if (err) return callback(crudError.create(op, enm.crudResult.ERROR));
+    if (err) return callback(crudError.create(op, enm.crudResult.ERROR_UPSTREAM));
 
     callback(null, document);
 };

@@ -28,6 +28,7 @@ describe('Model Flow Source User Relationship', () => {
                         tD.userRelationship.toFollow.followee.id,
                         (err, userRelationship) => {
                             should.not.exist(err);
+                            should.exist(userRelationship);
                             userRelationship.have.property('passive.following.user.count.total', 1);
                             cb();
                         }
@@ -56,6 +57,7 @@ describe('Model Flow Source User Relationship', () => {
                         tD.userRelationship.unFollow.followee.id,
                         (err, userRelationship) => {
                             should.not.exist(err);
+                            should.exist(userRelationship);
                             userRelationship.have.property('passive.following.user.count.total', 0);
                             cb();
                         }

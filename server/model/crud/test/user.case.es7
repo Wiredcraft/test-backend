@@ -1,6 +1,8 @@
-const should = require('chai').should()
-    , tD = require('./user.data.es7')
-    , userCrud = require('../user/index.es7').raw;
+const tD = require('./user.data.es7')
+    , should = require('chai').should()
+    , enm = require('../../../lib/enum.es7')
+    , userCrud = require('../user/index.es7').raw
+    , crudError = require('../../../lib/crud_error.es7');
 
 
 describe('Model Crud User', () => {
@@ -55,6 +57,9 @@ describe('Model Crud User', () => {
                     (err, user) => {
                         should.exist(err);
                         should.not.exist(user);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.CREATE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 );
@@ -90,6 +95,9 @@ describe('Model Crud User', () => {
                     (err, user) => {
                         should.exist(err);
                         should.not.exist(user);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.DELETE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 )
@@ -124,6 +132,9 @@ describe('Model Crud User', () => {
                     tD.user.notExist.id,
                     (err) => {
                         should.exist(err);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.UPDATE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 );
@@ -136,6 +147,9 @@ describe('Model Crud User', () => {
                     tD.user.registeredJustNow,
                     (err) => {
                         should.exist(err);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.UPDATE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 );
@@ -148,6 +162,9 @@ describe('Model Crud User', () => {
                     tD.user.profileFullFilledJustNow.id,
                     (err) => {
                         should.exist(err);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.UPDATE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 );
@@ -180,6 +197,9 @@ describe('Model Crud User', () => {
                     tD.user.notExist.id,
                     (err) => {
                         should.exist(err);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.UPDATE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 );
@@ -192,6 +212,9 @@ describe('Model Crud User', () => {
                     tD.user.profileFullFilledLongAgo.id,
                     (err) => {
                         should.exist(err);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.UPDATE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 );
@@ -223,6 +246,9 @@ describe('Model Crud User', () => {
                     tD.user.notExist.id,
                     (err) => {
                         should.exist(err);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.UPDATE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 );
@@ -235,6 +261,9 @@ describe('Model Crud User', () => {
                     tD.user.profileFullFilledLongAgo.id,
                     (err) => {
                         should.exist(err);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.UPDATE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 );
@@ -267,6 +296,9 @@ describe('Model Crud User', () => {
                     tD.user.notExist.id,
                     (err) => {
                         should.exist(err);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.UPDATE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 );
@@ -279,6 +311,9 @@ describe('Model Crud User', () => {
                     tD.user.registeredJustNow.id,
                     (err) => {
                         should.exist(err);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.UPDATE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 );
@@ -312,6 +347,9 @@ describe('Model Crud User', () => {
                     tD.user.notExist.id,
                     (err) => {
                         should.exist(err);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.UPDATE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 );
@@ -324,6 +362,9 @@ describe('Model Crud User', () => {
                     tD.user.profileFullFilledJustNow.id,
                     (err) => {
                         should.exist(err);
+                        err.should.deep.equal(crudError.create(
+                            enm.crudOperation.UPDATE, enm.crudResult.FAIL_FALLBACK
+                        ));
                         done();
                     }
                 );
