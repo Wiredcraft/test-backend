@@ -1,0 +1,9 @@
+const should = require('chai').should();
+
+
+const markFail = () => 'fail'.should.equal('success');
+
+
+module.exports = {
+    markFail: markFail,
+};
