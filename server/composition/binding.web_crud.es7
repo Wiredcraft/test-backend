@@ -1,0 +1,41 @@
+const bindWebCrudDefault = () => {
+    const modelIndex = require('../model/index.es7')
+        , webBinding = require('../web/binding.es7');
+
+    webBinding.crud.bind(modelIndex.web);
+};
+
+
+const unbindWebCrudDefault = () => {
+    const webBinding = require('../web/binding.es7');
+
+    webBinding.crud.unbind();
+};
+
+
+const bindWebCrudTest = () => {
+    const webBinding = require('../web/binding.es7');
+
+    webBinding.crud.bind({});
+};
+
+
+const unbindWebCrudTest = () => {
+    const webBinding = require('../web/binding.es7');
+
+    webBinding.crud.unbind();
+};
+
+
+module.exports = {
+    webCrud: {
+        default: {
+            bind: bindWebCrudDefault,
+            unbind: unbindWebCrudDefault,
+        },
+        test: {
+            bind: bindWebCrudTest,
+            unbind: unbindWebCrudTest,
+        },
+    },
+};
