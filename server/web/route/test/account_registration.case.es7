@@ -1,3 +1,10 @@
+const axios = require('axios')
+    , mock = require('../../test/mock.es7')
+    , enm = require('../../../lib/enum.es7')
+    , { markFail } = require('../../../lib/test.es7')
+    , crudError = require('../../../lib/crud_error.es7');
+
+
 describe('Web Route Api Account Registration', () => {
     describe('Sign Up Name Nick', () => {
         it('should res 400 if req token illegal');
@@ -5,10 +12,98 @@ describe('Web Route Api Account Registration', () => {
         it('should res 500 if error unhandled');
 
         //
-        it('should res 400 if req payload illegal');
-        it('should res 400 if upstream param nick name invalid');
-        it('should res 403 if upstream nick name already registered');
-        it('should res 200 if everything ok');
+        it('should res 400 if req payload illegal', (done) => {
+            axios.post(
+                '/sign-up',
+                { illegal: {} },
+                {}
+            )
+            .then(
+                (res) => { markFail(); },
+                (err) => { err.response.should.have.property('status', 400); }
+            )
+            .then(() => done(), (err) => done(err));
+        });
+
+        it('should res 400 if upstream param nick name invalid', (done) => {
+            const testUserNickName = 'Kinopico';
+
+            mock.crud(
+                'user.createNameNick',
+                (userId, callback) => {
+                    userId.should.equal(testUserNickName);
+                    callback(crudError.create(enm.crudOperation.CREATE, enm.crudResult.FAIL_GUARD));
+                }
+            );
+
+            axios.post(
+                '/sign-up',
+                { reg: { nameNick: testUserNickName } },
+                {}
+            )
+            .then(
+                (res) => { markFail(); },
+                (err) => { err.response.should.have.property('status', 400); }
+            )
+            .then(() => done(), (err) => done(err));
+        });
+
+        it('should res 403 if upstream nick name already registered', (done) => {
+            const testUserNickName = 'Kinopico';
+
+            mock.crud(
+                'user.createNameNick',
+                (userId, callback) => {
+                    userId.should.equal(testUserNickName);
+                    callback(crudError.create(enm.crudOperation.CREATE, enm.crudResult.FAIL_DOC_ALREADY_CREATED));
+                }
+            );
+
+            axios.post(
+                '/sign-up',
+                { reg: { nameNick: testUserNickName } },
+                {}
+            )
+            .then(
+                (res) => { markFail(); },
+                (err) => { err.response.should.have.property('status', 403); }
+            )
+            .then(() => done(), (err) => done(err));
+        });
+
+        it('should res 200 if everything ok', (done) => {
+            const testUserId = ''
+                , testUserNickName = 'Kinopico'
+                , testQueryDateTime = new Date();
+
+            const testNewUser = {
+                id: testUserId,
+                createAt: testQueryDateTime,
+                nameNick: testUserNickName,
+            };
+
+            mock.crud(
+                'user.createNameNick',
+                (userId, callback) => {
+                    userId.should.equal(testUserNickName);
+                    callback(null, testNewUser);
+                }
+            );
+
+            axios.postt(
+                '/sign-up',
+                { reg: { nameNick: testUserNickName } },
+                {}
+            )
+            .then(
+                (res) => {
+                    res.should.have.property('status', 200);
+                    should.not.exist(res.data);
+                },
+                (err) => { markFail(); }
+            )
+            .then(() => done(), (err) => done(err));
+        });
     });
 
     describe('Delete Acount', () => {

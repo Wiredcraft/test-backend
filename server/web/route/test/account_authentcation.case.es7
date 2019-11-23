@@ -1,3 +1,10 @@
+const axios = require('axios')
+    , mock = require('../../test/mock.es7')
+    , enm = require('../../../lib/enum.es7')
+    , { markFail } = require('../../../lib/test.es7')
+    , crudError = require('../../../lib/crud_error.es7');
+
+
 describe('Web Route Api Account Authentication', () => {
     describe('Sign Out', () => {
         it('should res 400 if req auth token illegal');
@@ -5,7 +12,18 @@ describe('Web Route Api Account Authentication', () => {
         it('should res 500 if error unhandled');
 
         //
-        it('should res 200 if everything ok');
+        it('should res 200 if everything ok', (done) => {
+            axios.put(
+                '/sign-out',
+                {},
+                {}
+            )
+            .then(
+                (res) => { res.should.have.property('status', 200); },
+                (err) => { markFail(); }
+            )
+            .then(() => done(), (err) => done(err));
+        });
     });
 
     describe('Sign In', () => {
@@ -14,6 +32,37 @@ describe('Web Route Api Account Authentication', () => {
         //
         it('should res 400 if req payload illegal');
         it('should res 403 if upstream account already registered');
-        it('should res 200 if everything ok');
+
+        it('should res 200 if everything ok', (done) => {
+            const testUserNickName = 'Mario';
+
+            const testUser = {
+                id: testUserId,
+                createAt: new Date(2019, 1, 1),
+                nameNick: testUserNickName,
+            };
+
+            mock.crud(
+                'user.findById',
+                (nickName, callback) => {
+                    nickName.should.equal(testUserNickName);
+                    callback(null, testUser);
+                }
+            );
+
+            axios.put(
+                '/sign-in',
+                { credentials: { nameNick: testUserNickName } },
+                {}
+            )
+            .then(
+                (res) => {
+                    res.should.have.property('status', 200);
+                    res.data.should.deep.equal(testUser);
+                },
+                (err) => { markFail(); }
+            )
+            .then(() => done(), (err) => done(err));
+        });
     });
 });
