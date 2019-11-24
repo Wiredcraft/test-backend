@@ -1,0 +1,55 @@
+----
+For Experienced Backend Programmer
+
+Check `package.json` profile and type `tree <repo-root>` to start. 
+Hope the holistic and semantic design facinates you.
+
+
+----
+About Project
+
+Build And Run Server Application
+- Download and extract mongodb linux generic v4.2.1 to directory:
+  <repo_root>/porting/mongodb-linux-x86_64-4.2.1
+- Build mongodb config by `npm run build.config.mongodb`, newly generated 
+  config file in <repo_root>/porting/mongodb-linux-x86_64-4.2.1.cfg.yaml
+- Launch mongodb instance by
+  `<repo_root>/porting/mongodb-linux-x86_64-4.2.1/bin/mongod -f <config>
+- Build server config profile by
+  `npm run build.config.server`
+- Launch default server application instance by
+  `npm run server`
+
+
+Run Test
+- Follow steps in last section without last one.
+- Run server model crud tests by `npm run test.server.model.crud`
+- Run server model flow tests by `npm run test.server.model.flow`
+- Run server web access layer tests by `npm run test.server.web`
+- After launch default server application, try
+  `curl -v \
+        --request POST \
+        --header "{Content-Type: application/json" \
+        --data '{"reg":{"nameNick":"Kinopico"}}' \
+        http://localhost:3000/sign-up`
+        
+
+
+----
+About The Solution And Opinion
+
+- Api document not written in single file or directory. Instead, put more 
+  resource in design and implementation.
+- The advanced requirement, user authentication/authorization, is skipped, 
+  which leads most part of web access layer test case not implement.
+- Those in-process unit test is skipped, due to limited time.
+- 20 hours time is consumed, which is 4x time compared with interviewer 
+  estimated in the face-to-face talk. Make real extensible code need hard work.
+
+
+
+----
+Final Words
+
+Hope this solution will make you doing a better and deeper candidate evaluation. 
+You can ask me anything about it.
