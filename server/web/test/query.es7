@@ -1,0 +1,22 @@
+const cfg = require('../../config.json');
+
+
+const domain = cfg.product.domain
+    , webPort = cfg.web.port
+    , baseUrl = `http://${domain}:${webPort}`;
+
+
+const queryOptionApiJson = {
+    baseURL: baseUrl,
+    responseType: 'json',
+    headers: {
+        'accept': 'application/json',
+    },
+};
+
+
+module.exports = {
+    option: { api: {
+        json: queryOptionApiJson
+    } },
+};
