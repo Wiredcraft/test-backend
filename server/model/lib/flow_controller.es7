@@ -11,12 +11,15 @@ const moduleName = modName.generateServer(__dirname, __filename)
 const emitEvent = (eventName, ...args) => {
     if (!sw.flow.on) return;
 
+    log.trace(`emit event ${eventName} `);
     eventEmitter.emit(eventName, ...args);
 };
 
 
 const getOnEvent = (moduleName) => (eventName, fnName, handler) => {
-    eventEmitter.on(eventName, (args) =>
+    eventEmitter.on(eventName, (...args) => {
+        log.trace(`event ${eventName} ${moduleName} ${fnName} handle`);
+
         handler(...args)((err, ...restArgs) => {
             err && log.error({ error: err }, `${moduleName} ${fnName} caught error`);
 
@@ -30,7 +33,7 @@ const getOnEvent = (moduleName) => (eventName, fnName, handler) => {
             //here i choose use simple non-transaction solution.
             //for those have requirement of data consistency, a transaction control is needed.
         })
-    );
+    });
 };
 
 

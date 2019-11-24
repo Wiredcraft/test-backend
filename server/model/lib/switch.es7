@@ -1,10 +1,25 @@
+const logging = require('../../lib/logging.es7')
+    , modName = require('../../../lib/module_name.es7');
+
+
+const moduleName = modName.generateServer(__dirname, __filename)
+    , log = logging.getLoggerModule(moduleName);
+
+
 exports = {
     flow: { on: false, turnOn: null, turnOff: null }
 };
 
 
-exports.flow.turnOn = () => { exports.flow.on = true; };
-exports.flow.turnOff = () => { exports.flow.on = false; };
+exports.flow.turnOn = () => {
+    log.trace('flow on');
+    exports.flow.on = true;
+};
+
+exports.flow.turnOff = () => {
+    log.trace('flow off');
+    exports.flow.on = false;
+};
 
 
 module.exports = exports;
