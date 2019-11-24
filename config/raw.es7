@@ -13,8 +13,12 @@ const rootDirectory = path.resolve(__dirname, '..')
 
 const projectConfig = {
     name: 'Karken',
-    domain: 'karken.io',
 }
+
+
+const productConfig = {
+    domain: beDevelopment ? 'localhost' : 'karken.io',
+};
 
 
 const mongodbDatabaseNameConfig = {
@@ -215,15 +219,22 @@ const mongodbServerProfileConfig = {
 
 const mongodbClientConfig = {
     connection: { option: { fallback: {
-        useMongoClient: true,
-        noDelay: true,
-        autoIndex: false,
-        autoReconnect: true,
-        reconnectTries: 16,
-        reconnectInterval: 5 * 1000,
+        bufferCommands: true,
+        //dbName: '',
+        //user: '',
+        //pass: '',
+        autoIndex: true,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+        useFindAndModify: false,
+        reconnectTries: 30,
+        reconnectInterval: 1000,
         poolSize: 2,
         bufferMaxEntries: 64,
-        keepAlive: 30 * 1000
+        connectTimeoutMS: 30 * 1000,
+        socketTimeoutMS: 30 * 1000,
+        family: 0,
     } } }
 };
 
@@ -232,26 +243,42 @@ const mongooseConfig = {
     document: { raw: { field: '_doc' } },
     option: {
         schema: { fallback: {
-            id: false,
-            _id: false,
-            safe: true,
-            minimize: true,
-            strict: 'throw',
-            autoIndex: false,
-            versionKey: '__v',
+            autoIndex: null,
+            autoCreate: null,
             bufferCommands: true,
-            validateBeforeSave:  true,
+            capped: false,
+            //collection: '',
+            id: true,
+            _id: false,
+            minimize: true,
+            //read: ''
+            writeConcern: null,
+            //shardKey: null
+            strict: true,
+            strictQuery: false,
+            //toObject: null,
+            //toJson: null,
+            typeKey: 'type',
+            useNestedStrict: false,
+            validateBeforeSave: true,
+            versionKey: '__v',
+            collation: null,
+            selectPopulatePaths: true,
+            //skipVersioning: {},
+            timestamps: false,
+            storeSubdocValidationError: true,
+            excluseIndexes: false,
         } },
         toObject: { fallback: {
             getters: false,
             virtuals: false,
         } },
         updateOption: { fallback: {
-            safe: true,
             upsert: false,
+            writeConcern: null,
             multi: false,
             overwrite: false,
-        } }
+        } },
     }
 };
 
@@ -271,14 +298,14 @@ const modelLimitConfig = {
 //NOTICE hexadecimal char length should be multiple of 2
 const randomHexadecimalCharLengthConfig = {
     document: { id: {
-        user: 8
+        user: 16,
     } }
 }
 
 
 const loggingConfig = {
     pino: {
-        level: 'debug',
+        level: 'trace',
     }
 }
 
@@ -304,7 +331,7 @@ const expressSettingConfig = {
 
 
 const expressMiddlewareConfig = {
-    bodyParse: {
+    bodyParser: {
         urlEncoded: { option: { fallback: {
             limit: '10kb',
             inflate: true,
@@ -349,10 +376,11 @@ const filePathConfig = {
         }
     },
     pid: {
-        mongodb: { default: dir('run/pid/mongodb.default.log') }
+        mongodb: { default: dir('run/pid/mongodb.default.pid') }
     },
     log: {
         default: dir('run/log/default.log'),
+        gateway: { default: { access: dir('run/log/gateway/access.log') } },
         mongodb: { default: { diagnostic: dir('run/log/mongodb/default.diagnostic.log') }}
     }
 }
@@ -361,6 +389,7 @@ const filePathConfig = {
 exports = {
     be: { development: beDevelopment },
     project: projectConfig,
+    product: productConfig,
     mongodb: {
         version: mongodbVersionConfig,
         server: { profile: mongodbServerProfileConfig },
