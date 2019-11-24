@@ -1,4 +1,5 @@
 const _ = require('lodash')
+    , b = require('../../binding.es7')
     , enm = require('../../../lib/enum.es7')
     , logging = require('../../../lib/logging.es7')
     , modName = require('../../../../lib/module_name.es7')
@@ -20,10 +21,10 @@ const getMyProfile = {
         return res.status(200).end();
 
         //SAMEPLE
-        b.model.crud.user.findById(
+        b.crud.i.user.findById(
             null, //user.id
             (err, user) => {
-                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err && isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
                 if (err) return handleErrorUnhandled(routeName, res);
                 if (!user) return res.status(404).end();
 
@@ -51,16 +52,16 @@ const setMyProfileHomeAddress = {
         if (!req.body || !_.get(req.body, 'new.homeAddress'))
             return res.status(400).end();
 
-        b.crud.user.setHomeAddressById(
+        b.crud.i.user.setHomeAddressById(
             req.body.new.homeAddress,
             null, //user.id
             (err) => {
-                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err && isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
                 if (err &&
                     (err.operation === enm.crudOperation.UPDATE) &&
                     (err.result === enm.crudResult.FAIL_CRITERIA_VIOLATION_INTERVAL_MIN))
                     return res.status(403).end();
-                if (err) return handleErrorUnhandled(routeName, err, res);
+                if (err) return handleErrorUnhandled(routeName, res);
 
                 res.status(200).end();
             }
@@ -81,16 +82,16 @@ const updateMyProfileHomeAddress = {
         if (!req.body || !_.get(req.body, 'new.homeAddress'))
             return res.status(400).end();
 
-        b.crud.user.updateHomeAddressById(
+        b.crud.i.user.updateHomeAddressById(
             req.body.new.homeAddress,
             null, //user.id
             (err) => {
-                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err && isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
                 if (err &&
                     (err.operation === enm.crudOperation.UPDATE) &&
                     (err.result === enm.crudResult.FAIL_FIELD_ALREADY_SET))
                     return res.status(403).end();
-                if (err) return handleErrorUnhandled(routeName, err, res);
+                if (err) return handleErrorUnhandled(routeName, res);
 
                 res.status(200).end();
             }
@@ -110,16 +111,16 @@ const setMyProfileBirthDay = {
         if (!req.body || !_.get(req.body, 'new.dateBirth'))
             return res.status(400).end();
 
-        b.crud.user.setDateBirthById(
+        b.crud.i.user.setDateBirthById(
             req.body.new.dateBirth,
             null, //user.id
             (err) => {
-                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err && isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
                 if (err &&
                     (err.operation === enm.crudOperation.UPDATE) &&
                     (err.result === enm.crudResult.FAIL_FIELD_ALREADY_SET))
                     return res.status(403).end();
-                if (err) return handleErrorUnhandled(routeName, err, res);
+                if (err) return handleErrorUnhandled(routeName, res);
 
                 res.status(200).end();
             }
@@ -139,16 +140,16 @@ const setMyProfileDescription = {
         if (!req.body || !_.get(req.body, 'new.description'))
             return res.status(400).end();
 
-        b.crud.user.setDescriptionById(
+        b.crud.i.user.setDescriptionById(
             req.body.new.description,
             null, //user.id
             (err) => {
-                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err && isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
                 if (err &&
                     (err.operation === enm.crudOperation.UPDATE) &&
                     (err.result === enm.crudResult.FAIL_FIELD_ALREADY_SET))
                     return res.status(403).end();
-                if (err) return handleErrorUnhandled(routeName, err, res);
+                if (err) return handleErrorUnhandled(routeName, res);
 
                 res.status(200).end();
             }
@@ -168,16 +169,16 @@ const updateMyProfileDescription = {
         if (!req.body || !_.get(req.body, 'new.description'))
             return res.status(400).end();
 
-        b.crud.user.updateDescriptionById(
+        b.crud.i.user.updateDescriptionById(
             req.body.new.description,
             null, //user.id
             (err) => {
-                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err && isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
                 if (err &&
                     (err.operation === enm.crudOperation.UPDATE) &&
                     (err.result === enm.crudResult.FAIL_FIELD_NOT_EXIST))
                     return res.status(403).end();
-                if (err) return handleErrorUnhandled(routeName, err, res);
+                if (err) return handleErrorUnhandled(routeName, res);
 
                 res.status(200).end();
             }

@@ -1,4 +1,6 @@
 const _ = require('lodash')
+    , b = require('../../binding.es7')
+    , enm = require('../../../lib/enum.es7')
     , logging = require('../../../lib/logging.es7')
     , modName = require('../../../../lib/module_name.es7')
     , { isErrorCommon, handleErrorCommon, handleErrorUnhandled } = require('../lib/common.es7');
@@ -28,16 +30,17 @@ const signInRoute = {
         if (!req.body || !_.get(req.body, 'credentials.nameNick'))
             return res.status(400).end();
 
-        b.crud.user.findById(
-            req.body.auth.name_nick,
+        b.crud.i.user.findById(
+            req.body.credentials.nameNick,
             (err, user) => {
-                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err && isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
                 if (err) return handleErrorUnhandled(routeName, res);
                 if (!user) return res.status(404).end();
 
                 //TODO generate json web token and return in data payload
                 res.status(200).json({ data: { me: {
-                    id: user.id,
+                    id: user._id,
+                    createAt: user.createAt.getTime(),
                     nameNick: user.nameNick,
                 } } });
             }
@@ -47,6 +50,6 @@ const signInRoute = {
 
 
 module.exports = {
-    signInRoute: signInRoute,
-    signOutRoute: signOutRoute,
+    signIn: signInRoute,
+    signOut: signOutRoute,
 };

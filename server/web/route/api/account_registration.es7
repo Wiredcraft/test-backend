@@ -1,4 +1,6 @@
 const _ = require('lodash')
+    , b = require('../../binding.es7')
+    , enm = require('../../../lib/enum.es7')
     , logging = require('../../../lib/logging.es7')
     , modName = require('../../../../lib/module_name.es7')
     , { isErrorCommon, handleErrorCommon, handleErrorUnhandled } = require('../lib/common.es7');
@@ -14,18 +16,18 @@ const signUpNameNickRoute = {
     path: '/sign-up',
     middleware: [],
     handle: (routeName) => (req, res) => {
-        if (!req.body || !_.get(req.body, 'reg.nickName'))
+        if (!req.body || !_.get(req.body, 'reg.nameNick'))
             return res.status(400).end();
 
-        b.crud.user.createNameNick(
-            req.body.nickName,
+        b.crud.i.user.createNameNick(
+            req.body.reg.nameNick,
             (err) => {
-                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err && isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
                 if (err &&
                     (err.operation === enm.crudOperation.CREATE) &&
                     (err.result === enm.crudResult.FAIL_DOC_ALREADY_CREATED))
                     return res.status(403).end();
-                if (err) return handleErrorUnhandled(routeName, err, res);
+                if (err) return handleErrorUnhandled(routeName, res);
 
                 res.status(200).end();
             }
@@ -45,15 +47,15 @@ const deleteAccountRoute = {
         //const user = req[cfg.jwt.middleware.requestMountField];
 
         //SAMPLE
-        b.crud.user.deleteById(
+        b.crud.i.user.deleteById(
             null, //user.id,
             (err, deletedUser) => {
-                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err && isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
                 if (err &&
                     (err.operation === enm.crudOperation.DELETE) &&
                     (err.result === enm.crudResult.FAIL_DOC_ALREADY_DELETED))
                     return res.status(404).end();
-                if (err) return handleErrorUnhandled(routeName, err, res);
+                if (err) return handleErrorUnhandled(routeName, res);
 
                 res.status(200).end();
             }

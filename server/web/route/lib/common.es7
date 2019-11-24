@@ -41,28 +41,28 @@ const isErrorCommon = (err) =>
 
 
 const handleErrorCommon = (routeName, err, res) => {
-    if (isErrorUnwrapped) {
-        log.debug(`route ${routeName} caught error unwrapped`);
+    if (isErrorUnwrapped(err)) {
+        log.trace(`route ${routeName} caught error unwrapped`);
         return res.status(500).end();
     }
 
-    if (isErrorWrappedNoneFailGuard) {
-        log.debug(`route ${routeName} fail guard`);
+    if (isErrorWrappedNoneFailGuard(err)) {
+        log.trace(`route ${routeName} fail guard`);
         return res.status(400).end();
     }
 
-    if (isErrorWrappedNoneErrorGuard) {
-        log.debug(`route ${routeName} error guard`);
+    if (isErrorWrappedNoneErrorGuard(err)) {
+        log.trace(`route ${routeName} error guard`);
         return res.status(400).end();
     }
 
-    if (isErrorWrappedGenericFailFallback) {
-        log.debug(`route ${routeName} fail fallback`);
+    if (isErrorWrappedGenericFailFallback(err)) {
+        log.trace(`route ${routeName} fail fallback`);
         return res.status(400).end();
     }
 
-    if (isErrorWrappedGenericErrorUpstream) {
-        log.debug(`route ${routeName} error upstream`);
+    if (isErrorWrappedGenericErrorUpstream(err)) {
+        log.trace(`route ${routeName} error upstream`);
         return res.status(500).end();
     }
 

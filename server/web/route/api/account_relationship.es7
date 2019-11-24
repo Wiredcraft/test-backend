@@ -1,4 +1,5 @@
 const _ = require('lodash')
+    , b = require('../../binding.es7')
     , enm = require('../../../lib/enum.es7')
     , logging = require('../../../lib/logging.es7')
     , modName = require('../../../../lib/module_name.es7')
@@ -17,11 +18,11 @@ const getMyRelationshipRoute = {
         //TODO
         //const user = req[cfg.jwt.middleware.requestMountField];
 
-        b.crud.userRelationship.findById(
+        b.crud.i.userRelationship.findById(
             null, //user.id
             (err, userRelationship) => {
-                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
-                if (err) return handleErrorUnhandled(routeName, err, res);
+                if (err && isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err) return handleErrorUnhandled(routeName, res);
                 if (!userRelationship) return res.status(404).end();
 
                 res.status(200).end();
@@ -42,16 +43,16 @@ const addMyRelationshipUserFollowingRoute = {
         if (!req.body || !_.get(req.body, 'user.id'))
             return res.status(400).end();
 
-        b.crud.userRelationship.addActiveFollowingById(
+        b.crud.i.userRelationship.addActiveFollowingById(
             req.body.user.id,
             null, //user.id
             (err) => {
-                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err && isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
                 if (err &&
                     (err.operation === enm.crudOperation.UPDATE) &&
                     (err.result === enm.crudResult.FAIL_GROUP_ITEM_EXIST))
                     return res.status(403).end();
-                if (err) return handleErrorUnhandled(routeName, err, res);
+                if (err) return handleErrorUnhandled(routeName, res);
 
                 res.status(200).end();
             }
@@ -71,16 +72,16 @@ const removeMyRelationshipUserFollowingRoute = {
         if (!req.body || !_.get(req.body, 'user.id'))
             return res.status(400).end();
 
-        b.crud.userRelationship.removeActiveFollowingById(
+        b.crud.i.userRelationship.removeActiveFollowingById(
             req.body.user.id,
             null, //user.id
             (err) => {
-                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err && isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
                 if (err &&
                     (err.operation === enm.crudOperation.UPDATE) &&
                     (err.result === enm.crudResult.FAIL_GROUP_ITEM_NOT_EXIST))
                     return res.status(403).end();
-                if (err) return handleErrorUnhandled(routeName, err, res);
+                if (err) return handleErrorUnhandled(routeName, res);
 
                 res.status(200).end();
             }

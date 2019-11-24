@@ -1,4 +1,5 @@
 const _ = require('lodash')
+    , b = require('../../binding.es7')
     , enm = require('../../../lib/enum.es7')
     , logging = require('../../../lib/logging.es7')
     , modName = require('../../../../lib/module_name.es7')
@@ -20,11 +21,11 @@ const uploadMyPositionRoute = {
         if (!req.body || !_.get(req.body, 'new.coordinates'))
             return res.status(400).end();
 
-        b.crud.userPosition.overwritePositionById(
+        b.crud.i.userPosition.overwritePositionById(
             req.body.new.coordinates,
             null, //user.id
             (err) => {
-                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err && isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
                 if (err &&
                     (err.operation === enm.crudOperation.UPDATE) &&
                     (err.result === enm.crudResult.FAIL_ID_NOT_EXIST))
@@ -55,7 +56,7 @@ const findMyPositionNearbyUserListRoute = {
             nearbyDistance,
             null, //user.id,
             (err, userList) => {
-                if (err && !isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
+                if (err && isErrorCommon(err)) return handleErrorCommon(routeName, err, res);
                 if (err &&
                     (err.operation === enm.crudOperation.READ) &&
                     (err.result === enm.crudResult.FAIL_DOC_NOT_EXIST))
@@ -64,7 +65,7 @@ const findMyPositionNearbyUserListRoute = {
 
                 res.status(200).json({ data: { nearby: { user: {
                     list: userList.map((u) => ({
-                        id: u.id,
+                        id: u._id,
                         nameNick: u.nameNick,
                     }))
                 } } } });
@@ -75,6 +76,6 @@ const findMyPositionNearbyUserListRoute = {
 
 
 module.exports = {
-    uploadMyPositionRoute: uploadMyPositionRoute,
+    uploadMyPosition: uploadMyPositionRoute,
     findMyPositionNearbyUserList: findMyPositionNearbyUserListRoute,
 };
