@@ -9,6 +9,7 @@ const d = (...args) => path.resolve(cfg.directory.root, 'server/', ...args);
 const runCase = () => {
     [
         //TODO add file system blob match support
+        d('web/route/test/match.case.es7'),
         d('web/route/api/test/account_authentication.case.es7'),
         d('web/route/api/test/account_position.case.es7'),
         d('web/route/api/test/account_profile.case.es7'),
