@@ -71,10 +71,7 @@ describe('Web Route Api Account Authentication', () => {
                         }
                     } });
                 },
-                (err) => {
-                    console.log(`response ${JSON.stringify(err.response.status, null, 4)}`);
-                    markFail();
-                }
+                (err) => { markFail(); }
             )
             .then(() => done(), (err) => done(err));
         });

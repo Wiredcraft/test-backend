@@ -116,7 +116,6 @@ const normalize = (log, fnName, transformSequence, callback) => {
     const transformCallback = _.flowRight(transformSequence);
 
     return (...args) => {
-        console.log(`normalize args ${JSON.stringify(args, null, 4)}`);
         const [err, ...restArgs] = args;
 
         err && log.error(`fn ${fnName} upstream error ${err}`);
