@@ -22,34 +22,27 @@ const transformCallbackDocToObject = (callback) => (err, returnData) => {
 };
 
 
-const transformCallbackSave = (callback) => (err, doc, numModified) => {
+const transformCallbackSave = (callback) => (err, doc) => {
     const op = enm.crudOperation.CREATE;
 
+    if (err && (err.code === 11000)) return callback(crudError.create(op, enm.crudResult.FAIL_FALLBACK));
     if (err) return callback(crudError.create(op, enm.crudResult.ERROR_UPSTREAM));
-    if (numModified === 0) return callback(crudError.create(op, enm.crudResult.FAIL_FALLBACK));
-    if (numModified === 1) return callback(null, doc);
 
-    log.error('Save Unhandle Condition Branch');
-    callback(crudError.create(op, enm.crudResult.ERROR_UPSTREAM));
+    callback(null, doc);
 };
 
 
 /*
  update raw response:
- {
-    ok: true,
-    n: 1,
-    nModified: 1,
-    updatedExisting: false
- }
+ { ok: 1, n: 1, nModified: 1 }
  */
 
-const transformCallbackUpdate = (callback) => (err, response) => {
+const transformCallbackUpdateOne = (callback) => (err, response) => {
     const op = enm.crudOperation.UPDATE;
 
     if (err) return callback(crudError.create(op, enm.crudResult.ERROR_UPSTREAM));
-    if (0 === response.n) return callback(crudError.create(op, enm.crudResult.FAIL_FALLBACK));
-    if (0 < response.n) return callback();
+    if (response.n === 0) return callback(crudError.create(op, enm.crudResult.FAIL_FALLBACK));
+    if (response.n === 1) return callback();
 
     log.error('Update Unhandle Condition Branch');
     callback(crudError.create(op, enm.crudResult.ERROR_UPSTREAM));
@@ -109,10 +102,11 @@ const transformCallbackFindOneAndUpdate = (callback) => (err, document) => {
 };
 
 
-const transformCallbackFindOneAndRemove = (callback) => (err, document) => {
+const transformCallbackFindOneAndDelete = (callback) => (err, document) => {
     const op = enm.crudOperation.DELETE;
 
     if (err) return callback(crudError.create(op, enm.crudResult.ERROR_UPSTREAM));
+    if (!document) return callback(crudError.create(op, enm.crudResult.FAIL_FALLBACK));
 
     callback(null, document);
 };
@@ -122,6 +116,7 @@ const normalize = (log, fnName, transformSequence, callback) => {
     const transformCallback = _.flowRight(transformSequence);
 
     return (...args) => {
+        console.log(`normalize args ${JSON.stringify(args, null, 4)}`);
         const [err, ...restArgs] = args;
 
         err && log.error(`fn ${fnName} upstream error ${err}`);
@@ -134,12 +129,12 @@ module.exports = {
     transform: {
         find: transformCallbackFind,
         save: transformCallbackSave,
-        update: transformCallbackUpdate,
         findOne: transformCallbackFindOne,
+        updateOne: transformCallbackUpdateOne,
         update_insert: transformCallbackUpdateInsert,
         docToObject: transformCallbackDocToObject,
         findOneAndUpdate: transformCallbackFindOneAndUpdate,
-        findOneAndRemove: transformCallbackFindOneAndRemove,
+        findOneAndDelete: transformCallbackFindOneAndDelete,
     },
     normalize: normalize,
 };

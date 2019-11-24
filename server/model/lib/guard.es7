@@ -28,10 +28,12 @@ const create = (log) => (fn, fnName, annotationList) => (...args) => {
         if (_.isFunction(annotation)) {
             try {
                 if (!annotation(arg)) {
+                    log.trace(`${fnName} ${idx} guard validation ok`);
                     failIndex = idx;
                     beResultOk = false;
                 }
             } catch(err) {
+                log.trace({ error: err }, 'guard validation caught error');
                 failIndex = idx;
                 beResultOk = false;
                 callback(err);
