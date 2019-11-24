@@ -1,4 +1,5 @@
 const s = require('./schema.es7')
+    , cfg = require('../../../config.json')
     , logging = require('../../../lib/logging.es7')
     , modName = require('../../../../lib/module_name.es7')
     , { normalize: ccn, transform: cct } = require('../../lib/crud_callback.es7');
@@ -12,40 +13,40 @@ const User = s.model;
 
 
 const setDateBirthById = (queryDateTime, userId, birthDate, callback) =>
-    User.update(
+    User.updateOne(
         {
             '_id': userId,
             'dateBirth': { $exists: false },
         },
         { $set: { 'dateBirth': birthDate } },
-        ccn(log, 'setDateBirthById', [cct.update], callback)
+        ccn(log, 'setDateBirthById', [cct.updateOne], callback)
     );
 
 
 const setDescriptionById = (queryDateTime, userId, description, callback) =>
-    User.update(
+    User.updateOne(
         {
             '_id': userId,
             'description': { $exists: false },
         },
         { $set: { 'description': description } },
-        ccn(log, 'setDescriptionById', [cct.update], callback)
+        ccn(log, 'setDescriptionById', [cct.updateOne], callback)
     );
 
 
 const updateDescriptionById = (queryDateTime, userId, description, callback) =>
-    User.update(
+    User.updateOne(
         {
             '_id': userId,
             'description': { $exists: true },
         },
         { $set: { 'description': description } },
-        ccn(log, 'setDescriptionById', [cct.update], callback)
+        ccn(log, 'setDescriptionById', [cct.updateOne], callback)
     );
 
 
 const setHomeAddressById = (queryDateTime, userId, address, callback) =>
-    User.update(
+    User.updateOne(
         {
             '_id': userId,
             'homeAddress.text': { $exists: false },
@@ -54,12 +55,12 @@ const setHomeAddressById = (queryDateTime, userId, address, callback) =>
             'homeAddress.text': address,
             'homeAddress.last.updateAt': queryDateTime,
         } },
-        ccn(log, 'setHomeAddressById', [cct.update], callback)
+        ccn(log, 'setHomeAddressById', [cct.updateOne], callback)
     );
 
 
 const updateHomeAddressById = (queryDateTime, userId, address, callback) =>
-    User.update(
+    User.updateOne(
         {
             '_id': userId,
             'homeAddress.text': { $exists: true },
@@ -72,7 +73,7 @@ const updateHomeAddressById = (queryDateTime, userId, address, callback) =>
             'homeAddress.text': address,
             'homeAddress.last.updateAt': queryDateTime,
         } },
-        ccn(log, 'setHomeAddressById', [cct.update], callback)
+        ccn(log, 'setHomeAddressById', [cct.updateOne], callback)
     );
 
 

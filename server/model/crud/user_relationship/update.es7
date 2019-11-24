@@ -2,6 +2,7 @@ const s = require('./schema.es7')
     , logging = require('../../../lib/logging.es7')
     , flowEvent = require('../../lib/flow_event.es7')
     , modName = require('../../../../lib/module_name.es7')
+    , { emitEvent } = require('../../lib/flow_controller.es7')
     , flowController = require('../../lib/flow_controller.es7')
     , { normalize: ccn, transform: cct } = require('../../lib/crud_callback.es7');
 
@@ -14,8 +15,8 @@ const moduleName = modName.generateServer(__dirname, __filename)
 const UserRelationship = s.model;
 
 
-const addActiveFollowingById = (queryDateTime, followingUserId, userId, callback) =>
-    UserRelationship.update(
+const addActiveFollowingById = (queryDateTime, userId, followingUserId, callback) =>
+    UserRelationship.updateOne(
         {
             '_id': userId,
             'active.following.user.list': { $not: { $elemMatch: { id: followingUserId } } },
@@ -29,18 +30,18 @@ const addActiveFollowingById = (queryDateTime, followingUserId, userId, callback
                 }
             }
         },
-        ccn(log, 'addActiveFollowingById', [cct.update], (err) => {
+        ccn(log, 'addActiveFollowingById', [cct.updateOne], (err) => {
             err || emitEvent(
                 flowEvent.USER_RELATIONSHIP_USER_FOLLOWING_ADDED,
-                queryDateTime, followingUserId, userId
+                queryDateTime, userId, followingUserId
             );
             callback(err);
         })
     );
 
 
-const removeActiveFollowingById = (queryDateTime, followingUserId, userId, callback) =>
-    UserRelationship.update(
+const removeActiveFollowingById = (queryDateTime, userId, followingUserId, callback) =>
+    UserRelationship.updateOne(
         {
             '_id': userId,
             'active.following.user.list': { $elemMatch: { id: followingUserId } }
@@ -49,18 +50,18 @@ const removeActiveFollowingById = (queryDateTime, followingUserId, userId, callb
             $inc: { 'active.following.user.count.total': -1 },
             $pull: { 'active.following.user.list': { id: followingUserId } },
         },
-        ccn(log, 'removeActiveFollowingById', [cct.update], (err) => {
+        ccn(log, 'removeActiveFollowingById', [cct.updateOne], (err) => {
             err || emitEvent(
                 flowEvent.USER_RELATIONSHIP_USER_FOLLOWING_REMOVED,
-                queryDateTime, followingUserId, userId
+                queryDateTime, userId, followingUserId
             );
             callback(err);
         })
     );
 
 
-const addPassiveFollowingById = (queryDateTime, followerId, userId, callback) =>
-    UserRelationship.update(
+const addPassiveFollowingById = (queryDateTime, userId, followerId, callback) =>
+    UserRelationship.updateOne(
         {
             '_id': userId,
             'passive.following.user.list': { $not: { $elemMatch: { id: followerId } } },
@@ -74,19 +75,19 @@ const addPassiveFollowingById = (queryDateTime, followerId, userId, callback) =>
                 }
             }
         },
-        ccn(log, 'addPassiveFollowingById', [cct.update], callback)
+        ccn(log, 'addPassiveFollowingById', [cct.updateOne], callback)
     );
 
 onEvent(
     flowEvent.USER_RELATIONSHIP_USER_FOLLOWING_ADDED,
     'addPassiveFollowingById',
-    (queryDateTime, followingUserId, userId) => (cb) =>
-        addPassiveFollowingById(queryDateTime, userId, followingUserId, cb)
+    (queryDateTime, userId, followingUserId) => (cb) =>
+        addPassiveFollowingById(queryDateTime, followingUserId, userId, cb)
 );
 
 
-const removePassiveFollowingById = (queryDateTime, followerId, userId, callback) =>
-    UserRelationship.update(
+const removePassiveFollowingById = (queryDateTime, userId, followerId, callback) =>
+    UserRelationship.updateOne(
         {
             '_id': userId,
             'passive.following.user.list': { $elemMatch: { id: followerId } },
@@ -95,14 +96,14 @@ const removePassiveFollowingById = (queryDateTime, followerId, userId, callback)
             $inc: { 'passive.following.user.count.total': 1 },
             $pull: { 'passive.following.user.list': { id: followerId } },
         },
-        ccn(log, 'removePassiveFollowingById', [cct.update], callback)
+        ccn(log, 'removePassiveFollowingById', [cct.updateOne], callback)
     );
 
 onEvent(
     flowEvent.USER_RELATIONSHIP_USER_FOLLOWING_REMOVED,
     'removePassiveFollowingById',
-    (queryDateTime, followingUserId, userId) => (cb) =>
-        removePassiveFollowingById(queryDateTime, userId, followingUserId, cb)
+    (queryDateTime, userId, followingUserId) => (cb) =>
+        removePassiveFollowingById(queryDateTime, followingUserId, userId, cb)
 );
 
 

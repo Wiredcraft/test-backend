@@ -39,8 +39,8 @@ const rawExports = {
         u.addPassiveFollowingById, 'addPassiveFollowingById',
         [a.QueryDateTime, a.Id, a.Id, null]
     ),
-    addPassiveFollowingById: gd(
-        u.addPassiveFollowingById, 'addPassiveFollowingById',
+    removePassiveFollowingById: gd(
+        u.removePassiveFollowingById, 'removePassiveFollowingById',
         [a.QueryDateTime, a.Id, a.Id, null]
     ),
     deleteById: gd(

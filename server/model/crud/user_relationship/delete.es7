@@ -15,9 +15,9 @@ const UserRelationship = s.model;
 
 
 const deleteById = (queryDateTime, userId, callback) =>
-    UserRelationship.findOneAndRemove(
+    UserRelationship.findOneAndDelete(
         { '_id': userId },
-        ccn(log, 'deleteById', [cct.findOneAndRemove, cct.docToObject], callback)
+        ccn(log, 'deleteById', [cct.findOneAndDelete, cct.docToObject], callback)
     );
 
 onEvent(

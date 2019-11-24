@@ -30,6 +30,9 @@ const userPositionSchema = new mongoose.Schema(
 );
 
 
+userPositionSchema.index({ 'last.record': '2dsphere' }, {});
+
+
 const userPositionModel = binding.db.connection.model(
     userPositionModelName, userPositionSchema, cfg.mongodb.collection.name.userPosition
 );

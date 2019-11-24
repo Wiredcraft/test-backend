@@ -14,10 +14,10 @@ const User = s.model;
 
 
 const deleteById = (queryDateTime, userId, callback) =>
-    User.findOneAndRemove(
+    User.findOneAndDelete(
         { '_id': userId },
         ccn(
-            log, 'deleteById', [cct.findOneAndRemove, cct.docToObject],
+            log, 'deleteById', [cct.findOneAndDelete, cct.docToObject],
             (err, deletedUser) => {
                 err || emitEvent(flowEvent.USER_DELETED, queryDateTime, deletedUser);
                 callback(err, deletedUser);

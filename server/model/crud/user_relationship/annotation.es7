@@ -1,10 +1,15 @@
 const cfg = require('../../../config.json')
-    , random = require('../../../lib/random.es7');
+    , random = require('../../../lib/random.es7')
+    , validate = require('../../../lib/validate.es7');
 
 
 const Id = random.getValidateStringHex(cfg.random.hexadecimal.charLength.document.id.user);
 
 
+const QueryDateTime = validate.queryDateTime;
+
+
 module.exports = {
     Id: Id,
+    QueryDateTime: QueryDateTime,
 };

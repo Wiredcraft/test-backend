@@ -1,4 +1,5 @@
 const s = require('./schema.es7')
+    , cfg = require('../../../config.json')
     , logging = require('../../../lib/logging.es7')
     , modName = require('../../../../lib/module_name.es7')
     , { normalize: ccn, transform: cct } = require('../../lib/crud_callback.es7');

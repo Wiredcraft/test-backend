@@ -37,9 +37,9 @@ const rawExports = {
     ),
     overwritePositionById: gd(
         u.overwritePositionById, 'overwritePositionById',
-        [a.QueryDateTime, a.PointCoordinates, a.Id, null]
+        [a.QueryDateTime, a.Id, a.PointCoordinates, null]
     ),
-    delete: gd(
+    deleteById: gd(
         d.deleteById, 'deleteById',
         [a.QueryDateTime, a.Id, null]
     ),

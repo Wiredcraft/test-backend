@@ -6,7 +6,10 @@ const cfg = require('../../../config.json')
 const Id = random.getValidateStringHex(cfg.random.hexadecimal.charLength.document.id.user);
 
 
-const PointCoordinates = validate.pointCoordinates;
+const QueryDateTime = validate.queryDateTime;
+
+
+const PointCoordinates = validate.userPointCoordinates;
 
 
 const Distance = validate.userNearbyDistance;
@@ -15,5 +18,6 @@ const Distance = validate.userNearbyDistance;
 module.exports = {
     Id: Id,
     Distance: Distance,
+    QueryDateTime: QueryDateTime,
     PointCoordinates: PointCoordinates,
 };

@@ -11,15 +11,15 @@ const moduleName = modName.generateServer(__dirname, __filename)
 const UserPosition = s.model;
 
 
-const overwritePositionById = (queryDateTime, positionCoordinates, userId, callback) =>
-    UserPosition.update(
+const overwritePositionById = (queryDateTime, userId, positionCoordinates, callback) =>
+    UserPosition.updateOne(
         { '_id': userId },
         { $set: {
             'last.update_at': queryDateTime,
             'last.record.type': 'Point',
             'last.record.coordinates': positionCoordinates,
         } },
-        ccn(log, 'overwritePositionById', [cct.update], callback)
+        ccn(log, 'overwritePositionById', [cct.updateOne], callback)
     );
 
 
