@@ -6,5 +6,5 @@ const crudOrientedWeb = {
 
 
 module.exports = {
-    crud: { web: orientedWeb }
+    crud: { web: crudOrientedWeb },
 };

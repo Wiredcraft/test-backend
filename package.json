@@ -24,7 +24,7 @@
         "npm": ">=6.9.0"
     },
     "scripts": {
-        "server": "node entry/default.es7",
+        "server": "node server/entry/default.es7",
         "build.config.server": "node script/build_config_server.es7",
         "build.config.mongodb": "node script/mongodb/build.es7",
         "test.server.web": "mocha --opts ./test/mocha.web.opts server/test/entry/web.es7",

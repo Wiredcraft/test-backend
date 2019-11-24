@@ -2,7 +2,7 @@ const bindWebCrudDefault = () => {
     const modelIndex = require('../model/index.es7')
         , webBinding = require('../web/binding.es7');
 
-    webBinding.crud.bind(modelIndex.web);
+    webBinding.crud.bind(modelIndex.crud.web);
 };
 
 
