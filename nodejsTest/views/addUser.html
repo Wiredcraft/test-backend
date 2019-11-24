@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <title>add user data</title>
+ </head>
+ <body>
+	<div class="user data format">
+		<form action="/doadd" method="get">
+			<div class="form-group">
+				<label for="input_name"> user id:</label>
+				<input type="text" class="form-control" required minlength="1" maxlength="20" name="userid" placeholder="input user id">
+			</div>
+			<div class="form-group">
+				<label for="input_name"> user name:</label>
+				<input type="text" class="form-control" required minlength="1" maxlength="20" name="name" placeholder="input name">
+			</div>
+			<div class="form-group">
+				<label for="input_name">date of birth:</label>
+				<input type="text" class="form-control" required minlength="1" maxlength="20" name="dob" placeholder="input dob">
+			</div>
+			<div class="form-group">
+				<label for="input_name">address:</label>
+				<input type="text" class="form-control" required minlength="1" maxlength="60" name="address" placeholder="address">
+			</div>
+			<div class="form-group">
+				<label for="textarea_message">description:</label>
+				<textarea class="form-control" name="description" cols="30" rows="10" required minlength="1"  maxlength="30"></textarea>
+			</div>
+			<button type="submit" class="btn btn-default"> add user </button>
+		</form>
+	</div>
+ </body>
+</html>
