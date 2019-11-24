@@ -40,7 +40,7 @@ const prepareTestWeb = (callback) =>
             (cb) => { composition.switch.procSignal.interrupt.shutdown.enable(); cb(); },
             (cb) => { composition.switch.procSignal.terminate.shutdown.enable(); cb(); },
             (cb) => { composition.binding.webCrud.test.bind(); cb(); },
-            (cb) => composition.binding.webListen.test.all.bind(cfg.port, cb),
+            (cb) => composition.binding.webListen.all.bind(cfg.web.port, cb),
         ],
         (err) => {
             should.not.exist(err);

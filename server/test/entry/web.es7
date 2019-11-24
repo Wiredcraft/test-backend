@@ -25,5 +25,5 @@ logging.initialize((err) => {
 
     const prepare = require('../prepare.es7')
 
-    prepare.model.crud(runCase);
+    prepare.web(runCase);
 });

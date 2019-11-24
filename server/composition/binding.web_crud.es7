@@ -28,14 +28,12 @@ const unbindWebCrudTest = () => {
 
 
 module.exports = {
-    webCrud: {
-        default: {
-            bind: bindWebCrudDefault,
-            unbind: unbindWebCrudDefault,
-        },
-        test: {
-            bind: bindWebCrudTest,
-            unbind: unbindWebCrudTest,
-        },
+    default: {
+        bind: bindWebCrudDefault,
+        unbind: unbindWebCrudDefault,
+    },
+    test: {
+        bind: bindWebCrudTest,
+        unbind: unbindWebCrudTest,
     },
 };

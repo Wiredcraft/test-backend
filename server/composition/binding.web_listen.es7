@@ -1,4 +1,8 @@
-const cfg = require('../config.json')
+const fs = require('fs')
+    //, morgan = require('morgan')
+    , express = require('express')
+    , cfg = require('../config.json')
+    , bodyParser = require('body-parser')
     , logging = require('../lib/logging.es7')
     , webRoute = require('../web/route/index.es7')
     , modName = require('../../lib/module_name.es7');
@@ -8,7 +12,7 @@ const moduleName = modName.generateServer(__dirname, __filename)
     , log = logging.getLoggerModule(moduleName);
 
 
-const loadRoute = (route) => {
+const loadRoute = (app, route) => {
     const { method, path, middleware, handle } = route;
 
     app[method](path, ...middleware, handle(path));
@@ -18,16 +22,16 @@ const loadRoute = (route) => {
 let appAll = null;
 
 const bindAll = (listenPort, callback) => {
-    const accessLogFilePath = cfg.file.name.log.node.web.all.express_http_access
+    const accessLogFilePath = cfg.file.path.log.gateway.default.access
         , accessLogStream = fs.createWriteStream(accessLogFilePath, { flags: 'a' });
 
     const app = express();
 
     appAll = app;
 
-    app.use(morgan({ stream: accessLogStream }));
-    app.use(bodyParser.json(cfg.express.middleware.bodyParser.json.options.fallback));
-    app.use(bodyParser.urlencoded(cfg.express.middleware.bodyParser.urlEncoded.options.fallback));
+    //app.use(morgan('default', { stream: accessLogStream }));
+    app.use(bodyParser.json(cfg.express.middleware.bodyParser.json.option.fallback));
+    app.use(bodyParser.urlencoded(cfg.express.middleware.bodyParser.urlEncoded.option.fallback));
 
     const wR = webRoute;
 
@@ -48,7 +52,7 @@ const bindAll = (listenPort, callback) => {
         wR.api.accountRelationship.getMyRelationship,
         wR.api.accountRelationship.addMyRelationshipUserFollowing,
         wR.api.accountRelationship.removeMyRelationshipUserFollowing,
-    ].forEach((route) => loadRoute(route));
+    ].forEach((route) => loadRoute(app, route));
 
     app.use((req, res) => {
         res.status(400).end();
