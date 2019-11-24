@@ -1,4 +1,5 @@
-const _ = require('lodash');
+const _ = require('lodash')
+    , should = require('chai').should();
 
 
 const getDropCollection = (dbEntity, collectionName) => (callback) =>
@@ -10,10 +11,9 @@ const getDropCollection = (dbEntity, collectionName) => (callback) =>
 
 const getFromSeedOperationGroup = (Model) => {
     const generateFromSeed = (seed, callback) =>
-        new Model(seed).save((err, newDocument, numModified) => {
+        new Model(seed).save((err, newDocument) => {
             should.not.exist(err);
-            should.exist(newDocument);
-            numModified.should.equal(1);
+            newDocument.should.have.property('_id');
             callback(null, newDocument);
         });
 

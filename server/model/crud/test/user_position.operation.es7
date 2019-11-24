@@ -1,4 +1,5 @@
-const cfg = require('../../../config.json')
+const async = require('async')
+    , cfg = require('../../../config.json')
     , utils = require('../../test/utils.es7')
     , userPositionCrud = require('../user_position/index.es7');
 
@@ -6,21 +7,21 @@ const cfg = require('../../../config.json')
 const UserPosition = userPositionCrud.model;
 
 
-const dropCollection = utils.getDropCollection(userPositionCrud.binding.db, cfg.mongodb.collection.name.user);
+const dropCollection = utils.getDropCollection(userPositionCrud.binding.db, cfg.mongodb.collection.name.userPosition);
 
 
 const [generateFromSeed, generateFromSeedList] = utils.getFromSeedOperationGroup(UserPosition);
 
 
-const ensureIndexes = (callback) => UserPosition.ensureIndexes(callback);
+const createIndexes = (callback) => UserPosition.createIndexes(callback);
 
 
 const reset = (userPositionSeedList) => (callback) =>
     async.series(
         [
-            (cb) => operation.dropCollection(cb),
-            (cb) => operation.ensureIndexes(cb),
-            (cb) => operation.generateFromSeedList(userPositionSeedList, cb),
+            (cb) => dropCollection(cb),
+            (cb) => createIndexes(cb),
+            (cb) => generateFromSeedList(userPositionSeedList, cb),
         ],
         callback
     );
@@ -29,7 +30,7 @@ const reset = (userPositionSeedList) => (callback) =>
 module.exports = {
     reset: reset,
     model: UserPosition,
-    ensureIndexes: ensureIndexes,
+    createIndexes: createIndexes,
     dropCollection: dropCollection,
     generateFromSeed, generateFromSeedList,
 };

@@ -30,11 +30,11 @@ describe('Model Crud User', () => {
             it('should return document if exist', (done) => {
                 findById(
                     tD.dt.justNow,
-                    tD.user.reigsteredJustNow.id,
+                    tD.user.registeredJustNow.id,
                     (err, user) => {
                         should.not.exist(err);
                         should.exist(user);
-                        user.should.have.property('id', tD.user.reigsteredJustNow.id);
+                        user.should.have.property('_id', tD.user.registeredJustNow.id);
                         done();
                     }
                 );
@@ -52,8 +52,8 @@ describe('Model Crud User', () => {
             it('should fail if id exist', (done) => {
                 createNameNick(
                     tD.dt.justNow,
-                    tD.user.notExist.nickName.
-                    tD.user.reigsteredJustNow.id,
+                    tD.user.registeredJustNow.id,
+                    tD.user.notExist.nickName,
                     (err, user) => {
                         should.exist(err);
                         should.not.exist(user);
@@ -68,12 +68,12 @@ describe('Model Crud User', () => {
             it('should pass if everything ok', (done) => {
                 createNameNick(
                     tD.dt.justNow,
-                    tD.user.unRegistered.nickName,
                     tD.user.unRegistered.id,
+                    tD.user.unRegistered.nickName,
                     (err, user) => {
                         should.not.exist(err);
                         should.exist(user);
-                        user.should.have.property('id', tD.user.unRegistered.id);
+                        user.should.have.property('_id', tD.user.unRegistered.id);
                         done();
                     }
                 );
@@ -110,7 +110,7 @@ describe('Model Crud User', () => {
                     (err, user) => {
                         should.not.exist(err);
                         should.exist(user);
-                        user.should.have.property('id', tD.user.toDelete.id);
+                        user.should.have.property('_id', tD.user.toDelete.id);
                         done();
                     }
                 );
@@ -120,16 +120,17 @@ describe('Model Crud User', () => {
 
     describe('Update', () => {
         //NOTICE update/set sequence matters
-        describe('Update Address By Id', () => {
-            const { updateAddressById } = userCrud;
+        describe('Update Home Address By Id', () => {
+            const { updateHomeAddressById } = userCrud;
 
             it('should return error if upstream caught error');
             it('should reject if guard fail');
 
             it('should fail if document not exist', (done) => {
-                updateAddressById(
+                updateHomeAddressById(
                     tD.dt.justNow,
                     tD.user.notExist.id,
+                    tD.user.notExist.homeAddress.text,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -141,10 +142,10 @@ describe('Model Crud User', () => {
             });
 
             it('should fail if address not set', (done) => {
-                updateAddressById(
+                updateHomeAddressById(
                     tD.dt.justNow,
+                    tD.user.registeredJustNow.id,
                     tD.user.notExist.homeAddress.text,
-                    tD.user.registeredJustNow,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -156,10 +157,10 @@ describe('Model Crud User', () => {
             });
 
             it('should fail if address just updated', (done) => {
-                updateAddressById(
+                updateHomeAddressById(
                     tD.dt.justNow,
-                    tD.user.notExist.homeAddress.text,
                     tD.user.profileFullFilledJustNow.id,
+                    tD.user.notExist.homeAddress.text,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -173,10 +174,10 @@ describe('Model Crud User', () => {
             //it('should fail if new address same with old one');
 
             it('should pass if address recent no update', (done) => {
-                updateAddressById(
+                updateHomeAddressById(
                     tD.dt.justNow,
-                    tD.user.profileFullFilledLongAgo.new.homeAddress.text,
                     tD.user.profileFullFilledLongAgo.id,
+                    tD.user.profileFullFilledLongAgo.new.homeAddress.text,
                     (err) => {
                         should.not.exist(err);
                         done();
@@ -185,16 +186,17 @@ describe('Model Crud User', () => {
             });
         });
 
-        describe('Set Address By Id', () => {
-            const { setAddressById } = userCrud;
+        describe('Set Home Address By Id', () => {
+            const { setHomeAddressById } = userCrud;
 
             it('should return error if upstream caught error');
             it('should reject if guard fail');
 
             it('should fail if document not exist', (done) => {
-                setAddressById(
+                setHomeAddressById(
                     tD.dt.justNow,
                     tD.user.notExist.id,
+                    tD.user.notExist.homeAddress.text,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -206,10 +208,10 @@ describe('Model Crud User', () => {
             });
 
             it('should fail if address set', (done) => {
-                setAddressById(
+                setHomeAddressById(
                     tD.dt.justNow,
-                    tD.user.notExist.homeAddress.text,
                     tD.user.profileFullFilledLongAgo.id,
+                    tD.user.notExist.homeAddress.text,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -221,12 +223,12 @@ describe('Model Crud User', () => {
             });
 
             it('should pass if address not set', (done) => {
-                setAddressById(
+                setHomeAddressById(
                     tD.dt.justNow,
-                    tD.user.registeredJustNow.homeAddress.text,
                     tD.user.registeredJustNow.id,
+                    tD.user.registeredJustNow.homeAddress.text,
                     (err) => {
-                        should.exist(err);
+                        should.not.exist(err);
                         done();
                     }
                 );
@@ -242,8 +244,8 @@ describe('Model Crud User', () => {
             it('should fail if document not exist', (done) => {
                 setDateBirthById(
                     tD.dt.justNow,
-                    tD.user.notExist.birthDate,
                     tD.user.notExist.id,
+                    tD.user.notExist.birthDate,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -257,8 +259,8 @@ describe('Model Crud User', () => {
             it('should fail if birth date already set', (done) => {
                 setDateBirthById(
                     tD.dt.justNow,
-                    tD.user.notExist.birthDate,
                     tD.user.profileFullFilledLongAgo.id,
+                    tD.user.notExist.birthDate,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -272,8 +274,8 @@ describe('Model Crud User', () => {
             it('should pass if everything ok', (done) => {
                 setDateBirthById(
                     tD.dt.justNow,
-                    tD.user.notExist.birthDate,
                     tD.user.registeredJustNow.id,
+                    tD.user.notExist.birthDate,
                     (err) => {
                         should.not.exist(err);
                         done();
@@ -292,8 +294,8 @@ describe('Model Crud User', () => {
             it('should fail if document not exist', (done) => {
                 updateDescriptionById(
                     tD.dt.justNow,
-                    tD.user.notExist.description,
                     tD.user.notExist.id,
+                    tD.user.notExist.description,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -307,8 +309,8 @@ describe('Model Crud User', () => {
             it('should fail if description not set', (done) => {
                 updateDescriptionById(
                     tD.dt.justNow,
-                    tD.user.notExist.description,
                     tD.user.registeredJustNow.id,
+                    tD.user.notExist.description,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -324,8 +326,8 @@ describe('Model Crud User', () => {
             it('should pass if description already set', (done) => {
                 updateDescriptionById(
                     tD.dt.justNow,
+                    tD.user.profileFullFilledJustNow.id,
                     tD.user.notExist.description,
-                    tD.user.profileFullFilledJustNow,
                     (err) => {
                         should.not.exist(err);
                         done();
@@ -343,8 +345,8 @@ describe('Model Crud User', () => {
             it('should fail if document not exist', (done) => {
                 setDescriptionById(
                     tD.dt.justNow,
-                    tD.user.notExist.description,
                     tD.user.notExist.id,
+                    tD.user.notExist.description,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -358,8 +360,8 @@ describe('Model Crud User', () => {
             it('should fail if description already set', (done) => {
                 setDescriptionById(
                     tD.dt.justNow,
-                    tD.user.notExist.description,
                     tD.user.profileFullFilledJustNow.id,
+                    tD.user.notExist.description,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -373,8 +375,8 @@ describe('Model Crud User', () => {
             it('should pass if description not set', (done) => {
                 setDescriptionById(
                     tD.dt.justNow,
-                    tD.user.notExist.description,
                     tD.user.registeredJustNow.id,
+                    tD.user.notExist.description,
                     (err) => {
                         should.not.exist(err);
                         done();

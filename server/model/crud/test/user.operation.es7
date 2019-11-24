@@ -1,4 +1,5 @@
-const cfg = require('../../../config.json')
+const async = require('async')
+    , cfg = require('../../../config.json')
     , utils = require('../../test/utils.es7')
     , userCrud = require('../user/index.es7');
 
@@ -12,15 +13,15 @@ const dropCollection = utils.getDropCollection(userCrud.binding.db, cfg.mongodb.
 const [generateFromSeed, generateFromSeedList] = utils.getFromSeedOperationGroup(User);
 
 
-const ensureIndexes = (callback) => User.ensureIndexes(callback);
+const createIndexes = (callback) => User.createIndexes(callback);
 
 
 const reset = (userSeedList) => (callback) =>
     async.series(
         [
-            (cb) => operation.dropCollection(cb),
-            (cb) => operation.ensureIndexes(cb),
-            (cb) => operation.generateFromSeedList(userSeedList, cb),
+            (cb) => dropCollection(cb),
+            (cb) => createIndexes(cb),
+            (cb) => generateFromSeedList(userSeedList, cb),
         ],
         callback
     );
@@ -29,7 +30,7 @@ const reset = (userSeedList) => (callback) =>
 module.exports = {
     model: User,
     reset: reset,
-    ensureIndexes: ensureIndexes,
+    createIndexes: createIndexes,
     dropCollection: dropCollection,
     generateFromSeed, generateFromSeedList,
 };

@@ -103,12 +103,9 @@ const upT = userPositionT;
 
 
 const userPositionSeedList = [
-    ...[
-        upT.toCreate,
-        upT.toDelete,
-    ].map((i) => ({
-        '_id': i.id,
-    })),
+    {
+        '_id': upT.toDelete.id,
+    },
     ...[
         upT.single,
         upT.nearbyGroup.normal.a,

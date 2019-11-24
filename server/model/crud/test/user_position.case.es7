@@ -1,4 +1,5 @@
-const should = require('chai').should()
+const _ = require('lodash')
+    , should = require('chai').should()
     , enm = require('../../../lib/enum.es7')
     , tD = require('./user_position.data.es7')
     , crudError = require('../../../lib/crud_error.es7')
@@ -33,7 +34,7 @@ describe('Model Crud User Position', () => {
                     tD.userPosition.single.id,
                     (err, userPosition) => {
                         should.not.exist(err);
-                        should.exist(userPosition);
+                        userPosition.should.have.property('_id', tD.userPosition.single.id);
                         done();
                     }
                 );
@@ -41,13 +42,13 @@ describe('Model Crud User Position', () => {
         });
 
         describe('Find Nearby Limited By Position Coordinates', () => {
-            const { findNearbyLimitedByPositionCoordinates } = userPositionCrud;
+            const { findNearbyLimitedByPointCoordinates } = userPositionCrud;
 
             it('should return error if upstream caught error');
             it('should reject if guard fail');
 
             it('should return none if no nearby record exist', (done) => {
-                findNearbyLimitedByPositionCoordinates(
+                findNearbyLimitedByPointCoordinates(
                     tD.dt.justNow,
                     tD.userPosition.notExist.last.coordinates,
                     tD.metric.nearbyDistance.max,
@@ -61,7 +62,7 @@ describe('Model Crud User Position', () => {
             });
 
             it('should return result if nearby record amount in limit', (done) => {
-                findNearbyLimitedByPositionCoordinates(
+                findNearbyLimitedByPointCoordinates(
                     tD.dt.justNow,
                     tD.userPosition.nearbyGroup.normal.a.last.coordinates,
                     tD.metric.nearbyDistance.max,
@@ -69,7 +70,7 @@ describe('Model Crud User Position', () => {
                         should.not.exist(err);
                         _.isArray(userPositionList).should.be.true;
                         userPositionList.should.have.property(
-                            'length', tD.userPosition.nearbyGroup.normal.keys.length - 1
+                            'length', _.keys(tD.userPosition.nearbyGroup.normal).length
                         );
                         done();
                     }
@@ -77,10 +78,10 @@ describe('Model Crud User Position', () => {
             });
 
             it('should return truncated result if nearby record amount over limit', (done) => {
-                findNearbyLimitedByPositionCoordinates(
+                findNearbyLimitedByPointCoordinates(
                     tD.dt.justNow,
                     tD.userPosition.nearbyGroup.huge.center.last.coordinates,
-                    tD.metric.nearbyDistances.max,
+                    tD.metric.nearbyDistance.max,
                     (err, userPositionList) => {
                         should.not.exist(err);
                         _.isArray(userPositionList).should.be.true;
@@ -94,13 +95,13 @@ describe('Model Crud User Position', () => {
         });
 
         describe('Find Nearby Un Limited By Position Coordinates', () => {
-            const { findNearbyLimitedByPositionCoordinates } = userPositionCrud;
+            const { findNearbyUnLimitedByPointCoordinates } = userPositionCrud;
 
             it('should return error if upstream caught error');
             it('should reject if guard fail');
 
             it('should return none if no nearby record exist', (done) => {
-                findNearbyLimitedByPositionCoordinates(
+                findNearbyUnLimitedByPointCoordinates(
                     tD.dt.justNow,
                     tD.userPosition.notExist.last.coordinates,
                     tD.metric.nearbyDistance.max,
@@ -114,7 +115,7 @@ describe('Model Crud User Position', () => {
             });
 
             it('should return result if nearby record amount little', (done) => {
-                findNearbyLimitedByPositionCoordinates(
+                findNearbyUnLimitedByPointCoordinates(
                     tD.dt.justNow,
                     tD.userPosition.nearbyGroup.normal.a.last.coordinates,
                     tD.metric.nearbyDistance.max,
@@ -122,7 +123,7 @@ describe('Model Crud User Position', () => {
                         should.not.exist(err);
                         _.isArray(userPositionList).should.be.true;
                         userPositionList.should.have.property(
-                            'length', tD.userPosition.nearbyGroup.normal.keys.length - 1
+                            'length', _.keys(tD.userPosition.nearbyGroup.normal).length
                         );
                         done();
                     }
@@ -130,15 +131,16 @@ describe('Model Crud User Position', () => {
             });
 
             it('should return result if nearby record amount huge', (done) => {
-                findNearbyLimitedByPositionCoordinates(
+                findNearbyUnLimitedByPointCoordinates(
                     tD.dt.justNow,
                     tD.userPosition.nearbyGroup.huge.center.last.coordinates,
-                    tD.metric.nearbyDistances.max,
+                    tD.metric.nearbyDistance.max,
                     (err, userPositionList) => {
                         should.not.exist(err);
                         _.isArray(userPositionList).should.be.true;
                         userPositionList.should.have.property(
-                            'length', tD.userPosition.nearbyGroup.huge.list.length
+                            //HINT including centric record, so plus one
+                            'length', tD.userPosition.nearbyGroup.huge.list.length + 1
                         );
                         done();
                     }
@@ -157,7 +159,7 @@ describe('Model Crud User Position', () => {
             it('should fail if id exist', (done) => {
                 create(
                     tD.dt.justNow,
-                    tD.userPositionn.notExist.id,
+                    tD.userPosition.single.id,
                     (err, newUserPosition) => {
                         should.exist(err);
                         should.not.exist(newUserPosition);
@@ -176,6 +178,7 @@ describe('Model Crud User Position', () => {
                     (err, newUserPosition) => {
                         should.not.exist(err);
                         should.exist(newUserPosition);
+                        newUserPosition.should.have.property('_id', tD.userPosition.toCreate.id);
                         done();
                     }
                 );
@@ -229,8 +232,8 @@ describe('Model Crud User Position', () => {
             it('should pass if position not exist', (done) => {
                 overwritePositionById(
                     tD.dt.justNow,
-                    tD.userPosition.single.last.coordinates,
                     tD.userPosition.notExist.id,
+                    tD.userPosition.single.last.coordinates,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -249,8 +252,8 @@ describe('Model Crud User Position', () => {
 
                 overwritePositionById(
                     tD.dt.justNow,
-                    newCoordinates,
                     tD.userPosition.single.id,
+                    newCoordinates,
                     (err) => {
                         should.not.exist(err);
                         done();

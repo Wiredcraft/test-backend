@@ -11,7 +11,7 @@ const generate = (moduleDirectory, moduleFileName) => {
 };
 
 
-const serverPrefix = 'server';
+const serverPrefix = 'server.';
 
 const generateServer = (moduleDirectory, moduleFileName) => {
     const result = generate(moduleDirectory, moduleFileName);

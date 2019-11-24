@@ -9,7 +9,7 @@ const prepareDateTimeTable = (baseTime) => {
     const data = { past: {}, future: {}, justNow: null };
 
     const dateSequence = _
-        .range(- alphabet.length, alphabet + 1)
+        .range(- alphabet.length, alphabet.length + 1)
         .map((offset) => new Date(baseTime + (offset * moment.duration(4, 'hours').asMilliseconds())));
 
     _.range(alphabet.length).forEach((idx) => {

@@ -30,10 +30,11 @@ describe('Model Crud User Relationship', () => {
             it('should return document if exist', (done) => {
                 findById(
                     tD.dt.justNow,
-                    tD.userRelationship.empty.id,
+                    tD.userRelationship.alone.a.id,
                     (err, userRelationship) => {
                         should.not.exist(err);
                         should.exist(userRelationship);
+                        userRelationship.should.have.property('_id', tD.userRelationship.alone.a.id);
                         done();
                     }
                 );
@@ -51,7 +52,7 @@ describe('Model Crud User Relationship', () => {
             it('should fail if id exist', (done) => {
                 create(
                     tD.dt.justNow,
-                    tD.userRelationship.toCreate.id,
+                    tD.userRelationship.alone.a.id,
                     (err, userRelationship) => {
                         should.exist(err);
                         should.not.exist(userRelationship);
@@ -70,6 +71,7 @@ describe('Model Crud User Relationship', () => {
                     (err, userRelationship) => {
                         should.not.exist(err);
                         should.exist(userRelationship);
+                        userRelationship.should.have.property('_id', tD.userRelationship.toCreate.id);
                         done();
                     }
                 );
@@ -123,8 +125,8 @@ describe('Model Crud User Relationship', () => {
             it('should fail if document not exist', (done) => {
                 addActiveFollowingById(
                     tD.dt.justNow,
-                    tD.userRelationship.alone.a.id,
                     tD.userRelationship.notExist.id,
+                    tD.userRelationship.alone.a.id,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -138,8 +140,8 @@ describe('Model Crud User Relationship', () => {
             it('should fail if already added', (done) => {
                 addActiveFollowingById(
                     tD.dt.justNow,
-                    tD.userRelationship.pair.followee.id,
                     tD.userRelationship.pair.follower.id,
+                    tD.userRelationship.pair.followee.id,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -153,8 +155,8 @@ describe('Model Crud User Relationship', () => {
             it('should pass if everything ok', (done) => {
                 addActiveFollowingById(
                     tD.dt.justNow,
-                    tD.userRelationship.alone.b.id,
                     tD.userRelationship.alone.a.id,
+                    tD.userRelationship.alone.b.id,
                     (err) => {
                         should.not.exist(err);
                         done();
@@ -172,8 +174,8 @@ describe('Model Crud User Relationship', () => {
             it('should fail if document not exist', (done) => {
                 removeActiveFollowingById(
                     tD.dt.justNow,
+                    tD.userRelationship.notExist.id,
                     tD.userRelationship.pair.followee.id,
-                    tD.userRelationship.pair.notExist.id,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -187,8 +189,8 @@ describe('Model Crud User Relationship', () => {
             it('should fail if not added', (done) => {
                 removeActiveFollowingById(
                     tD.dt.justNow,
-                    tD.userRelationship.alone.d.id,
                     tD.userRelationship.alone.c.id,
+                    tD.userRelationship.alone.d.id,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -202,8 +204,8 @@ describe('Model Crud User Relationship', () => {
             it('should pass if everything ok', (done) => {
                 removeActiveFollowingById(
                     tD.dt.justNow,
-                    tD.userRelationship.pair.followee.id,
                     tD.userRelationship.pair.follower.id,
+                    tD.userRelationship.pair.followee.id,
                     (err) => {
                         should.not.exist(err);
                         done();
@@ -221,8 +223,8 @@ describe('Model Crud User Relationship', () => {
             it('should fail if document not exist', (done) => {
                 addPassiveFollowingById(
                     tD.dt.justNow,
+                    tD.userRelationship.notExist.id,
                     tD.userRelationship.alone.a.id,
-                    tD.userRelationship.alone.notExist.id,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -236,8 +238,8 @@ describe('Model Crud User Relationship', () => {
             it('should fail if already added', (done) => {
                 addPassiveFollowingById(
                     tD.dt.justNow,
-                    tD.userRelationship.pair.follower.id,
                     tD.userRelationship.pair.followee.id,
+                    tD.userRelationship.pair.follower.id,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -251,8 +253,8 @@ describe('Model Crud User Relationship', () => {
             it('should pass if everything ok', (done) => {
                 addPassiveFollowingById(
                     tD.dt.justNow,
-                    tD.userRelationship.alone.a.id,
                     tD.userRelationship.alone.b.id,
+                    tD.userRelationship.alone.a.id,
                     (err) => {
                         should.not.exist(err);
                         done();
@@ -270,8 +272,8 @@ describe('Model Crud User Relationship', () => {
             it('should fail if document not exist', (done) => {
                 removePassiveFollowingById(
                     tD.dt.justNow,
-                    tD.userRelationship.alone.a.id,
                     tD.userRelationship.notExist.id,
+                    tD.userRelationship.alone.a.id,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -285,8 +287,8 @@ describe('Model Crud User Relationship', () => {
             it('should fail if not added', (done) => {
                 removePassiveFollowingById(
                     tD.dt.justNow,
-                    tD.userRelationship.alone.b.id,
                     tD.userRelationship.alone.c.id,
+                    tD.userRelationship.alone.b.id,
                     (err) => {
                         should.exist(err);
                         err.should.deep.equal(crudError.create(
@@ -300,8 +302,8 @@ describe('Model Crud User Relationship', () => {
             it('should pass if everything ok', (done) => {
                 removePassiveFollowingById(
                     tD.dt.justNow,
-                    tD.userRelationship.pair.follower.id,
                     tD.userRelationship.pair.followee.id,
+                    tD.userRelationship.pair.follower.id,
                     (err) => {
                         should.not.exist(err);
                         done();

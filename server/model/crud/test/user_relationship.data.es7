@@ -45,7 +45,6 @@ const urT = userRelationshipT;
 
 const userRelationshipSeedList = [
     ...[
-        urT.toCreate,
         urT.toDelete,
         urT.alone.a,
         urT.alone.b,
