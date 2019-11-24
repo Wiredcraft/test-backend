@@ -4,6 +4,7 @@ const fs = require('fs')
     , cfg = require('../config.json')
     , bodyParser = require('body-parser')
     , logging = require('../lib/logging.es7')
+    , shutdown = require('../lib/shutdown.es7')
     , webRoute = require('../web/route/index.es7')
     , modName = require('../../lib/module_name.es7');
 
@@ -63,6 +64,8 @@ const bindAll = (listenPort, callback) => {
     });
 
     app.listen(listenPort);
+    shutdown.handler.add(unbindAll);
+
     log.info('web scope all listening ...');
     callback();
 };
@@ -70,7 +73,10 @@ const bindAll = (listenPort, callback) => {
 
 const unbindAll = (callback) => {
     log.info('web scope all closing ...');
+
     appAll.close(callback);
+    shutdown.handler.remove(unbindAll);
+
     appAll = null;
 };
 
