@@ -26,10 +26,12 @@ const initializeEntity = (entityName, connection) => {
     const connect = (callback) => {
         assert(!isConnected(), 'Already Connected');
 
+
         connection
         .openUri(virtualHostUri, cfg.mongodb.client.connection.option.fallback)
         .then(
             (conn) => {
+                log.trace(`connect to ${entityName} ok`);
                 shutdown.handler.add(shutdownHandler);
                 callback();
             },
@@ -40,6 +42,7 @@ const initializeEntity = (entityName, connection) => {
     const disconnect = (callback) => {
         assert(isConnected(), 'Already Disconnected');
 
+        log.trace(`disconnect from ${entityName} ok`);
         shutdown.handler.remove(shutdownHandler);
         connection.close(callback);
     };

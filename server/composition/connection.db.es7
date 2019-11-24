@@ -10,8 +10,6 @@ const moduleName = modName.generateServer(__dirname, __filename)
 const connectMongodbDefault = (callback) =>
     db.mongodb.entity.default.connect((err) => {
         if (err) return callback(err);
-
-        log.trace('connect to mongodb default ok');
         callback();
     });
 
@@ -19,8 +17,6 @@ const connectMongodbDefault = (callback) =>
 const disconnectMongodbDefault = (callback) =>
     db.mongodb.entity.default.disconnect((err) => {
         if (err) return callback(err);
-
-        log.trace('disconnect from mongodb default ok');
         callback();
     });
 
