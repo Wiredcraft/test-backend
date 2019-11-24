@@ -10,11 +10,9 @@
         "moment": "^2.24.0",
         "lodash": "^4.17.15",
         "validator": "^12.0.0",
-        "is-plain-object": "^3.0.0",
         "redis": "^2.8.0",
         "mongoose": "^5.7.11",
         "body-parser": "^1.19.0",
-        "gulp": "^4.0.2",
         "express": "^4.17.1",
         "pino": "^5.13.6",
         "js-yaml": "^3.13.1"
@@ -25,7 +23,11 @@
         "npm": ">=6.9.0"
     },
     "scripts": {
+        "server": "node entry/default.es7",
         "build.config.server": "node script/build_config_server.es7",
-        "build.config.mongodb": "node script/mongodb/build.es7"
+        "build.config.mongodb": "node script/mongodb/build.es7",
+        "test.server.web": "mocha --opts ./test/mocha.web.opts server/test/entry/web.es7",
+        "test.server.model.crud": "mocha --opts ./test/mocha.model_crud.opts server/test/entry/model.crud.es7",
+        "test.server.model.flow": "mocha --opts ./test/mocha.model_flow.opts server/test/entry/model.flow.es7"
     }
 }

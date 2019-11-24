@@ -1,0 +1,8 @@
+# mocha opts
+--bail
+--ui bdd
+--reporter spec
+--exit
+--delay
+--slow 75
+--timeout 1000
