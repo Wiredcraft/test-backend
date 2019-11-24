@@ -1,4 +1,5 @@
-const testOpUser = require('../../crud/test/user.operation.es7')
+const async = require('async')
+    , testOpUser = require('../../crud/test/user.operation.es7')
     , testOpUserPosition = require('../../crud/test/user_position.operation.es7')
     , testOpUserRelationship = require('../../crud/test/user_relationship.operation.es7');
 

@@ -1,5 +1,5 @@
 const prepare = require('../../test/prepare.es7')
-    , operation = require('./source.user_relationship.operation.es7');
+    , operation = require('./source.user.operation.es7');
 
 
 const baseTime = Date.now()
@@ -23,6 +23,8 @@ const uT = userT;
 const userSeedList = [
     {
         '_id': uT.registered.id,
+        'createAt': dtT.past.a,
+        'nameNick': uT.registered.nameNick,
     },
 ];
 
@@ -34,7 +36,7 @@ const userPositionSeedList = [
 
 const userRelationshipSeedList = [
     {
-        '_id': uT.registered.id
+        '_id': uT.registered.id,
     }
 ];
 

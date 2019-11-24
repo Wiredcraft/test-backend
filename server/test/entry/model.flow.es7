@@ -10,7 +10,6 @@ const runCase = () => {
     [
         //TODO add file system blob match support
         d('model/flow/test/source.user.case.es7'),
-        d('model/flow/test/source.user_position.case.es7'),
         d('model/flow/test/source.user_relationship.case.es7'),
     ].forEach((filePath) => require(filePath))
 
@@ -23,5 +22,5 @@ logging.initialize((err) => {
 
     const prepare = require('../prepare.es7')
 
-    prepare.model.crud(runCase);
+    prepare.model.flow(runCase);
 });

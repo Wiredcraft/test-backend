@@ -1,9 +1,10 @@
 const should = require('chai').should()
+    , tD = require('./source.user_relationship.data.es7')
     , { createFlowShould } = require('../../test/utils.es7')
     , userRelationshipCrud = require('../../crud/user_relationship/index.es7').raw;
 
 
-const maxFlowDelayTime = 100
+const maxFlowDelayTime = 50
     , flowShould = createFlowShould(maxFlowDelayTime);
 
 
@@ -15,8 +16,8 @@ describe('Model Flow Source User Relationship', () => {
             flowShould(
                 (cb) => userRelationshipCrud.addActiveFollowingById(
                     tD.dt.justNow,
-                    tD.userRelationship.toFollow.followee.id,
                     tD.userRelationship.toFollow.follower.id,
+                    tD.userRelationship.toFollow.followee.id,
                     (err) => {
                         should.not.exist(err);
                         cb();
@@ -29,7 +30,7 @@ describe('Model Flow Source User Relationship', () => {
                         (err, userRelationship) => {
                             should.not.exist(err);
                             should.exist(userRelationship);
-                            userRelationship.have.property('passive.following.user.count.total', 1);
+                            userRelationship.should.have.nested.property('passive.following.user.count.total', 1);
                             cb();
                         }
                     ),
@@ -44,8 +45,8 @@ describe('Model Flow Source User Relationship', () => {
             flowShould(
                 (cb) => userRelationshipCrud.removeActiveFollowingById(
                     tD.dt.justNow,
-                    tD.userRelationship.unFollow.followee.id,
                     tD.userRelationship.unFollow.follower.id,
+                    tD.userRelationship.unFollow.followee.id,
                     (err) => {
                         should.not.exist(err);
                         cb();
@@ -58,7 +59,7 @@ describe('Model Flow Source User Relationship', () => {
                         (err, userRelationship) => {
                             should.not.exist(err);
                             should.exist(userRelationship);
-                            userRelationship.have.property('passive.following.user.count.total', 0);
+                            userRelationship.should.have.nested.property('passive.following.user.count.total', 0);
                             cb();
                         }
                     ),

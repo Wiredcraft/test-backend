@@ -1,11 +1,12 @@
 const should = require('chai').should()
-    , { createFlowShould } = require('../../test/utils.es7')
+    , tD = require('./source.user.data.es7')
     , userCrud = require('../../crud/user/index.es7').raw
+    , { createFlowShould } = require('../../test/utils.es7')
     , userPositionCrud = require('../../crud/user_position/index.es7').raw
     , userRelationshipCrud = require('../../crud/user_relationship/index.es7').raw;
 
 
-const maxFlowDelayTime = 100
+const maxFlowDelayTime = 50
     , flowShould = createFlowShould(maxFlowDelayTime);
 
 
@@ -18,9 +19,10 @@ describe('Model Flow Source User', () => {
                 (cb) => userCrud.createNameNick(
                     tD.dt.justNow,
                     tD.user.unRegistered.id,
-                    (err, user) => {
+                    tD.user.unRegistered.nameNick,
+                    (err, newUser) => {
                         should.not.exist(err);
-                        should.exist(user);
+                        should.exist(newUser);
                         cb();
                     }
                 ),
@@ -55,9 +57,9 @@ describe('Model Flow Source User', () => {
                 (cb) => userCrud.deleteById(
                     tD.dt.justNow,
                     tD.user.registered.id,
-                    (err, _user) => {
+                    (err, user) => {
                         should.not.exist(err);
-                        should.exist(err);
+                        should.exist(user);
                         cb();
                     }
                 ),

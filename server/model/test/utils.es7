@@ -1,4 +1,5 @@
 const _ = require('lodash')
+    , async = require('async')
     , should = require('chai').should();
 
 

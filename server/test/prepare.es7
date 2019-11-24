@@ -24,7 +24,7 @@ const prepareTestModelFlow = (callback) =>
         [
             (cb) => { composition.switch.procSignal.interrupt.shutdown.enable(); cb(); },
             (cb) => { composition.switch.procSignal.terminate.shutdown.enable(); cb(); },
-            (cb) => { composition.switch.model.flow.turnOff(); cb(); },
+            (cb) => { composition.switch.model.flow.turnOn(); cb(); },
             (cb) => composition.connection.db.mongodb.default.connect(cb),
         ],
         (err) => {
