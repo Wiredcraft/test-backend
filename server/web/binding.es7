@@ -3,31 +3,25 @@ const assert = require('assert')
     , modName = require('../../lib/module_name.es7');
 
 
-const moduleName = modName.generateModule(__dirname, __filename)
+const moduleName = modName.generateServer(__dirname, __filename)
     , log = logging.getLoggerModule(moduleName);
 
 
 exports = {
-    crud: null,
-    bind: {
-        crud: null,
-    },
-    unbind: {
-        crud: null,
-    }
+    crud: { i: null, bind: null, unbind: null },
 };
 
 
-exports.bind.crud = (index) => {
-    assert(exports.crud === null, 'Web Binding Crud Already Bound');
+exports.crud.bind = (index) => {
+    assert(exports.crud.i === null, 'Web Binding Crud Already Bound');
     log.trace('Web Binding Crud Bound');
-    exports.crud = index;
+    exports.crud.i = index;
 };
 
-exports.unbind.crud = () => {
-    assert(exports.crud !== null, 'Web Binding Crud Already Unbound');
+exports.crud.unbind = () => {
+    assert(exports.crud.i !== null, 'Web Binding Crud Already Unbound');
     log.trace('Web Binding Crud Unbound');
-    exports.crud = null;
+    exports.crud.i = null;
 };
 
 

@@ -4,9 +4,9 @@ const _ = require('lodash')
 
 
 const mockCrud = (nestedDotField, crudFn) => {
-    assert(binding.crud, 'Web Binding Crud Not Bound');
+    assert(binding.crud.i, 'Web Binding Crud Not Bound');
 
-    _.set(nestedDotField, crudFn);
+    _.set(binding.crud.i, nestedDotField, crudFn);
 };
 
 
