@@ -1,5 +1,5 @@
 const fs = require('fs')
-    //, morgan = require('morgan')
+    , morgan = require('morgan')
     , express = require('express')
     , cfg = require('../config.json')
     , bodyParser = require('body-parser')
@@ -29,7 +29,7 @@ const bindAll = (listenPort, callback) => {
 
     appAll = app;
 
-    //app.use(morgan('default', { stream: accessLogStream }));
+    app.use(morgan('combined', { stream: accessLogStream }));
     app.use(bodyParser.json(cfg.express.middleware.bodyParser.json.option.fallback));
     app.use(bodyParser.urlencoded(cfg.express.middleware.bodyParser.urlEncoded.option.fallback));
 
