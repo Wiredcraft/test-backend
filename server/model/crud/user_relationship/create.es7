@@ -23,7 +23,7 @@ onEvent(
     flowEvent.USER_NAME_NICK_REGISTERED,
     'create',
     (queryDateTime, newUser) => (cb) =>
-        create(queryDateTime, newUser.id, cb)
+        create(queryDateTime, newUser._id, cb)
 );
 
 

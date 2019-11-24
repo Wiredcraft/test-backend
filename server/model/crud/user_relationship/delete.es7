@@ -24,7 +24,7 @@ onEvent(
     flowEvent.USER_DELETED,
     'deleteById',
     (queryDateTime, deletedUser) => (cb) =>
-        deleteById(queryDateTime, deletedUser.id, cb)
+        deleteById(queryDateTime, deletedUser._id, cb)
 );
 
 

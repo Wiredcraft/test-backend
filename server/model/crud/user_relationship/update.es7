@@ -93,7 +93,7 @@ const removePassiveFollowingById = (queryDateTime, userId, followerId, callback)
             'passive.following.user.list': { $elemMatch: { id: followerId } },
         },
         {
-            $inc: { 'passive.following.user.count.total': 1 },
+            $inc: { 'passive.following.user.count.total': -1 },
             $pull: { 'passive.following.user.list': { id: followerId } },
         },
         ccn(log, 'removePassiveFollowingById', [cct.updateOne], callback)
