@@ -1,8 +1,10 @@
 const axios = require('axios')
+    , should = require('chai').should()
     , mock = require('../../../test/mock.es7')
     , enm = require('../../../../lib/enum.es7')
     , { markFail } = require('../../../../lib/test.es7')
-    , crudError = require('../../../../lib/crud_error.es7');
+    , crudError = require('../../../../lib/crud_error.es7')
+    , { option: { api: { json: queryOption } } } = require('../../../test/query.es7');
 
 
 describe('Web Route Api Account Registration', () => {
@@ -16,7 +18,7 @@ describe('Web Route Api Account Registration', () => {
             axios.post(
                 '/sign-up',
                 { illegal: {} },
-                {}
+                queryOption
             )
             .then(
                 (res) => { markFail(); },
@@ -30,16 +32,17 @@ describe('Web Route Api Account Registration', () => {
 
             mock.crud(
                 'user.createNameNick',
-                (userId, callback) => {
-                    userId.should.equal(testUserNickName);
-                    callback(crudError.create(enm.crudOperation.CREATE, enm.crudResult.FAIL_GUARD));
+                (nickName, callback) => {
+                    should.exist(nickName);
+                    nickName.should.equal(testUserNickName);
+                    callback(crudError.create(enm.crudOperation.NONE, enm.crudResult.FAIL_GUARD));
                 }
             );
 
             axios.post(
                 '/sign-up',
                 { reg: { nameNick: testUserNickName } },
-                {}
+                queryOption
             )
             .then(
                 (res) => { markFail(); },
@@ -53,8 +56,9 @@ describe('Web Route Api Account Registration', () => {
 
             mock.crud(
                 'user.createNameNick',
-                (userId, callback) => {
-                    userId.should.equal(testUserNickName);
+                (nickName, callback) => {
+                    should.exist(nickName);
+                    nickName.should.equal(testUserNickName);
                     callback(crudError.create(enm.crudOperation.CREATE, enm.crudResult.FAIL_DOC_ALREADY_CREATED));
                 }
             );
@@ -62,7 +66,7 @@ describe('Web Route Api Account Registration', () => {
             axios.post(
                 '/sign-up',
                 { reg: { nameNick: testUserNickName } },
-                {}
+                queryOption
             )
             .then(
                 (res) => { markFail(); },
@@ -72,7 +76,7 @@ describe('Web Route Api Account Registration', () => {
         });
 
         it('should res 200 if everything ok', (done) => {
-            const testUserId = ''
+            const testUserId = 'fadd85b4079cb409'
                 , testUserNickName = 'Kinopico'
                 , testQueryDateTime = new Date();
 
@@ -84,21 +88,22 @@ describe('Web Route Api Account Registration', () => {
 
             mock.crud(
                 'user.createNameNick',
-                (userId, callback) => {
-                    userId.should.equal(testUserNickName);
+                (nickName, callback) => {
+                    should.exist(nickName);
+                    nickName.should.equal(testUserNickName);
                     callback(null, testNewUser);
                 }
             );
 
-            axios.postt(
+            axios.post(
                 '/sign-up',
                 { reg: { nameNick: testUserNickName } },
-                {}
+                queryOption
             )
             .then(
                 (res) => {
                     res.should.have.property('status', 200);
-                    should.not.exist(res.data);
+                    res.data.should.equal('');
                 },
                 (err) => { markFail(); }
             )

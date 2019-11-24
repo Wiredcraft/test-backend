@@ -1,8 +1,11 @@
-const axios = require('axios')
+const _ = require('lodash')
+    , axios = require('axios')
+    , should = require('chai').should()
     , mock = require('../../../test/mock.es7')
     , enm = require('../../../../lib/enum.es7')
     , { markFail } = require('../../../../lib/test.es7')
-    , crudError = require('../../../../lib/crud_error.es7');
+    , crudError = require('../../../../lib/crud_error.es7')
+    , { option: { api: { json: queryOption } } } = require('../../../test/query.es7');
 
 
 describe('Web Route Api Account Authentication', () => {
@@ -16,7 +19,7 @@ describe('Web Route Api Account Authentication', () => {
             axios.put(
                 '/sign-out',
                 {},
-                {}
+                queryOption
             )
             .then(
                 (res) => { res.should.have.property('status', 200); },
@@ -34,10 +37,11 @@ describe('Web Route Api Account Authentication', () => {
         it('should res 403 if upstream account already registered');
 
         it('should res 200 if everything ok', (done) => {
-            const testUserNickName = 'Mario';
+            const testUserId = 'ecf5ca50d3ce9ea4'
+                , testUserNickName = 'Mario';
 
             const testUser = {
-                id: testUserId,
+                _id: testUserId,
                 createAt: new Date(2019, 1, 1),
                 nameNick: testUserNickName,
             };
@@ -45,6 +49,7 @@ describe('Web Route Api Account Authentication', () => {
             mock.crud(
                 'user.findById',
                 (nickName, callback) => {
+                    should.exist(nickName);
                     nickName.should.equal(testUserNickName);
                     callback(null, testUser);
                 }
@@ -53,14 +58,23 @@ describe('Web Route Api Account Authentication', () => {
             axios.put(
                 '/sign-in',
                 { credentials: { nameNick: testUserNickName } },
-                {}
+                queryOption
             )
             .then(
                 (res) => {
                     res.should.have.property('status', 200);
-                    res.data.should.deep.equal(testUser);
+                    res.data.should.deep.equal({ data: {
+                        me: {
+                            ..._.omit(testUser, ['_id']),
+                            id: testUser._id,
+                            createAt: testUser.createAt.getTime(),
+                        }
+                    } });
                 },
-                (err) => { markFail(); }
+                (err) => {
+                    console.log(`response ${JSON.stringify(err.response.status, null, 4)}`);
+                    markFail();
+                }
             )
             .then(() => done(), (err) => done(err));
         });
