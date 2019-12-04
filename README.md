@@ -30,3 +30,13 @@ TEST_DB_NAME='wired_backend_test'
 DEBUG=btapp
 ```
 
+# User Model
+Field(s):
+* id*: type String
+* name: type String required
+* dob: type: Date required
+* address: type: String
+* description: type: String
+* createdAt: type: Date
+
+*Note:* id is a string that is generated from the MongoDB created id
