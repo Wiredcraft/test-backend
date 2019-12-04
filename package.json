@@ -1,0 +1,19 @@
+{
+  "name": "test-backend",
+  "version": "1.0.0",
+  "description": "Test project for API development",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CurtiePi/test-backend.git"
+  },
+  "author": "Curtis Hayes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CurtiePi/test-backend/issues"
+  },
+  "homepage": "https://github.com/CurtiePi/test-backend#readme"
+}
