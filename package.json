@@ -4,7 +4,8 @@
   "description": "Test project for API development",
   "main": "btapp.js",
   "scripts": {
-    "test": "mocha ./test"
+    "start": "NODE_ENV=dev nodemon btapp.js",
+    "test": "NODE_ENV=test mocha ./test"
   },
   "repository": {
     "type": "git",
@@ -23,8 +24,10 @@
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
+    "lodash": "^4.17.15",
     "mongoose": "^5.7.13",
     "morgan": "^1.9.1",
+    "nodemon": "^2.0.1",
     "path": "^0.12.7"
   },
   "devDependencies": {
