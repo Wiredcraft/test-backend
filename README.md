@@ -17,4 +17,16 @@ Embedded Javascript Templates will be used as the template engine
 ## Environment Variable
 Will use the environment variable **.env** to hold information regard test and 
 development configuration data.
+```
+NODE_ENV='dev' 
+DEV_APP_PORT=3002                
+DEV_DB_HOST='***.***.***.***'
+DEV_DB_PORT='27017'                     
+DEV_DB_NAME='wired_backend_dev'
+TEST_APP_PORT=3000
+TEST_DB_HOST='***.***.***.***'
+TEST_DB_PORT='27017'
+TEST_DB_NAME='wired_backend_test'
+DEBUG=btapp
+```
 
