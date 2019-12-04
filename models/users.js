@@ -26,6 +26,12 @@ var UsersSchema = new Schema({
   }
 });
 
+/**
+ * Return user objects with an id field
+ * Convert Mongo generated id object and store it in 
+ * user object's id field.
+ **/
+
 UsersSchema.options.toObject = {
   virturals: true,
   transform: function(doc, ret) {
@@ -33,6 +39,12 @@ UsersSchema.options.toObject = {
     delete ret.__v;
   }
 };
+
+/**
+ * Return a user based on an input id
+ * Param(s):
+ * user_id: String
+ **/
 
 UsersSchema.statics.getUserById = function(user_id) {
     return  Users.findOne( { '_id': ObjectID(user_id)} );
