@@ -21,6 +21,24 @@ module.exports = {
         } catch(err) {
           console.log("Error getting user with id: ${userId} " + err);
         }
+    },
+
+    addNewUser: async (userData) => {
+        try {
+            let user = await Users.create(userData);
+            return user;
+        } catch(err) {
+            console.log("Error getting user with data" + err);
+        }
+    },
+
+    getUserByData: async(userData) => {
+        try {
+            let user = await Users.findOne(userData);
+            return user;
+        } catch(err) {
+          console.log("Error getting user with data" + err);
+        }
     }
 
 }
