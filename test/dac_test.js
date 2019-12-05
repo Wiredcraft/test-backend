@@ -8,6 +8,7 @@ const udac = require('../dac/user_dac'); //imports the User data access controll
 describe('Users Data Access Controller', function() {
   
     describe('Perform CRUD actions with users', () => {
+
         it('TEST: Get a listing of users', (done) => {
             udac.listusers()
                 .then((user_list) => {
@@ -92,6 +93,83 @@ describe('Users Data Access Controller', function() {
                 })
                 .catch((err) => {
                     console.log('Error testing creating a new user.' + err);
+                });
+        });
+
+        it('TEST: Do not Add an incomplete user', (done) => {
+            let check_date = new Date(1145544774469);
+            const data= {'name': 'Wesley Crusher',
+                         'dob': check_date};
+
+            udac.addNewUser(data)
+                .then((user) => {
+                    expect(user).to.be.undefined;
+                    done();
+                })
+                .catch((err) => {
+                    console.log('Error testing creating a new user.' + err);
+                });
+        });
+
+        it('TEST: create multiple users',(done) => {
+            let users = [{'name': "Captain Benjamin Sisko",
+                          'dob': new Date(1135544774469),
+                          'address': "Deep Space Nine"},
+                          {'name': "Commandeer William Ryker", 
+                          'dob': new Date(1045544774469),
+                          'address': "USS Enterprise"},
+                          {'name': "Ensign Ro Laren", 
+                          'dob': new Date(1345544774469),
+                          'address': "USS Enterprise"},
+                          {'name': "Lt. Cmdr Worf", 
+                          'dob': new Date(985544774469),
+                          'address': "Deep Space Nine"}];
+
+            udac.addNewUser(users)
+                .then((users) => {
+                    expect(users).to.be.an('array').to.have.lengthOf(4);
+                    done();
+                })
+                .catch((err) => {
+                    console.log('Error testing adding multiple users.' + err);
+                });
+        });
+
+        it('TEST: Updating a user', (done) => {
+            let check_date = new Date(1145544774469);
+            const data = {'name': 'Elim Garak',
+                         'address': 'Deep Space Nine'};
+
+            const new_data = {'address': 'Cardassia'};
+
+            udac.updateUser(data, new_data)
+                .then((user) => {
+                    expect(user.address).to.be.eq('Cardassia');
+                    done();
+                })
+                .catch((err) => {
+                    console.log('Error testing creating a new user.' + err);
+                });
+        });
+ 
+        it('TEST: Removing a user', (done) => {
+            let check_date = new Date(1145544774469);
+            const data= {'name': 'Elim Garak'};
+
+            udac.getUserByData(data)
+                .then((user) => {
+                    
+                    udac.removeUserById(user.id)
+                        .then((result) => {
+                            expect(result.deletedCount).to.be.eq(1);
+                            done();
+                    })
+                    .catch((err) => {
+                         console.log('Error testing creating a new user.' + err);
+                    });
+                })
+                .catch((err) => {
+                    console.log('Error getting a user ' + err);
                 });
         });
     });
