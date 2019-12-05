@@ -18,15 +18,15 @@ Embedded Javascript Templates will be used as the template engine
 Will use the environment variable **.env** to hold information regard test and 
 development configuration data.
 ```
-NODE_ENV='dev' 
+NODE_ENV=dev 
 DEV_APP_PORT=3002                
-DEV_DB_HOST='***.***.***.***'
-DEV_DB_PORT='27017'                     
-DEV_DB_NAME='wired_backend_dev'
+DEV_DB_HOST=***.***.***.***
+DEV_DB_PORT=27017                     
+DEV_DB_NAME=wired_backend_dev
 TEST_APP_PORT=3000
-TEST_DB_HOST='***.***.***.***'
-TEST_DB_PORT='27017'
-TEST_DB_NAME='wired_backend_test'
+TEST_DB_HOST=***.***.***.***
+TEST_DB_PORT=27017
+TEST_DB_NAME=wired_backend_test
 DEBUG=btapp
 ```
 
@@ -39,9 +39,20 @@ Field(s):
 * description: type: String
 * createdAt: type: Date
 
-*Note:* id is a string that is generated from the MongoDB created id
+*Note:* id is a string that is generated from the MongoDB created id.
+
 *Note 2:* make a unique index to help prevent duplicate entries. 
 Fields used are 
 * name
 * dob
 * address
+
+# Testing
+
+With the use of Mocha and Chai a number of test suites have been created to test a number of 
+features. These suites are as follows:
+
+* **basic_user_test.js**: This suite tests the basic CRUD actions on the database directly. Making 
+sure a user can be added, retrieved and deleted. Also it tests that a duplicate user cannot be added.
+* **dac_test.js**: This group of tests basically checks that the data access controller is performing CRUD 
+actions to expectations.
