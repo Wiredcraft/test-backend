@@ -9,6 +9,19 @@ describe('Users Data Access Controller', function() {
   
     describe('Perform CRUD actions with users', () => {
 
+        before(() => {
+            const data = {'name': { $ne: 'Commander Data'}};
+
+            udac.removeUsersByCriteria(data)
+                .then((result) => {
+                    console.log("Database reset....");
+                })
+                .catch((err) => {
+                    console.log('Error testing creating a new user.' + err);
+                    expect(err).is.defined
+                });
+        });
+
         it('TEST: Get a listing of users', (done) => {
             udac.listusers()
                 .then((user_list) => {
@@ -151,6 +164,22 @@ describe('Users Data Access Controller', function() {
                     console.log('Error testing creating a new user.' + err);
                 });
         });
+
+        it('TEST: Not updating when multiple users found', (done) => {
+            const data = {'address': 'Deep Space Nine'};
+
+            const new_data = {'address': 'Bajor'};
+
+            udac.updateUser(data, new_data)
+                .then((user) => {
+                    expect(user).to.be.undefined;
+                    done();
+                })
+                .catch((err) => {
+                    console.log('Error testing creating a new user.' + err);
+                    expect(err).is.defined
+                });
+        });
  
         it('TEST: Removing a user', (done) => {
             let check_date = new Date(1145544774469);
@@ -170,6 +199,19 @@ describe('Users Data Access Controller', function() {
                 })
                 .catch((err) => {
                     console.log('Error getting a user ' + err);
+                });
+        });
+
+        after(() => {
+            const data = {'name': { $ne: 'Commander Data'}};
+
+            udac.removeUsersByCriteria(data)
+                .then((result) => {
+                    console.log(result.deletedCount + " records deleted");
+                })
+                .catch((err) => {
+                    console.log('Error testing creating a new user.' + err);
+                    expect(err).is.defined
                 });
         });
     });
