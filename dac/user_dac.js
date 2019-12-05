@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 let Users = require('../models/users');
 
 module.exports = {
-
+    /**
+     * List all the users stored in the database
+     *
+     **/
     listusers: async () => {
         try {
             let users = await Users.find();
@@ -13,6 +16,12 @@ module.exports = {
         }
     },
 
+    /**
+     * Retrieve a user stored in database via an id
+     *
+     * param: userId - String
+     *
+     **/
     getUserById: async (userId) => {
         try {
             let user = await Users.getUserById(userId);
@@ -23,6 +32,12 @@ module.exports = {
         }
     },
 
+    /**
+     * Add user(s) into the database
+     *
+     * param: userData - associative array/array of associative arrays
+     *
+     **/
     addNewUser: async (userData) => {
         try {
             let user = await Users.create(userData);
@@ -32,6 +47,12 @@ module.exports = {
         }
     },
 
+    /**
+     * Retrieve one user from the database based on input criteria
+     *
+     * param: userData - associative array/array of associative arrays
+     *
+     **/
     getUserByData: async(userData) => {
         try {
             let user = await Users.findOne(userData);
@@ -41,6 +62,14 @@ module.exports = {
         }
     },
 
+    /**
+     * Update one user from the database based on input criteria
+     *
+     * param: userData - associative array: search criteria for user
+     * param: updateData - associative array: values to update
+     *
+     * return updated record
+     **/
     updateUser: async(userData, updateData) => {
         try {
             let users = await Users.getUsersByData(userData);
@@ -50,7 +79,6 @@ module.exports = {
                 return update_user;
             } else {
                 let message = (users.length > 1) ? "No User to update" : "Multiple users found";
-                console.log(message);
                 throw new Error(message);
             }
             
@@ -59,9 +87,31 @@ module.exports = {
         }
     },
 
+    /**
+     * Remove one user from the database based on userId
+     *
+     * param: userId - String
+     *
+     **/
     removeUserById: async (userId) => {
         try {
             let result = await Users.removeUserById(userId);
+            return result; 
+        } catch(err) {
+            console.log("Error removing user " + err);
+        }
+    },
+
+    /**
+     * Remove multiple users from the database based on query
+     * THIS FUNCTION IS FOR TESTING PURPOSES ONLY.
+     *
+     * param: query - associative array
+     *
+     **/
+    removeUsersByCriteria: async (criteria) => {
+        try {
+            let result = await Users.deleteMany(criteria);
             return result; 
         } catch(err) {
             console.log("Error removing user " + err);
