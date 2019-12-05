@@ -5,7 +5,7 @@
   "main": "btapp.js",
   "scripts": {
     "start": "NODE_ENV=dev nodemon btapp.js",
-    "test": "NODE_ENV=test mocha ./test"
+    "test": "NODE_ENV=test mocha --exit ./test"
   },
   "repository": {
     "type": "git",
