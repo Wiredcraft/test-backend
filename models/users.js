@@ -59,6 +59,29 @@ UsersSchema.statics.getUserById = function(user_id) {
     return  Users.findOne( { '_id': ObjectID(user_id)} );
 }
 
+/**
+ * Remove a user based on an input id
+ * Param(s):
+ * user_id: String
+ **/
+
+UsersSchema.statics.removeUserById = function(user_id) {
+    return  Users.deleteOne( { '_id': ObjectID(user_id)} );
+}
+
+/**
+ * Retrieve user(s) based on an input criteria
+ * Param(s):
+ * associative array of key: value
+ **/
+
+UsersSchema.statics.getUsersByData = function(userData) {
+    if (userData.id) {
+        userData._id = ObjectID(userData.id);
+    }
+    return  Users.find( userData );
+}
+
 const Users = mongoose.model('Users', UsersSchema);
 
 Users.init().then(() => {
