@@ -7,7 +7,7 @@ const udac = require('../dac/user_dac'); //imports the User data access controll
 
 describe('Users Data Access Controller', function() {
   
-    describe('Retrieve list of users', () => {
+    describe('Perform CRUD actions with users', () => {
         it('Get a listing of users', (done) => {
             udac.listusers()
                 .then((user_list) => {
@@ -18,5 +18,18 @@ describe('Users Data Access Controller', function() {
                     console.log('Error testing for the user list.' + err);
                 });
         });
+
+        it('Get one user by id', (done) => {
+            const userId = '5de88258976347576c2a965d';
+            udac.getUserById(userId)
+                .then((user) => {
+                    expect(user.name).to.be.eq('Commander Data');
+                    done();
+                })
+                .catch((err) => {
+                    console.log('Error testing for the user list.' + err);
+                });
+        });
+
     });
 });
