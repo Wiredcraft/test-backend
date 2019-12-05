@@ -31,6 +31,7 @@ let conn_str = `mongodb://${db_host}:${db_port}/${db_name}`;
 mongoose.connect(conn_str, {useNewUrlParser: true,
                             useUnifiedTopology: true,
                             useCreateIndex: true,
+                            useFindAndModify: false,
                             keepAlive: true});
 
 let db = mongoose.connection;
