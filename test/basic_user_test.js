@@ -11,7 +11,7 @@ describe('Users Access', function() {
         it('creates a user', (done) => {
             const user = new Users({ name: 'Captain Jean Luc Picard',
                                      dob: 810216104,
-                                     address: 'USS Eneterprise',
+                                     address: 'USS Enterprise',
                                      description: 'Captain of the Enterprise and foil of Q' });
             user.save()
                 .then((user) => {
