@@ -40,3 +40,8 @@ Field(s):
 * createdAt: type: Date
 
 *Note:* id is a string that is generated from the MongoDB created id
+*Note 2:* make a unique index to help prevent duplicate entries. 
+Fields used are 
+* name
+* dob
+* address
