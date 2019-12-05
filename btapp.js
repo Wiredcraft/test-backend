@@ -10,8 +10,6 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 
-
-console.log(config);
 /**
  * Set up the database connection
  **/
