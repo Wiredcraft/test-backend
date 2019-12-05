@@ -31,5 +31,52 @@ describe('Users Data Access Controller', function() {
                 });
         });
 
+        it('Get one user by data', (done) => {
+            let check_date = new Date(810216104);
+            const data= {'name': 'Commander Data',
+                         'dob': check_date,
+                         'address': 'USS Enterprise'};
+
+            udac.getUserByData(data)
+                .then((user) => {
+                    expect(user.description).to.include('Android');
+                    done();
+                })
+                .catch((err) => {
+                    console.log('Error testing getUserByData.' + err);
+                });
+        });
+
+        it('Do not get user that does not exist', (done) => {
+            let check_date = new Date(810216104);
+            const data= {'name': 'Doctor Who',
+                         'dob': check_date,
+                         'address': 'USS Enterprise'};
+
+            udac.getUserByData(data)
+                .then((user) => {
+                    expect(user).to.be.null;
+                    done();
+                })
+                .catch((err) => {
+                    console.log('Error testing getting user that does not exist.' + err);
+                });
+        });
+
+        it('Add a user with data', (done) => {
+            let check_date = new Date(945544774469);
+            const data= {'name': 'Elim Garak',
+                         'dob': check_date,
+                         'address': 'Deep Space Nine'};
+
+            udac.addNewUser(data)
+                .then((user) => {
+                    expect(user.isNew).to.be.false;
+                    done();
+                })
+                .catch((err) => {
+                    console.log('Error testing creating a new user.' + err);
+                });
+        });
     });
 });
