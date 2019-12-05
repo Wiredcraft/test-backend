@@ -1,20 +1,24 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var ObjectID = require('mongodb').ObjectID;
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
+let ObjectID = require('mongodb').ObjectID;
 
-var UsersSchema = new Schema({
+const UsersSchema = new Schema({
   name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    index: true
   },
   dob: {
     type: Date,
     required: true,
+    index: true
   },
   address: {
     type: String,
-    trim: true
+    required: true,
+    trim: true,
+    index: true
   },
   description: {
     type: String,
@@ -25,6 +29,11 @@ var UsersSchema = new Schema({
     default: Date.now
   }
 });
+
+/**
+ * Use a compound index to prevent duplicate users
+ **/
+UsersSchema.index({name: 1, dob: 1, address: 1}, {unique: true});
 
 /**
  * Return user objects with an id field
@@ -50,5 +59,10 @@ UsersSchema.statics.getUserById = function(user_id) {
     return  Users.findOne( { '_id': ObjectID(user_id)} );
 }
 
-var Users = mongoose.model('Users', UsersSchema);
+const Users = mongoose.model('Users', UsersSchema);
+
+Users.init().then(() => {
+    console.log("Users initialized...");
+});
+
 module.exports = Users;
