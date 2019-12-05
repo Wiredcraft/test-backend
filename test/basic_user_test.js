@@ -23,7 +23,7 @@ describe('Users Access', function() {
         it('Prevent a duplicate user', (done) => {
             const user = new Users({ name: 'Commander Data',
                                      dob: 810216104,
-                                     address: 'USS Eneterprise',
+                                     address: 'USS Enterprise',
                                      description: 'First Android in Starfleet' });
             user.save()
                 .then( () => {
