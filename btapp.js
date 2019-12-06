@@ -9,7 +9,8 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
-const userRouter = require('./routes/user_api_routes');
+const userApiRouter = require('./routes/user_api_routes');
+const userWebRouter = require('./routes/user_web_routes');
 
 /**
  * Set up the database connection
@@ -59,7 +60,8 @@ btapp.use(bodyParser.urlencoded({extended: false}));
 btapp.use(express.static(path.join(__dirname, 'public')));
 
 //Use the routing 
-btapp.use('/', userRouter);
+btapp.use('/api', userApiRouter);
+btapp.use('/', userWebRouter);
 
 // Catch 404 errors and forward to an error handler
 btapp.use(function(req, res, next) {
