@@ -13,7 +13,7 @@ describe('User API routing testing', () => {
     describe('Access user API via /GET requests', () => {
         it('TEST: Get all user records', (done) => {
             chai.request(app)
-                .get('/list')
+                .get('/api/list')
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('array');
@@ -23,7 +23,7 @@ describe('User API routing testing', () => {
 
         it('TEST: GET one user by their id', (done) => {
             chai.request(app)
-                .get('/user/5de88258976347576c2a965d')
+                .get('/api/user/5de88258976347576c2a965d')
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
@@ -31,6 +31,27 @@ describe('User API routing testing', () => {
                     done();
                 });
         });
+
+    });
+
+    describe('Access user API via /POST requests', () => {
+        it.skip('TEST: Post a mew user to the database', (done) => {
+            let data = {"name": "Lieutenant Hikara Sulu",
+                        "dob": new Data(),
+                        "address": "USS Enterprise",
+                        "description": "Coolest helmsman anywhere"};
+
+            chai.request(app)
+                .post('/enroll')
+                .set('content-type', 'application/json')
+                .send(data)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('array');
+                    done();
+                });
+        });
+
 
     });
 });
