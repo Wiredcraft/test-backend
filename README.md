@@ -56,3 +56,17 @@ features. These suites are as follows:
 sure a user can be added, retrieved and deleted. Also it tests that a duplicate user cannot be added.
 * **dac_test.js**: This group of tests basically checks that the data access controller is performing CRUD 
 actions to expectations.
+* **route_test.js**: This group of tests basically checks that the routing is working as expected and data 
+is being handled as exepected.
+
+# Controllers
+Will use two controllers to interface the data with the frontend whatever that may be.
+* **data_access_controller**: responsible for retrieving and storing data in the database.
+* **routing_controller**: responsible for getting data to the router for presentation.
+
+# Hold everything, it's all been changed
+Well not really, but now there needs to be a way to send data as an api request and a way do display on 
+the frontend via a web interface. To the end instead of using one router, there will be two **api_router.js**
+and **web_router.js** to respond to an api or webpage request respectively.
+
+
