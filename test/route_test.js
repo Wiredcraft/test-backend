@@ -35,19 +35,19 @@ describe('User API routing testing', () => {
     });
 
     describe('Access user API via /POST requests', () => {
-        it.skip('TEST: Post a mew user to the database', (done) => {
+        it('TEST: Post a mew user to the database', (done) => {
             let data = {"name": "Lieutenant Hikara Sulu",
-                        "dob": new Data(),
+                        "dob": new Date(158034734833),
                         "address": "USS Enterprise",
                         "description": "Coolest helmsman anywhere"};
 
             chai.request(app)
-                .post('/enroll')
+                .post('/api/user/enroll')
                 .set('content-type', 'application/json')
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.be.a('array');
+                    res.body.should.be.a('object');
                     done();
                 });
         });
