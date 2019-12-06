@@ -3,6 +3,10 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const app = require('../btapp');
 
+// Configure chai
+chai.use(chaiHttp);
+chai.should();
+
 describe('User API routing testing', () => {
 
     describe('Access user API via /GET requests', () => {
