@@ -23,3 +23,13 @@ userAPIRouter.get('/list', routingController.getUsersList);
  * @apiSuccess {JSON object} JSON object of users.
  */
 userAPIRouter.get('/user/:userId', routingController.retrieveUser);
+
+/**
+ * @api {post} /enroll/   single user
+ * @apiName GetUserById
+ *
+ * @apiParam {String} userId User's unique ID
+ *
+ * @apiSuccess {JSON object} JSON object of users.
+ */
+userAPIRouter.post('/user/enroll', routingController.enrollUser);
