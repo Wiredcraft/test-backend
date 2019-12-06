@@ -9,6 +9,7 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
+const userRouter = require('./routes/user_api_routes');
 
 /**
  * Set up the database connection
@@ -57,6 +58,8 @@ btapp.use(bodyParser.urlencoded({extended: false}));
 //Set up the static path to assets like javascript and images
 btapp.use(express.static(path.join(__dirname, 'public')));
 
+//Use the routing 
+btapp.use('/', userRouter);
 
 // Catch 404 errors and forward to an error handler
 btapp.use(function(req, res, next) {
