@@ -6,7 +6,7 @@ module.exports = {
      * List all the users stored in the database
      *
      **/
-    listusers: async () => {
+    listUsers: async () => {
         try {
             let users = await Users.find();
 
