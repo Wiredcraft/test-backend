@@ -23,7 +23,7 @@ describe('Users Data Access Controller', function() {
         });
 
         it('TEST: Get a listing of users', (done) => {
-            udac.listusers()
+            udac.listUsers()
                 .then((user_list) => {
                     expect(user_list).to.be.an('array');
                     done();
