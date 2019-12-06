@@ -5,7 +5,7 @@ const userAPIRouter = express.Router();
 module.exports = userAPIRouter;
 
 /**
- * @api {get} /list Request User information
+ * @api {get} /list Request list of users
  * @apiName ListUsers
  *
  * @apiParam None
@@ -14,3 +14,12 @@ module.exports = userAPIRouter;
  */
 userAPIRouter.get('/list', routingController.getUsersList);
 
+/**
+ * @api {get} /user/:userId Request single user
+ * @apiName GetUserById
+ *
+ * @apiParam {String} userId User's unique ID
+ *
+ * @apiSuccess {JSON object} JSON object of users.
+ */
+userAPIRouter.get('/user/:userId', routingController.retrieveUser);
