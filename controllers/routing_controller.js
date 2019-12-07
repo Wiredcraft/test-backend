@@ -45,7 +45,6 @@ module.exports = {
 
     enrollUser: async (req, res, next) => {
         try {
-            console.log(req.body);
             let user = await dataAccess.addNewUser(req.body);
         
             if (regex.exec(req.originalUrl) !== null) {
@@ -54,6 +53,30 @@ module.exports = {
                 if (user) {
                     let data = {'user': user}
                     responseController.respondToWebRequest(data, 'user_detail', res, next);
+                } else {
+
+                    let route = '/list';
+                    responseController.responseWithRedirect(route, res, next);
+                }
+            }
+        } catch(err) {
+           return res.status(500).json({
+               message: "Error enrolling new user!" + err
+           });
+        }
+    },
+
+    deleteUser: async (req, res, next) => {
+        try {
+            let result = await dataAccess.removeUserById(req.body.id);
+            let message = result.deletedCount + " user with id " + req.body.id + " deleted."
+        
+            if (regex.exec(req.originalUrl) !== null) {
+                responseController.respondToApiRequest(message, res, next);
+            } else {
+                if (result) {
+                    let data = {'message': message}
+                    responseController.respondToWebRequest(data, 'user_confirmation', res, next);
                 } else {
 
                     let route = '/list';
