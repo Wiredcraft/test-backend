@@ -43,7 +43,7 @@ module.exports = {
             let user = await Users.create(userData);
             return user;
         } catch(err) {
-            console.log("Error adding user " + err);
+            throw new Error(err);
         }
     },
 
@@ -78,12 +78,12 @@ module.exports = {
                 let update_user = Users.findOneAndUpdate(userData, updateData, options);
                 return update_user;
             } else {
-                let message = (users.length > 1) ? "No User to update" : "Multiple users found";
+                let message = ((users.length > 1) ? "Multiple" : "No")  +  " users found";
                 throw new Error(message);
             }
             
         } catch (err) {
-            console.log("Error updating user " + err);
+            throw new Error(err);
         }
     },
 
