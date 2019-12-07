@@ -95,35 +95,21 @@ describe('Users Data Access Controller', function() {
                 });
         });
 
-        it('TEST: Do not Add a duplicate', (done) => {
+        it('TEST: Do not Add a duplicate', async () => {
             let check_date = new Date(945544774469);
             const data= {'name': 'Elim Garak',
                          'dob': check_date,
                          'address': 'Deep Space Nine'};
 
-            udac.addNewUser(data)
-                .then((user) => {
-                    expect(user).to.be.undefined;
-                    done();
-                })
-                .catch((err) => {
-                    console.log('Error testing creating a new user.' + err);
-                });
+            await expect(udac.addNewUser(data)).to.be.rejectedWith('MongoError: E11000 duplicate key error');
         });
 
-        it('TEST: Do not Add an incomplete user', (done) => {
+        it('TEST: Do not Add an incomplete user', async () => {
             let check_date = new Date(1145544774469);
             const data= {'name': 'Wesley Crusher',
                          'dob': check_date};
 
-            udac.addNewUser(data)
-                .then((user) => {
-                    expect(user).to.be.undefined;
-                    done();
-                })
-                .catch((err) => {
-                    console.log('Error testing creating a new user.' + err);
-                });
+            await expect(udac.addNewUser(data)).to.be.rejectedWith('address: Path `address` is required');
         });
 
         it('TEST: create multiple users',(done) => {
