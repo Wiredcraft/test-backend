@@ -33,3 +33,13 @@ userAPIRouter.get('/user/:userId', routingController.retrieveUser);
  * @apiSuccess {JSON object} JSON object of users.
  */
 userAPIRouter.post('/user/enroll', routingController.enrollUser);
+
+/**
+ * @api {post} /remove/   single user
+ * @apiName GetUserById
+ *
+ * @apiParam {String} userId User's unique ID
+ *
+ * @apiSuccess {JSON object} JSON object of users.
+ */
+userAPIRouter.post('/user/remove', routingController.deleteUser);
