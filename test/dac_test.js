@@ -1,9 +1,11 @@
 //inside create_user_test.js
 const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const app = require('../btapp');
 const udac = require('../controllers/data_access_controller'); //imports the User data access controller.
 
+chai.use(chaiAsPromised);
 
 describe('Users Data Access Controller', function() {
   
@@ -165,20 +167,12 @@ describe('Users Data Access Controller', function() {
                 });
         });
 
-        it('TEST: Not updating when multiple users found', (done) => {
+        it('TEST: Not updating when multiple users found', async () => {
             const data = {'address': 'Deep Space Nine'};
 
             const new_data = {'address': 'Bajor'};
 
-            udac.updateUser(data, new_data)
-                .then((user) => {
-                    expect(user).to.be.undefined;
-                    done();
-                })
-                .catch((err) => {
-                    console.log('Error testing creating a new user.' + err);
-                    expect(err).is.defined
-                });
+            await expect(udac.updateUser(data, new_data)).to.be.rejectedWith('Multiple users found');
         });
  
         it('TEST: Removing a user', (done) => {
