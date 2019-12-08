@@ -12,7 +12,7 @@ module.exports = {
                 responseController.respondToApiRequest(users, res, next);
             } else {
                 let data = {'users': users}
-                responseController.respondToWebRequest(data, 'userlist', res, next);
+                responseController.respondToWebRequest(data, 'wired_users', res, next);
             }
         } catch(err) {
            return res.status(500).json({
