@@ -53,6 +53,44 @@ describe('User API routing testing', () => {
                 });
         });
 
+        it('TEST: Update exiting user in the database', (done) => {
+            let data = { 'criteria': {
+                                      "name": "Lieutenant Hikara Sulu",
+                                      "address": "USS Enterprise"
+                                     },
+                         'update': {"dob": new Date(-158034734833)}
+                       };
+
+            chai.request(app)
+                .post('/api/user/update')
+                .set('content-type', 'application/json')
+                .send(data)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.dob.should.be.not.equal('1975-01-04T02:32:14.833Z');
+                    done();
+                });
+        });
+
+        it('TEST: Do not update any user in database if criteria applies to more than one user', (done) => {
+            let data = { 'criteria': {
+                                      "address": "USS Enterprise"
+                                     },
+                         'update': {"dob": new Date(-188034734833)}
+                       };
+
+            chai.request(app)
+                .post('/api/user/update')
+                .set('content-type', 'application/json')
+                .send(data)
+                .end((err, res) => {
+                    res.should.have.status(403);
+                    res.body.message.should.be.equal("Error: Multiple users found");
+                    done();
+                });
+        });
+
         it('TEST: Remove a user from the database', (done) => {
             let data = {"id": "5deb33aee9567c7b7e77c8f8"};
 
