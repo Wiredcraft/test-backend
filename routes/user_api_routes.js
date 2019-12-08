@@ -25,7 +25,7 @@ userAPIRouter.get('/list', routingController.getUsersList);
 userAPIRouter.get('/user/:userId', routingController.retrieveUser);
 
 /**
- * @api {post} /enroll/   single user
+ * @api {post} /enroll   single user
  * @apiName GetUserById
  *
  * @apiParam {String} userId User's unique ID
@@ -35,11 +35,21 @@ userAPIRouter.get('/user/:userId', routingController.retrieveUser);
 userAPIRouter.post('/user/enroll', routingController.enrollUser);
 
 /**
- * @api {post} /remove/   single user
+ * @api {post} /update   single user
  * @apiName GetUserById
  *
  * @apiParam {String} userId User's unique ID
  *
  * @apiSuccess {JSON object} JSON object of users.
+ */
+userAPIRouter.post('/user/update', routingController.updateUser);
+
+/**
+ * @api {post} /remove   single user
+ * @apiName GetUserById
+ *
+ * @apiParam {String} userId User's unique ID
+ *
+ * @apiSuccess {String} message confirming the deletion.
  */
 userAPIRouter.post('/user/remove', routingController.deleteUser);
