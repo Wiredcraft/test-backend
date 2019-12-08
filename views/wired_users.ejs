@@ -1,0 +1,95 @@
+<!DOCTYPE html></DOCTYPE!>
+<html lang="en">
+
+<head>
+    <link href="/styles/main.css" rel="stylesheet">
+    <script src="/scripts/main.js"></script>
+</head>
+<body>
+    <%
+        calcAge = function(dob) {
+            var d = new Date(dob);
+            var today = new Date();
+            return today.getFullYear() - d.getFullYear();
+        }
+    %>
+    <%
+        formatDate = function(date, size="short") {
+        var options = { "short": { weekday: 'short',
+                                   year: 'numeric',
+                                   month: 'long',
+                                   day: 'numeric' },
+                        "long":  { weekday: 'long',
+                                   year: 'numeric',
+                                   month: 'long',
+                                   day: 'numeric' },
+                        "tiny":  { year: 'numeric',
+                                   month: '2-digit',
+                                   day: '2-digit' }
+                      }
+
+            var enroll = new Date(date);
+            return enroll.toLocaleDateString("en-US", options[size]);
+        }
+    %>
+    <div class="col-md-12 style="display:inline-block">
+        <div class="col-md-4 main-nav user-profile-info">
+            <div id="profile_card" style="background-color: #cccc89; padding: 10px; margin: 10px; visibility:hidden">
+                <h3> Profile Information</h3>
+                <p>Name: <span id="pname"></span></p>
+                <p>DOB: <span id="pdob"></span>
+                (<span id="page"></span>)</p>
+                <p>Address: <span id="paddress"></span></p>
+                <p>Description: <span id="pdescription"></span></p>
+                <p>Enroll Date: <span id="pdate"></span></p>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div style="height: 450px; max-height: 575px; overflow-y:auto">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>DoB</th>
+                            <th>Address</th>
+                            <th>Description</th>
+                            <th>Enroll Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <% 
+                        for (const user of users) { 
+                    %>
+                        <tr onclick="loadProfile(this)"> 
+                            <td><%= user.name %></td>
+                            <td><%= calcAge(user.dob) %></td>
+                            <td><%= formatDate(user.dob, "tiny") %></td>
+                            <td><%= user.address %></td>
+                            <td><%= user.description %></td>
+                            <td><%= formatDate(user.createdAt, "tiny") %></td>
+                            <td><a >Edit</a><
+                        </tr>    
+                    <%      
+                        }      
+                    %>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-5">
+                <form style="margin-top: 10px">
+                    <labal>Name</label><input type="text"/>
+                    <br>
+                    <label>Date of Birth</label><input type="text"/>
+                    <br>
+                    <label>Address</label><input type="text"/>
+                    <br>
+                    <label>Description</label><input type="text"/>
+                    <br>
+                    <input type="Submit" Value="Add User" />
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
