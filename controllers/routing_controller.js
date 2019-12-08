@@ -66,6 +66,31 @@ module.exports = {
         }
     },
 
+    updateUser: async (req, res, next) => {
+        try {
+            let user = await dataAccess.updateUser(req.body.criteria,
+                                                   req.body.update);
+        
+            if (regex.exec(req.originalUrl) !== null) {
+                responseController.respondToApiRequest(user, res, next);
+            } else {
+                if (user) {
+                    let data = {'user': user}
+                    responseController.respondToWebRequest(data, 'user_detail', res, next);
+                } else {
+
+                    let route = '/list';
+                    responseController.responseWithRedirect(route, res, next);
+                }
+            }
+        } catch(err) {
+            let status = err.message.indexOf("Multiple") > -1 ? 403 : 404;
+            let data = {'message':  err.message}
+            responseController.responsdWithApiError(data, status, res, next);
+        }
+    },
+
+
     deleteUser: async (req, res, next) => {
         try {
             let result = await dataAccess.removeUserById(req.body.id);
