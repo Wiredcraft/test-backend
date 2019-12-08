@@ -12,6 +12,10 @@ module.exports = {
         });
     },
 
+    responsdWithApiError: ( data, status, res, next) => {
+        return res.status(status).json(data);
+    },
+
     respondToWebRequest: (data, renderer, res, next) => {
         return res.render(renderer, data);
     },
