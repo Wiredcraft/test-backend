@@ -12,7 +12,7 @@ module.exports = userAPIRouter;
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userAPIRouter.get('/list', routingController.getUsersList);
+userAPIRouter.get('/user/list', routingController.getUsersList);
 
 /**
  * @api {get} /user/:userId Request single user

@@ -12,7 +12,7 @@ module.exports = userWebRouter;
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userWebRouter.get('/list', routingController.getUsersList);
+userWebRouter.get('/user/list', routingController.getUsersList);
 
 /**
  * @api {get} /user/:userId Request single user
@@ -32,4 +32,24 @@ userWebRouter.get('/user/:userId', routingController.retrieveUser);
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userAPIRouter.get('/user/:userId', routingController.retrieveUser);
+userWebRouter.post('/user/:userId', routingController.retrieveUser);
+
+/**
+ * @api {post} /update   single user
+ * @apiName GetUserById
+ *
+ * @apiParam {String} userId User's unique ID
+ *
+ * @apiSuccess {JSON object} JSON object of users.
+ */
+userWebRouter.post('/user/update', routingController.updateUser);
+
+/**
+ * @api {post} /remove   single user
+ * @apiName GetUserById
+ *
+ * @apiParam {String} userId User's unique ID
+ *
+ * @apiSuccess {String} message confirming the deletion.
+ */
+userWebRouter.post('/user/remove', routingController.deleteUser);
