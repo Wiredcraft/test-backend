@@ -68,7 +68,7 @@ module.exports = {
 
     updateUser: async (req, res, next) => {
         try {
-            let user = await dataAccess.updateUser(req.body.criteria,
+            let user = await dataAccess.updateUserById(req.body.criteria,
                                                    req.body.update);
         
             if (regex.exec(req.originalUrl) !== null) {
@@ -84,7 +84,7 @@ module.exports = {
                 }
             }
         } catch(err) {
-            let status = err.message.indexOf("Multiple") > -1 ? 403 : 404;
+            let status = 403;
             let data = {'message':  err.message}
             responseController.responsdWithApiError(data, status, res, next);
         }
