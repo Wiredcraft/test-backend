@@ -2,8 +2,15 @@
 <html lang="en">
 
 <head>
-    <link href="/styles/main.css" rel="stylesheet">
     <script src="/scripts/main.js"></script>
+    <script type="text/javascript" src="/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/scripts/moment.js"></script>
+    <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/scripts/bootstrap-datetimepicker.js"></script>
+
+    <link href="/styles/main.css" rel="stylesheet">
+    <link href="/styles/wired_styles.css" rel="stylesheet">
+    <script type="text/javascript" src="/styles/bootstrap.min.css"></script>
 </head>
 <body>
     <%
@@ -33,19 +40,19 @@
         }
     %>
     <div class="col-md-12 style="display:inline-block">
-        <div class="col-md-4 main-nav user-profile-info">
-            <div id="profile_card" style="background-color: #cccc89; padding: 10px; margin: 10px; visibility:hidden">
+        <div class="col-md-3 main-nav user-profile-info">
+            <div id="profile_card" class="wired_profile">
                 <h3> Profile Information</h3>
                 <p>Name: <span id="pname"></span></p>
                 <p>DOB: <span id="pdob"></span>
                 (<span id="page"></span>)</p>
                 <p>Address: <span id="paddress"></span></p>
                 <p>Description: <span id="pdescription"></span></p>
-                <p>Enroll Date: <span id="pdate"></span></p>
+                <p>Enroll Date: <span id="penroll"></span></p>
             </div>
         </div>
-        <div class="col-md-8">
-            <div style="height: 450px; max-height: 575px; overflow-y:auto">
+        <div class="col-md-9 wired-pos-rel">
+            <div class="wired_table">
                 <table class="table">
                     <thead>
                         <tr>
@@ -63,13 +70,16 @@
                         for (const user of users) { 
                     %>
                         <tr onclick="loadProfile(this)"> 
-                            <td><%= user.name %></td>
-                            <td><%= calcAge(user.dob) %></td>
-                            <td><%= formatDate(user.dob, "tiny") %></td>
-                            <td><%= user.address %></td>
-                            <td><%= user.description %></td>
-                            <td><%= formatDate(user.createdAt, "tiny") %></td>
-                            <td><a >Edit</a><
+                            <td name="name"><%= user.name %></td>
+                            <td name="age"><%= calcAge(user.dob) %></td>
+                            <td name="dob"><%= formatDate(user.dob, "tiny") %></td>
+                            <td name="address"><%= user.address %></td>
+                            <td name="description"><%= user.description %></td>
+                            <td name="enroll"><%= formatDate(user.createdAt, "tiny") %></td>
+                            <td>
+                                <input class="edit-btn" type="image" src="/images/dot.png" onclick="loadEditor(this); return false;">
+                                <input class="delete-btn" type="image" src="/images/dot.png">
+                            </td>
                         </tr>    
                     <%      
                         }      
@@ -77,19 +87,24 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-md-5">
-                <form style="margin-top: 10px">
-                    <labal>Name</label><input type="text"/>
+            <div class="col-md-9 wired-pos-abs">
+                <form id="user_form" style="margin-top: 10px">
+                    <labal>Name</label><input id="name" type="text"/>
                     <br>
-                    <label>Date of Birth</label><input type="text"/>
+                    <label>Date of Birth</label><input class="input-group-date" id="dob" type="text"/>
                     <br>
-                    <label>Address</label><input type="text"/>
+                    <label>Address</label><input id="address"  type="text"/>
                     <br>
-                    <label>Description</label><input type="text"/>
+                    <label>Description</label><input id="description"  type="text"/>
                     <br>
-                    <input type="Submit" Value="Add User" />
+                    <input id="sub-btn" type="Submit" Value="Add User" />
                 </form>
             </div>
         </div>
     </div>
 </body>
+    <script>
+        let dobpicker = $('#dob').datetimepicker({
+                                  format: 'YYYY-MM-DD'
+                                  });
+    </script>
