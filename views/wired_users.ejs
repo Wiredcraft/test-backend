@@ -2,9 +2,11 @@
 <html lang="en">
 
 <head>
+    <title>Wired Users Profile Information</title>
     <script src="/scripts/main.js"></script>
     <script type="text/javascript" src="/scripts/jquery.js"></script>
     <script type="text/javascript" src="/scripts/moment.js"></script>
+    <script type="text/javascript" src="/scripts/jquery.serializeJSON.js"></script>
     <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="/scripts/bootstrap-datetimepicker.js"></script>
 
@@ -77,7 +79,7 @@
                             <td name="description"><%= user.description %></td>
                             <td name="enroll"><%= formatDate(user.createdAt, "tiny") %></td>
                             <td>
-                                <input class="edit-btn" type="image" src="/images/dot.png" onclick="loadEditor(this); return false;">
+                                <input class="edit-btn" type="image" src="/images/dot.png" onclick="loadEditor(this, '<%= user.id %>'); return false;">
                                 <input class="delete-btn" type="image" src="/images/dot.png">
                             </td>
                         </tr>    
@@ -88,14 +90,15 @@
                 </table>
             </div>
             <div class="col-md-9 wired-pos-abs">
-                <form id="user_form" style="margin-top: 10px">
-                    <labal>Name</label><input id="name" type="text"/>
+                <form id="wired_user_form" style="margin-top: 10px" onsubmit="updateUser(this);" >
+                    <input type="hidden" name="id" id="id" />
+                    <labal>Name</label><input id="name" name="name" type="text"/>
                     <br>
-                    <label>Date of Birth</label><input class="input-group-date" id="dob" type="text"/>
+                    <label>Date of Birth</label><input id="dob" name="dob" type="text"/>
                     <br>
-                    <label>Address</label><input id="address"  type="text"/>
+                    <label>Address</label><input id="address" name="address"  type="text"/>
                     <br>
-                    <label>Description</label><input id="description"  type="text"/>
+                    <label>Description</label><input id="description" name="description" type="text"/>
                     <br>
                     <input id="sub-btn" type="Submit" Value="Add User" />
                 </form>

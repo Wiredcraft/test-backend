@@ -10,7 +10,7 @@ loadProfile = (rowObj) => {
     document.getElementById("profile_card").style.visibility = "visible";
 }
 
-loadEditor = (someObj) => {
+loadEditor = (someObj, ident) => {
     let rowObj =  someObj.parentElement.parentElement;
    
     for (const child of rowObj.children) {
@@ -21,8 +21,40 @@ loadEditor = (someObj) => {
             }
         }
     }
-    
+    document.getElementById("id").value =ident;
     document.getElementById("sub-btn").value = "Update User";
+}
+
+
+formToJSON = (elements) => [].reduce.call(elements, (data, element) => {
+                                    if (element.name) {
+                                        data[element.name] = element.value;
+                                    }
+                                    return data;
+                            }, {});
+
+updateUser = (formObj) => {
+    let inputs = formObj.elements;
+    let new_data = formToJSON(inputs);
+    let criteria = {"id": new_data.id};
+
+    delete new_data.id;
+
+    let data = JSON.stringify({"criteria": criteria,
+                "update": new_data});
+    
+    fetch("/user/update", {
+        method: "post",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: data
+    })
+    .then( (response) => {
+        console.log("Boo!");
+        //do something awesome that makes the world a better place
+    });
 }
 
 
