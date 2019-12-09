@@ -114,21 +114,26 @@ describe('Users Data Access Controller', function() {
 
         it('TEST: create multiple users',(done) => {
             let users = [{'name': "Captain Benjamin Sisko",
-                          'dob': new Date(1135544774469),
-                          'address': "Deep Space Nine"},
+                           'dob': new Date(1135544774469),
+                           'address': "Deep Space Nine"},
                           {'name': "Commandeer William Ryker", 
-                          'dob': new Date(1045544774469),
-                          'address': "USS Enterprise"},
+                           'dob': new Date(1045544774469),
+                           'address': "USS Enterprise"},
                           {'name': "Ensign Ro Laren", 
                           'dob': new Date(1345544774469),
                           'address': "USS Enterprise"},
-                          {'name': "Lt. Cmdr Worf", 
-                          'dob': new Date(985544774469),
-                          'address': "Deep Space Nine"}];
+                           {'name': "Lt. Cmdr Worf", 
+                           'dob': new Date(985544774469),
+                           'address': "Deep Space Nine"},
+                          {'_id': "5debb71eac1cb28342888aba",
+                           'name': "Seven of Nine",
+                           'dob': new Date(1045544774469),
+                           'address': "USS Voyager",
+                           'description': "Former Borg member"}]
 
             udac.addNewUser(users)
                 .then((users) => {
-                    expect(users).to.be.an('array').to.have.lengthOf(4);
+                    expect(users).to.be.an('array').to.have.lengthOf(5);
                     done();
                 })
                 .catch((err) => {
@@ -138,27 +143,34 @@ describe('Users Data Access Controller', function() {
 
         it('TEST: Updating a user', (done) => {
             let check_date = new Date(1145544774469);
-            const data = {'name': 'Elim Garak',
-                         'address': 'Deep Space Nine'};
+            const data = {'_id': '5debb71eac1cb28342888aba'};
 
-            const new_data = {'address': 'Cardassia'};
+            const new_data = {'address': 'Terra Prime'};
 
-            udac.updateUser(data, new_data)
+            udac.updateUserById(data, new_data)
                 .then((user) => {
-                    expect(user.address).to.be.eq('Cardassia');
+                    expect(user.address).to.be.eq('Terra Prime');
                     done();
                 })
                 .catch((err) => {
-                    console.log('Error testing creating a new user.' + err);
+                    console.log('Error testing updating a new user.' + err);
                 });
         });
 
         it('TEST: Not updating when multiple users found', async () => {
+            const data = {'_id': { $in: ["5debb71eac1cb28342888aba", "5de88258976347576c2a965d"]}};
+
+            const new_data = {'address': 'Bajor'};
+
+            await expect(udac.updateUserById(data, new_data)).to.be.rejectedWith('One and only one user can be updated at a time');
+        });
+ 
+        it('TEST: Not updating when no id is present users found', async () => {
             const data = {'address': 'Deep Space Nine'};
 
             const new_data = {'address': 'Bajor'};
 
-            await expect(udac.updateUser(data, new_data)).to.be.rejectedWith('Multiple users found');
+            await expect(udac.updateUserById(data, new_data)).to.be.rejectedWith('User Id required to update user.');
         });
  
         it('TEST: Removing a user', (done) => {

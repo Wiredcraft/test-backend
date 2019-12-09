@@ -13,7 +13,7 @@ describe('User API routing testing', () => {
     describe('Access user API via /GET requests', () => {
         it('TEST: Get all user records', (done) => {
             chai.request(app)
-                .get('/api/list')
+                .get('/api/user/list')
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('array');
@@ -53,11 +53,43 @@ describe('User API routing testing', () => {
                 });
         });
 
-        it('TEST: Update exiting user in the database', (done) => {
+        it('TEST: Do Not update exiting user in the database with data alone', (done) => {
             let data = { 'criteria': {
                                       "name": "Lieutenant Hikara Sulu",
                                       "address": "USS Enterprise"
                                      },
+                         'update': {"dob": new Date(-158034734833)}
+                       };
+
+            chai.request(app)
+                .post('/api/user/update')
+                .set('content-type', 'application/json')
+                .send(data)
+                .end((err, res) => {
+                    res.should.have.status(403);
+                    res.body.message.should.be.equal("User Id required to update user.");
+                    done();
+                });
+        });
+
+        it('TEST: Do not update any user in database if criteria applies to more than one user', (done) => {
+            let data = { 'criteria': { "_id" : { $in: ["5deb33aee9567c7b7e77c8f8", "5de88258976347576c2a965d"] } },
+                         'update': {"address": "USS Reliant"}
+                       };
+
+            chai.request(app)
+                .post('/api/user/update')
+                .set('content-type', 'application/json')
+                .send(data)
+                .end((err, res) => {
+                    res.should.have.status(403);
+                    res.body.message.should.be.equal("Error: One and only one user can be updated at a time");
+                    done();
+                });
+        });
+
+        it('TEST: Update exiting user in the database by id', (done) => {
+            let data = { 'criteria': {"_id": "5deb33aee9567c7b7e77c8f8"},
                          'update': {"dob": new Date(-158034734833)}
                        };
 
@@ -73,23 +105,6 @@ describe('User API routing testing', () => {
                 });
         });
 
-        it('TEST: Do not update any user in database if criteria applies to more than one user', (done) => {
-            let data = { 'criteria': {
-                                      "address": "USS Enterprise"
-                                     },
-                         'update': {"dob": new Date(-188034734833)}
-                       };
-
-            chai.request(app)
-                .post('/api/user/update')
-                .set('content-type', 'application/json')
-                .send(data)
-                .end((err, res) => {
-                    res.should.have.status(403);
-                    res.body.message.should.be.equal("Error: Multiple users found");
-                    done();
-                });
-        });
 
         it('TEST: Remove a user from the database', (done) => {
             let data = {"id": "5deb33aee9567c7b7e77c8f8"};
