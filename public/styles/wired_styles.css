@@ -1,0 +1,38 @@
+.wired-pos-abs {
+    position: absolute;
+    top: 460px;
+}
+
+.wired-pos-rel {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.wired_profile { 
+    background-color: #cccc89;
+    padding: 10px;
+    margin: 10px;
+    visibility: hidden;
+}
+
+.wired_table {
+    height: 400px;
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+.edit-btn {
+    background: url('/images/edit.png');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+}
+
+.delete-btn {
+    background: url('/images/delete.png');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+}
