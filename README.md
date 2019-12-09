@@ -69,4 +69,17 @@ Well not really, but now there needs to be a way to send data as an api request 
 the frontend via a web interface. To the end instead of using one router, there will be two **api_router.js**
 and **web_router.js** to respond to an api or webpage request respectively.
 
+Now that there are two routers, one for the api and another for the web view, trying to use one controller has
+gotten a little unruly. I can tell becuse my tests are misbehaving with the slightest change.  So a little talk
+about the web view then back to the controllers.
+
+# Web view
+Originally the plan was to have at least 3 pages. A Listing page, a profile detail page and an edit page. This plan
+was scrapped for one page that lists the users in a table, when a user in the table is clicked on the details come 
+up in a profile div, and the update/adding of a user is handled by a form on the lower portion of the page.
+
+One problem that came up with having a web view and an API is that the API will handle data submission using JSON 
+while the web view can putter along with submitting form data. Thus at this point it may be prudent to go with two
+separate controllers.
+
 
