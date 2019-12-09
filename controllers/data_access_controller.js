@@ -65,20 +65,24 @@ module.exports = {
     /**
      * Update one user from the database based on input criteria
      *
-     * param: userData - associative array: search criteria for user
+     * param: criteria - associative array containing userId of user 
+     *        to update as a value. 
      * param: updateData - associative array: values to update
      *
      * return updated record
      **/
-    updateUser: async(userData, updateData) => {
+    updateUserById: async(criteria, updateData) => {
+        if (!criteria._id) {
+            throw new Error ("User Id required to update user.");
+        }
         try {
-            let users = await Users.getUsersByData(userData);
+            let users = await Users.getUsersByData(criteria);
             if (users.length == 1){
                 let options = {'new': true};  // option to return updated record
-                let update_user = Users.findOneAndUpdate(userData, updateData, options);
+                let update_user = Users.findOneAndUpdate(criteria, updateData, options);
                 return update_user;
             } else {
-                let message = ((users.length > 1) ? "Multiple" : "No")  +  " users found";
+                let message = "One and only one user can be updated at a time";
                 throw new Error(message);
             }
             
