@@ -21,10 +21,17 @@ loadEditor = (someObj, ident) => {
             }
         }
     }
-    document.getElementById("id").value =ident;
+    document.getElementById("_id").value = ident;
+    document.getElementById("wired_user_form").action = '/user/update';
+    document.getElementById('cancel_link).style.visibility = 'visibility';
     document.getElementById("sub-btn").value = "Update User";
 }
 
+cancelEdit = () => {
+    document.getElementById("wired_user_form").reset();
+    document.getElementById("wired_user_form").action = '/user/enroll';
+    document.getElementById('cancel_link).style.visibility = 'hidden';
+}
 
 formToJSON = (elements) => [].reduce.call(elements, (data, element) => {
                                     if (element.name) {
@@ -34,17 +41,19 @@ formToJSON = (elements) => [].reduce.call(elements, (data, element) => {
                             }, {});
 
 updateUser = (formObj) => {
+    document.getElementById("wired_user_form").action = action;
     let inputs = formObj.elements;
     let new_data = formToJSON(inputs);
-    let criteria = {"id": new_data.id};
+    let criteria = {"_id": new_data._id};
 
+    console.log(formObj.action)
     delete new_data.id;
 
     let data = JSON.stringify({"criteria": criteria,
                 "update": new_data});
-    
+   /* 
     fetch("/user/update", {
-        method: "post",
+        method: "POST",
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -52,9 +61,9 @@ updateUser = (formObj) => {
         body: data
     })
     .then( (response) => {
-        console.log("Boo!");
         //do something awesome that makes the world a better place
     });
+    */
 }
 
 

@@ -71,7 +71,7 @@
                     <% 
                         for (const user of users) { 
                     %>
-                        <tr onclick="loadProfile(this)"> 
+                    <tr id="<%= user.id %>" onclick="loadProfile(this)"> 
                             <td name="name"><%= user.name %></td>
                             <td name="age"><%= calcAge(user.dob) %></td>
                             <td name="dob"><%= formatDate(user.dob, "tiny") %></td>
@@ -83,24 +83,27 @@
                                 <input class="delete-btn" type="image" src="/images/dot.png">
                             </td>
                         </tr>    
-                    <%      
+                    <%
                         }      
                     %>
                     </tbody>
                 </table>
             </div>
             <div class="col-md-9 wired-pos-abs">
-                <form id="wired_user_form" style="margin-top: 10px" onsubmit="updateUser(this);" >
-                    <input type="hidden" name="id" id="id" />
-                    <labal>Name</label><input id="name" name="name" type="text"/>
+                <form id="wired_user_form" action="/user/enroll" method="POST" style="margin-top: 10px" >
+                    <input type="hidden" name="_id" id="_id" />
+                    <label>Name</label><input id="name" name="name" type="text"/>
                     <br>
                     <label>Date of Birth</label><input id="dob" name="dob" type="text"/>
                     <br>
-                    <label>Address</label><input id="address" name="address"  type="text"/>
+                    <label>Address</label><input id="address" name="address" type="text"/>
                     <br>
                     <label>Description</label><input id="description" name="description" type="text"/>
                     <br>
                     <input id="sub-btn" type="Submit" Value="Add User" />
+                    <span id="cancel_link" style="visibility: hidden">
+                        <a href="#" onclick='cancelEdit()">Cancel</a>
+                    </span>
                 </form>
             </div>
         </div>
@@ -110,4 +113,8 @@
         let dobpicker = $('#dob').datetimepicker({
                                   format: 'YYYY-MM-DD'
                                   });
+
+         <% if (typeof target_id !== "undefined") { %>
+                 document.getElementById("<%= target_id %>").click();
+         <% } %>
     </script>
