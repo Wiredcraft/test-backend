@@ -25,7 +25,7 @@ module.exports = {
                 let data = {'user': user, 'target_id': req.params.userId}
                 responseController.respondToWebRequest(data, 'user_detail', res, next);
             } else {
-                return res.redirect(r'/user/list');
+                return res.redirect('/user/list');
             }
         } catch(err) {
                return res.status(500).json({
@@ -69,7 +69,7 @@ module.exports = {
                 let data = {'users': users, 'target_id': user.id, 'message': message  }
                 responseController.respondToWebRequest(data, 'wired_users', res, next);
             } else {
-                return res.redirect(r'/user/list');
+                return res.redirect('/user/list');
             }
         } catch(err) {
             let status = 403;
@@ -96,7 +96,7 @@ module.exports = {
                 let data = {'users': users, 'message': message};
                 responseController.respondToWebRequest(data, 'wired_users', res, next);
             } else {
-                return res.redirect(r'/user/list');
+                return res.redirect('/user/list');
             }
         } catch(err) {
            return res.status(500).json({

@@ -18,9 +18,5 @@ module.exports = {
 
     respondToWebRequest: (data, renderer, res, next) => {
         return res.render(renderer, data);
-    },
-
-    responseWithRedirect:(route, res, next) => {
-        return res.redirect(route);
     }
  }
