@@ -6,8 +6,11 @@ module.exports = {
     getUsersList: async (req, res, next) =>  {
         try {
             let users = await dataAccess.listUsers()
-            
-            let data = {'users': users}
+
+            let data = {'users': users,
+                        'target': req.session.target,
+                        'message': req.session.message};
+
             responseController.respondToWebRequest(data, 'wired_users', res, next);
         } catch(err) {
            return res.status(500).json({
@@ -19,14 +22,13 @@ module.exports = {
     retrieveUser: async (req, res, next) => {
         try{
             let user = await dataAccess.getUserById(req.params.userId);
-            let users = await dataAccess.listUsers();
 
             if (user) {
-                let data = {'user': user, 'target_id': req.params.userId}
-                responseController.respondToWebRequest(data, 'user_detail', res, next);
+                req.session.target = user.id
             } else {
-                return res.redirect('/user/list');
+                req.session.message = "Sorry, that user could not be located."
             }
+            return res.redirect('/user/list');
         } catch(err) {
                return res.status(500).json({
                message: "Error retrieving specified user!" + err
@@ -38,16 +40,17 @@ module.exports = {
         try {
             // Handle the possibility of [Object: null prototype] error
             let param = JSON.parse(JSON.stringify(req.body));
+            delete param._id;
+
             let user = await dataAccess.addNewUser(param);
-            let users = await dataAccess.listUsers();
         
             if (user) {
-                let message = user.name + " had just been enrolled as a new user.";
-                let data = {'users': users, 'target_id': user.id, 'message': message  }
-                responseController.respondToWebRequest(data, 'wired_users', res, next);
+                req.session.message = user.name + " has been enrolled as a new user.";
+                req.session.target = user.id
             } else {
-                return res.responseWithRedirect('/user/list');
+                req.session.message = "Unable to enroll as a new user.";
             }
+            return res.redirect('/user/list');
         } catch(err) {
            return res.status(500).json({
                message: "Error enrolling new user!" + err
@@ -62,15 +65,14 @@ module.exports = {
             let criteria = {"_id": param._id};
             delete param._id;
             let user = await dataAccess.updateUserById(criteria, param);
-            let users = await dataAccess.listUsers();
         
             if (user) {
-                let message = user.name + " had just been updated.";
-                let data = {'users': users, 'target_id': user.id, 'message': message  }
-                responseController.respondToWebRequest(data, 'wired_users', res, next);
+                req.session.message = user.name + " had just been updated.";
+                req.session.target = user.id
             } else {
-                return res.redirect('/user/list');
+                let message = user.name + " could not be updated.";
             }
+            return res.redirect('/user/list');
         } catch(err) {
             let status = 403;
             let data = {'message':  err.message}
@@ -83,21 +85,20 @@ module.exports = {
         try {
             let param = JSON.parse(JSON.stringify(req.body));
             let result = await dataAccess.removeUserById(param._id);
-            let users = await dataAccess.listUsers();
-
-            if (param.name) {
-                let message = param.name  + " has been  deleted. Goodbye.";
-            } else {
-                let count = result.deletedCount;
-                let message = "Deleted " + count + " user with id " + param._id;
-            }
 
             if (result) {
-                let data = {'users': users, 'message': message};
-                responseController.respondToWebRequest(data, 'wired_users', res, next);
+                let count = result.deletedCount;
+                let message = "Deleted " + count + " user with id " + param._id;
+
+                if (param.name) {
+                    message = param.name  + " has been  deleted. Goodbye.";
+                }
+
+                req.session.message = message;
             } else {
-                return res.redirect('/user/list');
+                req.session.message = "Unable to delete user.";
             }
+            return res.redirect('/user/list');
         } catch(err) {
            return res.status(500).json({
                message: "Error enrolling new user!" + err

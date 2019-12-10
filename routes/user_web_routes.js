@@ -32,7 +32,7 @@ userWebRouter.get('/user/:userId', routingController.retrieveUser);
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userWebRouter.post('/user/enroll', routingController.retrieveUser);
+userWebRouter.post('/user/enroll', routingController.enrollUser);
 
 /**
  * @api {post} /update   single user
