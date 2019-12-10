@@ -170,7 +170,7 @@ describe('Users Data Access Controller', function() {
 
             const new_data = {'address': 'Bajor'};
 
-            await expect(udac.updateUserById(data, new_data)).to.be.rejectedWith('User Id required to update user.');
+            await expect(udac.updateUserById(data, new_data)).to.be.rejectedWith('One and only one user can be updated at a time');
         });
  
         it('TEST: Removing a user', (done) => {
