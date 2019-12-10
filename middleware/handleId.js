@@ -7,8 +7,13 @@
 const convertId = (req, res, next) => {
     if (typeof req.body.id !== 'undefined') {
         req.body._id = req.body.id;
+        delete req.body.id;
     } else if (typeof req.params.id !== 'undefined') {
         req.params._id = req.params.id;
+        delete req.params.id;
+    } else if (typeof req.body.criteria.id !== "undefined") {
+        req.body.criteria._id = req.body.criteria.id;
+        delete req.body.criteria.id;
     }
 
     return  next()
