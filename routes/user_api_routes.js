@@ -1,6 +1,15 @@
 const express = require('express');
 const routingController = require('../controllers/api_routing_controller');
 
+const validator = require('../middleware/validator.js');
+const createValidationRules = validator.createValidationRules;
+const retrieveValidationRules = validator.retrieveValidationRules;
+const deleteValidationRules = validator.deleteValidationRules;
+const changeValidationRules = validator.changeValidationRules;
+const apiValidate = validator.apiValidate;
+
+const converter = require('../middleware/handleId.js').convertId;
+
 const userAPIRouter = express.Router();
 module.exports = userAPIRouter;
 
@@ -22,27 +31,27 @@ userAPIRouter.get('/user/list', routingController.getUsersList);
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userAPIRouter.get('/user/:userId', routingController.retrieveUser);
+userAPIRouter.get('/user/:userId', retrieveValidationRules(), apiValidate, routingController.retrieveUser);
 
 /**
  * @api {post} /enroll   single user
- * @apiName GetUserById
+ * @apiName EnrollUser
  *
  * @apiParam {String} userId User's unique ID
  *
  * @apiSuccess {JSON object} JSON object of users.
- */
-userAPIRouter.post('/user/enroll', routingController.enrollUser);
+ **/
+userAPIRouter.post('/user/enroll', converter, createValidationRules(), apiValidate, routingController.enrollUser);
 
 /**
- * @api {post} /update   single user
- * @apiName GetUserById
+ * @api {post} /update  single user
+ * @apiName UpdateUser
  *
- * @apiParam {String} userId User's unique ID
+ * @apiParam {String} userId User's unique ID and fields to be updated
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userAPIRouter.post('/user/update', routingController.updateUser);
+userAPIRouter.post('/user/update', converter, changeValidationRules(), apiValidate, routingController.updateUser);
 
 /**
  * @api {post} /remove   single user
@@ -52,4 +61,4 @@ userAPIRouter.post('/user/update', routingController.updateUser);
  *
  * @apiSuccess {String} message confirming the deletion.
  */
-userAPIRouter.post('/user/remove', routingController.deleteUser);
+userAPIRouter.post('/user/remove', converter, deleteValidationRules(), apiValidate, routingController.deleteUser);

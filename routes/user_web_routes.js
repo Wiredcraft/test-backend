@@ -59,4 +59,4 @@ userWebRouter.post('/user/update', converter,  updateValidationRules(), webValid
  *
  * @apiSuccess {String} message confirming the deletion.
  */
-userWebRouter.post('/user/remove', converter, routingController.deleteUser);
+userWebRouter.post('/user/remove', converter, deleteValidationRules(), webValidate, routingController.deleteUser);
