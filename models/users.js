@@ -77,7 +77,7 @@ UsersSchema.statics.removeUserById = function(user_id) {
 
 UsersSchema.statics.getUsersByData = function(userData) {
     if (userData.id) {
-        userData._id = ObjectID(userData.id);
+        userData._id = ObjectID(userData._id);
     }
     return  Users.find( userData );
 }
