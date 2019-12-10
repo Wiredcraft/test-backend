@@ -72,9 +72,6 @@ module.exports = {
      * return updated record
      **/
     updateUserById: async(criteria, updateData) => {
-        if (!criteria._id) {
-            throw new Error ("User Id required to update user.");
-        }
         try {
             let users = await Users.getUsersByData(criteria);
             if (users.length == 1){
