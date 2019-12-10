@@ -8,17 +8,39 @@
     margin-bottom: 15px;
 }
 
+.wired-msg-pos-abs {
+    position: absolute;
+}
+
+.wired-form {
+    top: 420px;
+}
+
 .wired_profile { 
     background-color: #cccc89;
     padding: 10px;
     margin: 10px;
     visibility: hidden;
+    top: 20px;
 }
 
 .wired_table {
     height: 400px;
     max-height: 450px;
     overflow-y: auto;
+}
+
+.wired-errors {
+    margin-top:-50px;
+    font-family: "Comic Sans Serif", Arial, Verdana;
+    font-style: bold;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ff2222;
+}
+
+.wired-errors li {
+    overflow: wrap;
 }
 
 .edit-btn {
@@ -35,4 +57,64 @@
     background-repeat: no-repeat;
     width: 15px;
     height: 15px;
+}
+
+.message {
+    font-family: "Comic Sans Serif", Arial, Verdana;
+    font-style: bold;
+    font-size: 16px;
+    font-weight: bold;
+    color: #4432ff;
+}
+
+.fade-out {
+  animation: fadeOut ease 15s;
+  -webkit-animation: fadeOut ease 15s;
+  -moz-animation: fadeOut ease 15s;
+  -o-animation: fadeOut ease 15s;
+  -ms-animation: fadeOut ease 15s;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}
+
+@-moz-keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}
+
+@-webkit-keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}
+
+@-o-keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}
+
+@-ms-keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
 }

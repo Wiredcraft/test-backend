@@ -1,5 +1,6 @@
 const express = require('express');
 const routingController = require('../controllers/web_routing_controller');
+const {createValidationRules, validateCreate} = require('../middleware/validator.js');
 
 const userWebRouter = express.Router();
 module.exports = userWebRouter;
@@ -32,7 +33,7 @@ userWebRouter.get('/user/:userId', routingController.retrieveUser);
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userWebRouter.post('/user/enroll', routingController.enrollUser);
+userWebRouter.post('/user/enroll', createValidationRules(), webValidate, routingController.enrollUser);
 
 /**
  * @api {post} /update   single user

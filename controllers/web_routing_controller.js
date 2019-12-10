@@ -9,13 +9,17 @@ module.exports = {
 
             let data = {'users': users,
                         'target': req.session.target,
-                        'message': req.session.message};
+                        'message': req.session.message,
+                        'errors': req.session.val_errors};
+
+            delete req.session.target;
+            delete req.session.message;
+            delete req.session.val_errors;
 
             responseController.respondToWebRequest(data, 'wired_users', res, next);
         } catch(err) {
-           return res.status(500).json({
-               message: "Error retrieving user list!" + err
-           });
+            req.session.message = "Error retrieving user list!\n" + err;
+            return res.redirect('/user/list');
         }
     },
 
@@ -30,14 +34,17 @@ module.exports = {
             }
             return res.redirect('/user/list');
         } catch(err) {
-               return res.status(500).json({
-               message: "Error retrieving specified user!" + err
-           });
+            req.session.message = "Error retrieving specified user!\n" + err;
+            return res.redirect('/user/list');
         }
     },
 
     enrollUser: async (req, res, next) => {
         try {
+            if (req.session.val_errors) {
+                return res.redirect('/user/list');
+            }
+
             // Handle the possibility of [Object: null prototype] error
             let param = JSON.parse(JSON.stringify(req.body));
             delete param._id;
@@ -52,9 +59,8 @@ module.exports = {
             }
             return res.redirect('/user/list');
         } catch(err) {
-           return res.status(500).json({
-               message: "Error enrolling new user!" + err
-           });
+            req.session.message = "Error enrolling new user!\n" + err;
+            return res.redirect('/user/list');
         }
     },
 
@@ -74,9 +80,8 @@ module.exports = {
             }
             return res.redirect('/user/list');
         } catch(err) {
-            let status = 403;
-            let data = {'message':  err.message}
-            responseController.responsdWithApiError(data, status, res, next);
+            req.session.message = "Error updating user!\n" + err;
+            return res.redirect('/user/list');
         }
     },
 
@@ -100,9 +105,8 @@ module.exports = {
             }
             return res.redirect('/user/list');
         } catch(err) {
-           return res.status(500).json({
-               message: "Error enrolling new user!" + err
-           });
+            req.session.message = "Error deleting user!\n" + err;
+            return res.redirect('/user/list');
         }
     }
 }

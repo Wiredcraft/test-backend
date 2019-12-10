@@ -40,9 +40,9 @@
             return enroll.toLocaleDateString("en-US", options[size]);
         }
     %>
-    <div class="col-md-12 style="display:inline-block">
-        <div class="col-md-3 main-nav user-profile-info">
-            <div id="profile_card" class="wired_profile">
+    <div class="col-md-12"  style="display:inline-block">
+        <div class="col-md-3 main-nav user-profile-info wired-pos-rel">
+            <div id="profile_card" class="wired_profile wired-pos-abs">
                 <h3> Profile Information</h3>
                 <p>Name: <span id="pname"></span></p>
                 <p>DOB: <span id="pdob"></span>
@@ -51,6 +51,21 @@
                 <p>Description: <span id="pdescription"></span></p>
                 <p>Enroll Date: <span id="penroll"></span></p>
             </div>
+            <% if (typeof errors !== "undefined") { 
+               console.log(errors);
+            %>
+
+            <div class="main-nav wired-pos-abs wired-errors">
+                <h3>  Validation Errors</h3>
+                <ul>
+                    <% for (const errObj of errors) {
+                           for (let [key, value] of Object.entries(errObj)) {  %>
+                                <li><%=(key + ": " + value)%></li>
+                        <% }
+                       } %>
+                </ul>
+            </div>
+            <% } %>
         </div>
         <div class="col-md-9 wired-pos-rel">
             <div class="wired_table">
@@ -88,7 +103,12 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-md-9 wired-pos-abs">
+            <% if (typeof message !== "undefined") { %>
+                <div class="col-md-9 wired-msg-pos-abs fade-out">
+                    <span class="message"><%= message %></span>
+                </div>
+            <% } %>
+            <div class="col-md-9 wired-pos-abs wired-form">
                 <form id="wired_user_form" action="/user/enroll" method="POST" style="margin-top: 10px" >
                     <input type="hidden" name="_id" id="_id" />
                     <label>Name</label><input id="name" name="name" type="text"/>
