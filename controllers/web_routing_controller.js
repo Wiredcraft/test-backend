@@ -24,6 +24,9 @@ module.exports = {
     },
 
     retrieveUser: async (req, res, next) => {
+        if (req.session.val_errors) {
+            return res.redirect('/user/list');
+        }
         try{
             let user = await dataAccess.getUserById(req.params.userId);
 
@@ -40,11 +43,10 @@ module.exports = {
     },
 
     enrollUser: async (req, res, next) => {
+        if (req.session.val_errors) {
+            return res.redirect('/user/list');
+        }
         try {
-            if (req.session.val_errors) {
-                return res.redirect('/user/list');
-            }
-
             // Handle the possibility of [Object: null prototype] error
             let param = JSON.parse(JSON.stringify(req.body));
             delete param._id;
@@ -65,6 +67,9 @@ module.exports = {
     },
 
     updateUser: async (req, res, next) => {
+        if (req.session.val_errors) {
+            return res.redirect('/user/list');
+        }
         try {
             // Handle the possibility of [Object: null prototype] error
             let param = JSON.parse(JSON.stringify(req.body));
@@ -87,6 +92,9 @@ module.exports = {
 
 
     deleteUser: async (req, res, next) => {
+        if (req.session.val_errors) {
+            return res.redirect('/user/list');
+        }
         try {
             let param = JSON.parse(JSON.stringify(req.body));
             let result = await dataAccess.removeUserById(param._id);

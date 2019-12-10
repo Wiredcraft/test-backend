@@ -60,7 +60,7 @@
                 <ul>
                     <% for (const errObj of errors) {
                            for (let [key, value] of Object.entries(errObj)) {  %>
-                                <li><%=(key + ": " + value)%></li>
+                                <li><%= value %></li>
                         <% }
                        } %>
                 </ul>

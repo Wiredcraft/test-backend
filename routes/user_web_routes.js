@@ -1,6 +1,11 @@
 const express = require('express');
 const routingController = require('../controllers/web_routing_controller');
-const {createValidationRules, validateCreate} = require('../middleware/validator.js');
+const validator = require('../middleware/validator.js');
+const createValidationRules = validator.createValidationRules;
+const retrieveValidationRules = validator.retrieveValidationRules;
+const updateValidationRules = validator.updateValidationRules;
+const deleteValidationRules = validator.deleteValidationRules;
+const webValidate = validator.webValidate;
 
 const userWebRouter = express.Router();
 module.exports = userWebRouter;
@@ -23,7 +28,7 @@ userWebRouter.get('/user/list', routingController.getUsersList);
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userWebRouter.get('/user/:userId', routingController.retrieveUser);
+userWebRouter.get('/user/:userId', retrieveValidationRules(), webValidate, routingController.retrieveUser);
 
 /**
  * @api {post} /enroll/   single user
@@ -43,7 +48,7 @@ userWebRouter.post('/user/enroll', createValidationRules(), webValidate, routing
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userWebRouter.post('/user/update', routingController.updateUser);
+userWebRouter.post('/user/update', updateValidationRules(), webValidate, routingController.updateUser);
 
 /**
  * @api {post} /remove   single user
