@@ -1,3 +1,28 @@
+/**
+ *  Attach confirmation function to the delete button to confirm
+ *  the deletion of a user.
+ **/
+window.onload = () => {
+    var elems = document.getElementsByClassName('confirmation');
+    var confirmIt = function (e) {
+        let rowElem = e.currentTarget.parentElement.parentElement;
+        let message = "Are you sure you want to delete\n";
+        message += rowElem.children[0].innerText + "?";
+        if (!confirm(message)){
+            e.preventDefault();
+        } else {
+            deleteUser(rowElem.id);
+        }
+    };
+    for (var i = 0, l = elems.length; i < l; i++) {
+        elems[i].addEventListener('click', confirmIt, false);
+    }
+}
+
+/**
+ * Load profile data into div element for viewing
+ *
+ **/
 loadProfile = (rowObj) => {
 
     for (const child of rowObj.children) {
@@ -10,6 +35,10 @@ loadProfile = (rowObj) => {
     document.getElementById("profile_card").style.visibility = "visible";
 }
 
+/**
+ *  Load user information for updating, change the form action, make
+ *  the canel link visible, and change the button text.
+ **/
 loadEditor = (someObj, ident) => {
     let rowObj =  someObj.parentElement.parentElement;
    
@@ -23,36 +52,31 @@ loadEditor = (someObj, ident) => {
     }
     document.getElementById("_id").value = ident;
     document.getElementById("wired_user_form").action = '/user/update';
-    document.getElementById('cancel_link).style.visibility = 'visibility';
+    console.log(document.getElementById("cancel_link").style.visibility);
+    document.getElementById("cancel_link").style.visibility = 'visible';
+    console.log(document.getElementById("cancel_link").style.visibility);
     document.getElementById("sub-btn").value = "Update User";
 }
 
+/**
+ *  Clear out user information from form, change the form action, make
+ *  the canel link hidden, and change the button text.
+ **/
 cancelEdit = () => {
     document.getElementById("wired_user_form").reset();
     document.getElementById("wired_user_form").action = '/user/enroll';
-    document.getElementById('cancel_link).style.visibility = 'hidden';
+    document.getElementById("sub-btn").value = "Add User";
+    document.getElementById("cancel_link").style.visibility = 'hidden';
 }
 
-formToJSON = (elements) => [].reduce.call(elements, (data, element) => {
-                                    if (element.name) {
-                                        data[element.name] = element.value;
-                                    }
-                                    return data;
-                            }, {});
-
-updateUser = (formObj) => {
-    document.getElementById("wired_user_form").action = action;
-    let inputs = formObj.elements;
-    let new_data = formToJSON(inputs);
-    let criteria = {"_id": new_data._id};
-
-    console.log(formObj.action)
-    delete new_data.id;
-
-    let data = JSON.stringify({"criteria": criteria,
-                "update": new_data});
-   /* 
-    fetch("/user/update", {
+/**
+ *  Send a post request to delete the user and reload the page.
+ *
+ **/
+deleteUser = (userId) => {
+    let data = JSON.stringify({"_id": userId});
+  
+    fetch("/user/remove", {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -61,10 +85,6 @@ updateUser = (formObj) => {
         body: data
     })
     .then( (response) => {
-        //do something awesome that makes the world a better place
+        location.reload(true);
     });
-    */
 }
-
-
-

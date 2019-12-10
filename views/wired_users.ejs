@@ -6,7 +6,6 @@
     <script src="/scripts/main.js"></script>
     <script type="text/javascript" src="/scripts/jquery.js"></script>
     <script type="text/javascript" src="/scripts/moment.js"></script>
-    <script type="text/javascript" src="/scripts/jquery.serializeJSON.js"></script>
     <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="/scripts/bootstrap-datetimepicker.js"></script>
 
@@ -80,7 +79,7 @@
                             <td name="enroll"><%= formatDate(user.createdAt, "tiny") %></td>
                             <td>
                                 <input class="edit-btn" type="image" src="/images/dot.png" onclick="loadEditor(this, '<%= user.id %>'); return false;">
-                                <input class="delete-btn" type="image" src="/images/dot.png">
+                                <input class="delete-btn confirmation" type="image" src="/images/dot.png">
                             </td>
                         </tr>    
                     <%
@@ -98,11 +97,11 @@
                     <br>
                     <label>Address</label><input id="address" name="address" type="text"/>
                     <br>
-                    <label>Description</label><input id="description" name="description" type="text"/>
+                    <label>Description</label><textarea rows=4 cols=80  id="description" name="description"></textarea>
                     <br>
                     <input id="sub-btn" type="Submit" Value="Add User" />
                     <span id="cancel_link" style="visibility: hidden">
-                        <a href="#" onclick='cancelEdit()">Cancel</a>
+                        <a href="#" onclick="cancelEdit(); return false;">Cancel</a>
                     </span>
                 </form>
             </div>
@@ -114,7 +113,8 @@
                                   format: 'YYYY-MM-DD'
                                   });
 
-         <% if (typeof target_id !== "undefined") { %>
-                 document.getElementById("<%= target_id %>").click();
+         <% if (typeof target !== "undefined") { %>
+                 
+                 document.getElementById("<%= target %>").click();
          <% } %>
     </script>
