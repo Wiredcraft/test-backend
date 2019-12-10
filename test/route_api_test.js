@@ -107,7 +107,7 @@ describe('User API routing testing', () => {
 
 
         it('TEST: Remove a user from the database', (done) => {
-            let data = {"id": "5deb33aee9567c7b7e77c8f8"};
+            let data = {"_id": "5deb33aee9567c7b7e77c8f8"};
 
             chai.request(app)
                 .post('/api/user/remove')
@@ -115,7 +115,7 @@ describe('User API routing testing', () => {
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.be.a('string').eq("1 user with id 5deb33aee9567c7b7e77c8f8 deleted.");
+                    res.body.should.be.a('string').that.include("has been deleted.");
                     done();
                 });
         });
