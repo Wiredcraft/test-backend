@@ -2,36 +2,40 @@ const { check, validationResult } = require('express-validator')
 const createValidationRules = () => {
   return [
     // Name must exist
-    check('name').not().isEmpty().withMessage("Name is a required parameter"),
+    check('name').not().isEmpty().withMessage("Please enter a name").isAlphanumeric().withMessage("Please enter a valid name"),
     // DOB must exist
-    check('dob').not().isEmpty().withMessage("Date of Birth is a required parameter"),
+    check('dob').not().isEmpty().withMessage("Please enter a date of birth"),
     // Address must exist
-    check('address').not().isEmpty().withMessage("Address is a required parameter"),
+    check('address').not().isEmpty().withMessage("Please enter an ddress").isAlphanumeric().withMessage("Please use letter and numbers"),
+    // Description should be alpha numerics
+    check('description').isAlphanumeric().withMessage("Please use letter and numbers"),
   ]
 }
 
 const retrieveValidationRules = () => {
   return [
     // Id must exist
-    check('id').not().isEmpty().withMessage("Id is a required parameter"),
+    check('userId').not().isEmpty().withMessage("Please enter userId to find a user"),
   ]
 }
 
 const updateValidationRules = () => {
   return [
     // Id must exist
-    check('_id').not().isEmpty().withMessage("Id is a required parameter"),
+    check('_id').not().isEmpty().withMessage("Id required to update user"),
     // Name must exist
-    check('name').not().isEmpty().withMessage("Name is a required parameter"),
+    check('name').not().isEmpty().withMessage("Please enter a name"),
     // DOB must exist
-    check('dob').not().isEmpty().withMessage("Date of Birth is a required parameter"),
+    check('dob').not().isEmpty().withMessage("Please enter a date of birth"),
+    // Description should be alpha numerics
+    check('description').isAlphanumeric().withMessage("Please use letter and numbers"),
   ]
 }
 
 const deleteValidationRules = () => {
   return [
     // Id must exist
-    check('id').not().isEmpty().withMessage("Id is a required parameter"),
+    check('_id').not().isEmpty().withMessage("Id required to remove user"),
   ]
 }
 

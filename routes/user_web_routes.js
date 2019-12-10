@@ -6,6 +6,7 @@ const retrieveValidationRules = validator.retrieveValidationRules;
 const updateValidationRules = validator.updateValidationRules;
 const deleteValidationRules = validator.deleteValidationRules;
 const webValidate = validator.webValidate;
+const converter = require('../middleware/handleId.js').convertId;
 
 const userWebRouter = express.Router();
 module.exports = userWebRouter;
@@ -28,7 +29,7 @@ userWebRouter.get('/user/list', routingController.getUsersList);
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userWebRouter.get('/user/:userId', retrieveValidationRules(), webValidate, routingController.retrieveUser);
+userWebRouter.get('/user/:userId', converter, retrieveValidationRules(), webValidate, routingController.retrieveUser);
 
 /**
  * @api {post} /enroll/   single user
@@ -38,7 +39,7 @@ userWebRouter.get('/user/:userId', retrieveValidationRules(), webValidate, routi
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userWebRouter.post('/user/enroll', createValidationRules(), webValidate, routingController.enrollUser);
+userWebRouter.post('/user/enroll', converter, createValidationRules(), webValidate, routingController.enrollUser);
 
 /**
  * @api {post} /update   single user
@@ -48,7 +49,7 @@ userWebRouter.post('/user/enroll', createValidationRules(), webValidate, routing
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userWebRouter.post('/user/update', updateValidationRules(), webValidate, routingController.updateUser);
+userWebRouter.post('/user/update', converter,  updateValidationRules(), webValidate, routingController.updateUser);
 
 /**
  * @api {post} /remove   single user
@@ -58,4 +59,4 @@ userWebRouter.post('/user/update', updateValidationRules(), webValidate, routing
  *
  * @apiSuccess {String} message confirming the deletion.
  */
-userWebRouter.post('/user/remove', routingController.deleteUser);
+userWebRouter.post('/user/remove', converter, routingController.deleteUser);

@@ -50,7 +50,7 @@ loadEditor = (someObj, ident) => {
             }
         }
     }
-    document.getElementById("_id").value = ident;
+    document.getElementById("id").value = ident;
     document.getElementById("wired_user_form").action = '/user/update';
     console.log(document.getElementById("cancel_link").style.visibility);
     document.getElementById("cancel_link").style.visibility = 'visible';
@@ -74,7 +74,7 @@ cancelEdit = () => {
  *
  **/
 deleteUser = (userId) => {
-    let data = JSON.stringify({"_id": userId});
+    let data = JSON.stringify({"id": userId});
   
     fetch("/user/remove", {
         method: "POST",
