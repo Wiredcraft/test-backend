@@ -23,6 +23,7 @@
     "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
+    "express-session": "^1.17.0",
     "fs": "0.0.1-security",
     "lodash": "^4.17.15",
     "mongoose": "^5.7.13",
@@ -33,6 +34,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "chai-dom": "^1.8.1",
     "chai-http": "^4.3.0",
     "mocha": "^6.2.2"
   }

@@ -4,6 +4,7 @@
 
 const config = require('./config');
 const express = require('express');
+const session = require('express-session');
 const logger = require('morgan');
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser');
@@ -55,6 +56,13 @@ btapp.use(logger('combined', {stream: accessLogStream}));
 // Use the body parser for url parsing in the routes
 btapp.use(bodyParser.json())
 btapp.use(bodyParser.urlencoded({extended: false}));
+
+// Set up the session so that we can use session variables and the like.
+btapp.use(session({secret: 'Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch',
+                 saveUninitialized: false,
+                 resave: false,
+                 cookie: {secure: false}
+        }));
 
 //Set up the static path to assets like javascript and images
 btapp.use(express.static(path.join(__dirname, 'public')));
