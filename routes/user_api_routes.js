@@ -1,5 +1,5 @@
 const express = require('express');
-const routingController = require('../controllers/routing_controller');
+const routingController = require('../controllers/api_routing_controller');
 
 const userAPIRouter = express.Router();
 module.exports = userAPIRouter;

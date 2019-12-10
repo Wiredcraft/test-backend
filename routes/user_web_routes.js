@@ -1,5 +1,5 @@
 const express = require('express');
-const routingController = require('../controllers/routing_controller');
+const routingController = require('../controllers/web_routing_controller');
 
 const userWebRouter = express.Router();
 module.exports = userWebRouter;
@@ -32,7 +32,7 @@ userWebRouter.get('/user/:userId', routingController.retrieveUser);
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userWebRouter.post('/user/:userId', routingController.retrieveUser);
+userWebRouter.post('/user/enroll', routingController.retrieveUser);
 
 /**
  * @api {post} /update   single user
