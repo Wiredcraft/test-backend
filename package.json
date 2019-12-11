@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/CurtiePi/test-backend#readme",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.19.0",
     "connect-mongo": "^3.2.0",
     "dotenv": "^8.2.0",
@@ -31,6 +32,8 @@
     "morgan": "^1.9.1",
     "node-oauth2-server": "^2.4.0",
     "nodemon": "^2.0.1",
+    "passport": "^0.4.1",
+    "passport-http": "^0.3.0",
     "path": "^0.12.7"
   },
   "devDependencies": {
