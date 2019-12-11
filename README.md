@@ -82,4 +82,8 @@ One problem that came up with having a web view and an API is that the API will 
 while the web view can putter along with submitting form data. Thus at this point it may be prudent to go with two
 separate controllers.
 
+# Authentication
 
+Now Authentication will be added. Some say this should have been done first and maybe they're right, however the
+attempt here was to get the basis functionality working first. Also, adding an oAuth autehntication is not a trivial
+task; so another branch was created.
