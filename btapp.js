@@ -40,9 +40,19 @@ mongoose.connect(conn_str, {useNewUrlParser: true,
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
 
+const tokenController = require('./controllers/tokenAccessController')(db)
+const droneController = requires('.controllers/droneAccessController')(db)
+
 console.log(`Database: ${conn_str}`)
 
 var btapp = express();
+
+// Start setting up the authentication by requireing routing functions
+const authRoutesMethods = require('./routes/authRoutesMethods')(droneController)
+const authRouter = require('./routes/authRouter')(express.Router(), btApp, authRouteMethods);
+
+btapp.user('/auth', authRouter);
+
 
 //View engine setup
 btapp.set('views', path.join(__dirname, 'views'));
