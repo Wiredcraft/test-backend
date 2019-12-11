@@ -3,7 +3,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const app = require('../btapp');
-const udac = require('../controllers/data_access_controller'); //imports the User data access controller.
+const udac = require('../controllers/dataAccessController'); //imports the User data access controller.
 
 chai.use(chaiAsPromised);
 

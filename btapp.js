@@ -10,8 +10,8 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
-const userApiRouter = require('./routes/user_api_routes');
-const userWebRouter = require('./routes/user_web_routes');
+const userApiRouter = require('./routes/userApiRoutes');
+const userWebRouter = require('./routes/userWebRoutes');
 
 /**
  * Set up the database connection
@@ -55,7 +55,7 @@ btapp.use(logger('combined', {stream: accessLogStream}));
 
 // Use the body parser for url parsing in the routes
 btapp.use(bodyParser.json())
-btapp.use(bodyParser.urlencoded({extended: false}));
+btapp.use(bodyParser.urlencoded({extended: true}));
 
 // Set up the session so that we can use session variables and the like.
 btapp.use(session({secret: 'Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch',

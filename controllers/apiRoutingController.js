@@ -1,6 +1,6 @@
 let mongoose = require('mongoose');
-let dataAccess = require('./data_access_controller');
-let responseController = require('./response_controller');
+let dataAccess = require('./dataAccessController');
+let responseController = require('./responseController');
 const regex = /^\/api\//;
 
 module.exports = { 
