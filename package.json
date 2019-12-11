@@ -29,6 +29,7 @@
     "lodash": "^4.17.15",
     "mongoose": "^5.7.13",
     "morgan": "^1.9.1",
+    "node-oauth2-server": "^2.4.0",
     "nodemon": "^2.0.1",
     "path": "^0.12.7"
   },
