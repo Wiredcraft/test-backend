@@ -1,18 +1,18 @@
-const express = require('express');
-const passport = require('passport');
-const routingController = require('../controllers/apiRoutingController');
+const express               = require('express');
+const passport              = require('passport');
+const routingController     = require('../controllers/apiRoutingController');
 
-const validator = require('../middleware/validator.js');
-const createVR = validator.createVR;
-const retrieveVR = validator.retrieveVR;
-const deleteVR = validator.deleteVR;
-const changeVR = validator.changeVR;
-const apiValidate = validator.apiValidate;
+const validator             = require('../middleware/validator.js');
+const createVR              = validator.createVR;
+const retrieveVR            = validator.retrieveVR;
+const deleteVR              = validator.deleteVR;
+const changeVR              = validator.changeVR;
+const apiValidate           = validator.apiValidate;
 
-const converter = require('../middleware/handleId.js').convertId;
+const converter             = require('../middleware/utilities.js').convertId;
 
-const userAPIRouter = express.Router();
-module.exports = userAPIRouter;
+const userAPIRouter         = express.Router();
+module.exports              = userAPIRouter;
 
 userAPIRouter.get('/', passport.authenticate('bearer', { session: false }), function (req, res) {
     res.json({
@@ -21,51 +21,51 @@ userAPIRouter.get('/', passport.authenticate('bearer', { session: false }), func
 });
 
 /**
- * @api {get} /list Request list of users
- * @apiName ListUsers
+ * @api {get} /list Request list of person
+ * @apiName ListPerson
  *
  * @apiParam None
  *
- * @apiSuccess {JSON object} JSON object of users.
+ * @apiSuccess {JSON object} JSON object of person.
  */
-userAPIRouter.get('/user/list', routingController.getUsersList);
+userAPIRouter.get('/user/list', routingController.getPersonList);
 
 /**
- * @api {get} /user/:userId Request single user
- * @apiName GetUserById
+ * @api {get} /user/:personId Request single person
+ * @apiName GetPersonById
  *
- * @apiParam {String} userId User's unique ID
+ * @apiParam {String} personId Person's unique ID
  *
- * @apiSuccess {JSON object} JSON object of users.
+ * @apiSuccess {JSON object} JSON object of person.
  */
-userAPIRouter.get('/user/:userId', retrieveVR(), apiValidate, routingController.retrieveUser);
+userAPIRouter.get('/user/:personId', retrieveVR(), apiValidate, routingController.retrievePerson);
 
 /**
- * @api {post} /enroll   single user
- * @apiName EnrollUser
+ * @api {post} /enroll   single person
+ * @apiName EnrollPerson
  *
- * @apiParam {String} userId User's unique ID
+ * @apiParam {String} personId Person's unique ID
  *
- * @apiSuccess {JSON object} JSON object of users.
+ * @apiSuccess {JSON object} JSON object of person.
  **/
-userAPIRouter.post('/user/enroll', converter, createVR(), apiValidate, routingController.enrollUser);
+userAPIRouter.post('/user/enroll', converter, createVR(), apiValidate, routingController.enrollPerson);
 
 /**
- * @api {post} /update  single user
- * @apiName UpdateUser
+ * @api {post} /update  single person
+ * @apiName UpdatePerson
  *
- * @apiParam {String} userId User's unique ID and fields to be updated
+ * @apiParam {String} personId Person's unique ID and fields to be updated
  *
- * @apiSuccess {JSON object} JSON object of users.
+ * @apiSuccess {JSON object} JSON object of person.
  */
-userAPIRouter.post('/user/update', converter, changeVR(), apiValidate, routingController.updateUser);
+userAPIRouter.post('/user/update', converter, changeVR(), apiValidate, routingController.updatePerson);
 
 /**
- * @api {post} /remove   single user
- * @apiName GetUserById
+ * @api {post} /remove   single person
+ * @apiName GetPersonById
  *
- * @apiParam {String} userId User's unique ID
+ * @apiParam {String} personId Person's unique ID
  *
  * @apiSuccess {String} message confirming the deletion.
  */
-userAPIRouter.post('/user/remove', converter, deleteVR(), apiValidate, routingController.deleteUser);
+userAPIRouter.post('/user/remove', converter, deleteVR(), apiValidate, routingController.deletePerson);

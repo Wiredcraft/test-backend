@@ -1,18 +1,55 @@
 const express = require('express');
 const passport = require('passport');
-const {loginVR, registerVR,  webValidate} = require('../middleware/validator');
-const droneController = require('../controllers/droneAccessController');
-const securityController = require('../controllers/securityController');
-const oauth2 = require('../config/oauth2')
+const log = require('../libs/log')(module);
+const User = require('../models/user.js');
 
+const router = express.Router();
 
-const securityRouter = express.Router();
-module.exports = securityRouter;
+/**
+ * Route that handles user registration
+ * 
+ * @param passport object
+ *
+ * @ return { router }
+ **/
+module.exports = (passport) => {
+    router.post('/register', (req, res) => {
+        let body = req.body;
+        let username = body.username;
+        let password = body.password;
 
+        console.log(username + " : " + password);
+        User.findOne({username: username})
+            .then((record) => {
 
-securityRouter.post('/login', loginVR(), webValidate, securityController.login);
-securityRouter.get('/login',  securityController.signIn);
-securityRouter.get('/', securityController.goHome);
+                if (record) {
+                    res.status(500).send('Username already exists!');
+                } else {
+                    let newUser = new User();
+                    newUser.username = username;
+                    newUser.password = newUser.encryptPassword(password);
 
-securityRouter.post('/register', securityController.register);
-securityRouter.get('/register', securityController.enroll);
+                     newUser.save()
+                            .then((user) => {
+                                res.send(user);
+                            })
+                            .catch((err) => {
+                               log.error(err);
+                               res.status(500).send('There was a database error!');
+                            });
+                 } 
+            })
+            .catch((err) => {
+                res.status(500).send('Houston we have a problem!');
+            });
+    });
+
+    router.post('/login', passport.authenticate('local', {
+        failureRedirect:'/',
+        successRedirect:'/user/list'
+    }), (req, res) => {
+        res.send('Welcome to the thunderdome!');
+    })
+    return router;
+};
+
