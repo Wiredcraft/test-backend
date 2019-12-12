@@ -12,10 +12,12 @@ const fs                    = require('fs');
 const log                   = require('./libs/log')(module);
 const path                  = require('path');
 const passport              = require('passport');
+require('./config/auth')(passport)
 const userApiRouter         = require('./routes/userApiRoutes');
 const userWebRouter         = require('./routes/userWebRoutes');
-const securityRouter        = require('./routes/securityRoutes');
+const securityRouter        = require('./routes/securityRoutes')(passport);
 const oauthRouter           = require('./routes/oauthRoutes');
+const oauth2                = require('./config/oauth2');
 
 /**
  * Set up the database connection
@@ -74,13 +76,25 @@ btapp.use(express.static(path.join(__dirname, 'public')));
 // Initialize passport
 btapp.use(passport.initialize());
 btapp.use(passport.session());
-require('./config/auth');
+
+btapp.post('/oauth/token', oauth2.token);
+
+btapp.get('/api/userInfo',
+    passport.authenticate('bearer', { session: false }),
+        function(req, res) {
+            // req.authInfo is set using the `info` argument supplied by
+            // `BearerStrategy`.  It is typically used to indicate a scope of the token,
+            // and used in access control checks.  For illustrative purposes, this
+            // example simply returns the scope in the response.
+            res.json({ user_id: req.user.userId, name: req.user.username, scope: req.authInfo.scope })
+        }
+);
 
 // Use the routing 
 btapp.use('/api', userApiRouter);
 btapp.use('/', userWebRouter);
-btapp.use('/', securityRouter);
-btapp.use('/oauth', oauthRouter);
+btapp.use('/auth', securityRouter);
+//btapp.use('/oauth', oauthRouter);
 
 // Catch 404 errors and forward to an error handler
 btapp.use(function(req, res, next) {
