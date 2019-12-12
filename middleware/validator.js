@@ -33,7 +33,7 @@ const createVR = () => {
 const retrieveVR = () => {
   return [
     // Id must exist
-    check('userId').not().isEmpty().withMessage("Please enter userId to find a user"),
+    check('personId').not().isEmpty().withMessage("Please enter userId to find a user"),
   ]
 }
 
