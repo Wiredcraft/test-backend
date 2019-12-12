@@ -51,7 +51,7 @@
 <body class="page page-home chrome">
     <nav>
         <ul>
-            <li><a href="/auth/logout">Logout</a></li>
+            <li><a href="/logout">Logout</a></li>
             <li><a href="/auth/login">Login</a></li>
             <li><a href="/">Homepage</a></li>
         </ul>
@@ -60,8 +60,8 @@
         <h1> Login please</h1>
     </header>
     <main>
-        <form action='/login' method='POST'>
-            <label>Username</label><input type="text" placeholder="Username" name="dronename" />
+        <form action='/auth/login' method='POST'>
+            <label>Username</label><input type="text" placeholder="Username" name="username" />
             <br>
             <label>Password</label><input type="password" name="password" />
             <br>
