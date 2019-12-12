@@ -1,17 +1,24 @@
 const express = require('express');
+const passport = require('passport');
 const routingController = require('../controllers/apiRoutingController');
 
 const validator = require('../middleware/validator.js');
-const createValidationRules = validator.createValidationRules;
-const retrieveValidationRules = validator.retrieveValidationRules;
-const deleteValidationRules = validator.deleteValidationRules;
-const changeValidationRules = validator.changeValidationRules;
+const createVR = validator.createVR;
+const retrieveVR = validator.retrieveVR;
+const deleteVR = validator.deleteVR;
+const changeVR = validator.changeVR;
 const apiValidate = validator.apiValidate;
 
 const converter = require('../middleware/handleId.js').convertId;
 
 const userAPIRouter = express.Router();
 module.exports = userAPIRouter;
+
+userAPIRouter.get('/', passport.authenticate('bearer', { session: false }), function (req, res) {
+    res.json({
+        msg: 'API is running'
+    });
+});
 
 /**
  * @api {get} /list Request list of users
@@ -31,7 +38,7 @@ userAPIRouter.get('/user/list', routingController.getUsersList);
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userAPIRouter.get('/user/:userId', retrieveValidationRules(), apiValidate, routingController.retrieveUser);
+userAPIRouter.get('/user/:userId', retrieveVR(), apiValidate, routingController.retrieveUser);
 
 /**
  * @api {post} /enroll   single user
@@ -41,7 +48,7 @@ userAPIRouter.get('/user/:userId', retrieveValidationRules(), apiValidate, routi
  *
  * @apiSuccess {JSON object} JSON object of users.
  **/
-userAPIRouter.post('/user/enroll', converter, createValidationRules(), apiValidate, routingController.enrollUser);
+userAPIRouter.post('/user/enroll', converter, createVR(), apiValidate, routingController.enrollUser);
 
 /**
  * @api {post} /update  single user
@@ -51,7 +58,7 @@ userAPIRouter.post('/user/enroll', converter, createValidationRules(), apiValida
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userAPIRouter.post('/user/update', converter, changeValidationRules(), apiValidate, routingController.updateUser);
+userAPIRouter.post('/user/update', converter, changeVR(), apiValidate, routingController.updateUser);
 
 /**
  * @api {post} /remove   single user
@@ -61,4 +68,4 @@ userAPIRouter.post('/user/update', converter, changeValidationRules(), apiValida
  *
  * @apiSuccess {String} message confirming the deletion.
  */
-userAPIRouter.post('/user/remove', converter, deleteValidationRules(), apiValidate, routingController.deleteUser);
+userAPIRouter.post('/user/remove', converter, deleteVR(), apiValidate, routingController.deleteUser);

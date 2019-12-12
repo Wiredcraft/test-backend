@@ -1,15 +1,16 @@
 const express = require('express');
 const routingController = require('../controllers/webRoutingController');
 const validator = require('../middleware/validator.js');
-const createValidationRules = validator.createValidationRules;
-const retrieveValidationRules = validator.retrieveValidationRules;
-const updateValidationRules = validator.updateValidationRules;
-const deleteValidationRules = validator.deleteValidationRules;
+const createVR = validator.createVR;
+const retrieveVR = validator.retrieveVR;
+const updateVR = validator.updateVR;
+const deleteVR = validator.deleteVR;
 const webValidate = validator.webValidate;
 const converter = require('../middleware/handleId.js').convertId;
 
 const userWebRouter = express.Router();
 module.exports = userWebRouter;
+
 
 /**
  * @api {get} /list Request list of users
@@ -29,7 +30,7 @@ userWebRouter.get('/user/list', routingController.getUsersList);
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userWebRouter.get('/user/:userId', converter, retrieveValidationRules(), webValidate, routingController.retrieveUser);
+userWebRouter.get('/user/:userId', converter, retrieveVR(), webValidate, routingController.retrieveUser);
 
 /**
  * @api {post} /enroll/   single user
@@ -39,7 +40,7 @@ userWebRouter.get('/user/:userId', converter, retrieveValidationRules(), webVali
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userWebRouter.post('/user/enroll', converter, createValidationRules(), webValidate, routingController.enrollUser);
+userWebRouter.post('/user/enroll', converter, createVR(), webValidate, routingController.enrollUser);
 
 /**
  * @api {post} /update   single user
@@ -49,7 +50,7 @@ userWebRouter.post('/user/enroll', converter, createValidationRules(), webValida
  *
  * @apiSuccess {JSON object} JSON object of users.
  */
-userWebRouter.post('/user/update', converter,  updateValidationRules(), webValidate, routingController.updateUser);
+userWebRouter.post('/user/update', converter,  updateVR(), webValidate, routingController.updateUser);
 
 /**
  * @api {post} /remove   single user
@@ -59,4 +60,4 @@ userWebRouter.post('/user/update', converter,  updateValidationRules(), webValid
  *
  * @apiSuccess {String} message confirming the deletion.
  */
-userWebRouter.post('/user/remove', converter, deleteValidationRules(), webValidate, routingController.deleteUser);
+userWebRouter.post('/user/remove', converter, deleteVR(), webValidate, routingController.deleteUser);
