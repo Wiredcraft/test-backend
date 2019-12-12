@@ -1,0 +1,79 @@
+<DOCTYPE! html></DOCTYPE!>
+<html lang="en">
+
+<head>
+   
+    <link href="/styles/main.css" rel="stylesheet">
+    <title>Login</title>
+    <style>
+            body{
+                font-family: arial;
+                margin: 0;
+            }
+            nav{
+                background: #ff5353;
+                padding: 20px 10px;
+            }
+            nav ul{
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 0;
+            }
+            nav li{
+                list-style-type: none;
+                display: inline-block;
+                margin: 0 10px 0 0;
+            }
+            nav a{
+                color: #fff;
+                font-size: 18px;
+                background: rgba(255,255,255,0.2);
+                text-decoration: none;
+                padding: 10px;
+                display: block;
+            }
+            main, header{
+                max-width: 960px;
+                margin: 30px auto;
+                padding: 0 10px;
+                color: #333;
+            }
+            .google-btn{
+                color: #fff;
+                text-decoration: none;
+                font-size: 18px;
+                padding: 10px;
+                background: #ff5353;
+            }
+        </style>
+</head>
+
+<body class="page page-home chrome">
+    <nav>
+        <ul>
+            <li><a href="/auth/logout">Logout</a></li>
+            <li><a href="/auth/login">Login</a></li>
+            <li><a href="/">Homepage</a></li>
+        </ul>
+    </nav>
+    <header>
+        <h1> Login please</h1>
+    </header>
+    <main>
+        <form action='/login' method='POST'>
+            <label>Username</label><input type="text" placeholder="Username" name="dronename" />
+            <br>
+            <label>Password</label><input type="password" name="password" />
+            <br>
+          <input type='submit' value='Start'></input>
+        </form>
+
+        <hr>
+
+        <p>Don't have an account? <a href="/register">Register</a></p>
+        <p>Or go <a href="/">home</a>.</p>
+
+    </main>
+</body>
+</html>
+            
