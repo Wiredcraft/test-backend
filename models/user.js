@@ -1,5 +1,5 @@
 let mongoose = require('mongoose');
-var bcrypt = require('crypto');
+var crypto = require('crypto');
 let Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -8,7 +8,7 @@ const UserSchema = new Schema({
     unique: true,
     required: true
   },
-  hashedpassword: {
+  password: {
     type: String,
     required: true
   },
@@ -18,14 +18,16 @@ const UserSchema = new Schema({
 });
 
 UserSchema.methods.encryptPassword = function(password) {
+    this.salt = crypto.randomBytes(128).toString('hex');
     return crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
 };
+
 
 UserSchema.virtual('userId')
      .get(function () {
          return this.id;
      });
-
+/*
 UserSchema.virtual('password')
      .set((password) => {
          this._plainPassword = password;
@@ -33,12 +35,20 @@ UserSchema.virtual('password')
              this.hashedPassword = this.encryotPassword(password);
      })
      .get(() => {return this._plainPassword;});
+*/
 
 UserSchema.methods.validatePassword = function(password) {
-    return this.setPassword(password) === this.hashedPassword;
+    console.log("Checking password");
+    return this.encryptPassword(password) === this.password;
 };
 
 
 // Export the Mongoose model
 const User = mongoose.model('User', UserSchema);
-module.exports = User;
+
+User.init().then(() => {
+    console.log("User initialized...");
+});
+
+module.exports = User; 
+

@@ -3,11 +3,28 @@ let dataAccess = require('./dataAccessController');
 let responseController = require('./responseController');
 
 module.exports = { 
-    getUsersList: async (req, res, next) =>  {
-        try {
-            let users = await dataAccess.listUsers()
+    goHome: (req, res, next) => {
+        res.render('home');
+    },
 
-            let data = {'users': users,
+    signIn: (req, res, next) => {
+        res.render('login');
+    },
+
+    enroll: (req, res, next) => {
+        res.render('register');
+    },
+
+    logout: (req, res, next) => {
+        req.logout();
+        res.redirect('/');
+    },
+
+    getPersonList: async (req, res, next) =>  {
+        try {
+            let persons = await dataAccess.listPerson()
+
+            let data = {'users': persons,
                         'target': req.session.target,
                         'message': req.session.message,
                         'errors': req.session.val_errors};
@@ -16,24 +33,24 @@ module.exports = {
             delete req.session.message;
             delete req.session.val_errors;
 
-            responseController.respondToWebRequest(data, 'wired_users', res, next);
+            return res.render('wired_users', data);
         } catch(err) {
-            req.session.message = "Error retrieving user list!\n" + err;
+            req.session.message = "Error retrieving person list!\n" + err;
             return res.redirect('/user/list');
         }
     },
 
-    retrieveUser: async (req, res, next) => {
+    retrievePerson: async (req, res, next) => {
         if (req.session.val_errors) {
             return res.redirect('/user/list');
         }
         try{
-            let user = await dataAccess.getUserById(req.params.userId);
+            let person = await dataAccess.getPersonById(req.params.personId);
 
-            if (user) {
-                req.session.target = user.id
+            if (person) {
+                req.session.target = person.id
             } else {
-                req.session.message = "Sorry, that user could not be located."
+                req.session.message = "Sorry, that person could not be located."
             }
             return res.redirect('/user/list');
         } catch(err) {
@@ -42,7 +59,7 @@ module.exports = {
         }
     },
 
-    enrollUser: async (req, res, next) => {
+    enrollPerson: async (req, res, next) => {
         if (req.session.val_errors) {
             return res.redirect('/user/list');
         }
@@ -51,13 +68,13 @@ module.exports = {
             let param = JSON.parse(JSON.stringify(req.body));
             delete param._id;
 
-            let user = await dataAccess.addNewUser(param);
+            let person = await dataAccess.addNewPerson(param);
         
-            if (user) {
-                req.session.message = user.name + " has been enrolled as a new user.";
-                req.session.target = user.id
+            if (person) {
+                req.session.message = person.name + " has been enrolled as a new person.";
+                req.session.target = person.id
             } else {
-                req.session.message = "Unable to enroll as a new user.";
+                req.session.message = "Unable to enroll as a new person.";
             }
             return res.redirect('/user/list');
         } catch(err) {
@@ -66,7 +83,7 @@ module.exports = {
         }
     },
 
-    updateUser: async (req, res, next) => {
+    updatePerson: async (req, res, next) => {
         if (req.session.val_errors) {
             return res.redirect('/user/list');
         }
@@ -75,29 +92,29 @@ module.exports = {
             let param = JSON.parse(JSON.stringify(req.body));
             let criteria = {"_id": param._id};
             delete param._id;
-            let user = await dataAccess.updateUserById(criteria, param);
+            let person = await dataAccess.updatePersonById(criteria, param);
         
-            if (user) {
-                req.session.message = user.name + " had just been updated.";
-                req.session.target = user.id
+            if (person) {
+                req.session.message = person.name + " had just been updated.";
+                req.session.target = person.id
             } else {
-                let message = user.name + " could not be updated.";
+                let message = person.name + " could not be updated.";
             }
             return res.redirect('/user/list');
         } catch(err) {
-            req.session.message = "Error updating user!\n" + err;
+            req.session.message = "Error updating person!\n" + err;
             return res.redirect('/user/list');
         }
     },
 
 
-    deleteUser: async (req, res, next) => {
+    deletePerson: async (req, res, next) => {
         if (req.session.val_errors) {
             return res.redirect('/user/list');
         }
         try {
             let param = JSON.parse(JSON.stringify(req.body));
-            let result = await dataAccess.removeUserById(param._id);
+            let result = await dataAccess.removePersonById(param._id);
 
             if (result) {
                 let count = result.deletedCount;
@@ -113,7 +130,7 @@ module.exports = {
             }
             return res.redirect('/user/list');
         } catch(err) {
-            req.session.message = "Error deleting user!\n" + err;
+            req.session.message = "Error deleting person!\n" + err;
             return res.redirect('/user/list');
         }
     }

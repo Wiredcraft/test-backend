@@ -1,85 +1,85 @@
 const mongoose = require('mongoose');
-let Users = require('../models/users');
+let Person = require('../models/person');
 
 module.exports = {
     /**
-     * List all the users stored in the database
+     * List all the persons stored in the database
      *
      **/
-    listUsers: async () => {
+    listPerson: async () => {
         try {
-            let users = await Users.find();
+            let person = await Person.find();
 
-            return users;
+            return person;
         } catch(err) {
-          console.log("Having a problem getting user listing: " + err);
+          console.log("Having a problem getting person listing: " + err);
         }
     },
 
     /**
-     * Retrieve a user stored in database via an id
+     * Retrieve a person stored in database via an id
      *
-     * param: userId - String
+     * param: personId - String
      *
      **/
-    getUserById: async (userId) => {
+    getPersonById: async (personId) => {
         try {
-            let user = await Users.getUserById(userId);
+            let person = await Person.getPersonById(personId);
 
-            return user;
+            return person;
         } catch(err) {
-          console.log("Error getting user with id: ${userId} " + err);
+          console.log("Error getting person with id: ${personId} " + err);
         }
     },
 
     /**
-     * Add user(s) into the database
+     * Add person(s) into the database
      *
-     * param: userData - associative array/array of associative arrays
+     * param: personData - associative array/array of associative arrays
      *
      **/
-    addNewUser: async (userData) => {
+    addNewPerson: async (personData) => {
         try {
-            let user = await Users.create(userData);
-            return user;
+            let person = await Person.create(personData);
+            return person;
         } catch(err) {
             throw new Error(err);
         }
     },
 
     /**
-     * Retrieve one user from the database based on input criteria
+     * Retrieve one person from the database based on input criteria
      *
-     * param: userData - associative array/array of associative arrays
+     * param: personData - associative array/array of associative arrays
      *
      **/
-    getUserByData: async(userData) => {
+    getPersonByData: async(personData) => {
         try {
-            let user = await Users.findOne(userData);
-            return user;
+            let person = await Person.findOne(personData);
+            return person;
         } catch(err) {
-            console.log("Error getting user with data " + err);
+            console.log("Error getting person with data " + err);
         }
     },
 
     /**
-     * Update one user from the database based on input criteria
+     * Update one person from the database based on input criteria
      *
-     * param: criteria - associative array containing userId of user 
+     * param: criteria - associative array containing personId of person 
      *        to update as a value. 
      * param: updateData - associative array: values to update
      *
      * return updated record
      **/
-    updateUserById: async(criteria, updateData) => {
+    updatePersonById: async(criteria, updateData) => {
         try {
-            let users = await Users.getUsersByData(criteria);
-            if (users.length == 1){
+            let person = await Person.getPersonByData(criteria);
+            if (person.length == 1){
                 let options = {'new': true};  // option to return updated record
-                let update_user = Users.findOneAndUpdate(criteria, updateData, options);
-                return update_user;
+                let update_person = Person.findOneAndUpdate(criteria, updateData, options);
+                return update_person;
             } else {
-                let message = "One and only one user can be updated at a time";
+                let message = "One and only one person can be updated at a time";
                 throw new Error(message);
             }
             
@@ -89,33 +89,33 @@ module.exports = {
     },
 
     /**
-     * Remove one user from the database based on userId
+     * Remove one person from the database based on personId
      *
-     * param: userId - String
+     * param: personId - String
      *
      **/
-    removeUserById: async (userId) => {
+    removePersonById: async (personId) => {
         try {
-            let result = await Users.removeUserById(userId);
+            let result = await Person.removePersonById(personId);
             return result; 
         } catch(err) {
-            console.log("Error removing user " + err);
+            console.log("Error removing person " + err);
         }
     },
 
     /**
-     * Remove multiple users from the database based on query
+     * Remove multiple person from the database based on query
      * THIS FUNCTION IS FOR TESTING PURPOSES ONLY.
      *
      * param: query - associative array
      *
      **/
-    removeUsersByCriteria: async (criteria) => {
+    removePersonByCriteria: async (criteria) => {
         try {
-            let result = await Users.deleteMany(criteria);
+            let result = await Person.deleteMany(criteria);
             return result; 
         } catch(err) {
-            console.log("Error removing user " + err);
+            console.log("Error removing person " + err);
         }
     }
 

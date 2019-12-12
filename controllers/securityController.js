@@ -2,10 +2,6 @@ const passport   = require('passport');
 const log        = require('../libs/log')(module);
 const User      = require('../models/user');
 module.exports = { 
-    signIn: (req, res, next) => {
-        res.render('login');
-    },
-
     login: (req, res, next) => {
         console.log("I am Groot.");
         passport.authenticate('local-login', {
@@ -37,7 +33,7 @@ module.exports = {
         console.log("I am Groot.");
         passport.authenticate('local-signup', {
         successRedirect : '/users/list', // redirect to the secure profile section
-        failureRedirect : '/signup', // redirect back to the signup page if there is an error
+        failureRedirect : '/', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     });
 
@@ -61,11 +57,4 @@ module.exports = {
  */
     },
 
-    enroll: (req, res, next) => {
-        res.render('register');
-    },
-
-    goHome: (req, res, next) => {
-        res.render('home');
-    }
  }

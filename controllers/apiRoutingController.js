@@ -4,48 +4,48 @@ let responseController = require('./responseController');
 const regex = /^\/api\//;
 
 module.exports = { 
-    getUsersList: async (req, res, next) =>  {
+    getPersonList: async (req, res, next) =>  {
         try {
-            let users = await dataAccess.listUsers()
+            let person = await dataAccess.listPerson()
             
-            responseController.respondToApiRequest(users, res, next);
+            responseController.respondToApiRequest(person, res, next);
         } catch(err) {
            return res.status(500).json({
-               message: "Error retrieving user list!" + err
+               message: "Error retrieving person list!" + err
            });
         }
     },
 
-    retrieveUser: async (req, res, next) => {
+    retrievePerson: async (req, res, next) => {
         try{
-            let searchId = req.params.userId;
-            let user = await dataAccess.getUserById(req.params.userId);
+            let searchId = req.params.personId;
+            let person = await dataAccess.getPersonById(req.params.personId);
 
-            responseController.respondToApiRequest(user, res, next);
+            responseController.respondToApiRequest(person, res, next);
         } catch(err) {
                return res.status(500).json({
-               message: "Error retrieving specified user!" + err
+               message: "Error retrieving specified person!" + err
            });
         }
     },
 
-    enrollUser: async (req, res, next) => {
+    enrollPerson: async (req, res, next) => {
         try {
-            let user = await dataAccess.addNewUser(req.body);
+            let person = await dataAccess.addNewPerson(req.body);
         
-            responseController.respondToApiRequest(user, res, next);
+            responseController.respondToApiRequest(person, res, next);
         } catch(err) {
            return res.status(500).json({
-               message: "Error enrolling new user!" + err
+               message: "Error enrolling new person!" + err
            });
         }
     },
 
-    updateUser: async (req, res, next) => {
+    updatePerson: async (req, res, next) => {
         try {
-            let user = await dataAccess.updateUserById(req.body.criteria,
+            let person = await dataAccess.updatePersonById(req.body.criteria,
                                                    req.body.update);
-            responseController.respondToApiRequest(user, res, next);
+            responseController.respondToApiRequest(person, res, next);
         } catch(err) {
             let status = 403;
             let data = {'message':  err.message}
@@ -53,10 +53,10 @@ module.exports = {
         }
     },
 
-    deleteUser: async (req, res, next) => {
+    deletePerson: async (req, res, next) => {
         try {
-            let result = await dataAccess.removeUserById(req.body._id);
-            let message = result.deletedCount + " user with the id " + req.body._id + " has been deleted. Goodbye.";
+            let result = await dataAccess.removePersonById(req.body._id);
+            let message = result.deletedCount + " person with the id " + req.body._id + " has been deleted. Goodbye.";
 
             if (typeof req.body.name !== "undefined") {
                 message = req.body.name  + " has been deleted. Goodbye.";
@@ -65,7 +65,7 @@ module.exports = {
             responseController.respondToApiRequest(message, res, next);
         } catch(err) {
            return res.status(500).json({
-               message: "Error deleting new user!" + err
+               message: "Error deleting new person!" + err
            });
         }
     }
