@@ -2,16 +2,20 @@
  * Get the modules used to power this app
  */
 
-const config = require('./config');
-const express = require('express');
-const session = require('express-session');
-const logger = require('morgan');
-const mongoose = require('mongoose')
-const bodyParser = require('body-parser');
-const fs = require('fs');
-const path = require('path');
-const userApiRouter = require('./routes/userApiRoutes');
-const userWebRouter = require('./routes/userWebRoutes');
+const config                = require('./config/config');
+const express               = require('express');
+const session               = require('express-session');
+const logger                = require('morgan');
+const mongoose              = require('mongoose')
+const bodyParser            = require('body-parser');
+const fs                    = require('fs');
+const log                   = require('./libs/log')(module);
+const path                  = require('path');
+const passport              = require('passport');
+const userApiRouter         = require('./routes/userApiRoutes');
+const userWebRouter         = require('./routes/userWebRoutes');
+const securityRouter        = require('./routes/securityRoutes');
+const oauthRouter           = require('./routes/oauthRoutes');
 
 /**
  * Set up the database connection
@@ -40,21 +44,11 @@ mongoose.connect(conn_str, {useNewUrlParser: true,
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
 
-const tokenController = require('./controllers/tokenAccessController')(db)
-const droneController = requires('.controllers/droneAccessController')(db)
-
 console.log(`Database: ${conn_str}`)
 
 var btapp = express();
 
-// Start setting up the authentication by requireing routing functions
-const authRoutesMethods = require('./routes/authRoutesMethods')(droneController)
-const authRouter = require('./routes/authRouter')(express.Router(), btApp, authRouteMethods);
-
-btapp.user('/auth', authRouter);
-
-
-//View engine setup
+// View engine setup
 btapp.set('views', path.join(__dirname, 'views'));
 btapp.set('view engine', 'ejs');
 
@@ -74,12 +68,19 @@ btapp.use(session({secret: 'Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogo
                  cookie: {secure: false}
         }));
 
-//Set up the static path to assets like javascript and images
+// Set up the static path to assets like javascript and images
 btapp.use(express.static(path.join(__dirname, 'public')));
 
-//Use the routing 
+// Initialize passport
+btapp.use(passport.initialize());
+btapp.use(passport.session());
+require('./config/auth');
+
+// Use the routing 
 btapp.use('/api', userApiRouter);
 btapp.use('/', userWebRouter);
+btapp.use('/', securityRouter);
+btapp.use('/auth', oauthRouter);
 
 // Catch 404 errors and forward to an error handler
 btapp.use(function(req, res, next) {

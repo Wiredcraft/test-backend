@@ -1,3 +1,9 @@
+/**
+ * This file provides the validation rules for data entered on the front end
+ * VR will be used as a postfix of the rule names primarily to save space
+ *
+ **/
+
 const { check, oneOf, validationResult } = require('express-validator')
 /**
  * Validate parameters when creating a user
@@ -5,7 +11,7 @@ const { check, oneOf, validationResult } = require('express-validator')
  * Used by web and api routers
  *
  **/
-const createValidationRules = () => {
+const createVR = () => {
   return [
     // Name must exist
     check('name').not().isEmpty().withMessage("Please enter a name").not().isAlphanumeric().withMessage("Please enter a valid name"),
@@ -24,7 +30,7 @@ const createValidationRules = () => {
  * Used by web and api routers
  *
  **/
-const retrieveValidationRules = () => {
+const retrieveVR = () => {
   return [
     // Id must exist
     check('userId').not().isEmpty().withMessage("Please enter userId to find a user"),
@@ -38,7 +44,7 @@ const retrieveValidationRules = () => {
  * 
  *
  **/
-const updateValidationRules = () => {
+const updateVR = () => {
   return [
     // Id must exist
     check('_id').not().isEmpty().withMessage("Id required to update user"),
@@ -59,7 +65,7 @@ const updateValidationRules = () => {
  * This is used only by the api router
  *
  **/
-const changeValidationRules = () => {
+const changeVR = () => {
   return [
     check('criteria._id', "Must have an id to change user").not().isEmpty(), 
     // Update must exist
@@ -81,10 +87,39 @@ const changeValidationRules = () => {
  * This is used by the web and api routers
  *
  **/
-const deleteValidationRules = () => {
+const deleteVR = () => {
   return [
     // Id must exist
     check('_id').not().isEmpty().withMessage("Id required to remove user"),
+  ]
+}
+
+/**
+ * Validate parameters when a user logs in
+ *
+ * This is used by the web router
+ *
+ **/
+const loginVR = () => {
+  return [
+    // Id must exist
+    check('dronename').not().isEmpty().withMessage("Pleae enter a username"),
+    check('password').not().isEmpty().withMessage("Pleae enter a password"),
+  ]
+}
+
+/**
+ * Validate parameters when a user registers 
+ *
+ * This is used by the web router
+ *
+ **/
+const registerVR = () => {
+  return [
+    // Id must exist
+    check('dronename').not().isEmpty().withMessage("Pleae enter a username"),
+    check('password').not().isEmpty().withMessage("Pleae enter a password"),
+    check('password').not().isLength({min: 5}).withMessage("Password must be at least 5 characters in length")
   ]
 }
 
@@ -127,11 +162,13 @@ const apiValidate = (req, res, next) => {
 }
 
 module.exports = {
-  createValidationRules,
-  retrieveValidationRules,
-  updateValidationRules,
-  deleteValidationRules,
-  changeValidationRules,
+  createVR,
+  retrieveVR,
+  updateVR,
+  deleteVR,
+  changeVR,
+  loginVR,
+  registerVR,
   webValidate,
   apiValidate,
 }
