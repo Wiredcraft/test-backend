@@ -87,3 +87,9 @@ separate controllers.
 Now Authentication will be added. Some say this should have been done first and maybe they're right, however the
 attempt here was to get the basis functionality working first. Also, adding an oAuth autehntication is not a trivial
 task; so another branch was created.
+
+Trying to implement OAuth2 but running into a number of unexpected issues. Did discover a logger called Winston
+which I will try to implement before turning over my code.
+
+As for the OAuth code that was starting to be implemented I want to give credit to this [this article I read](https://aleksandrov.ws/2013/09/12/restful-api-with-nodejs-plus-mongodb/)
+regarding implementing OAuth2.
