@@ -80,7 +80,7 @@ require('./config/auth');
 btapp.use('/api', userApiRouter);
 btapp.use('/', userWebRouter);
 btapp.use('/', securityRouter);
-btapp.use('/auth', oauthRouter);
+btapp.use('/oauth', oauthRouter);
 
 // Catch 404 errors and forward to an error handler
 btapp.use(function(req, res, next) {
