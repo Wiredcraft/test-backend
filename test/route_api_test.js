@@ -23,7 +23,7 @@ describe('User API routing testing', () => {
 
         it('TEST: GET one user by their id', (done) => {
             chai.request(app)
-                .get('/api/user/5de88258976347576c2a965d')
+                .get('/api/user/5df24fe5a151d95809659a2e')
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
@@ -73,7 +73,7 @@ describe('User API routing testing', () => {
         });
 
         it('TEST: Do not update any user in database if criteria applies to more than one user', (done) => {
-            let data = { 'criteria': { "_id" : { $in: ["5deb33aee9567c7b7e77c8f8", "5de88258976347576c2a965d"] } },
+            let data = { 'criteria': { "_id" : { $in: ["5deb33aee9567c7b7e77c8f8", "5df24fe5a151d95809659a2e"] } },
                          'update': {"address": "USS Reliant"}
                        };
 
@@ -83,7 +83,7 @@ describe('User API routing testing', () => {
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(403);
-                    res.body.message.should.be.equal("Error: One and only one user can be updated at a time");
+                    res.body.message.should.be.equal("Error: One and only one person can be updated at a time");
                     done();
                 });
         });

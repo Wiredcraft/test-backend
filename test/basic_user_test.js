@@ -1,31 +1,31 @@
-//inside create_user_test.js
+//inside create_person_test.js
 const chai = require('chai');
 const expect = chai.expect;
 const assert = chai.assert;
 const app = require('../btapp');
-const Users = require('../models/users'); //imports the User model.
+const Person = require('../models/person'); //imports the Person model.
 
 
-describe('Users Access', function() {
+describe('Person Access', function() {
     describe('Creating documents', () => {
-        it('creates a user', (done) => {
-            const user = new Users({ name: 'Captain Jean Luc Picard',
+        it('creates a person', (done) => {
+            const person = new Person({ name: 'Captain Jean Luc Picard',
                                      dob: 810216104,
                                      address: 'USS Enterprise',
                                      description: 'Captain of the Enterprise and foil of Q' });
-            user.save()
-                .then((user) => {
-                    expect(user.isNew).to.be.false;  //if user is saved to db it is not new
+            person.save()
+                .then((person) => {
+                    expect(person.isNew).to.be.false;  //if person is saved to db it is not new
                     done();
                 });
         });
 
-        it('Prevent a duplicate user', (done) => {
-            const user = new Users({ name: 'Commander Data',
+        it('Prevent a duplicate person', (done) => {
+            const person = new Person({ name: 'Commander Data',
                                      dob: 810216104,
                                      address: 'USS Enterprise',
                                      description: 'First Android in Starfleet' });
-            user.save()
+            person.save()
                 .then( () => {
                     done(new Error(('Expected method to reject')));
                 })
@@ -36,16 +36,16 @@ describe('Users Access', function() {
                 .catch(done);
         });
 
-        it('Remove a user', (done) => {
+        it('Remove a person', (done) => {
             const name =  'Commander Data';
-            Users.estimatedDocumentCount()
-                 .then((numUsers) => {
+            Person.estimatedDocumentCount()
+                 .then((numPerson) => {
 
 
-                Users.deleteMany({ name: { $ne: name} })
+                Person.deleteMany({ name: { $ne: name} })
                      .then((result) => {
                
-                        let remaining = numUsers - result.deletedCount;
+                        let remaining = numPerson - result.deletedCount;
                         expect(remaining).to.be.eq(1);
                         done();
                     })

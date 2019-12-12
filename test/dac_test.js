@@ -14,7 +14,7 @@ describe('Users Data Access Controller', function() {
         before(() => {
             const data = {'name': { $ne: 'Commander Data'}};
 
-            udac.removeUsersByCriteria(data)
+            udac.removePersonByCriteria(data)
                 .then((result) => {
                     console.log("Database reset....");
                 })
@@ -25,7 +25,7 @@ describe('Users Data Access Controller', function() {
         });
 
         it('TEST: Get a listing of users', (done) => {
-            udac.listUsers()
+            udac.listPerson()
                 .then((user_list) => {
                     expect(user_list).to.be.an('array');
                     done();
@@ -36,10 +36,10 @@ describe('Users Data Access Controller', function() {
         });
 
         it('TEST: Get one user by id', (done) => {
-            const userId = '5de88258976347576c2a965d';
-            udac.getUserById(userId)
-                .then((user) => {
-                    expect(user.name).to.be.eq('Commander Data');
+            const personId = '5df24fe5a151d95809659a2e';
+            udac.getPersonById(personId)
+                .then((person) => {
+                    expect(person.name).to.be.eq('Commander Data');
                     done();
                 })
                 .catch((err) => {
@@ -53,13 +53,13 @@ describe('Users Data Access Controller', function() {
                          'dob': check_date,
                          'address': 'USS Enterprise'};
 
-            udac.getUserByData(data)
-                .then((user) => {
-                    expect(user.description).to.include('Android');
+            udac.getPersonByData(data)
+                .then((person) => {
+                    expect(person.description).to.include('Android');
                     done();
                 })
                 .catch((err) => {
-                    console.log('Error testing getUserByData.' + err);
+                    console.log('Error testing getPersonByData.' + err);
                 });
         });
 
@@ -69,9 +69,9 @@ describe('Users Data Access Controller', function() {
                          'dob': check_date,
                          'address': 'USS Enterprise'};
 
-            udac.getUserByData(data)
-                .then((user) => {
-                    expect(user).to.be.null;
+            udac.getPersonByData(data)
+                .then((person) => {
+                    expect(person).to.be.null;
                     done();
                 })
                 .catch((err) => {
@@ -85,9 +85,9 @@ describe('Users Data Access Controller', function() {
                          'dob': check_date,
                          'address': 'Deep Space Nine'};
 
-            udac.addNewUser(data)
-                .then((user) => {
-                    expect(user.isNew).to.be.false;
+            udac.addNewPerson(data)
+                .then((person) => {
+                    expect(person.isNew).to.be.false;
                     done();
                 })
                 .catch((err) => {
@@ -101,7 +101,7 @@ describe('Users Data Access Controller', function() {
                          'dob': check_date,
                          'address': 'Deep Space Nine'};
 
-            await expect(udac.addNewUser(data)).to.be.rejectedWith('MongoError: E11000 duplicate key error');
+            await expect(udac.addNewPerson(data)).to.be.rejectedWith('MongoError: E11000 duplicate key error');
         });
 
         it('TEST: Do not Add an incomplete user', async () => {
@@ -109,11 +109,11 @@ describe('Users Data Access Controller', function() {
             const data= {'name': 'Wesley Crusher',
                          'dob': check_date};
 
-            await expect(udac.addNewUser(data)).to.be.rejectedWith('address: Path `address` is required');
+            await expect(udac.addNewPerson(data)).to.be.rejectedWith('address: Path `address` is required');
         });
 
         it('TEST: create multiple users',(done) => {
-            let users = [{'name': "Captain Benjamin Sisko",
+            let people = [{'name': "Captain Benjamin Sisko",
                            'dob': new Date(1135544774469),
                            'address': "Deep Space Nine"},
                           {'name': "Commandeer William Ryker", 
@@ -131,9 +131,9 @@ describe('Users Data Access Controller', function() {
                            'address': "USS Voyager",
                            'description': "Former Borg member"}]
 
-            udac.addNewUser(users)
-                .then((users) => {
-                    expect(users).to.be.an('array').to.have.lengthOf(5);
+            udac.addNewPerson(people)
+                .then((people) => {
+                    expect(people).to.be.an('array').to.have.lengthOf(5);
                     done();
                 })
                 .catch((err) => {
@@ -147,9 +147,9 @@ describe('Users Data Access Controller', function() {
 
             const new_data = {'address': 'Terra Prime'};
 
-            udac.updateUserById(data, new_data)
-                .then((user) => {
-                    expect(user.address).to.be.eq('Terra Prime');
+            udac.updatePersonById(data, new_data)
+                .then((person) => {
+                    expect(person.address).to.be.eq('Terra Prime');
                     done();
                 })
                 .catch((err) => {
@@ -158,11 +158,11 @@ describe('Users Data Access Controller', function() {
         });
 
         it('TEST: Not updating when multiple users found', async () => {
-            const data = {'_id': { $in: ["5debb71eac1cb28342888aba", "5de88258976347576c2a965d"]}};
+            const data = {'_id': { $in: ["5debb71eac1cb28342888aba", "5df24fe5a151d95809659a2e"]}};
 
             const new_data = {'address': 'Bajor'};
 
-            await expect(udac.updateUserById(data, new_data)).to.be.rejectedWith('One and only one user can be updated at a time');
+            await expect(udac.updatePersonById(data, new_data)).to.be.rejectedWith('Error: One and only one person can be updated at a time');
         });
  
         it('TEST: Not updating when no id is present users found', async () => {
@@ -170,17 +170,17 @@ describe('Users Data Access Controller', function() {
 
             const new_data = {'address': 'Bajor'};
 
-            await expect(udac.updateUserById(data, new_data)).to.be.rejectedWith('One and only one user can be updated at a time');
+            await expect(udac.updatePersonById(data, new_data)).to.be.rejectedWith('Error: One and only one person can be updated at a time');
         });
  
         it('TEST: Removing a user', (done) => {
             let check_date = new Date(1145544774469);
             const data= {'name': 'Elim Garak'};
 
-            udac.getUserByData(data)
-                .then((user) => {
+            udac.getPersonByData(data)
+                .then((person) => {
                     
-                    udac.removeUserById(user.id)
+                    udac.removePersonById(person.id)
                         .then((result) => {
                             expect(result.deletedCount).to.be.eq(1);
                             done();
@@ -197,12 +197,12 @@ describe('Users Data Access Controller', function() {
         after(() => {
             const data = {'name': { $ne: 'Commander Data'}};
 
-            udac.removeUsersByCriteria(data)
+            udac.removePersonByCriteria(data)
                 .then((result) => {
                     console.log(result.deletedCount + " records deleted");
                 })
                 .catch((err) => {
-                    console.log('Error testing creating a new user.' + err);
+                    console.log('Error deleting people.' + err);
                     expect(err).is.defined
                 });
         });
