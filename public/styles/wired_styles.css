@@ -25,6 +25,7 @@
 }
 
 .wired_table {
+    margin-top: 20px;
     height: 400px;
     max-height: 450px;
     overflow-y: auto;
@@ -43,6 +44,31 @@
     overflow: wrap;
 }
 
+nav{
+    background: #ff5353;
+    padding: 20px 10px;
+}
+
+nav ul{
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+nav li{
+    list-style-type: none;
+    display: inline-block;
+    margin: 0 10px 0 0;
+}
+
+nav a{
+    color: #fff;
+    font-size: 18px;
+    background: rgba(255,255,255,0.2);
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+}
 .edit-btn {
     background: url('/images/edit.png');
     background-size: 100%;
