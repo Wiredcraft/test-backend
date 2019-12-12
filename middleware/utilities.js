@@ -19,7 +19,16 @@ const convertId = (req, res, next) => {
     return  next()
 }
 
+const isLoggedIn = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        next()
+    } else {
+        res.redirect('/login');
+    }
+}
+
 module.exports = {
-    convertId
+    convertId,
+    isLoggedIn
 }
 
