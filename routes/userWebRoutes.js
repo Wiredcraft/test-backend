@@ -49,6 +49,17 @@ userWebRouter.get('/user/:personId',isLoggedIn, converter, retrieveVR(), webVali
 userWebRouter.post('/user/enroll', isLoggedIn, converter, createVR(), webValidate, routingController.enrollPerson);
 
 /**
+ * @api {post} /catalogl/   single user
+ * @apiName GetPersonById
+ *
+ * @apiParam {JSON obj} criteria data for getting person(s)
+ *
+ * @apiSuccess {JSON object} JSON object of person(s).
+ */
+userWebRouter.post('/user/catalog', isLoggedIn,  routingController.retrievePeople);
+
+
+/**
  * @api {post} /update   single person
  * @apiName GetPersonById
  *

@@ -59,6 +59,26 @@ module.exports = {
         }
     },
 
+    retrievePeople: async (req, res, next) => {
+        if (req.session.val_errors) {
+            return res.redirect('/user/list');
+        }
+        try{
+            let param = JSON.parse(JSON.stringify(req.body));
+            let persons = await dataAccess.getPeopleByData(param.criteria);
+
+            let message = persons.length + " matches found."
+            let data = {'users': persons,
+                        'message': message}
+
+
+            return res.render('wired_users', data);
+        } catch(err) {
+            req.session.message = "Error retrieving specified user!\n" + err;
+            return res.redirect('/user/list');
+        }
+    },
+
     enrollPerson: async (req, res, next) => {
         if (req.session.val_errors) {
             return res.redirect('/user/list');

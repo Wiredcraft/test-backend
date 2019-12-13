@@ -53,6 +53,17 @@ module.exports = {
         }
     },
 
+    retrieveGroup: async (req, res, next) => {
+        try {
+            let group = await dataAccess.getPeopleByData(req.body.criteria);
+            responseController.respondToApiRequest(group, res, next);
+        } catch(err) {
+            let status = 403;
+            let data = {'message':  err.message}
+            responseController.responsdWithApiError(data, status, res, next);
+        }
+    },
+
     deletePerson: async (req, res, next) => {
         try {
             let result = await dataAccess.removePersonById(req.body._id);

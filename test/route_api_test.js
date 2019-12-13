@@ -36,6 +36,21 @@ describe('User API routing testing', () => {
 
     describe('Access user API via /POST requests', () => {
         it('TEST: Post a new user to the database', (done) => {
+            let data = {"criteria" : {"address": "USS Enterprise"}
+                        };
+
+            chai.request(app)
+                .post('/api/user/catalog')
+                .set('content-type', 'application/json')
+                .send(data)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('array');
+                    done();
+                });
+        });
+
+        it('TEST: Retrieve multiple persons by data ', (done) => {
             let data = {"id": "5deb33aee9567c7b7e77c8f8",
                         "name": "Lieutenant Hikara Sulu",
                         "dob": new Date(158034734833),
@@ -52,6 +67,7 @@ describe('User API routing testing', () => {
                     done();
                 });
         });
+
 
         it('TEST: Do Not update exiting user in the database with data alone', (done) => {
             let data = { 'criteria': {

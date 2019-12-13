@@ -44,6 +44,17 @@ userAPIRouter.get('/user/:personId', retrieveVR(), apiValidate, routingControlle
  **/
 userAPIRouter.post('/user/enroll', converter, createVR(), apiValidate, routingController.enrollPerson);
 
+
+/**
+ * @api {post} /catalog   single or muliple  persons
+ * @apiName CatalogPersons
+ *
+ * @apiParam {JSON obj}  criteria to search users on
+ *
+ * @apiSuccess {JSON object} JSON object of person(s).
+ **/
+userAPIRouter.post('/user/catalog', converter, routingController.retrieveGroup);
+
 /**
  * @api {post} /update  single person
  * @apiName UpdatePerson

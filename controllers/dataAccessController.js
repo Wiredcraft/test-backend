@@ -51,6 +51,7 @@ module.exports = {
      * Retrieve one person from the database based on input criteria
      *
      * param: personData - associative array/array of associative arrays
+     *  In the case of an array of objects, the first mtch will be sent.  
      *
      **/
     getPersonByData: async(personData) => {
@@ -59,6 +60,22 @@ module.exports = {
             return person;
         } catch(err) {
             console.log("Error getting person with data " + err);
+        }
+    },
+
+    /**
+     * Retrieve one person from the database based on input criteria
+     *
+     * param: personData - associative array/array of associative arrays
+     *  In the case of an array of objects, the first mtch will be sent.  
+     *
+     **/
+    getPeopleByData: async(criteria) => {
+        try {
+            let persons = await Person.find(criteria);
+            return persons;
+        } catch(err) {
+            console.log("Error getting mulitple persons with data " + err);
         }
     },
 
