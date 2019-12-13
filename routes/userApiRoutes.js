@@ -14,12 +14,6 @@ const converter             = require('../middleware/utilities.js').convertId;
 const userAPIRouter         = express.Router();
 module.exports              = userAPIRouter;
 
-userAPIRouter.get('/', passport.authenticate('bearer', { session: false }), function (req, res) {
-    res.json({
-        msg: 'API is running'
-    });
-});
-
 /**
  * @api {get} /list Request list of person
  * @apiName ListPerson

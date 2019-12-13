@@ -16,7 +16,6 @@ require('./config/auth')(passport)
 const userApiRouter         = require('./routes/userApiRoutes');
 const userWebRouter         = require('./routes/userWebRoutes');
 const securityRouter        = require('./routes/securityRoutes')(passport);
-const oauthRouter           = require('./routes/oauthRoutes');
 const oauth2                = require('./config/oauth2');
 
 /**
@@ -94,7 +93,6 @@ btapp.get('/api/userInfo',
 btapp.use('/api', userApiRouter);
 btapp.use('/', userWebRouter);
 btapp.use('/auth', securityRouter);
-//btapp.use('/oauth', oauthRouter);
 
 // Catch 404 errors and forward to an error handler
 btapp.use(function(req, res, next) {
