@@ -132,7 +132,7 @@ The test can be run from the main folder with the command npm test
 
 The front end works as one would expect, there is a login, an informational screen and a logout. The API can be accessed by prefixing the route with **api**
 
-# Post morten
+# Post mortem
 
 I hope I have the basics down, as I eventually got sucked into a black hole of Passport and OAuth2. Honestly this has been my first encouter with OAuth2 with NodeJs.
 I'm also a bit disappointed that I couldn't get to the distance calculator, since I already have th formula to find the distance between two coordinates. 
