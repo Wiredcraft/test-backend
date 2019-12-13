@@ -93,3 +93,57 @@ which I will try to implement before turning over my code.
 
 As for the OAuth code that was starting to be implemented I want to give credit to this [this article I read](https://aleksandrov.ws/2013/09/12/restful-api-with-nodejs-plus-mongodb/)
 regarding implementing OAuth2.
+
+In an unsuccessful the effort to implement OAuth2, basic authentication has been implemented with Passport.
+
+The User model has been changed as it was creating a conflict between users of the sysetm (which had been temporarily renamed to drones) and 
+the data in the system. Now the User model is called Person. The current Users model is set up to work with Passport and apears as follows:
+
+# User Model
+Field(s):
+* username: type String required
+* password: type: String required
+* salt: type: String
+ 
+# Set up and run
+
+So I continue to use env variables to have some of the configuration. You can see it again here:
+```
+NODE_ENV=dev
+DEV_APP_PORT=3002
+DEV_DB_HOST=***.***.***.***
+DEV_DB_PORT=27017
+DEV_DB_NAME=wired_backend_dev
+TEST_APP_PORT=3000
+TEST_DB_HOST=***.***.***.***
+TEST_DB_PORT=27017
+TEST_DB_NAME=wired_backend_test
+DEBUG=btapp
+```
+*Note*: I had issues when putting strings in quotes.
+
+# Setting up
+Clone into a directory, afterwards you should run npm install in project root, then run mongod, node ./libs/dataGen.js (wait for completion), and then npm start.
+
+the dataGen.js will popluate the database with some Persons and create a User.
+
+# Running the tests
+The test can be run from the main folder with the command npm test
+
+The front end works as one would expect, there is a login, an informational screen and a logout. The API can be accessed by prefixing the route with **api**
+
+# Post morten
+
+I hope I have the basics down, as I eventually got sucked into a black hole of Passport and OAuth2. Honestly this has been my first encouter with OAuth2 with NodeJs.
+I'm also a bit disappointed that I couldn't get to the distance calculator, since I already have th formula to find the distance between two coordinates. 
+Some takeaways:
+
+* Stop using the environment variable for so much configuration information, start using a key.js file instead
+* OAuth2 will be implemented even if it isn't in time for this presentation
+* Naming conventions are important, having to change model names and all the references is not a fun task to do when you have a few hours to go
+* It was fun and I really enjoyed doing this project. I did learn a bit. 
+* Working alone is no fun.
+
+# Thank you for your time and consideration 
+
+
