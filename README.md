@@ -180,6 +180,20 @@ The front end works as one would expect, there is a login, an informational scre
  Oddly enough as I write this document, I'm realizing I put in no methods for retrieving batches of users based on some 
  criteria. I will correct that oversight now. Back in 20 minutes.
  
+ **Removing a group of Persons**: POST http://127.0.0.1:3000/api/user/catalog : Retrieve a group of Persons from the
+ database based on some input criteria
+ * param JSON
+ 
+ {"criteria" : {"field<sub>1</sub>": "value<sub>1</sub>",
+                "field<sub>2</sub>": "value<sub>2</sub>",
+                "field<sub>n</sub>": "value<sub>n</sub>"
+                }
+ }
+
+For now this only works as an **AND** selector. I'll try to implement on the front end as a filter.
+ 
+
+ 
 # Post mortem
 
 I hope I have the basics down, as I eventually got sucked into a black hole of Passport and OAuth2. Honestly this has been my first encouter with OAuth2 with NodeJs.
