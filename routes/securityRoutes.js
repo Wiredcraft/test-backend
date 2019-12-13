@@ -18,7 +18,6 @@ module.exports = (passport) => {
         let username = body.username;
         let password = body.password;
 
-        console.log(username + " : " + password);
         User.findOne({username: username})
             .then((record) => {
 

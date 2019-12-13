@@ -36,7 +36,7 @@ userWebRouter.get('/user/list', isLoggedIn, routingController.getPersonList);
  *
  * @apiSuccess {JSON object} JSON object of person.
  */
-userWebRouter.get('/user/:personId', converter, retrieveVR(), webValidate, routingController.retrievePerson);
+userWebRouter.get('/user/:personId',isLoggedIn, converter, retrieveVR(), webValidate, routingController.retrievePerson);
 
 /**
  * @api {post} /enroll/   single user
@@ -46,7 +46,7 @@ userWebRouter.get('/user/:personId', converter, retrieveVR(), webValidate, routi
  *
  * @apiSuccess {JSON object} JSON object of person.
  */
-userWebRouter.post('/user/enroll', converter, createVR(), webValidate, routingController.enrollPerson);
+userWebRouter.post('/user/enroll', isLoggedIn, converter, createVR(), webValidate, routingController.enrollPerson);
 
 /**
  * @api {post} /update   single person
@@ -56,7 +56,7 @@ userWebRouter.post('/user/enroll', converter, createVR(), webValidate, routingCo
  *
  * @apiSuccess {JSON object} JSON object of person.
  */
-userWebRouter.post('/user/update', converter,  updateVR(), webValidate, routingController.updatePerson);
+userWebRouter.post('/user/update', isLoggedIn, converter,  updateVR(), webValidate, routingController.updatePerson);
 
 /**
  * @api {post} /remove   single person
@@ -66,4 +66,4 @@ userWebRouter.post('/user/update', converter,  updateVR(), webValidate, routingC
  *
  * @apiSuccess {String} message confirming the deletion.
  */
-userWebRouter.post('/user/remove', converter, deleteVR(), webValidate, routingController.deletePerson);
+userWebRouter.post('/user/remove', isLoggedIn, converter, deleteVR(), webValidate, routingController.deletePerson);

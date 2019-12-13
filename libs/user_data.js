@@ -1,4 +1,11 @@
-let data = [{"name":"Captain James T. Kirk",
+let ObjectID = require('mongodb').ObjectID;
+
+let data = [ { "_id" : ObjectID("5df24fe5a151d95809659a2e"),
+             "name" : "Commander Data",
+             "dob" : "1970-01-10T09:03:36.104Z", 
+             "address" : "USS Enterprise", 
+             "description" : "First Android in Starfleet"},
+            {"name":"Captain James T. Kirk",
             "dob":"1964-09-22T09:06:48.743Z",
             "address":"USS Enterprise",
             "description":"Starfleet captain extraodinaire"},
