@@ -130,8 +130,56 @@ the dataGen.js will popluate the database with some Persons and create a User.
 # Running the tests
 The test can be run from the main folder with the command npm test
 
-The front end works as one would expect, there is a login, an informational screen and a logout. The API can be accessed by prefixing the route with **api**
+The front end works as one would expect, there is a login, an informational screen and a logout. The API can be accessed by prefixing the route with **/api**
 
+
+# Using the API
+
+**Retrieveing the list of Persons**: GET http://127.0.0.1:3000/api/user/list : Retrieve all the person information in the database.
+
+**Selecting one Person**: GET http://127.0.0.1:3000/api/user/:personId : Retrive exactly one person from the database
+* personId: String
+
+**Creating a Person**: POST http://127.0.0.1:3000/api/user/enroll : Insert a Person into the database
+* JSON object
+```
+{
+"name": Sring,
+ "dob" : Date,
+ "address": String,
+ "description": String
+ }
+ ```
+ The **name, dob, and address** fields are required as they form the unique key to identify one user from another (the odds of
+ having two people with the exact same name, address and date of birth are fairly slim).
+ 
+ **Updating a Person**: POST http://127.0.0.1:3000/api/user/enroll : Update a Person in the database
+ * Two element JSON object
+```
+{"criteria": {"id" : String},
+ "data":  {JSON Object of the field names and values you want to update}
+ }
+ 
+ EX.
+ { "criteria" :{
+                id": "5df2eacde78180653f79e5d5"
+                },
+   "data" :    { 
+                "description": "Vulcan first officer and Ambassador to Romulus"
+                }
+ }
+ ```
+ Currently, an attempt to update more than one person simultaneously whould produce and error.
+ 
+ **Removing a Person**: POST http://127.0.0.1:3000/api/user/remove : Delete a Person from the database
+ * param JSON
+ ```
+ {"id": String}
+ ```
+ 
+ Oddly enough as I write this document, I'm realizing I put in no methods for retrieving batches of users based on some 
+ criteria. I will correct that oversight now. Back in 20 minutes.
+ 
 # Post mortem
 
 I hope I have the basics down, as I eventually got sucked into a black hole of Passport and OAuth2. Honestly this has been my first encouter with OAuth2 with NodeJs.
