@@ -208,4 +208,25 @@ Some takeaways:
 
 # Thank you for your time and consideration 
 
+# Zombieville a.k.a coming back from the dead
 
+Managed to get the basic funcionality of seaching for persons within range of another person. Basically,
+with the use of MongoDB GeoJSON functionality, I can let the database to all the calculations. The only 
+major problem was, with all the brackets in a Mongoose query, I misplaced a parameter and it took hours 
+of reading and searching for more things to read before I realized I had a parameter in the wrong place.
+
+So without further adieu:
+
+ **Finding a group of Persons within range of another**: POST http://127.0.0.1:3000/api/user/radar : Retrieve a group of Persons from the database based on range  of another person
+ * param JSON
+ 
+ {"position": {"coordinates": [float, float]},
+  "distance": integer
+ }
+
+The funtionality is there for the API however there is still a matter of:
+* Presentation in the web view
+* Removing the search user coordinates from the result group
+* Including more parameter validation for the requests.
+
+I'm really happy I got this implemented.
