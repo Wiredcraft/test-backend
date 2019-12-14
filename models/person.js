@@ -5,9 +5,9 @@ let ObjectID = require('mongodb').ObjectID;
 const PersonSchema = new Schema({
   name: {
     type: String,
-    required: true,
     trim: true,
-    index: true
+    index: true,
+    required: true
   },
   dob: {
     type: Date,
@@ -24,12 +24,24 @@ const PersonSchema = new Schema({
     type: String,
     trim: true,
   },
+  position: { 
+      type: {
+          type: String,
+          default: 'Point'
+      },
+      coordinates: {
+          type: [Number],
+          index: '2dsphere',
+          required: true
+      }
+  },
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
 
+PersonSchema.index({position: '2dsphere'});
 /**
  * Use a compound index to prevent duplicate person
  **/
@@ -55,7 +67,7 @@ PersonSchema.options.toObject = {
  * person_id: String
  **/
 
-PersonSchema.statics.getPersonById = function(person_id) {
+PersonSchema.statics.getPersonById = (person_id) => {
     return  Person.findOne( { '_id': ObjectID(person_id)} );
 }
 
@@ -65,7 +77,7 @@ PersonSchema.statics.getPersonById = function(person_id) {
  * person_id: String
  **/
 
-PersonSchema.statics.removePersonById = function(person_id) {
+PersonSchema.statics.removePersonById = (person_id) => {
     return  Person.deleteOne( { '_id': ObjectID(person_id)} );
 }
 
@@ -75,11 +87,29 @@ PersonSchema.statics.removePersonById = function(person_id) {
  * associative array of key: value
  **/
 
-PersonSchema.statics.getPersonByData = function(personData) {
+PersonSchema.statics.getPersonByData = (personData) => {
     if (personData.id) {
         personData._id = ObjectID(personData._id);
     }
     return  Person.find( personData );
+}
+
+/**
+ * Find persons within a certain distance
+ *
+ * @param: location -  object based on the location field
+ * @param: distance -  Integer - max distance, in meters, from the provided location
+ **/
+PersonSchema.statics.findPersonInRange = (coords, distance) => {
+
+console.log(coords)
+    return Person.find({
+        "position": {
+            "$geoNear": {
+                "$geometry": coords,
+                "$maxDistance": distance
+            },
+        }});
 }
 
 const Person = mongoose.model('Person', PersonSchema);

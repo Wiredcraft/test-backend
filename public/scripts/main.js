@@ -46,7 +46,13 @@ loadEditor = (someObj, ident) => {
         let cell_name = child.getAttribute("name");
         if (document.getElementById(cell_name)) {
             if (cell_name !== null || cell_name !== "age") {
-                document.getElementById(cell_name).value = child.innerText;
+                if (cell_name != "position") {
+                    document.getElementById(cell_name).value = child.innerText;
+                } else {
+                    let coords = child.innerText.split(":");
+                    document.getElementById("lng").value = coords[0];
+                    document.getElementById("lat").value = coords[1];
+                }
             }
         }
     }

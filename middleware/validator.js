@@ -21,6 +21,10 @@ const createVR = () => {
     check('address').not().isEmpty().withMessage("Please enter an address").not().isAlphanumeric().withMessage("Please use letter and numbers"),
     // Description should be alpha numerics
     check('description').not().isAlphanumeric().withMessage("Please use letter and numbers"),
+    check('position.coordinates.lng').not().isEmpty().withMessage("Please enter a longitude"),
+    check('position.coordinates.lat').not().isEmpty().withMessage("Please enter a latitude"),
+    check('position.coordinates.lng').isFloat({min: -180, max: 180}).withMessage("Longitude between -180 and 180 degrees, inclusive"),
+    check('position.coordinates.lat').isFloat({min: -90, max: 90}).withMessage("Latitude between -90 and 90 degrees, inclusive")
   ]
 }
 
@@ -56,6 +60,10 @@ const updateVR = () => {
     check('address').not().isEmpty().withMessage("Enter a name or leave current value"),
     // Description should be alpha numerics
     check('description').not().isAlphanumeric().withMessage("description should be alpha numberic"),
+    check('position.coordinates.lng').not().isEmpty().withMessage("Please enter a longitude"),
+    check('position.coordinates.lat').not().isEmpty().withMessage("Please enter a latitude"),
+    check('position.coordinates.lng').isFloat({min: -180, max: 180}).withMessage("Longitude between -180 and 180 degrees, inclusive"),
+    check('position.coordinates.lat').isFloat({min: -90, max: 90}).withMessage("Latitude between -90 and 90 degrees, inclusive")
   ]
 }
 
@@ -70,6 +78,10 @@ const changeVR = () => {
     check('criteria._id', "Must have an id to change user").not().isEmpty(), 
     // Update must exist
     check('update').not().isEmpty().withMessage("Update data required to change user"),
+    check('position.coordinates.lng').not().isEmpty().withMessage("Please enter a longitude"),
+    check('position.coordinates.lat').not().isEmpty().withMessage("Please enter a latitude"),
+    check('position.coordinates.lng').isFloat({min: -180, max: 180}).withMessage("Longitude between -180 and 180 degrees, inclusive"),
+    check('position.coordinates.lat').isFloat({min: -90, max: 90}).withMessage("Latitude between -90 and 90 degrees, inclusive"),
     oneOf([
         // Name must exist
         check('name').not().isEmpty(),

@@ -54,6 +54,7 @@
                 (<span id="page"></span>)</p>
                 <p>Address: <span id="paddress"></span></p>
                 <p>Description: <span id="pdescription"></span></p>
+                <p>Current Position: <span id="pposition"></span></p>
                 <p>Enroll Date: <span id="penroll"></span></p>
             </div>
             <% if (typeof errors !== "undefined") { 
@@ -84,6 +85,7 @@
                             <th>Description</th>
                             <th>Enroll Date</th>
                             <th></th>
+                            <th style="display:none"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -101,6 +103,7 @@
                                 <input class="edit-btn" type="image" src="/images/dot.png" onclick="loadEditor(this, '<%= user.id %>'); return false;">
                                 <input class="delete-btn confirmation" type="image" src="/images/dot.png">
                             </td>
+                            <td name="position" id="coords" style="display:none"><%= user.position.coordinates[0] + " : " + user.position.coordinates[1]%></td> 
                         </tr>    
                     <%
                         }      
@@ -115,6 +118,7 @@
             <% } %>
             <div class="col-md-9 wired-pos-abs wired-form">
                 <form id="wired_user_form" action="/user/enroll" method="POST" style="margin-top: 10px" >
+                    <section>
                     <input type="hidden" name="id" id="id" />
                     <label>Name</label><input id="name" name="name" type="text"/>
                     <br>
@@ -123,6 +127,19 @@
                     <label>Address</label><input id="address" name="address" type="text"/>
                     <br>
                     <label>Description</label><textarea rows=4 cols=80  id="description" name="description"></textarea>
+                    </section>
+                    <br style="clear:both;" />
+                    <section id="position">
+                        <div class="group">
+                            <label for="lng">Lng</label><br/>
+                            <input id="lng" type="text" size=8 value="" name="lng">
+                        </div>
+
+                        <div class="group">
+                            <label for="lat">Lat</label><br/>
+                            <input id="lat" type="text" size=8 value="" name="lat">
+                        </div>
+                    </section>
                     <br>
                     <input id="sub-btn" type="Submit" Value="Add User" />
                     <span id="cancel_link" style="visibility: hidden">

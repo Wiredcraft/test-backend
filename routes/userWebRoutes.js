@@ -6,8 +6,9 @@ const retrieveVR                = validator.retrieveVR;
 const updateVR                  = validator.updateVR;
 const deleteVR                  = validator.deleteVR;
 const webValidate               = validator.webValidate;
-const converter                 = require('../middleware/utilities.js').convertId;
+const converter                 = require('../middleware/utilities.js').converter;
 const isLoggedIn                = require('../middleware/utilities.js').isLoggedIn;
+const iWannaSee                 = require('../middleware/utilities.js').iWannaSee;
 
 const userWebRouter = express.Router();
 module.exports = userWebRouter;
@@ -26,7 +27,7 @@ userWebRouter.get('/register', routingController.enroll);
  *
  * @apiSuccess {JSON object} JSON object of person.
  */
-userWebRouter.get('/user/list', isLoggedIn, routingController.getPersonList);
+userWebRouter.get('/user/list', routingController.getPersonList);
 
 /**
  * @api {get} /user/:personId Request single person
@@ -67,7 +68,7 @@ userWebRouter.post('/user/catalog', isLoggedIn,  routingController.retrievePeopl
  *
  * @apiSuccess {JSON object} JSON object of person.
  */
-userWebRouter.post('/user/update', isLoggedIn, converter,  updateVR(), webValidate, routingController.updatePerson);
+userWebRouter.post('/user/update', converter, iWannaSee,  updateVR(), webValidate, routingController.updatePerson);
 
 /**
  * @api {post} /remove   single person

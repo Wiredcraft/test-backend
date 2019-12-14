@@ -32,6 +32,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "mongoose": "^5.7.13",
+    "mongoose-geojson-schema": "^2.1.3",
     "morgan": "^1.9.1",
     "node-oauth2-server": "^2.4.0",
     "nodemon": "^2.0.1",

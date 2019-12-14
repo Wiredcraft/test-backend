@@ -9,7 +9,7 @@ const deleteVR              = validator.deleteVR;
 const changeVR              = validator.changeVR;
 const apiValidate           = validator.apiValidate;
 
-const converter             = require('../middleware/utilities.js').convertId;
+const converter             = require('../middleware/utilities.js').converter;
 
 const userAPIRouter         = express.Router();
 module.exports              = userAPIRouter;
@@ -44,7 +44,6 @@ userAPIRouter.get('/user/:personId', retrieveVR(), apiValidate, routingControlle
  **/
 userAPIRouter.post('/user/enroll', converter, createVR(), apiValidate, routingController.enrollPerson);
 
-
 /**
  * @api {post} /catalog   single or muliple  persons
  * @apiName CatalogPersons
@@ -54,6 +53,18 @@ userAPIRouter.post('/user/enroll', converter, createVR(), apiValidate, routingCo
  * @apiSuccess {JSON object} JSON object of person(s).
  **/
 userAPIRouter.post('/user/catalog', converter, routingController.retrieveGroup);
+
+/**
+ * @api {post} /radar   single or muliple  persons
+ * @apiName CatalogPersons
+ *
+ * @apiParam {JSON obj}  geo criteria to search users on
+ *                       :position:  location obj - containing coordinates to search from
+ *                       :distance: Integer - max distance to search in meters
+ *                       
+ * @apiSuccess {JSON object} JSON object of person(s).
+ **/
+userAPIRouter.post('/user/radar', converter, routingController.retrieveInRange);
 
 /**
  * @api {post} /update  single person

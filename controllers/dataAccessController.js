@@ -19,7 +19,7 @@ module.exports = {
     /**
      * Retrieve a person stored in database via an id
      *
-     * param: personId - String
+     * @param: personId - String
      *
      **/
     getPersonById: async (personId) => {
@@ -35,7 +35,7 @@ module.exports = {
     /**
      * Add person(s) into the database
      *
-     * param: personData - associative array/array of associative arrays
+     * @param: personData - associative array/array of associative arrays
      *
      **/
     addNewPerson: async (personData) => {
@@ -50,7 +50,7 @@ module.exports = {
     /**
      * Retrieve one person from the database based on input criteria
      *
-     * param: personData - associative array/array of associative arrays
+     * @param: personData - associative array/array of associative arrays
      *  In the case of an array of objects, the first mtch will be sent.  
      *
      **/
@@ -66,7 +66,7 @@ module.exports = {
     /**
      * Retrieve one person from the database based on input criteria
      *
-     * param: personData - associative array/array of associative arrays
+     * @param: personData - associative array/array of associative arrays
      *  In the case of an array of objects, the first mtch will be sent.  
      *
      **/
@@ -82,9 +82,9 @@ module.exports = {
     /**
      * Update one person from the database based on input criteria
      *
-     * param: criteria - associative array containing personId of person 
+     * @param: criteria - associative array containing personId of person 
      *        to update as a value. 
-     * param: updateData - associative array: values to update
+     * @param: updateData - associative array: values to update
      *
      * return updated record
      **/
@@ -106,9 +106,24 @@ module.exports = {
     },
 
     /**
+     * Find persons within a certain distance
+     *
+     * @param: location -location object: based on the field in the Person Model
+     * @param: distance - Integer:  max distance, in meters, from the provided location
+     **/
+    findPersonInRange: async (position, distance) => {
+        try {
+            let result = await Person.findPersonInRange(position, distance);
+            return result; 
+        } catch(err) {
+            console.log("Error finding person(s) " + err);
+        }
+    },
+
+    /**
      * Remove one person from the database based on personId
      *
-     * param: personId - String
+     * @param: personId - String
      *
      **/
     removePersonById: async (personId) => {
@@ -124,7 +139,7 @@ module.exports = {
      * Remove multiple person from the database based on query
      * THIS FUNCTION IS FOR TESTING PURPOSES ONLY.
      *
-     * param: query - associative array
+     * @param: query - associative array
      *
      **/
     removePersonByCriteria: async (criteria) => {

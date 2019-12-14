@@ -44,6 +44,10 @@
     overflow: wrap;
 }
 
+.group: {
+    display: inline-block;
+}
+
 nav{
     background: #ff5353;
     padding: 20px 10px;
