@@ -35,9 +35,8 @@ describe('User API routing testing', () => {
     });
 
     describe('Access user API via /POST requests', () => {
-        it('TEST: Post a new user to the database', (done) => {
-            let data = {"criteria" : {"address": "USS Enterprise"}
-                        };
+        it('TEST: Retrieve persons from database based on criteria', (done) => {
+            let data = {"criteria" : {"address": "USS Enterprise"}};
 
             chai.request(app)
                 .post('/api/user/catalog')
@@ -50,11 +49,12 @@ describe('User API routing testing', () => {
                 });
         });
 
-        it('TEST: Retrieve multiple persons by data ', (done) => {
+        it('TEST: Enroll person to the database ', (done) => {
             let data = {"id": "5deb33aee9567c7b7e77c8f8",
                         "name": "Lieutenant Hikara Sulu",
                         "dob": new Date(158034734833),
                         "address": "USS Enterprise",
+                        "position": { "coordinates": [121.5874, 31.3481]},
                         "description": "Coolest helmsman anywhere"};
 
             chai.request(app)
@@ -64,6 +64,36 @@ describe('User API routing testing', () => {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
+                    done();
+                });
+        });
+
+        it('TEST: Find persons in a range ', (done) => {
+            let data = {"position": {"coordinates": [121.5874, 31.3481]},
+                        "distance": 5000};
+
+            chai.request(app)
+                .post('/api/user/radar')
+                .set('content-type', 'application/json')
+                .send(data)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('array');
+                    done();
+                });
+        });
+
+        it('TEST: Find persons in a range from another person ', (done) => {
+            let data = {"id": "5debb71eac1cb28342888aba",
+                        "distance": 5000};
+
+            chai.request(app)
+                .post('/api/user/rangeid')
+                .set('content-type', 'application/json')
+                .send(data)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('array');
                     done();
                 });
         });
@@ -135,6 +165,22 @@ describe('User API routing testing', () => {
                     done();
                 });
         });
+
+        after(() => {
+
+            const udac = require('../controllers/dataAccessController');
+            const data = {'name': { $ne: 'Commander Data'}};
+
+            udac.removePersonByCriteria(data)
+                .then((result) => {
+                    console.log(result.deletedCount + " records deleted");
+                })
+                .catch((err) => {
+                    console.log('Error deleting people.' + err);
+                    expect(err).is.defined
+                });
+        });
+
 
 
     });

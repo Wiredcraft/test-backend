@@ -7,7 +7,7 @@ const udac = require('../controllers/dataAccessController'); //imports the User 
 
 chai.use(chaiAsPromised);
 
-describe('Users Data Access Controller', function() {
+
   
     describe('Perform CRUD actions with users', () => {
 
@@ -81,15 +81,18 @@ describe('Users Data Access Controller', function() {
 
         it('TEST: Create a user with data', (done) => {
             let check_date = new Date(945544774469);
-            const data= [{'name': 'Elim Garak',
+            const data= {'name': 'Elim Garak',
                          'dob': check_date,
-                         'address': 'Deep Space Nine'}];
+                         'address': 'Deep Space Nine',
+                         'position' : { "type" : "Point",
+                                        "coordinates" : [ 121.4499, 31.2345 ] }
+                        };
 
             udac.addNewPerson(data)
                 .then((person) => {
-                    expect(person).to.be.an('array').to.have.lengthOf(1);
-                    expect(person[0].name).to.be.eq('Elim Garak');
-                    expect(person[0].address).to.be.eq('Deep Space Nine');
+                    expect(person.isNew).to.be.false;
+                    expect(person.name).to.be.eq('Elim Garak');
+                    expect(person.address).to.be.eq('Deep Space Nine');
                     done()
                 })
                 .catch((err) => {
@@ -101,7 +104,10 @@ describe('Users Data Access Controller', function() {
             let check_date = new Date(945544774469);
             const data= {'name': 'Elim Garak',
                          'dob': check_date,
-                         'address': 'Deep Space Nine'};
+                         'address': 'Deep Space Nine',
+                         'position' : { "type" : "Point",
+                                        "coordinates" : [ 121.4499, 31.2345 ] }
+                        };
 
             await expect(udac.addNewPerson(data)).to.be.rejected;
         });
@@ -117,26 +123,33 @@ describe('Users Data Access Controller', function() {
         it('TEST: create multiple users',(done) => {
             let people = [{'name': "Captain Benjamin Sisko",
                            'dob': new Date(1135544774469),
-                           'address': "Deep Space Nine"},
-                          {'name': "Commandeer Montgomery Scott", 
-                           'dob': new Date(-45544774469),
-                           'address': "USS Enterprise"},
+                           'address': "Deep Space Nine",
+                           'position': {coordinates: [121.4574, 31.2429]}},
+                           {'name': "Lieutenant Montgomery Scott", 
+                           'dob': new Date(-155544774469),
+                           'address': "USS Enterprise",
+                           'position': {coordinates: [121.6250, 30.9110]}},
                           {'name': "Commandeer William Ryker", 
                            'dob': new Date(1045544774469),
-                           'address': "USS Enterprise"},
+                           'address': "USS Enterprise",
+                           'position': {coordinates: [121.4691,31.224361]}},
                           {'name': "Ensign Ro Laren", 
                           'dob': new Date(1345544774469),
-                          'address': "USS Enterprise"},
+                          'address': "USS Enterprise",
+                           'position': {coordinates: [121.2772, 31.1857]}},
                            {'name': "Lt. Cmdr Worf", 
                            'dob': new Date(985544774469),
-                           'address': "Deep Space Nine"},
-                          {'name': "Lt. Cmdr Geordi LaForge", 
-                           'dob': new Date(945544774469),
-                           'address': "USS Enterprise"},
+                           'address': "Deep Space Nine",
+                           'position': {coordinates: [121.4343, 31.1983]}},
+                           {'name': "Lt. Cmdr Geordi LaForge", 
+                           'dob': new Date(975544774469),
+                           'address': "USS Enterprise",
+                           'position': {coordinates: [121.2772, 31.1858]}},
                           {'_id': "5debb71eac1cb28342888aba",
                            'name': "Seven of Nine",
                            'dob': new Date(1045544774469),
                            'address': "USS Voyager",
+                           'position': {coordinates: [121.5874, 31.3481]},
                            'description': "Former Borg member"}]
 
             udac.addNewPerson(people)
@@ -198,6 +211,35 @@ describe('Users Data Access Controller', function() {
                 });
         });
 
+        it('TEST: Retrieve persons in a range', (done) => {
+            let pos =  {type: 'Point',  coordinates: [121.2772, 31.1858]};
+            let distance =  5000;
+
+            udac.findPersonInRange(pos, distance)
+                .then((persons) => {
+                    expect(persons).to.be.an('array');
+                    done();
+                })
+                .catch((err) => {
+                    console.log('Error testing getting a new user in a range.' + err);
+                });
+        });
+
+        it('TEST: Retrieve persons in a range of another person', (done) => {
+            let personId = "5debb71eac1cb28342888aba";
+            let distance =  5000;
+
+            let persons = udac.findPersonInRangeOfId(personId, distance);
+            persons.then((people) => {
+                expect(people).to.be.an('array');
+                const att = people.filter(e => e._id === '5debb71eac1cb28342888aba');
+                expect(att).to.have.lengthOf(0);
+                done();
+            })
+            .catch((err) => {
+                    console.log('Error testing getting a new user in a range.' + err);
+            });
+        });
  
         it('TEST: Removing a user', (done) => {
             let check_date = new Date(1145544774469);
@@ -219,7 +261,7 @@ describe('Users Data Access Controller', function() {
                     console.log('Error getting a user ' + err);
                 });
         });
-
+/*
         after(() => {
             const data = {'name': { $ne: 'Commander Data'}};
 
@@ -233,4 +275,5 @@ describe('Users Data Access Controller', function() {
                 });
         });
     });
+*/
 });
