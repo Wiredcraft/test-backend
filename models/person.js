@@ -95,19 +95,37 @@ PersonSchema.statics.getPersonByData = (personData) => {
 }
 
 /**
- * Find persons within a certain distance
+ * Find persons within a certain distance of coordinates
  *
  * @param: location -  object based on the location field
  * @param: distance -  Integer - max distance, in meters, from the provided location
  **/
 PersonSchema.statics.findPersonInRange = (coords, distance) => {
+    coords.type = "Point";
 
-console.log(coords)
     return Person.find({
         "position": {
             "$geoNear": {
                 "$geometry": coords,
                 "$maxDistance": distance
+            },
+        }});
+}
+
+/**
+ * Find persons within a certain distance of another person 
+ *
+ * @param: location -  object based on the location field
+ * @param: distance -  Integer - max distance, in meters, from the provided location
+ **/
+PersonSchema.statics.findPersonInRangeOfId = (person, distance) => {
+
+    return Person.find({
+        "position": {
+            "$geoNear": {
+                "$geometry": person.position,
+                "$maxDistance": distance,
+                "query" : { "id" : {"$ne" : person._id}}
             },
         }});
 }

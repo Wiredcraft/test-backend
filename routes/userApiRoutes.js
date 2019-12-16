@@ -67,6 +67,17 @@ userAPIRouter.post('/user/catalog', converter, routingController.retrieveGroup);
 userAPIRouter.post('/user/radar', converter, routingController.retrieveInRange);
 
 /**
+ * @api {post} /rangeid   single or muliple  persons
+ * @apiName CatalogPersons
+ *
+ * @apiParam {String}  userid of the user to search from
+ * @apiParam {Integer} distance: max distance to search in meters
+ *                       
+ * @apiSuccess {JSON object} JSON object of person(s).
+ **/
+userAPIRouter.post('/user/rangeid', converter, routingController.retrieveInRangeOfId);
+
+/**
  * @api {post} /update  single person
  * @apiName UpdatePerson
  *
