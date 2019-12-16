@@ -116,9 +116,41 @@ module.exports = {
             let result = await Person.findPersonInRange(position, distance);
             return result; 
         } catch(err) {
-            console.log("Error finding person(s) " + err);
+            throw new Error("Error finding person(s) " + err);
         }
     },
+
+    /**
+     * Find persons within a certain distance of another person given an id
+     *
+     * @param: userId - String: id of the user you want to search from
+     * @param: distance - Integer:  max distance, in meters, from the provided location
+     **/
+    findPersonInRangeOfId: async (personId, distance) => {
+        try {
+            let person = await Person.getPersonById(personId);
+
+            if (!person) {
+                console.log("The specified user could not be found");
+                throw new Error("The specified user could not be found");
+            }
+
+            let results = await Person.findPersonInRange(person.position, distance);
+            // remove the id we searched for
+            let persons = [];
+            for (const result of results) {
+                if (result.id !== person.id) {
+                    persons.push(result);
+                }
+            }
+
+            return persons;
+
+        } catch(err) {
+            throw new Error(err);
+        }
+    },
+
 
     /**
      * Remove one person from the database based on personId

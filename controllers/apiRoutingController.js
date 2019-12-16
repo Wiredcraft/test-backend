@@ -76,6 +76,19 @@ module.exports = {
         }
     },
 
+    retrieveInRangeOfId: async (req, res, next) => {
+        try {
+            let group = await dataAccess.findPersonInRangeOfId(req.body._id,
+                                                            req.body.distance);
+            responseController.respondToApiRequest(group, res, next);
+        } catch(err) {
+            console.log(err.message);
+            let status = 403;
+            let data = {'message':  err.message}
+            responseController.responsdWithApiError(data, status, res, next);
+        }
+    },
+
     deletePerson: async (req, res, next) => {
         try {
             let result = await dataAccess.removePersonById(req.body._id);
