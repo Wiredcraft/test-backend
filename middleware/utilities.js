@@ -15,15 +15,16 @@
  **/
 
 const converter = (req, res, next) => {
-    if (typeof req.body.id === 'undefined') {
-        req.body._id = req.body.id;
+    if (typeof req.body.id !== "undefined") {
+        let id = req.body.id
+        req.body._id = id;
         delete req.body.id;
-    } else if (!(typeof req.params.id === 'undefined')) {
-        req.params._id = req.params.id;
-        delete req.params.id;
-    } else if (typeof req.body.criteria.id !== "undefined") {
-        req.body.criteria._id = req.body.criteria.id;
-        delete req.body.criteria.id;
+    } else if (typeof req.body.criteria !== "undefined") {
+        if(typeof req.body.criteria.id !== "undefined"){
+            let id = req.body.criteria.id
+            req.body.criteria._id = id;
+            delete req.body.criteria.id
+        }
     }
 
     if (req.body.lng || req.body.lat) {
