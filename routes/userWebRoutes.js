@@ -8,7 +8,6 @@ const deleteVR                  = validator.deleteVR;
 const webValidate               = validator.webValidate;
 const converter                 = require('../middleware/utilities.js').converter;
 const isLoggedIn                = require('../middleware/utilities.js').isLoggedIn;
-const iWannaSee                 = require('../middleware/utilities.js').iWannaSee;
 
 const userWebRouter = express.Router();
 module.exports = userWebRouter;
@@ -27,7 +26,7 @@ userWebRouter.get('/register', routingController.enroll);
  *
  * @apiSuccess {JSON object} JSON object of person.
  */
-userWebRouter.get('/user/list', routingController.getPersonList);
+userWebRouter.get('/user/list', isLoggedIn, routingController.getPersonList);
 
 /**
  * @api {get} /user/:personId Request single person
@@ -41,7 +40,7 @@ userWebRouter.get('/user/:personId',isLoggedIn, converter, retrieveVR(), webVali
 
 /**
  * @api {post} /enroll/   single user
- * @apiName GetPersonById
+ * @apiName EnrollPersonById
  *
  * @apiParam {String} personId Person's unique ID
  *
@@ -50,8 +49,8 @@ userWebRouter.get('/user/:personId',isLoggedIn, converter, retrieveVR(), webVali
 userWebRouter.post('/user/enroll', isLoggedIn, converter, createVR(), webValidate, routingController.enrollPerson);
 
 /**
- * @api {post} /catalogl/   single user
- * @apiName GetPersonById
+ * @api {post} /catalog/   single user
+ * @apiName GetPersonByData
  *
  * @apiParam {JSON obj} criteria data for getting person(s)
  *
@@ -62,17 +61,28 @@ userWebRouter.post('/user/catalog', isLoggedIn,  routingController.retrievePeopl
 
 /**
  * @api {post} /update   single person
- * @apiName GetPersonById
+ * @apiName UpdatePerson
  *
  * @apiParam {String} personId Person's unique ID
  *
  * @apiSuccess {JSON object} JSON object of person.
  */
-userWebRouter.post('/user/update', converter, iWannaSee,  updateVR(), webValidate, routingController.updatePerson);
+userWebRouter.post('/user/update', isLoggedIn, converter, updateVR(), webValidate, routingController.updatePerson);
+
+/**
+ * @api {post} /rangeid   single or muliple  persons
+ * @apiName CatalogPersons
+ *
+ * @apiParam {String}  userid of the user to search from
+ * @apiParam {Integer} distance: max distance to search in meters
+ *                       
+ * @apiSuccess {JSON object} JSON object of person(s).
+ **/
+userWebRouter.post('/user/rangeid', isLoggedIn, converter, routingController.retrievePeopleRangeOfId);
 
 /**
  * @api {post} /remove   single person
- * @apiName GetPersonById
+ * @apiName RemovePerson
  *
  * @apiParam {String} personId Person's unique ID
  *
