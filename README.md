@@ -210,14 +210,14 @@ Some takeaways:
 
 # Zombieville a.k.a coming back from the dead
 
-Managed to get the basic funcionality of seaching for persons within range of another person. Basically,
+Managed to get the basic funcionality of seaching for persons within range of some coordinates. Basically,
 with the use of MongoDB GeoJSON functionality, I can let the database to all the calculations. The only 
 major problem was, with all the brackets in a Mongoose query, I misplaced a parameter and it took hours 
 of reading and searching for more things to read before I realized I had a parameter in the wrong place.
 
 So without further adieu:
 
- **Finding a group of Persons within range of some coordinates*: POST http://127.0.0.1:3000/api/user/radar : Retrieve a group of Persons from the database based on distance from some coordinates
+ **Finding a group of Persons within range of some coordinates**: POST http://127.0.0.1:3000/api/user/radar : Retrieve a group of Persons from the database based on distance from some coordinates
  * param JSON
  
  {"position": {"coordinates": [float, float]},
@@ -236,7 +236,7 @@ I've now implemented the distance search on the front end as well and reinstitut
 I also realized that I had not implemented finding a person based on the coordinates of another person. This is 
 now implmented and used on the front end.
 
-**Finding a group of Persons within range of another person*: POST http://127.0.0.1:3000/api/user/rangeid : Retrieve a group of Persons from the database based on distance from the position of another person
+**Finding a group of Persons within range of another person**: POST http://127.0.0.1:3000/api/user/rangeid : Retrieve a group of Persons from the database based on distance from the position of another person
  * param JSON
  
  {"id": String the person Id
