@@ -217,7 +217,7 @@ of reading and searching for more things to read before I realized I had a param
 
 So without further adieu:
 
- **Finding a group of Persons within range of another**: POST http://127.0.0.1:3000/api/user/radar : Retrieve a group of Persons from the database based on range  of another person
+ **Finding a group of Persons within range of some coordinates*: POST http://127.0.0.1:3000/api/user/radar : Retrieve a group of Persons from the database based on distance from some coordinates
  * param JSON
  
  {"position": {"coordinates": [float, float]},
@@ -230,3 +230,19 @@ The funtionality is there for the API however there is still a matter of:
 * Including more parameter validation for the requests.
 
 I'm really happy I got this implemented.
+
+I've now implemented the distance search on the front end as well and reinstituted signing in to see the web page.
+
+I also realized that I had not implemented finding a person based on the coordinates of another person. This is 
+now implmented and used on the front end.
+
+**Finding a group of Persons within range of another person*: POST http://127.0.0.1:3000/api/user/rangeid : Retrieve a group of Persons from the database based on distance from the position of another person
+ * param JSON
+ 
+ {"id": String the person Id
+  "distance": integer the distance in meters
+ }
+
+# Ghosts of problems past
+
+Now I'll go revisit the Bearer Stratategy implementation for OAuth2.
