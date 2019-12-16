@@ -56,6 +56,7 @@
                 <p>Description: <span id="pdescription"></span></p>
                 <p>Current Position: <span id="pposition"></span></p>
                 <p>Enroll Date: <span id="penroll"></span></p>
+                 <input type="image" src="/images/radar.png" style="height: 50px; width: 50px; margin-left:40%; border:none" onclick="findPeopleInRange(); return false;">
             </div>
             <% if (typeof errors !== "undefined") { 
                console.log(errors);
@@ -92,7 +93,7 @@
                     <% 
                         for (const user of users) { 
                     %>
-                    <tr id="<%= user.id %>" onclick="loadProfile(this)"> 
+                    <tr id="<%= user.id %>" onclick="loadProfile(this)" style="width:100%"> 
                             <td name="name"><%= user.name %></td>
                             <td name="age"><%= calcAge(user.dob) %></td>
                             <td name="dob"><%= formatDate(user.dob, "tiny") %></td>
@@ -117,6 +118,7 @@
                 </div>
             <% } %>
             <div class="col-md-9 wired-pos-abs wired-form">
+                <span id="listmessage" style="margin-bottom: 8px; display:inline-block"></span>
                 <form id="wired_user_form" action="/user/enroll" method="POST" style="margin-top: 10px" >
                     <section>
                     <input type="hidden" name="id" id="id" />

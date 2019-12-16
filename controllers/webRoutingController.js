@@ -79,6 +79,25 @@ module.exports = {
         }
     },
 
+    retrievePeopleRangeOfId: async (req, res, next) => {
+        if (req.session.val_errors) {
+            return res.redirect('/user/list');
+        }
+        try{
+            console.log(req.body);
+            let param = JSON.parse(JSON.stringify(req.body));
+            let persons = await dataAccess.findPersonInRangeOfId(param._id, param.distance);
+             console.log(persons);
+            res.setHeader('Content-Type', 'application/json');
+            res.json(persons);
+        } catch(err) {
+            console.log('Some error');
+            console.log(err);
+            req.session.message = "Error retrieving people near this person!\n" + err;
+            return res.redirect('/user/list');
+        }
+    },
+
     enrollPerson: async (req, res, next) => {
         if (req.session.val_errors) {
             return res.redirect('/user/list');

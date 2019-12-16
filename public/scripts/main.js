@@ -33,6 +33,8 @@ loadProfile = (rowObj) => {
         }
     }
     document.getElementById("profile_card").style.visibility = "visible";
+    console.log(rowObj.id);
+    document.getElementById("profile_card").setAttribute('name', rowObj.id);
 }
 
 /**
@@ -81,8 +83,42 @@ cancelEdit = () => {
  **/
 deleteUser = (userId) => {
     let data = JSON.stringify({"id": userId});
-  
-    fetch("/user/remove", {
+    let url = "/user/remove";
+    let callback = () => {
+        location.reload(true);
+    };
+}
+
+/**
+ *  Send a post request to delete the user and reload the page.
+ *
+ **/
+findPeopleInRange  = () => {
+  let message = "Enter a range in meters to see who is near ";
+  message += document.getElementById("pname").innerText;
+  var distance = prompt(message, "100");
+  if (distance != null) {
+     let personId = document.getElementById("profile_card").getAttribute("name");
+     let data = JSON.stringify({"id": personId, "distance": parseInt(distance)});
+     let url = "/user/rangeid";
+     let callback = filterListing;
+
+     goHunting(data, url, callback);
+  }
+}
+
+/**
+ * A generalize function to do some fetching ala 
+ * the AJAX calls from days of old.
+ *
+ * @param: {data} JSON formatted string
+ * @param: {url} string if the request url
+ * @param  {function} callback function
+ *
+ **/
+goHunting = (data, url, callback) => {
+
+    fetch(url, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -91,6 +127,58 @@ deleteUser = (userId) => {
         body: data
     })
     .then( (response) => {
-        location.reload(true);
+        return response.json()
+    })
+    .then((finale) => {
+        if (callback) {
+            callback(finale);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
     });
 }
+
+filterListing = (dataArray) => {
+    let name = document.getElementById('pname').innerText;
+
+    let visible = [];
+    for (var datum of dataArray) {
+        visible.push(datum._id);
+    }   
+
+    let rows = document.getElementsByTagName('tr');
+    for (var row of rows) {
+        if (row.id !== '') {
+            if (!visible.includes(row.id)) {
+                row.style.display = "none";
+            }
+        } else {
+            row.addEventListener('click', fullListing, false);
+        }
+    }
+
+    let message;
+    if (dataArray.length == 0) {
+         message = "Apparently there is no one within that distance to " + name;
+    } else {
+        message = "Here's who's within that distance to " + name + ".  ";
+    }
+    message += "Click header to return to full listing.";
+    document.getElementById("listmessage").innerText = message;
+    document.getElementById("listmessage").style.visibilty = "visible";
+}
+
+fullListing = () => {
+    let rows = document.getElementsByTagName('tr');
+    for (var row of rows) {
+        if (row.id !== '') {
+            row.style.display = "table-row";
+        } else {
+            row.removeEventListener('click', fullListing);
+        }
+    }
+    document.getElementById("listmessage").style.visibility = "hidden";
+    document.getElementById("listmessage").innerText = '';
+}
+
