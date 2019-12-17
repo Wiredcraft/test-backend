@@ -47,6 +47,22 @@ Fields used are
 * dob
 * address
 
+**Update**
+
+In order to integrate distance search, and to remove a naming conflict the *User* model was changed to
+the *Person* model with the following Schema:
+
+* id*: type String
+* name: type String required
+* dob: type: Date required
+* address: type: String
+* position: {type: {type: String, default: 'Point'}, coordinates: [Number, Number]}
+* description: type: String
+* createdAt: type: Date
+
+The position field must be indexed as a **2sphere** in order to use the [MongoDB's GeoJSON features](https://docs.mongodb.com/manual/geospatial-queries/). Also the *type* field in the *Person* Schema is 
+mererly one implementation of the GeoJSON types.
+
 # Testing
 
 With the use of Mocha and Chai a number of test suites have been created to test a number of 
