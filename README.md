@@ -71,3 +71,25 @@ Fork this repo and send us a pull request when you think it's ready for review. 
 > What if I have a question?
 
 Create a new issue in the repo and we will get back to you shortly.
+
+
+## Installation
+
+```bash
+$ yarn install
+```
+
+## Running the app
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run webpack
+then 
+$ npm run start:dev 
+in new Terminal
+
+# production mode
+$ npm run start:prod
+```
