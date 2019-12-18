@@ -46,11 +46,12 @@ Client.deleteMany({}, function(err) {
 });
 
 log.info("Creating a new authenticated user....");
+let rawPassword = "dolemitexmas"
 User.deleteMany({}, function(err) {
-    var user = new User({ username: "dolemite", password: "stickingittotheman" });
+    var user = new User({ username: "dolemite", password: rawPassword });
     user.save(function(err, user) {
         if(err) return log.error(err);
-        else log.info(`New User - username: ${user.username} *  password: ${user.password}`);
+        else log.info(`New User - username: ${user.username} *  password: ${rawPassword}`);
     });
 });
 
