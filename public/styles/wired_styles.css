@@ -31,6 +31,12 @@
     overflow-y: auto;
 }
 
+.table-head {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
 .wired-errors {
     margin-top:-50px;
     font-family: "Comic Sans Serif", Arial, Verdana;

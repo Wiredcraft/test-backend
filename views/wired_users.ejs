@@ -59,7 +59,6 @@
                  <input type="image" src="/images/radar.png" style="height: 50px; width: 50px; margin-left:40%; border:none" onclick="findPeopleInRange(); return false;">
             </div>
             <% if (typeof errors !== "undefined") { 
-               console.log(errors);
             %>
 
             <div class="main-nav wired-pos-abs wired-errors">
@@ -79,14 +78,14 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Age</th>
-                            <th>DoB</th>
-                            <th>Address</th>
-                            <th>Description</th>
-                            <th>Enroll Date</th>
-                            <th></th>
-                            <th style="display:none"></th>
+                            <th class="table-head">Name</th>
+                            <th class="table-head">Age</th>
+                            <th class="table-head">DoB</th>
+                            <th class="table-head">Address</th>
+                            <th class="table-head">Description</th>
+                            <th class="table-head">Enroll Date</th>
+                            <th class="table-head"></th>
+                            <th class="table-head" style="display:none"></th>
                         </tr>
                     </thead>
                     <tbody>
