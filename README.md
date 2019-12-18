@@ -139,7 +139,12 @@ DEBUG=btapp
 *Note*: I had issues when putting strings in quotes.
 
 # Setting up
-Clone into a directory, afterwards you should run npm install in project root, then run mongod, node ./libs/dataGen.js (wait for completion), and then npm start.
+Clone into a directory, [install MongoDB](https://www.mongodb.com/download-center/enterprise), afterwards you should 
+* cd to project root
+* Run npm install in project root
+* Run mongod to start MongoDB server
+* Execute node ./libs/dataGen.js to load data and test user for sign in(wait for completion)
+* Run npm start to start the server
 
 the dataGen.js will popluate the database with some Persons and create a User.
 
@@ -148,6 +153,10 @@ The test can be run from the main folder with the command npm test
 
 The front end works as one would expect, there is a login, an informational screen and a logout. The API can be accessed by prefixing the route with **/api**
 
+# Using the web view:
+Start the server, open a browser andenter the url **http://127.0.0.1:3000/** and you should be presented with
+a homepage. From there you can sign in with a test user created by the data generator program mentioned previously
+or you can register a new user.
 
 # Using the API
 
