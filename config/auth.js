@@ -51,7 +51,6 @@ module.exports = (passport) => {
     passport.use(
         new LocalStrategy (
             (username, password, done) => {
-                console.log(username, password);
                 User.findOne({username: username})
                      .then((user) => {
                         if(!user || !user.validate(password)) {

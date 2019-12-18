@@ -33,7 +33,6 @@ loadProfile = (rowObj) => {
         }
     }
     document.getElementById("profile_card").style.visibility = "visible";
-    console.log(rowObj.id);
     document.getElementById("profile_card").setAttribute('name', rowObj.id);
 }
 
@@ -60,9 +59,7 @@ loadEditor = (someObj, ident) => {
     }
     document.getElementById("id").value = ident;
     document.getElementById("wired_user_form").action = '/user/update';
-    console.log(document.getElementById("cancel_link").style.visibility);
     document.getElementById("cancel_link").style.visibility = 'visible';
-    console.log(document.getElementById("cancel_link").style.visibility);
     document.getElementById("sub-btn").value = "Update User";
 }
 

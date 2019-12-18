@@ -3,7 +3,6 @@ const log        = require('../libs/log')(module);
 const User      = require('../models/user');
 module.exports = { 
     login: (req, res, next) => {
-        console.log("I am Groot.");
         passport.authenticate('local-login', {
         successRedirect : '/users/list', // redirect to the secure profile section
         failureRedirect : '/login', // redirect back to the signup page if there is an error
@@ -21,7 +20,6 @@ module.exports = {
                                   if (passportUser) {
                                       const user = passportUser;
                                       user.token = passportUser.generateJWT();
-                                      console.log("We are here");
                                       return res.json({ user: user.toAuthJSON() });
                                   }
 
@@ -30,7 +28,6 @@ module.exports = {
 */
     },
     register: (req, res, next) => {
-        console.log("I am Groot.");
         passport.authenticate('local-signup', {
         successRedirect : '/users/list', // redirect to the secure profile section
         failureRedirect : '/', // redirect back to the signup page if there is an error
@@ -42,7 +39,7 @@ module.exports = {
         // save in Mongo
         user.save()
              .then((user) => {
-                 console.log('worker: ' + user.username + " saved.");  
+                 //console.log('worker: ' + user.username + " saved.");  
                  req.login(user)
                     .then(() => {
                         return res.redirect('/user/list');
