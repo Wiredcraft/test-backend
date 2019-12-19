@@ -156,14 +156,14 @@ filterListing = (dataArray) => {
     }
 
     let message;
-    if (dataArray.length == 0) {
-         message = "Apparently there is no one within that distance to " + name;
+    console.log(visible.length);
+    if (visible.length == 0) {
+         message = "Apparently there is no one within that distance to " + name + "<br/>";
     } else {
-        message = "Here's who's within that distance to " + name + ".  ";
+        message = "Here's who's within that distance to " + name + ".<br/>";
     }
     message += "Click header to return to full listing.";
-    document.getElementById("listmessage").innerText = message;
-    document.getElementById("listmessage").style.visibilty = "visible";
+    document.getElementById("listmessage").innerHTML = message;
 }
 
 fullListing = () => {
@@ -175,7 +175,7 @@ fullListing = () => {
             row.removeEventListener('click', fullListing);
         }
     }
-    document.getElementById("listmessage").style.visibility = "hidden";
-    document.getElementById("listmessage").innerText = '';
+
+    document.getElementById("listmessage").innerHTML = '';
 }
 
