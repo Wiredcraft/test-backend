@@ -30,7 +30,7 @@ module.exports = (passport) => {
 
                      newUser.save()
                             .then((user) => {
-                                res.send(user);
+                                res.redirect('/login');
                             })
                             .catch((err) => {
                                log.error(err);

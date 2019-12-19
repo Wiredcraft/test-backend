@@ -156,11 +156,12 @@ filterListing = (dataArray) => {
     }
 
     let message;
-    console.log(visible.length);
-    if (visible.length == 0) {
+    let count = visible.length;
+    if (count == 0) {
          message = "Apparently there is no one within that distance to " + name + "<br/>";
     } else {
-        message = "Here's who's within that distance to " + name + ".<br/>";
+        var phrase = (count == 1) ? `is ${count} person` : `are ${count} people`;
+        message = "There " + phrase + " within that distance to " + name + ".<br/>";
     }
     message += "Click header to return to full listing.";
     document.getElementById("listmessage").innerHTML = message;
