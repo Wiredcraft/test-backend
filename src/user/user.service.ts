@@ -21,6 +21,10 @@ export class UserService {
         return await this.userModel.findById(id).lean();
     }
 
+    async findByUsername(username: string): Promise<User> {
+        return await this.userModel.findOne({name: username}).lean();
+    }
+
     async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
         return await this.userModel.findByIdAndUpdate(id, updateUserDto, {new: true}).lean();
     }

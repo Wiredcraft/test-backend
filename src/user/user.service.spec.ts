@@ -12,6 +12,7 @@ describe('UserService', () => {
       save() { return this.dto; }
       static findById(id:string) { return {_id:id, name: 'yarco002', lean: function() {return this;}}; }
       static findByIdAndUpdate(id:string, dto: any) { dto.lean = function() { return this;}; return dto; }
+      static findOne(cond:any) { return {_id:'12345', name: 'yarco004', password: '$2b$10$AgIFDQ08D39DNQiXA0kak.MZg5.tFgo1gdGbK02gfGHl/3rrXrn3W'}; }
     }
 
     const module: TestingModule = await Test.createTestingModule({
@@ -35,6 +36,11 @@ describe('UserService', () => {
   it('should return the name "yarco003" when after updating', async () => {
     let user = await service.update('0003', {dob: '2018-01-01', address:'', description: ''});
     expect(user.dob).toEqual('2018-01-01');
+  });
+
+  it('should return "yarco004" when executing find by username', async() => {
+    let user = await service.findByUsername('yarco004');
+    expect(user.name).toEqual('yarco004');
   });
 
 });
