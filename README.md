@@ -93,3 +93,12 @@ in new Terminal
 # production mode
 $ npm run start:prod
 ```
+
+## Running test case
+```bash
+$ npm run test
+```
+## Swagger UI
+```
+http://localhost:3000/api
+```
