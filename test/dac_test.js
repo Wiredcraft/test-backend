@@ -2,7 +2,7 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
-const app = require('../btapp');
+const db  = require('../config/dbservice');
 const udac = require('../controllers/dataAccessController'); //imports the User data access controller.
 
 chai.use(chaiAsPromised);
@@ -22,6 +22,10 @@ chai.use(chaiAsPromised);
                     console.log('Error testing creating a new user.' + err);
                     expect(err).is.defined
                 });
+        });
+
+        beforeEach(() => {
+            db.connect()
         });
 
         it('TEST: Get a listing of users', (done) => {

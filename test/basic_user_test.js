@@ -2,11 +2,16 @@
 const chai = require('chai');
 const expect = chai.expect;
 const assert = chai.assert;
-const app = require('../btapp');
+const db  = require('../config/dbservice');
 const Person = require('../models/person'); //imports the Person model.
 
 
 describe('Person Access', function() {
+    beforeEach(() => {
+        db.connect()
+    });
+
+
     describe('Creating documents', () => {
         it('creates a person', (done) => {
             const person = new Person({ name: 'Captain Jean Luc Picard',
@@ -71,7 +76,6 @@ describe('Person Access', function() {
                            'description': "Former Borg member"}]
            Person.insertMany(people)
                  .then((persons) => {
-                     console.log(typeof persons);
                      expect(persons).to.be.a('array').to.have.length(7);;
                      const attrs = persons.filter(e => e.address === 'USS Enterprise');
                      expect(attrs).to.have.lengthOf.at.least(1);
