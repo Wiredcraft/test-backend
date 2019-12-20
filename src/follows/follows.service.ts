@@ -55,4 +55,9 @@ export class FollowsService extends BaseService<Follows> {
         const users = await this.findAll({uid: user.id}, {password: 0}, {path: 'followId'});
         return users;
     }
+
+    async following(user: User) {
+        const users = await this.findAll({followId: user.id}, {password: 0}, {path: 'uid'});
+        return users;
+    }
 }

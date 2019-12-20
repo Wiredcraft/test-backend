@@ -33,4 +33,11 @@ export class FollowsController {
     async followers(@UserDec() user: User) {
         return await this.followService.followers(user);
     }
+
+    @Get('following')
+    @ApiBearerAuth()
+    @ApiOperation({ title: 'user following' })
+    async following(@UserDec() user: User) {
+        return await this.followService.following(user);
+    }
 }
