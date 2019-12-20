@@ -169,7 +169,7 @@ describe('User API routing testing', () => {
         after(() => {
 
             const udac = require('../controllers/dataAccessController');
-            const data = {'name': { $ne: 'Commander Data'}};
+            const data = {};
 
             udac.removePersonByCriteria(data)
                 .then((result) => {
@@ -180,8 +180,6 @@ describe('User API routing testing', () => {
                     expect(err).is.defined
                 });
         });
-
-
 
     });
 });

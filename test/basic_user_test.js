@@ -14,11 +14,12 @@ describe('Person Access', function() {
 
     describe('Creating documents', () => {
         it('creates a person', (done) => {
-            const person = new Person({ name: 'Captain Jean Luc Picard',
+            const person = new Person({_id: '5df24fe5a151d95809659a2e',
+                                     name: 'Commander Data',
                                      dob: 810216104,
                                      address: 'USS Enterprise',
                                      position: {coordinates: [121.5874, 31.3481]},
-                                     description: 'Captain of the Enterprise and foil of Q' });
+                                     description: 'First Android in Starfleet' });
             person.save()
                 .then((person) => {
                     expect(person.isNew).to.be.false;  //if person is saved to db it is not new
@@ -27,7 +28,8 @@ describe('Person Access', function() {
         });
 
         it('Prevent a duplicate person', (done) => {
-            const person = new Person({ name: 'Commander Data',
+            const person = new Person({
+                                     name: 'Commander Data',
                                      dob: 810216104,
                                      address: 'USS Enterprise',
                                      position: {coordinates: [121.5874, 31.3481]},
