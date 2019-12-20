@@ -8,20 +8,15 @@ import {IsNotEmpty, IsDateString, IsOptional, IsDate, IsString, IsNumber} from "
 import {ApiModelProperty} from "@nestjs/swagger/dist/decorators/api-model-property.decorator";
 
 export class UpdateUserDto {
-    @ApiModelProperty()
-    @IsOptional()
-    @IsString()
-    name: string;
-
-    @ApiModelProperty()
+    @ApiModelProperty({required: false})
     @IsOptional()
     dob: string;
 
-    @ApiModelProperty()
+    @ApiModelProperty({required: false})
     @IsOptional()
     address: string;
 
-    @ApiModelProperty()
+    @ApiModelProperty({required: false})
     @IsOptional()
     description: string;
 }
