@@ -30,6 +30,9 @@ export abstract class BaseService<T extends Document> {
         return this.model.findOneAndUpdate(conditions, update, options).exec();
     }
 
+    findByIdAndUpdate(id: string, update: any, options: QueryFindOneAndUpdateOptions = { new: true }): Promise<T | null> {
+        return this.model.findByIdAndUpdate(this.toObjectId(id), update, options).exec();
+    }
     create(docs: Partial<T>): Promise<T> {
         return this.model.create(docs);
     }
@@ -38,6 +41,9 @@ export abstract class BaseService<T extends Document> {
         return this.model.findByIdAndRemove(this.toObjectId(id)).exec();
     }
 
+    remove(conditions: any): Promise<any | null> {
+        return this.model.findOneAndRemove(conditions).exec();
+    }
     private toObjectId(id: string): Types.ObjectId {
         return Types.ObjectId(id);
     }
