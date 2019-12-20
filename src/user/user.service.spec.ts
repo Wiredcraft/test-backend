@@ -51,7 +51,7 @@ describe('UserService', () => {
 
   it('User Login', async () => {
     const token = await service.login('test', '123');
-    expect(token.length).toBeGreaterThan(0);
+    expect(token).toBeDefined();
   });
 
   afterAll(async () => {
