@@ -1,31 +1,51 @@
-import {Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
+import {
+    Body,
+    ClassSerializerInterceptor,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Put, SerializeOptions,
+    UseInterceptors
+} from '@nestjs/common';
 import {CreateUserDto} from "./dto/create-user.dto";
 import {UserService} from "./user.service";
-import {ApiParam, ApiTags} from "@nestjs/swagger";
+import {ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiParam, ApiTags} from "@nestjs/swagger";
 import {UpdateUserDto} from "./dto/update-user.dto";
+import {User} from "./models/user.m";
 
-@ApiTags('user')
+@ApiTags('User')
 @Controller('users')
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Post()
+    @ApiCreatedResponse({description: 'user created'})
+    @ApiBadRequestResponse({description: 'client error'})
     async create(@Body() createUserDto: CreateUserDto) {
-        return await this.userService.create(createUserDto);
+        await this.userService.create(createUserDto);
     }
 
+    @UseInterceptors(ClassSerializerInterceptor)
     @Get(':id')
-    async findById(@Param('id') id: string) {
-        return await this.userService.findById(id);
+    @ApiOkResponse({description: 'user information', type: User})
+    async findById(@Param('id') id: string): Promise<User> {
+        let user = await this.userService.findById(id);
+        return new User(user);
     }
 
+    @UseInterceptors(ClassSerializerInterceptor)
     @Put(':id')
+    @ApiOkResponse({description: 'user information', type: User})
     async updateById(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-        return await this.userService.update(id, updateUserDto);
+        let user = await this.userService.update(id, updateUserDto);
+        return new User(user);
     }
 
     @Delete(':id')
+    @ApiOkResponse({description: 'user removed'})
     async remove(@Param('id') id: string) {
-        return await this.userService.remove(id);
+        await this.userService.remove(id);
     }
 }

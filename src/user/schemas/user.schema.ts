@@ -8,6 +8,7 @@ import * as mongoose from 'mongoose';
 
 export const UserSchema = new mongoose.Schema({
     name: String,
+    password: String,
     dob: String,
     address: String,
     description: String,

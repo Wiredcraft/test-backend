@@ -13,19 +13,18 @@ export class CreateUserDto {
     name: string;
 
     @ApiModelProperty()
+    @IsNotEmpty()
+    password: string;
+
+    @ApiModelProperty({required: false})
     @IsOptional()
     dob: string;
 
-    @ApiModelProperty()
+    @ApiModelProperty({required: false})
     @IsOptional()
     address: string;
 
-    @ApiModelProperty()
+    @ApiModelProperty({required: false})
     @IsOptional()
     description: string;
-
-    @ApiModelProperty()
-    @IsOptional()
-    @IsNumber()
-    createdAt: Number;
 }
