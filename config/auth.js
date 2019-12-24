@@ -14,11 +14,10 @@ const BasicStrategy                 = require('passport-http').BasicStrategy;
 const LocalStrategy                 = require('passport-local').Strategy;
 const ClientPasswordStrategy        = require('passport-oauth2-client-password');
 const BearerStrategy                = require('passport-http-bearer');
+const jwt                           = require('jsonwebtoken');
 const User                          = require('../models/user');
 const Client                        = require('../models/client');
 const {AccessToken, RefreshToken}   = require('../models/token');
-
-
 
 
 /***
@@ -42,13 +41,13 @@ module.exports = (passport) => {
 
 
 /**
-* LOCAL LOGIN 
+* LOCAL LOGIN - FOR WEB
 *
 * @param object defining option overrides 
 * @param function defining the functionality of this strategy
 *
 **/
-    passport.use(
+    passport.use('local-web',
         new LocalStrategy (
             (username, password, done) => {
                 User.findOne({username: username})
@@ -60,6 +59,35 @@ module.exports = (passport) => {
                              username: user.username,
                              password: user.password
                          });
+                    })
+                     .catch((err) => {
+                         return  done(err);
+                    });
+            }
+      ));
+
+/**
+* LOCAL LOGIN - FOR API 
+*
+* @param object defining option overrides 
+* @param function defining the functionality of this strategy
+*
+**/
+    passport.use('local-api',
+        new LocalStrategy (
+            (username, password, done) => {
+                User.findOne({username: username})
+                     .then((user) => {
+                        if(!user || !user.validate(password)) {
+                            return done(null, false);
+                      }   
+                         // Signing the token
+                         let token = jwt.sign({ username: user.username },
+                                              config.security.tokenSecret,
+                                              { expiresIn: config.security.tokenLife }
+                                             ); 
+
+                         return done(null, token);
                     })
                      .catch((err) => {
                          return  done(err);
@@ -99,7 +127,27 @@ module.exports = (passport) => {
         }
     ));
 
-    passport.use(new BearerStrategy(
+    passport.use('bearer', new BearerStrategy((token, done) => {
+        try {
+            const {username} = jwt.verify(token, config.security.tokenSecret);
+            User.findOne({username: username})
+                .then((user) => {
+                    if (!user) {
+                       done(null, false, {messsage: "Not a user of this application."});
+                    }
+                    done(null, username);
+                    return;
+                })
+                .catch((err) => {
+                       done(null, false, {messsage: "Could not verify user."});
+                });
+        }
+        catch(err) {
+            done(null, false, {messsage: "Could not verify user."});
+        }
+    }));
+
+    passport.use('oauth2-bearer', new BearerStrategy(
         (accessToken, done) => {
             AccessToken.findOne({token: accessToken })
                 .then((token) => {

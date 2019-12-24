@@ -7,7 +7,7 @@ const updateVR                  = validator.updateVR;
 const deleteVR                  = validator.deleteVR;
 const webValidate               = validator.webValidate;
 const converter                 = require('../middleware/utilities.js').converter;
-const isLoggedIn                = require('../middleware/utilities.js').isLoggedIn;
+const isLoggedIn                = require('../middleware/security.js').isLoggedIn;
 
 const userWebRouter = express.Router();
 module.exports = userWebRouter;

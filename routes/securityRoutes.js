@@ -15,8 +15,6 @@ const router = express.Router();
 module.exports = (passport) => {
     router.post('/register', (req, res) => {
         let body = req.body;
-        let username = body.username;
-        let password = body.password;
 
         User.findOne({username: username})
             .then((record) => {
@@ -43,12 +41,18 @@ module.exports = (passport) => {
             });
     });
 
-    router.post('/login', passport.authenticate('local', {
+    router.post('/login', passport.authenticate('local-web', {
         failureRedirect:'/',
         successRedirect:'/user/list'
     }), (req, res) => {
         res.send('Welcome to the thunderdome!');
-    })
+    });
+
+    router.post('/gettoken', passport.authenticate('local-api', {session: false}),
+    (req, res) => {
+        res.send({token: req.user});
+    });
+
     return router;
 };
 
