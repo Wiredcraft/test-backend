@@ -103,9 +103,9 @@ while the web view can putter along with submitting form data. Thus at this poin
 separate controllers.
 
 With the addition of distance search, in the profile view there is a radar icon. Clicking on the icon will open a
-dialogue in with the user can enter a distance (in meters) in which to search and then set off an AJAX 
-request (now we are calling it _fetch_) and the listing  of people will be updated to reflect the people in the 
-given range of the person whose profile is displayed. 
+dialogue in with the user can enter a distance (in meters) in which to search. Afterwards an AJAX request is made 
+(actually we're using javascript's _fetch_ function) which returns a list of ids within that range. The listing of people 
+on the page is updated to reflect the people in the given range of the person whose profile is displayed. 
 
 # Authentication
 
