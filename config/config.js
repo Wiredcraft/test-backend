@@ -4,7 +4,8 @@ const env = process.env.NODE_ENV;  // 'dev' or 'test'
 
 const dev  = {
      security: {
-         tokenLife: 3600
+         tokenLife: parseInt(process.env.DEV_TOKEN_LIFE),
+         tokenSecret: process.env.DEV_TOKEN_SECRET
      },
      app: {
          port: parseInt(process.env.DEV_APP_PORT) || 3000
@@ -18,7 +19,8 @@ const dev  = {
 
 const test = {
      security: {
-         tokenLife: 3600
+         tokenLife: parseInt(process.env.TEST_TOKEN_LIFE),
+         tokenSecret: process.env.TEST_TOKEN_SECRET
      },
      app: {
          port: parseInt(process.env.TEST_APP_PORT) || 3000

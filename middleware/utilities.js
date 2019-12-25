@@ -39,36 +39,13 @@ const converter = (req, res, next) => {
     return  next()
 }
 
-const isLoggedIn = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        next()
-    } else {
-        res.redirect('/login');
-    }
-}
-
 const iWannaSee = (req, res, next) => {
     console.log(req.body);
     next()
 }
 
-const bearerSignin = (req, res) =>  {
-    passport.authenticate('bearer', {
-        session: false
-    })(req, res, function() { // this is the function called after auth
-        console.log('inside authenticate', req.user);
-        var response = {
-            userObj: req.user,
-            redirectUrl: req.session.redirectUrl
-        };
-        res.json(response);
-    });
-};
-
 module.exports = {
     converter,
-    isLoggedIn,
     iWannaSee,
-    bearerSignin
 }
 

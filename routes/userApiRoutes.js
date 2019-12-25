@@ -10,6 +10,7 @@ const changeVR              = validator.changeVR;
 const apiValidate           = validator.apiValidate;
 
 const converter             = require('../middleware/utilities.js').converter;
+const isVerified            = require('../middleware/security.js').bearerVerified;
 
 const userAPIRouter         = express.Router();
 module.exports              = userAPIRouter;
@@ -22,7 +23,7 @@ module.exports              = userAPIRouter;
  *
  * @apiSuccess {JSON object} JSON object of person.
  */
-userAPIRouter.get('/user/list', routingController.getPersonList);
+userAPIRouter.get('/user/list', isVerified, routingController.getPersonList);
 
 /**
  * @api {get} /user/:personId Request single person
@@ -32,7 +33,7 @@ userAPIRouter.get('/user/list', routingController.getPersonList);
  *
  * @apiSuccess {JSON object} JSON object of person.
  */
-userAPIRouter.get('/user/:personId', retrieveVR(), apiValidate, routingController.retrievePerson);
+userAPIRouter.get('/user/:personId', isVerified, retrieveVR(), apiValidate, routingController.retrievePerson);
 
 /**
  * @api {post} /enroll   single person
@@ -42,7 +43,7 @@ userAPIRouter.get('/user/:personId', retrieveVR(), apiValidate, routingControlle
  *
  * @apiSuccess {JSON object} JSON object of person.
  **/
-userAPIRouter.post('/user/enroll', converter, createVR(), apiValidate, routingController.enrollPerson);
+userAPIRouter.post('/user/enroll', isVerified, converter, createVR(), apiValidate, routingController.enrollPerson);
 
 /**
  * @api {post} /catalog   single or muliple  persons
@@ -52,7 +53,7 @@ userAPIRouter.post('/user/enroll', converter, createVR(), apiValidate, routingCo
  *
  * @apiSuccess {JSON object} JSON object of person(s).
  **/
-userAPIRouter.post('/user/catalog', converter, routingController.retrieveGroup);
+userAPIRouter.post('/user/catalog', isVerified, converter, routingController.retrieveGroup);
 
 /**
  * @api {post} /radar   single or muliple  persons
@@ -64,7 +65,7 @@ userAPIRouter.post('/user/catalog', converter, routingController.retrieveGroup);
  *                       
  * @apiSuccess {JSON object} JSON object of person(s).
  **/
-userAPIRouter.post('/user/radar', converter, routingController.retrieveInRange);
+userAPIRouter.post('/user/radar', isVerified, converter, routingController.retrieveInRange);
 
 /**
  * @api {post} /rangeid   single or muliple  persons
@@ -75,7 +76,7 @@ userAPIRouter.post('/user/radar', converter, routingController.retrieveInRange);
  *                       
  * @apiSuccess {JSON object} JSON object of person(s).
  **/
-userAPIRouter.post('/user/rangeid', converter, routingController.retrieveInRangeOfId);
+userAPIRouter.post('/user/rangeid', isVerified, converter, routingController.retrieveInRangeOfId);
 
 /**
  * @api {post} /update  single person
@@ -85,7 +86,7 @@ userAPIRouter.post('/user/rangeid', converter, routingController.retrieveInRange
  *
  * @apiSuccess {JSON object} JSON object of person.
  */
-userAPIRouter.post('/user/update', converter, changeVR(), apiValidate, routingController.updatePerson);
+userAPIRouter.post('/user/update', isVerified, converter, changeVR(), apiValidate, routingController.updatePerson);
 
 /**
  * @api {post} /remove   single person
@@ -95,4 +96,4 @@ userAPIRouter.post('/user/update', converter, changeVR(), apiValidate, routingCo
  *
  * @apiSuccess {String} message confirming the deletion.
  */
-userAPIRouter.post('/user/remove', converter, deleteVR(), apiValidate, routingController.deletePerson);
+userAPIRouter.post('/user/remove', isVerified, converter, deleteVR(), apiValidate, routingController.deletePerson);
