@@ -8,12 +8,37 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 chai.should();
 
+let token
+
 describe('User API routing testing', () => {
 
+    before((done) => {
+        chai.request(app)
+            .post('/auth/gettoken')
+            .send({
+                username: "dolemite",
+                password: "dolemitexmas",
+            })
+            .end((err, response) => {
+                token = response.body.token; // save the token!
+                done();
+            });
+    });
+
     describe('Access user API via /GET requests', () => {
+        it('Test: Should get an unauthorized response(401) if we do not send the token', (done) => {
+            chai.request(app)
+                .get('/api/user/list')
+                .end((err, res) => {
+                    res.should.have.status(401);
+                    done();
+                });
+        });
+
         it('TEST: Get all user records', (done) => {
             chai.request(app)
                 .get('/api/user/list')
+                .set('Authorization', `Bearer ${token}`)
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('array');
@@ -24,6 +49,7 @@ describe('User API routing testing', () => {
         it('TEST: GET one user by their id', (done) => {
             chai.request(app)
                 .get('/api/user/5df24fe5a151d95809659a2e')
+                .set('Authorization', `Bearer ${token}`)
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
@@ -41,6 +67,7 @@ describe('User API routing testing', () => {
             chai.request(app)
                 .post('/api/user/catalog')
                 .set('content-type', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(200);
@@ -60,6 +87,7 @@ describe('User API routing testing', () => {
             chai.request(app)
                 .post('/api/user/enroll')
                 .set('content-type', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(200);
@@ -75,6 +103,7 @@ describe('User API routing testing', () => {
             chai.request(app)
                 .post('/api/user/radar')
                 .set('content-type', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(200);
@@ -90,6 +119,7 @@ describe('User API routing testing', () => {
             chai.request(app)
                 .post('/api/user/rangeid')
                 .set('content-type', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(200);
@@ -110,6 +140,7 @@ describe('User API routing testing', () => {
             chai.request(app)
                 .post('/api/user/update')
                 .set('content-type', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(422);
@@ -126,6 +157,7 @@ describe('User API routing testing', () => {
             chai.request(app)
                 .post('/api/user/update')
                 .set('content-type', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(403);
@@ -142,6 +174,7 @@ describe('User API routing testing', () => {
             chai.request(app)
                 .post('/api/user/update')
                 .set('content-type', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(200);
@@ -158,6 +191,7 @@ describe('User API routing testing', () => {
             chai.request(app)
                 .post('/api/user/remove')
                 .set('content-type', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(200);
