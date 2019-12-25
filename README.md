@@ -14,7 +14,7 @@ Mongoose will be used for database interaction
 Mocha and Chai will be used for testing
 Embedded Javascript Templates will be used as the template engine
 
-## Environment Variable
+## Environment Variable  (Updated)
 Will use the environment variable **.env** to hold information regard test and 
 development configuration data.
 ```
@@ -23,10 +23,14 @@ DEV_APP_PORT=3002
 DEV_DB_HOST=***.***.***.***
 DEV_DB_PORT=27017                     
 DEV_DB_NAME=wired_backend_dev
+DEV_TOKEN_LIFE=3600
+DEV_TOKEN_SECRET='some string of characters'
 TEST_APP_PORT=3000
 TEST_DB_HOST=***.***.***.***
 TEST_DB_PORT=27017
 TEST_DB_NAME=wired_backend_test
+TEST_TOKEN_LIFE=3600
+TEST_TOKEN_SECRET='maybe another string of characters'
 DEBUG=btapp
 ```
 
@@ -97,6 +101,11 @@ up in a profile div, and the update/adding of a user is handled by a form on the
 One problem that came up with having a web view and an API is that the API will handle data submission using JSON 
 while the web view can putter along with submitting form data. Thus at this point it may be prudent to go with two
 separate controllers.
+
+With the addition of distance search, in the profile view there is a radar icon. Clicking on the icon will open a
+dialogue in with the user can enter a distance (in meters) in which to search and then set off an AJAX 
+request (now we are calling it _fetch_) and the listing  of people will be updated to reflect the people in the 
+given range of the person whose profile is displayed. 
 
 # Authentication
 
@@ -270,4 +279,38 @@ now implmented and used on the front end.
 
 # Ghosts of problems past
 
-Now I'll go revisit the Bearer Stratategy implementation for OAuth2.
+Now I'll go revisit the Bearer Strategy implementation for OAuth2.
+
+# Who ya gonna call?
+So, a simplified verson of Passport's Bearer Strategy has been implemented. So what does that mean for the use of
+this application. 
+
+That means in order to use the api to interact with the application you must request and use a token during your 
+interaction.
+
+**Step 1. Request a token**
+
+POST user credentials to http://127.0.0.1:3000/auth/token to receive a token from the system
+ * param JSON
+ 
+ {"username": String,
+  "password": String
+ }
+ 
+ * returns JSON
+ {token: String}
+ 
+ **Step 2. Make a request**
+ 
+ Making a request remains the same as laid out previously in this document with one difference. Now in the headers
+ you must include the following:
+ 
+ {'Authorization', `Bearer ${token}`}
+ 
+ How you get that header information into your request will depend on your delivery system. In the tests Mocha allows
+ the user to set header information with a _set_ command. In Postman you can use the console to enter header information.
+
+# What's next?
+
+Will try to make the token system more dynamic with refresh tokens and automating the process a bit more. There is already
+some code structure in the application to achieve this, however it must be reviewed and implemented.
