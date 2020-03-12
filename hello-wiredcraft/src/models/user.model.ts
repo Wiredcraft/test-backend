@@ -2,13 +2,24 @@ import {Entity, model, property} from '@loopback/repository';
 
 // TODO(tong): it need to confirm which field is required.
 // and update the README later.
-@model({settings: {strict: false}})
+@model({
+  settings: {
+    indexes: {
+      uniqueEmail: {
+        keys: {
+          name: 1,
+        },
+        options: {
+          unique: true,
+        },
+      },
+    },
+  },
+})
 export class User extends Entity {
   @property({
     type: 'string',
     id: true,
-    generated: false,
-    required: true,
   })
   id: string;
 
@@ -37,12 +48,6 @@ export class User extends Entity {
     type: 'date',
   })
   createdAt: string;
-
-  // Define well-known properties here
-
-  // Indexer property to allow additional data
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
 
   constructor(data?: Partial<User>) {
     super(data);
