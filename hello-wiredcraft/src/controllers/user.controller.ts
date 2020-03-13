@@ -53,7 +53,7 @@ export class UserController {
 
     let user: User = _.omit(newUser, 'password');
     if (existUser) {
-      user = Object.assign({}, existUser, user);
+      user = Object.assign({}, existUser, user, {deleted: false});
       await this.userRepository.replaceById(user.id, user);
     } else {
       user = await this.userRepository.create(user);
