@@ -25,6 +25,7 @@
     "test": "lb-mocha --allow-console-logs \"dist/__tests__\"",
     "posttest": "npm run lint",
     "test:dev": "lb-mocha --allow-console-logs dist/__tests__/**/*.js && npm run posttest",
+    "test:unit": "lb-mocha --allow-console-logs dist/__tests__/unit/**/*.js",
     "docker:build": "docker build -t hello-wiredcraft .",
     "docker:run": "docker run -p 3000:3000 -d hello-wiredcraft",
     "migrate": "node ./dist/migrate",

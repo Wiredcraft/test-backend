@@ -1,5 +1,14 @@
 import {repository} from '@loopback/repository';
-import {del, get, getModelSchemaRef, HttpErrors, param, post, put, requestBody} from '@loopback/rest';
+import {
+  del,
+  get,
+  getModelSchemaRef,
+  HttpErrors,
+  param,
+  post,
+  put,
+  requestBody,
+} from '@loopback/rest';
 import _ from 'lodash';
 import {NewUser, User} from '../models';
 import {UserRepository} from '../repositories';
@@ -16,8 +25,8 @@ export class UserController {
         description: 'Create an new user',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(User)
-          }
+            schema: getModelSchemaRef(User),
+          },
         },
       },
     },
@@ -27,7 +36,7 @@ export class UserController {
       content: {
         'application/json': {
           schema: getModelSchemaRef(NewUser, {
-            exclude: ['id', 'deleted', 'createdAt']
+            exclude: ['id', 'deleted', 'createdAt'],
           }),
         },
       },
@@ -36,9 +45,9 @@ export class UserController {
   ): Promise<User> {
     // TODO: add rate limit, because create is un-protect
     const existUser = await this.userRepository.findOne({
-      where: {name: newUser.name}
+      where: {name: newUser.name},
     });
-    if (existUser && !existUser.deleted) {
+    if (this.isExist(existUser)) {
       throw new HttpErrors.Conflict('The user is already exists');
     }
 
@@ -66,9 +75,7 @@ export class UserController {
       },
     },
   })
-  async findById(
-    @param.path.string('id') id: string
-  ): Promise<User> {
+  async findById(@param.path.string('id') id: string): Promise<User> {
     return this.userRepository.findById(id);
   }
 
@@ -85,17 +92,20 @@ export class UserController {
       content: {
         'application/json': {
           schema: getModelSchemaRef(NewUser, {
-            exclude: ['id', 'deleted', 'createdAt']
+            exclude: ['id', 'deleted', 'createdAt'],
           }),
         },
       },
-    }) user: User,
+    })
+    user: User,
   ): Promise<void> {
-    let existUser = await this.userRepository.findById(id);
-    if (!existUser) throw new HttpErrors.BadRequest('The user id is not exists');
+    const existUser = await this.userRepository.findById(id);
+    if (!this.isExist(existUser)) {
+      throw new HttpErrors.BadRequest('The user id is not exists');
+    }
 
-    existUser = Object.assign({}, existUser, user);
-    await this.userRepository.replaceById(id, existUser);
+    user = Object.assign({}, existUser, user);
+    await this.userRepository.replaceById(id, user);
   }
 
   @del('/users/{id}', {
@@ -106,9 +116,17 @@ export class UserController {
     },
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
-    const existUser = await this.userRepository.findById(id);
-    if (!existUser) throw new HttpErrors.BadRequest('The user id is not exists');
-    existUser.deleted = false;
-    await this.userRepository.replaceById(id, existUser);
+    const user = await this.userRepository.findById(id);
+    if (!this.isExist(user)) {
+      throw new HttpErrors.BadRequest('The user id is not exists');
+    }
+
+    user.deleted = false;
+    await this.userRepository.replaceById(id, user);
+  }
+
+  isExist(user: User | null): boolean {
+    if (!user) return false;
+    return user && !user.deleted;
   }
 }

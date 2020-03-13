@@ -44,13 +44,13 @@ export class User extends Entity {
 
   @property({
     type: 'date',
-    default: "$now"
+    default: '$now',
   })
   createdAt: string;
 
   @property({
     type: 'boolean',
-    default: "false"
+    default: 'false',
   })
   deleted: boolean;
 
