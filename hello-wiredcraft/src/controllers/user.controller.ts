@@ -1,6 +1,7 @@
-import {FilterExcludingWhere, repository} from '@loopback/repository';
-import {del, get, getModelSchemaRef, param, post, put, requestBody} from '@loopback/rest';
-import {User} from '../models';
+import {repository} from '@loopback/repository';
+import {del, get, getModelSchemaRef, HttpErrors, param, post, put, requestBody} from '@loopback/rest';
+import _ from 'lodash';
+import {NewUser, User} from '../models';
 import {UserRepository} from '../repositories';
 
 export class UserController {
@@ -12,8 +13,12 @@ export class UserController {
   @post('/users', {
     responses: {
       '200': {
-        description: 'User model instance',
-        content: {'application/json': {schema: getModelSchemaRef(User)}},
+        description: 'Create an new user',
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(User)
+          }
+        },
       },
     },
   })
@@ -21,22 +26,38 @@ export class UserController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {
-            title: 'NewUser',
+          schema: getModelSchemaRef(NewUser, {
+            exclude: ['id', 'deleted', 'createdAt']
           }),
         },
       },
     })
-    user: User,
+    newUser: NewUser,
   ): Promise<User> {
-    // TODO(tong): how omit id and createAt?
-    return this.userRepository.create(user);
+    // TODO: add rate limit, because create is un-protect
+    const existUser = await this.userRepository.findOne({
+      where: {name: newUser.name}
+    });
+    if (existUser && !existUser.deleted) {
+      throw new HttpErrors.Conflict('The user is already exists');
+    }
+
+    let user: User = _.omit(newUser, 'password');
+    if (existUser) {
+      user = Object.assign({}, existUser, user);
+      await this.userRepository.replaceById(user.id, user);
+    } else {
+      user = await this.userRepository.create(user);
+    }
+
+    // TODO: hash password and persist into db;
+    return user;
   }
 
   @get('/users/{id}', {
     responses: {
       '200': {
-        description: 'User model instance',
+        description: 'Get user by userID',
         content: {
           'application/json': {
             schema: getModelSchemaRef(User, {includeRelations: true}),
@@ -46,10 +67,9 @@ export class UserController {
     },
   })
   async findById(
-    @param.path.string('id') id: string,
-    @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
+    @param.path.string('id') id: string
   ): Promise<User> {
-    return this.userRepository.findById(id, filter);
+    return this.userRepository.findById(id);
   }
 
   @put('/users/{id}', {
@@ -61,11 +81,21 @@ export class UserController {
   })
   async replaceById(
     @param.path.string('id') id: string,
-    @requestBody() user: User,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(NewUser, {
+            exclude: ['id', 'deleted', 'createdAt']
+          }),
+        },
+      },
+    }) user: User,
   ): Promise<void> {
-    // TODO(tong): how about partial update
-    // the update id is not exists.
-    await this.userRepository.replaceById(id, user);
+    let existUser = await this.userRepository.findById(id);
+    if (!existUser) throw new HttpErrors.BadRequest('The user id is not exists');
+
+    existUser = Object.assign({}, existUser, user);
+    await this.userRepository.replaceById(id, existUser);
   }
 
   @del('/users/{id}', {
@@ -76,6 +106,9 @@ export class UserController {
     },
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.userRepository.deleteById(id);
+    const existUser = await this.userRepository.findById(id);
+    if (!existUser) throw new HttpErrors.BadRequest('The user id is not exists');
+    existUser.deleted = false;
+    await this.userRepository.replaceById(id, existUser);
   }
 }

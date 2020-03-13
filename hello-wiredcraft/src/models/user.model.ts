@@ -1,7 +1,5 @@
 import {Entity, model, property} from '@loopback/repository';
 
-// TODO(tong): it need to confirm which field is required.
-// and update the README later.
 @model({
   settings: {
     indexes: {
@@ -66,3 +64,12 @@ export interface UserRelations {
 }
 
 export type UserWithRelations = User & UserRelations;
+
+@model()
+export class NewUser extends User {
+  @property({
+    type: 'string',
+    required: true,
+  })
+  password: string;
+}
