@@ -5,7 +5,7 @@ import {Entity, model, property} from '@loopback/repository';
 @model({
   settings: {
     indexes: {
-      uniqueEmail: {
+      uniqueName: {
         keys: {
           name: 1,
         },
@@ -46,8 +46,15 @@ export class User extends Entity {
 
   @property({
     type: 'date',
+    default: "$now"
   })
   createdAt: string;
+
+  @property({
+    type: 'boolean',
+    default: "false"
+  })
+  deleted: boolean;
 
   constructor(data?: Partial<User>) {
     super(data);
