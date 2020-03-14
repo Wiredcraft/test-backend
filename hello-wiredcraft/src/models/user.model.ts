@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasOne} from '@loopback/repository';
+import {UserCredentials} from './user-credentials.model';
 
 @model({
   settings: {
@@ -54,6 +55,9 @@ export class User extends Entity {
   })
   deleted: boolean;
 
+  @hasOne(() => UserCredentials)
+  userCredentials: UserCredentials;
+
   constructor(data?: Partial<User>) {
     super(data);
   }
@@ -64,12 +68,3 @@ export interface UserRelations {
 }
 
 export type UserWithRelations = User & UserRelations;
-
-@model()
-export class NewUser extends User {
-  @property({
-    type: 'string',
-    required: true,
-  })
-  password: string;
-}

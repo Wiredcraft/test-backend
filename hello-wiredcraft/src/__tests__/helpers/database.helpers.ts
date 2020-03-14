@@ -1,5 +1,5 @@
 import {User} from '../../models';
-import {UserRepository} from '../../repositories';
+import {UserCredentialsRepository, UserRepository} from '../../repositories';
 import {testDB} from '../fixtures/datasources/testdb.datasource';
 
 export function givenUserData(data?: Partial<User>) {
@@ -17,5 +17,9 @@ export function givenUserData(data?: Partial<User>) {
 }
 
 export async function givenUser(data?: Partial<User>) {
-  return new UserRepository(testDB).create(givenUserData(data));
+  const userCredentialsRepository = new UserCredentialsRepository(testDB);
+  return new UserRepository(
+    testDB,
+    async () => userCredentialsRepository,
+  ).create(givenUserData(data));
 }

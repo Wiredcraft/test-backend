@@ -1,4 +1,6 @@
-import {repository} from '@loopback/repository';
+import {TokenService, UserService} from '@loopback/authentication';
+import {inject} from '@loopback/core';
+import {model, property, repository} from '@loopback/repository';
 import {
   del,
   get,
@@ -10,13 +12,26 @@ import {
   requestBody,
 } from '@loopback/rest';
 import _ from 'lodash';
-import {NewUser, User} from '../models';
-import {UserRepository} from '../repositories';
+import {User} from '../models';
+import {Credentials, UserRepository} from '../repositories';
+import {TokenServiceBindings, UserServiceBindings} from '../services';
+
+@model()
+export class NewUserRequest extends User {
+  @property({
+    type: 'string',
+    required: true,
+  })
+  password: string;
+}
 
 export class UserController {
   constructor(
     @repository(UserRepository)
     public userRepository: UserRepository,
+    @inject(TokenServiceBindings.TOKEN_SERVICE) public jwtService: TokenService,
+    @inject(UserServiceBindings.USER_SERVICE)
+    public userService: UserService<User, Credentials>,
   ) {}
 
   @post('/users', {
@@ -25,7 +40,7 @@ export class UserController {
         description: 'Create an new user',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(User),
+            schema: getModelSchemaRef(NewUserRequest),
           },
         },
       },
@@ -35,28 +50,32 @@ export class UserController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(NewUser, {
+          schema: getModelSchemaRef(NewUserRequest, {
             exclude: ['id', 'deleted', 'createdAt'],
           }),
         },
       },
     })
-    newUser: NewUser,
+    newUserRequest: NewUserRequest,
   ): Promise<User> {
-    // TODO: add rate limit, because create is un-protect
     const existUser = await this.userRepository.findOne({
-      where: {name: newUser.name},
+      where: {name: newUserRequest.name},
     });
     if (this.isExist(existUser)) {
       throw new HttpErrors.Conflict('The user is already exists');
     }
 
-    let user: User = _.omit(newUser, 'password');
+    let user: User = _.omit(newUserRequest, 'password');
+    const password = newUserRequest.password;
     if (existUser) {
       user = Object.assign({}, existUser, user, {deleted: false});
       await this.userRepository.replaceById(user.id, user);
+      if (newUserRequest.password) {
+        await this.userRepository.userCredentials(user.id).patch({password});
+      }
     } else {
       user = await this.userRepository.create(user);
+      await this.userRepository.userCredentials(user.id).create({password});
     }
 
     // TODO: hash password and persist into db;
@@ -91,7 +110,7 @@ export class UserController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(NewUser, {
+          schema: getModelSchemaRef(NewUserRequest, {
             exclude: ['id', 'deleted', 'createdAt'],
           }),
         },
@@ -104,6 +123,7 @@ export class UserController {
       throw new HttpErrors.BadRequest('The user id is not exists');
     }
 
+    // TODO: handler update password case.
     user = Object.assign({}, existUser, user);
     await this.userRepository.replaceById(id, user);
   }
@@ -123,6 +143,57 @@ export class UserController {
 
     user.deleted = false;
     await this.userRepository.replaceById(id, user);
+  }
+
+  @post('/users/login', {
+    responses: {
+      '200': {
+        description: 'Get JWT Token',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                token: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  async login(
+    @requestBody({
+      required: true,
+      description: 'The user login request body',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            required: ['name', 'password'],
+            properties: {
+              name: {
+                type: 'string',
+              },
+              password: {
+                type: 'string',
+                minLength: 6,
+              },
+            },
+          },
+        },
+      },
+    })
+    credentials: Credentials,
+  ): Promise<{token: string}> {
+    const user = await this.userService.verifyCredentials(credentials);
+    const userProfile = this.userService.convertToUserProfile(user);
+
+    const token = await this.jwtService.generateToken(userProfile);
+
+    return {token};
   }
 
   isExist(user: User | null): boolean {

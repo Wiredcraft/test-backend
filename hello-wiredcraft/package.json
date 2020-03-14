@@ -50,6 +50,7 @@
     "!*/__tests__"
   ],
   "dependencies": {
+    "@loopback/authentication": "^4.0.0",
     "@loopback/boot": "^2.0.0",
     "@loopback/context": "^3.0.0",
     "@loopback/core": "^2.0.0",
@@ -59,6 +60,8 @@
     "@loopback/rest-explorer": "^2.0.0",
     "@loopback/service-proxy": "^2.0.0",
     "@types/lodash": "^4.14.149",
+    "dotenv": "^8.2.0",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "loopback-connector-mongodb": "^4.2.0",
     "tslib": "^1.10.0"
