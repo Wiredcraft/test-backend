@@ -1,4 +1,8 @@
-import {TokenService, UserService} from '@loopback/authentication';
+import {
+  authenticate,
+  TokenService,
+  UserService,
+} from '@loopback/authentication';
 import {inject} from '@loopback/core';
 import {model, property, repository} from '@loopback/repository';
 import {
@@ -11,10 +15,12 @@ import {
   put,
   requestBody,
 } from '@loopback/rest';
+import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import _ from 'lodash';
 import {User} from '../models';
 import {Credentials, UserRepository} from '../repositories';
 import {TokenServiceBindings, UserServiceBindings} from '../services';
+import {OPERATION_SECURITY_SPEC} from '../specs/security-spec';
 
 @model()
 export class NewUserRequest extends User {
@@ -194,6 +200,35 @@ export class UserController {
     const token = await this.jwtService.generateToken(userProfile);
 
     return {token};
+  }
+
+  @get('/users/me', {
+    security: OPERATION_SECURITY_SPEC,
+    responses: {
+      '200': {
+        description: 'The current user profile',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              required: ['id'],
+              properties: {
+                id: {type: 'string'},
+                name: {type: 'string'},
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  @authenticate('jwt')
+  async getCurrentUser(
+    @inject(SecurityBindings.USER) userProfile: UserProfile,
+  ): Promise<UserProfile> {
+    userProfile.id = userProfile[securityId];
+    delete userProfile[securityId];
+    return userProfile;
   }
 
   isExist(user: User | null): boolean {
