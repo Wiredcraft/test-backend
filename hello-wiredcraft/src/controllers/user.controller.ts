@@ -4,11 +4,10 @@ import {
   UserService,
 } from '@loopback/authentication';
 import {inject} from '@loopback/core';
-import {model, property, repository} from '@loopback/repository';
+import {repository} from '@loopback/repository';
 import {
   del,
   get,
-  getModelSchemaRef,
   HttpErrors,
   param,
   post,
@@ -17,19 +16,20 @@ import {
 } from '@loopback/rest';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import _ from 'lodash';
-import {User} from '../models';
+import {NewUser, User} from '../models';
 import {Credentials, UserRepository} from '../repositories';
 import {TokenServiceBindings, UserServiceBindings} from '../services';
-import {OPERATION_SECURITY_SPEC} from '../specs/security-spec';
-
-@model()
-export class NewUserRequest extends User {
-  @property({
-    type: 'string',
-    required: true,
-  })
-  password: string;
-}
+import {
+  CREATE_USER_REQUEST_SPEC,
+  CREATE_USER_RESPONSE_SPEC,
+  DELETE_USER_RESPONSE_SPEC,
+  GET_USER_ME_RESPONSE_SPEC,
+  GET_USER_RESPONSE_SPEC,
+  UPDATE_USER_REQUEST_SPEC,
+  UPDATE_USER_RESPONSE_SPEC,
+  USER_LOGIN_REQUEST_SPEC,
+  USER_LOGIN_RESPONSE_SPEC,
+} from '../specs/user-spec';
 
 export class UserController {
   constructor(
@@ -40,43 +40,24 @@ export class UserController {
     public userService: UserService<User, Credentials>,
   ) {}
 
-  @post('/users', {
-    responses: {
-      '200': {
-        description: 'Create an new user',
-        content: {
-          'application/json': {
-            schema: getModelSchemaRef(NewUserRequest),
-          },
-        },
-      },
-    },
-  })
+  @post('/users', CREATE_USER_RESPONSE_SPEC)
   async create(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(NewUserRequest, {
-            exclude: ['id', 'deleted', 'createdAt'],
-          }),
-        },
-      },
-    })
-    newUserRequest: NewUserRequest,
+    @requestBody(CREATE_USER_REQUEST_SPEC)
+    newUser: NewUser,
   ): Promise<User> {
     const existUser = await this.userRepository.findOne({
-      where: {name: newUserRequest.name},
+      where: {name: newUser.name},
     });
     if (this.isExist(existUser)) {
       throw new HttpErrors.Conflict('The user is already exists');
     }
 
-    let user: User = _.omit(newUserRequest, 'password');
-    const password = newUserRequest.password;
+    let user: User = _.omit(newUser, 'password');
+    const password = newUser.password;
     if (existUser) {
       user = Object.assign({}, existUser, user, {deleted: false});
       await this.userRepository.replaceById(user.id, user);
-      if (newUserRequest.password) {
+      if (newUser.password) {
         await this.userRepository.userCredentials(user.id).patch({password});
       }
     } else {
@@ -88,40 +69,15 @@ export class UserController {
     return user;
   }
 
-  @get('/users/{id}', {
-    responses: {
-      '200': {
-        description: 'Get user by userID',
-        content: {
-          'application/json': {
-            schema: getModelSchemaRef(User, {includeRelations: true}),
-          },
-        },
-      },
-    },
-  })
+  @get('/users/{id}', GET_USER_RESPONSE_SPEC)
   async findById(@param.path.string('id') id: string): Promise<User> {
     return this.userRepository.findById(id);
   }
 
-  @put('/users/{id}', {
-    responses: {
-      '204': {
-        description: 'User PUT success',
-      },
-    },
-  })
+  @put('/users/{id}', UPDATE_USER_RESPONSE_SPEC)
   async replaceById(
     @param.path.string('id') id: string,
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(NewUserRequest, {
-            exclude: ['id', 'deleted', 'createdAt'],
-          }),
-        },
-      },
-    })
+    @requestBody(UPDATE_USER_REQUEST_SPEC)
     user: User,
   ): Promise<void> {
     const existUser = await this.userRepository.findById(id);
@@ -134,13 +90,7 @@ export class UserController {
     await this.userRepository.replaceById(id, user);
   }
 
-  @del('/users/{id}', {
-    responses: {
-      '204': {
-        description: 'User DELETE success',
-      },
-    },
-  })
+  @del('/users/{id}', DELETE_USER_RESPONSE_SPEC)
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     const user = await this.userRepository.findById(id);
     if (!this.isExist(user)) {
@@ -151,47 +101,9 @@ export class UserController {
     await this.userRepository.replaceById(id, user);
   }
 
-  @post('/users/login', {
-    responses: {
-      '200': {
-        description: 'Get JWT Token',
-        content: {
-          'application/json': {
-            schema: {
-              type: 'object',
-              properties: {
-                token: {
-                  type: 'string',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  })
+  @post('/users/login', USER_LOGIN_RESPONSE_SPEC)
   async login(
-    @requestBody({
-      required: true,
-      description: 'The user login request body',
-      content: {
-        'application/json': {
-          schema: {
-            type: 'object',
-            required: ['name', 'password'],
-            properties: {
-              name: {
-                type: 'string',
-              },
-              password: {
-                type: 'string',
-                minLength: 6,
-              },
-            },
-          },
-        },
-      },
-    })
+    @requestBody(USER_LOGIN_REQUEST_SPEC)
     credentials: Credentials,
   ): Promise<{token: string}> {
     const user = await this.userService.verifyCredentials(credentials);
@@ -202,26 +114,7 @@ export class UserController {
     return {token};
   }
 
-  @get('/users/me', {
-    security: OPERATION_SECURITY_SPEC,
-    responses: {
-      '200': {
-        description: 'The current user profile',
-        content: {
-          'application/json': {
-            schema: {
-              type: 'object',
-              required: ['id'],
-              properties: {
-                id: {type: 'string'},
-                name: {type: 'string'},
-              },
-            },
-          },
-        },
-      },
-    },
-  })
+  @get('/users/me', GET_USER_ME_RESPONSE_SPEC)
   @authenticate('jwt')
   async getCurrentUser(
     @inject(SecurityBindings.USER) userProfile: UserProfile,

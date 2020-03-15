@@ -1,9 +1,9 @@
-import { promisify } from "util";
-import { TokenService } from '@loopback/authentication';
-import { inject } from '@loopback/core';
-import { TokenServiceBindings } from './bindings';
-import { UserProfile, securityId } from '@loopback/security';
-import { HttpErrors } from '@loopback/rest';
+import {promisify} from 'util';
+import {TokenService} from '@loopback/authentication';
+import {inject} from '@loopback/core';
+import {TokenServiceBindings} from './bindings';
+import {UserProfile, securityId} from '@loopback/security';
+import {HttpErrors} from '@loopback/rest';
 
 const jwt = require('jsonwebtoken');
 const signAsync = promisify(jwt.sign);
@@ -13,11 +13,13 @@ export class JWTService implements TokenService {
   constructor(
     @inject(TokenServiceBindings.TOKEN_SECRET) private jwtSecret: string,
     @inject(TokenServiceBindings.TOKEN_EXPIRES_IN) private jwtExpiresIn: string,
-  ){}
+  ) {}
 
   async verifyToken(token: string): Promise<UserProfile> {
     if (!token) {
-      throw new HttpErrors.Unauthorized(`Error verifying token: 'token' is null`);
+      throw new HttpErrors.Unauthorized(
+        `Error verifying token: 'token' is null`,
+      );
     }
 
     let userProfile: UserProfile;
@@ -29,18 +31,22 @@ export class JWTService implements TokenService {
         {
           [securityId]: decryptedToken.id,
           id: decryptedToken.id,
-          name: decryptedToken.name
+          name: decryptedToken.name,
         },
       );
       return userProfile;
     } catch (error) {
-      throw new HttpErrors.Unauthorized(`Error verifying token: ${error.message}`);
+      throw new HttpErrors.Unauthorized(
+        `Error verifying token: ${error.message}`,
+      );
     }
   }
 
   async generateToken(userProfile: UserProfile): Promise<string> {
     if (!userProfile) {
-      throw new HttpErrors.Unauthorized('Error generating token: userProfile is null');
+      throw new HttpErrors.Unauthorized(
+        'Error generating token: userProfile is null',
+      );
     }
 
     let token: string;
