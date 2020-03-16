@@ -1,8 +1,8 @@
-import {User} from '../../models';
-import {UserCredentialsRepository, UserRepository} from '../../repositories';
-import {testDB} from '../fixtures/datasources/testdb.datasource';
+import {User, UserCredentials} from '../../models';
+import {UserRepository} from '../../repositories';
+import {UserCredentialsRepository} from './../../repositories/user-credentials.repository';
 
-export function givenUserData(data?: Partial<User>) {
+export function givenUser(data?: Partial<User>) {
   return Object.assign(
     {
       name: 'user-name',
@@ -16,10 +16,29 @@ export function givenUserData(data?: Partial<User>) {
   );
 }
 
-export async function givenUser(data?: Partial<User>) {
-  const userCredentialsRepository = new UserCredentialsRepository(testDB);
-  return new UserRepository(
-    testDB,
-    async () => userCredentialsRepository,
-  ).create(givenUserData(data));
+export async function givenUserInstance(
+  userRepository: UserRepository,
+  user?: Partial<User>,
+) {
+  return userRepository.create(givenUser(user));
+}
+
+export function givenUserCredentials(
+  userCredentials?: Partial<UserCredentials>,
+) {
+  return Object.assign(
+    {
+      password: 'p4ssw0rd',
+    },
+    userCredentials,
+  );
+}
+
+export async function givenUserCredentialsInstance(
+  userCredentialsRepository: UserCredentialsRepository,
+  userCredentials?: Partial<UserCredentials>,
+) {
+  return userCredentialsRepository.create(
+    givenUserCredentials(userCredentials),
+  );
 }

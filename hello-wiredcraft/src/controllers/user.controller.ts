@@ -57,11 +57,9 @@ export class UserController {
     if (existUser) {
       user = Object.assign({}, existUser, user, {deleted: false});
       await this.userRepository.replaceById(user.id, user);
-      if (newUser.password) {
-        await this.userRepository
-          .userCredentials(user.id)
-          .patch({password, userId: user.id});
-      }
+      await this.userRepository
+        .userCredentials(user.id)
+        .patch({password, userId: user.id});
     } else {
       user = await this.userRepository.create(user);
       await this.userRepository.userCredentials(user.id).create({password});
