@@ -27,25 +27,26 @@ describe('UserController (unit)', () => {
   let userRepositoryCreate: sinon.SinonStub;
   let userCredentialsRepositoryCreate: sinon.SinonStub;
   let userCredentialsRepositoryPatch: sinon.SinonStub;
+  let findOneUserStub: sinon.SinonStub;
+  let findUserByIdStub: sinon.SinonStub;
+  let userController: UserController;
   const userId = 'a3db1b15-fd23-4bbe-8f1e-104b1c714a0a';
 
   beforeEach(function() {
     stubRepository();
     stubTokenService();
     stubUserService();
+    stepupUserController();
   });
 
   describe('create()', () => {
     it('should create an new user when the user is no exists', async () => {
-      const findStub = userRepository.findOne as sinon.SinonStub;
-      findStub.resolves();
-
       const user = givenUser({id: userId});
       const userCredentials = givenUserCredentials();
+      findOneUserStub.resolves();
       userRepositoryCreate.resolves(user);
       userCredentialsRepositoryCreate.resolves(userCredentials);
-      const controller = initUserController();
-      const newUser = await controller.create(
+      const newUser = await userController.create(
         Object.assign({
           ...user,
           ...userCredentials,
@@ -58,11 +59,9 @@ describe('UserController (unit)', () => {
     it('should throw conflict error when user is exists', async () => {
       const user = givenUser({id: userId});
       const userCredentials = givenUserCredentials();
-      const findStub = userRepository.findOne as sinon.SinonStub;
-      findStub.resolves(user);
+      findOneUserStub.resolves(user);
       try {
-        const controller = initUserController();
-        await controller.create(
+        await userController.create(
           Object.assign({
             ...user,
             ...userCredentials,
@@ -75,14 +74,12 @@ describe('UserController (unit)', () => {
 
     it('should upsert when the user is exists but has been deleted', async () => {
       const user = givenUser({id: userId, deleted: true});
-      const findStub = userRepository.findOne as sinon.SinonStub;
-      findStub.resolves(user);
+      findOneUserStub.resolves(user);
       const replaceByIdStub = userRepository.replaceById as sinon.SinonStub;
       replaceByIdStub.resolves();
       userCredentialsRepositoryPatch.resolves();
       const newUserAddress = 'user-new-address';
-      const controller = initUserController();
-      const newUser = await controller.create(
+      const newUser = await userController.create(
         Object.assign({
           ...user,
           password: 'user-password',
@@ -97,10 +94,8 @@ describe('UserController (unit)', () => {
   describe('findById()', () => {
     it('should return user find by userId', async () => {
       const user = givenUser({id: userId});
-      const findStub = userRepository.findOne as sinon.SinonStub;
-      findStub.resolves(user);
-      const controller = initUserController();
-      const findUser = await controller.findById(userId);
+      findOneUserStub.resolves(user);
+      const findUser = await userController.findById(userId);
       expect(findUser).not.to.be.null();
       expect(findUser!.name).to.be.eql(user.name);
       expect(findUser!.address).to.be.eql(user.address);
@@ -110,11 +105,9 @@ describe('UserController (unit)', () => {
   describe('replaceById()', () => {
     it('should throw error if replace a deleted user', async () => {
       const user = givenUser({id: userId, deleted: true});
-      const findStub = userRepository.findById as sinon.SinonStub;
-      findStub.resolves(user);
-      const controller = initUserController();
+      findUserByIdStub.resolves(user);
       try {
-        await controller.replaceById(
+        await userController.replaceById(
           userId,
           Object.assign({
             ...user,
@@ -128,10 +121,8 @@ describe('UserController (unit)', () => {
     it('should replace the exist user with the new one', async () => {
       const replaceByIdStub = userRepository.replaceById as sinon.SinonStub;
       const user = givenUser({id: userId});
-      const findStub = userRepository.findById as sinon.SinonStub;
-      findStub.resolves(user);
-      const controller = initUserController();
-      await controller.replaceById(
+      findUserByIdStub.resolves(user);
+      await userController.replaceById(
         userId,
         Object.assign({
           ...user,
@@ -144,11 +135,9 @@ describe('UserController (unit)', () => {
   describe('deleteById()', () => {
     it('should throw error if delete a deleted user', async () => {
       const user = givenUser({id: userId, deleted: true});
-      const findStub = userRepository.findById as sinon.SinonStub;
-      findStub.resolves(user);
-      const controller = initUserController();
+      findUserByIdStub.resolves(user);
       try {
-        await controller.deleteById(userId);
+        await userController.deleteById(userId);
       } catch (error) {
         expect(error).match(/The user id is not exists/);
       }
@@ -157,10 +146,8 @@ describe('UserController (unit)', () => {
     it('should delete the exist user', async () => {
       const replaceByIdStub = userRepository.replaceById as sinon.SinonStub;
       const user = givenUser({id: userId});
-      const findStub = userRepository.findById as sinon.SinonStub;
-      findStub.resolves(user);
-      const controller = initUserController();
-      await controller.deleteById(userId);
+      findUserByIdStub.resolves(user);
+      await userController.deleteById(userId);
       expect(replaceByIdStub.calledOnce).to.be.true();
     });
   });
@@ -175,8 +162,7 @@ describe('UserController (unit)', () => {
         name: user.name,
       });
       (jwtService.generateToken as sinon.SinonStub).resolves('accepted');
-      const controller = initUserController();
-      const {token} = await controller.login({
+      const {token} = await userController.login({
         name: 'name',
         password: 'password',
       });
@@ -192,8 +178,7 @@ describe('UserController (unit)', () => {
         id: user.id,
         name: user.name,
       };
-      const controller = initUserController();
-      const returnUserProfile = await controller.getCurrentUser(
+      const returnUserProfile = await userController.getCurrentUser(
         Object.assign({
           ...userProfile,
         }),
@@ -207,22 +192,19 @@ describe('UserController (unit)', () => {
     it('should return true if user is valid and deleted is false', async () => {
       userRepositoryCreate.resolves(givenUser());
       const user = await givenUserInstance(userRepository);
-      const controller = initUserController();
-      const isExist = controller.isExist(user);
+      const isExist = userController.isExist(user);
       expect(isExist).to.be.eql(true);
     });
 
     it('should return false if user is valid and deleted is true', async () => {
       userRepositoryCreate.resolves(givenUser({deleted: true}));
       const user = await givenUserInstance(userRepository);
-      const controller = initUserController();
-      const isExist = controller.isExist(user);
+      const isExist = userController.isExist(user);
       expect(isExist).to.be.eql(false);
     });
 
     it('should return false if user is null', () => {
-      const controller = initUserController();
-      const isExist = controller.isExist(null);
+      const isExist = userController.isExist(null);
       expect(isExist).to.be.eql(false);
     });
   });
@@ -252,9 +234,16 @@ describe('UserController (unit)', () => {
 
     // eslint-disable-next-line
     (userRepository as any).userCredentials = userCredentialsStub;
+
+    findOneUserStub = userRepository.findOne as sinon.SinonStub;
+    findUserByIdStub = userRepository.findById as sinon.SinonStub;
   }
 
-  function initUserController() {
-    return new UserController(userRepository, jwtService, userService);
+  function stepupUserController() {
+    userController = new UserController(
+      userRepository,
+      jwtService,
+      userService,
+    );
   }
 });
