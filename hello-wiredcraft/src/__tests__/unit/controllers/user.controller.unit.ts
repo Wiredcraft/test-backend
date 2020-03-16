@@ -1,5 +1,6 @@
 import {TokenService, UserService} from '@loopback/authentication';
 import {DefaultHasOneRepository, HasOneRepository} from '@loopback/repository';
+import {securityId} from '@loopback/security';
 import {
   createStubInstance,
   expect,
@@ -106,7 +107,7 @@ describe('UserController (unit)', () => {
     });
   });
 
-  describe('replaceById', () => {
+  describe('replaceById()', () => {
     it('should throw error if replace a deleted user', async () => {
       const user = givenUser({id: userId, deleted: true});
       const findStub = userRepository.findById as sinon.SinonStub;
@@ -140,7 +141,7 @@ describe('UserController (unit)', () => {
     });
   });
 
-  describe('deleteById', () => {
+  describe('deleteById()', () => {
     it('should throw error if delete a deleted user', async () => {
       const user = givenUser({id: userId, deleted: true});
       const findStub = userRepository.findById as sinon.SinonStub;
@@ -161,6 +162,44 @@ describe('UserController (unit)', () => {
       const controller = initUserController();
       await controller.deleteById(userId);
       expect(replaceByIdStub.calledOnce).to.be.true();
+    });
+  });
+
+  describe('login()', () => {
+    it('should verify the credentials and return the JWT token', async () => {
+      const user = givenUser({id: userId});
+      (userService.verifyCredentials as sinon.SinonStub).resolves(user);
+      (userService.convertToUserProfile as sinon.SinonStub).returns({
+        [securityId]: user.id,
+        id: user.id,
+        name: user.name,
+      });
+      (jwtService.generateToken as sinon.SinonStub).resolves('accepted');
+      const controller = initUserController();
+      const {token} = await controller.login({
+        name: 'name',
+        password: 'password',
+      });
+      expect(token).to.be.eql('accepted');
+    });
+  });
+
+  describe('getCurrentUser()', () => {
+    it('should return current user profile', async () => {
+      const user = givenUser({id: userId});
+      const userProfile = {
+        [securityId]: user.id,
+        id: user.id,
+        name: user.name,
+      };
+      const controller = initUserController();
+      const returnUserProfile = await controller.getCurrentUser(
+        Object.assign({
+          ...userProfile,
+        }),
+      );
+      expect(returnUserProfile.id).to.be.eql(userProfile.id);
+      expect(returnUserProfile.name).to.be.eql(userProfile.name);
     });
   });
 
