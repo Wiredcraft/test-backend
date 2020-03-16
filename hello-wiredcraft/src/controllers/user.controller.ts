@@ -1,13 +1,35 @@
-import {authenticate, TokenService, UserService} from '@loopback/authentication';
+import {
+  authenticate,
+  TokenService,
+  UserService,
+} from '@loopback/authentication';
 import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
-import {del, get, HttpErrors, param, post, put, requestBody} from '@loopback/rest';
+import {
+  del,
+  get,
+  HttpErrors,
+  param,
+  post,
+  put,
+  requestBody,
+} from '@loopback/rest';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import _ from 'lodash';
 import {NewUser, User} from '../models';
 import {Credentials, UserRepository} from '../repositories';
 import {TokenServiceBindings, UserServiceBindings} from '../services';
-import {CREATE_USER_REQUEST_SPEC, CREATE_USER_RESPONSE_SPEC, DELETE_USER_RESPONSE_SPEC, GET_USER_ME_RESPONSE_SPEC, GET_USER_RESPONSE_SPEC, UPDATE_USER_REQUEST_SPEC, UPDATE_USER_RESPONSE_SPEC, USER_LOGIN_REQUEST_SPEC, USER_LOGIN_RESPONSE_SPEC} from '../specs/user-spec';
+import {
+  CREATE_USER_REQUEST_SPEC,
+  CREATE_USER_RESPONSE_SPEC,
+  DELETE_USER_RESPONSE_SPEC,
+  GET_USER_ME_RESPONSE_SPEC,
+  GET_USER_RESPONSE_SPEC,
+  UPDATE_USER_REQUEST_SPEC,
+  UPDATE_USER_RESPONSE_SPEC,
+  USER_LOGIN_REQUEST_SPEC,
+  USER_LOGIN_RESPONSE_SPEC,
+} from '../specs/user-spec';
 
 export class UserController {
   constructor(
