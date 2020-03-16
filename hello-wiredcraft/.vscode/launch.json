@@ -9,10 +9,28 @@
       "request": "launch",
       "name": "Launch Program",
       "program": "${workspaceFolder}/index.js",
-      "preLaunchTask": "tsc: build - tsconfig.json",
       "outFiles": [
         "${workspaceFolder}/dist/**/*.js"
       ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Current Test",
+      "program": "${workspaceRoot}/bin/mocha-current-file",
+      "runtimeArgs": ["-r", "${workspaceRoot}/node_modules/source-map-support/register"],
+      "cwd": "${workspaceRoot}",
+      "autoAttachChildProcesses": true,
+      "args": [
+        "--config",
+        "${workspaceRoot}/.mocharc.json",
+        "-u", "bdd",
+        "--timeout", "999999",
+        "--colors", "--exit",
+        "--inspect",
+        "${file}",
+      ],
+      "disableOptimisticBPs": true
     }
   ]
 }

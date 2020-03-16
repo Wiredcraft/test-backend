@@ -1,4 +1,4 @@
-import {Entity, model, property, hasOne} from '@loopback/repository';
+import {Entity, hasOne, model, property} from '@loopback/repository';
 import {UserCredentials} from './user-credentials.model';
 
 @model({
@@ -51,7 +51,7 @@ export class User extends Entity {
 
   @property({
     type: 'boolean',
-    default: 'false',
+    default: false,
   })
   deleted: boolean;
 

@@ -44,8 +44,12 @@ export class UserRepository extends DefaultCrudRepository<
     userId: typeof User.prototype.id,
   ): Promise<UserCredentials | undefined> {
     try {
-      console.log(this.userCredentials(userId));
-      return await this.userCredentials(userId).get();
+      return await this.userCredentials(userId).get(
+        {},
+        {
+          strictObjectIDCoercion: true,
+        },
+      );
     } catch (err) {
       if (err.code === 'ENTITY_NOT_FOUND') {
         return undefined;

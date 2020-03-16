@@ -41,7 +41,7 @@ export const GET_USER_RESPONSE_SPEC = {
 export const UPDATE_USER_REQUEST_SPEC = {
   content: {
     'application/json': {
-      schema: getModelSchemaRef(NewUser, {
+      schema: getModelSchemaRef(User, {
         exclude: ['id', 'deleted', 'createdAt'],
       }),
     },

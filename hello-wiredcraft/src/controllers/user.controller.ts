@@ -72,11 +72,13 @@ export class UserController {
   }
 
   @get('/users/{id}', GET_USER_RESPONSE_SPEC)
+  @authenticate('jwt')
   async findById(@param.path.string('id') id: string): Promise<User> {
     return this.userRepository.findById(id);
   }
 
   @put('/users/{id}', UPDATE_USER_RESPONSE_SPEC)
+  @authenticate('jwt')
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody(UPDATE_USER_REQUEST_SPEC)
@@ -93,6 +95,7 @@ export class UserController {
   }
 
   @del('/users/{id}', DELETE_USER_RESPONSE_SPEC)
+  @authenticate('jwt')
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     const user = await this.userRepository.findById(id);
     if (!this.isExist(user)) {

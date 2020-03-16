@@ -23,16 +23,16 @@ export class MyUserService implements UserService<User, Credentials> {
       throw invalidCredentialsError;
     }
 
-    // const credentialsFound = await this.userRepository.findCredentials(user.id);
-    // if (!credentialsFound) {
-    //   throw invalidCredentialsError;
-    // }
+    const credentialsFound = await this.userRepository.findCredentials(user.id);
+    if (!credentialsFound) {
+      throw invalidCredentialsError;
+    }
 
-    // // TODO: inject PasswordHasher
-    // // TODO: verify user password.
-    // if (credentials.password !== credentialsFound.password) {
-    //   throw invalidCredentialsError;
-    // }
+    // TODO: inject PasswordHasher
+    // TODO: verify user password.
+    if (credentials.password !== credentialsFound.password) {
+      throw invalidCredentialsError;
+    }
 
     return user;
   }
