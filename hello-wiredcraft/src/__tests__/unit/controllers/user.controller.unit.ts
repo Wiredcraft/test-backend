@@ -140,6 +140,30 @@ describe('UserController (unit)', () => {
     });
   });
 
+  describe('deleteById', () => {
+    it('should throw error if delete a deleted user', async () => {
+      const user = givenUser({id: userId, deleted: true});
+      const findStub = userRepository.findById as sinon.SinonStub;
+      findStub.resolves(user);
+      const controller = initUserController();
+      try {
+        await controller.deleteById(userId);
+      } catch (error) {
+        expect(error).match(/The user id is not exists/);
+      }
+    });
+
+    it('should delete the exist user', async () => {
+      const replaceByIdStub = userRepository.replaceById as sinon.SinonStub;
+      const user = givenUser({id: userId});
+      const findStub = userRepository.findById as sinon.SinonStub;
+      findStub.resolves(user);
+      const controller = initUserController();
+      await controller.deleteById(userId);
+      expect(replaceByIdStub.calledOnce).to.be.true();
+    });
+  });
+
   describe('isExist()', () => {
     it('should return true if user is valid and deleted is false', async () => {
       userRepositoryCreate.resolves(givenUser());
