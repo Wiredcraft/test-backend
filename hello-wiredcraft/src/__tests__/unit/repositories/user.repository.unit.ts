@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import {UserCredentialsRepository, UserRepository} from '../../../repositories';
 import {testDB} from '../../fixtures/datasources/testdb.datasource';
 
-describe('UserRepository(unit)', () => {
+describe('UserRepository (unit)', () => {
   let userCredentialsRepository: UserCredentialsRepository;
   let userRepository: UserRepository;
   const userId = 'a3db1b15-fd23-4bbe-8f1e-104b1c714a0a';

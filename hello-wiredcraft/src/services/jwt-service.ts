@@ -1,13 +1,13 @@
-import {promisify} from 'util';
 import {TokenService} from '@loopback/authentication';
 import {inject} from '@loopback/core';
-import {TokenServiceBindings} from './bindings';
-import {UserProfile, securityId} from '@loopback/security';
 import {HttpErrors} from '@loopback/rest';
+import {securityId, UserProfile} from '@loopback/security';
+import {promisify} from 'util';
+import {TokenServiceBindings} from './bindings';
 
 const jwt = require('jsonwebtoken');
-const signAsync = promisify(jwt.sign);
-const verifyAsync = promisify(jwt.verify);
+const _signAsync = promisify(jwt.sign);
+const _verifyAsync = promisify(jwt.verify);
 
 export class JWTService implements TokenService {
   constructor(
@@ -15,7 +15,10 @@ export class JWTService implements TokenService {
     @inject(TokenServiceBindings.TOKEN_EXPIRES_IN) private jwtExpiresIn: string,
   ) {}
 
-  async verifyToken(token: string): Promise<UserProfile> {
+  async verifyToken(
+    token: string,
+    verifyAsync: Function = _verifyAsync,
+  ): Promise<UserProfile> {
     if (!token) {
       throw new HttpErrors.Unauthorized(
         `Error verifying token: 'token' is null`,
@@ -42,7 +45,10 @@ export class JWTService implements TokenService {
     }
   }
 
-  async generateToken(userProfile: UserProfile): Promise<string> {
+  async generateToken(
+    userProfile: UserProfile,
+    signAsync: Function = _signAsync,
+  ): Promise<string> {
     if (!userProfile) {
       throw new HttpErrors.Unauthorized(
         'Error generating token: userProfile is null',

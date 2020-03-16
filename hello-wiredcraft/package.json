@@ -28,7 +28,7 @@
     "test:unit": "lb-mocha --config .mocharc.json --allow-console-logs dist/__tests__/unit/**/*.js",
     "test:integration": "lb-mocha --config .mocharc.json --allow-console-logs dist/__tests__/integration/**/*.js",
     "test:acceptance": "lb-mocha --config .mocharc.json --allow-console-logs dist/__tests__/acceptance/**/*.js",
-    "test:cov": "lb-nyc lb-mocha --config .mocharc.json --allow-console-logs dist/__tests__/**/*.js",
+    "test:cov": "lb-nyc lb-mocha --config .mocharc.json --allow-console-logs \"dist/__tests__\"",
     "precoverage": "npm test",
     "coverage": "open coverage/index.html",
     "docker:build": "docker build -t hello-wiredcraft .",
