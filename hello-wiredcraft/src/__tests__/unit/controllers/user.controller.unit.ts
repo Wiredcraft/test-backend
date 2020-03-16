@@ -93,6 +93,19 @@ describe('UserController (unit)', () => {
     });
   });
 
+  describe('findById()', () => {
+    it('should return user find by userId', async () => {
+      const user = givenUser({id: userId});
+      const findStub = userRepository.findOne as sinon.SinonStub;
+      findStub.resolves(user);
+      const controller = initUserController();
+      const findUser = await controller.findById(userId);
+      expect(findUser).not.to.be.null();
+      expect(findUser!.name).to.be.eql(user.name);
+      expect(findUser!.address).to.be.eql(user.address);
+    });
+  });
+
   describe('isExist()', () => {
     it('should return true if user is valid and deleted is false', async () => {
       userRepositoryCreate.resolves(givenUser());

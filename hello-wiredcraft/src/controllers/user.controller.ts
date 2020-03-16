@@ -71,8 +71,10 @@ export class UserController {
 
   @get('/users/{id}', GET_USER_RESPONSE_SPEC)
   @authenticate('jwt')
-  async findById(@param.path.string('id') id: string): Promise<User> {
-    return this.userRepository.findById(id);
+  async findById(@param.path.string('id') id: string): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: {id, deleted: false},
+    });
   }
 
   @put('/users/{id}', UPDATE_USER_RESPONSE_SPEC)

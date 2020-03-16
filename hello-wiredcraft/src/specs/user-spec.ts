@@ -26,6 +26,7 @@ export const CREATE_USER_RESPONSE_SPEC = {
 };
 
 export const GET_USER_RESPONSE_SPEC = {
+  security: OPERATION_SECURITY_SPEC,
   responses: {
     '200': {
       description: 'Get user by userId',
@@ -49,6 +50,7 @@ export const UPDATE_USER_REQUEST_SPEC = {
 };
 
 export const UPDATE_USER_RESPONSE_SPEC = {
+  security: OPERATION_SECURITY_SPEC,
   responses: {
     '204': {
       description: 'Update user by userId',
@@ -57,6 +59,7 @@ export const UPDATE_USER_RESPONSE_SPEC = {
 };
 
 export const DELETE_USER_RESPONSE_SPEC = {
+  security: OPERATION_SECURITY_SPEC,
   responses: {
     '204': {
       description: 'Delete user by userId',

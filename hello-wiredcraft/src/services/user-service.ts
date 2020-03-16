@@ -16,7 +16,7 @@ export class MyUserService implements UserService<User, Credentials> {
     );
 
     const user = await this.userRepository.findOne({
-      where: {name: credentials.name},
+      where: {name: credentials.name, deleted: false},
     });
 
     if (!user) {
@@ -29,7 +29,6 @@ export class MyUserService implements UserService<User, Credentials> {
     }
 
     // TODO: inject PasswordHasher
-    // TODO: verify user password.
     if (credentials.password !== credentialsFound.password) {
       throw invalidCredentialsError;
     }
