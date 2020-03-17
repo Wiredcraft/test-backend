@@ -4,9 +4,11 @@
   "description": "general user management service",
   "license": "MIT",
   "scripts": {
-    "format": "prettier --write \"**/*.js\"",
+    "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\"",
+    "build": "babel src -d dist",
     "start": "node index.js",
     "start:dev": "nodemon",
+    "start:prod": "node dist/main.js",
     "test": "jest",
     "test:cov": "jest --coverage"
   },
@@ -18,6 +20,7 @@
     "rxjs": "^6.5.4"
   },
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",
     "@babel/node": "^7.8.7",
     "@babel/plugin-proposal-decorators": "^7.8.3",
