@@ -27,9 +27,14 @@ describe('UserController (unit)', () => {
   let userRepositoryCreate: sinon.SinonStub;
   let userCredentialsRepositoryCreate: sinon.SinonStub;
   let userCredentialsRepositoryPatch: sinon.SinonStub;
+  let userCredentialsRepositoryDelete: sinon.SinonStub;
   let findOneUserStub: sinon.SinonStub;
   let findUserByIdStub: sinon.SinonStub;
+  let createUserStub: sinon.SinonStub;
+  let replaceUserByIdStub: sinon.SinonStub;
+  let deleteUserByIdStub: sinon.SinonStub;
   let userController: UserController;
+  let logErrorStub: sinon.SinonStub;
   const userId = 'a3db1b15-fd23-4bbe-8f1e-104b1c714a0a';
 
   beforeEach(function() {
@@ -37,6 +42,11 @@ describe('UserController (unit)', () => {
     stubTokenService();
     stubUserService();
     stepupUserController();
+
+    // setp console.error
+    logErrorStub = sinon.stub();
+    // eslint-disable-next-line
+    (console.error as any) = logErrorStub;
   });
 
   describe('create()', () => {
@@ -68,7 +78,7 @@ describe('UserController (unit)', () => {
           }),
         );
       } catch (error) {
-        expect(error).match(/The user is already exists/);
+        expect(error).match(/Create user fail/);
       }
     });
 
@@ -88,6 +98,86 @@ describe('UserController (unit)', () => {
       );
       expect(newUser.deleted).to.be.eql(false);
       expect(newUser.address).to.be.eql(newUserAddress);
+    });
+
+    it('should remark the exists user deleted when replace user fail or fail to path UserCredentials', async () => {
+      const user = givenUser({id: userId, deleted: true});
+      findOneUserStub.resolves(user);
+      replaceUserByIdStub.resolves();
+      userCredentialsRepositoryPatch.throws('MockError');
+      try {
+        await userController.create(
+          Object.assign({
+            ...user,
+            password: 'user-password',
+          }),
+        );
+      } catch (err) {
+        expect(err).match(/MockError/);
+      }
+
+      // test replaceById error
+      replaceUserByIdStub.rejects('MockError');
+      try {
+        await userController.create(
+          Object.assign({
+            ...user,
+            password: 'user-password',
+          }),
+        );
+      } catch (err) {
+        expect(err).match(/MockError/);
+        expect(logErrorStub.callCount).to.be.eql(1);
+      }
+    });
+
+    it('should delete the new user deleted when replace user fail or fail to path UserCredentials', async () => {
+      const user = givenUser({id: userId});
+      findOneUserStub.resolves(null);
+      createUserStub.resolves(user);
+      userCredentialsRepositoryCreate.throws('MockError');
+      deleteUserByIdStub.resolves();
+      userCredentialsRepositoryDelete.resolves();
+      try {
+        await userController.create(
+          Object.assign({
+            ...user,
+            password: 'user-password',
+          }),
+        );
+      } catch (err) {
+        expect(err).match(/MockError/);
+      }
+
+      // fail to delete user credentials
+      userCredentialsRepositoryDelete.rejects('MockError');
+      deleteUserByIdStub.resolves();
+      try {
+        await userController.create(
+          Object.assign({
+            ...user,
+            password: 'user-password',
+          }),
+        );
+      } catch (err) {
+        expect(err).match(/MockError/);
+        expect(logErrorStub.callCount).to.be.eql(1);
+      }
+
+      // fail to delete user
+      userCredentialsRepositoryDelete.resolves();
+      deleteUserByIdStub.rejects('MockError');
+      try {
+        await userController.create(
+          Object.assign({
+            ...user,
+            password: 'user-password',
+          }),
+        );
+      } catch (err) {
+        expect(err).match(/MockError/);
+        expect(logErrorStub.callCount).to.be.eql(2);
+      }
     });
   });
 
@@ -231,12 +321,16 @@ describe('UserController (unit)', () => {
     userCredentialsStub.withArgs(userId).returns(userCredentialsRepository);
     userCredentialsRepositoryCreate = userCredentialsRepository.stubs.create;
     userCredentialsRepositoryPatch = userCredentialsRepository.stubs.patch;
+    userCredentialsRepositoryDelete = userCredentialsRepository.stubs.delete;
 
     // eslint-disable-next-line
     (userRepository as any).userCredentials = userCredentialsStub;
 
     findOneUserStub = userRepository.findOne as sinon.SinonStub;
     findUserByIdStub = userRepository.findById as sinon.SinonStub;
+    createUserStub = userRepository.create as sinon.SinonStub;
+    replaceUserByIdStub = userRepository.replaceById as sinon.SinonStub;
+    deleteUserByIdStub = userRepository.deleteById as sinon.SinonStub;
   }
 
   function stepupUserController() {

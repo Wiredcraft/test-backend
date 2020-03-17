@@ -49,24 +49,42 @@ export class UserController {
       where: {name: newUser.name},
     });
     if (this.isExist(existUser)) {
-      throw new HttpErrors.Conflict('The user is already exists');
+      throw new HttpErrors.Conflict('Create user fail');
     }
 
     let user: User = _.omit(newUser, 'password');
     const password = newUser.password;
-    if (existUser) {
-      user = Object.assign({}, existUser, user, {deleted: false});
-      await this.userRepository.replaceById(user.id, user);
-      await this.userRepository
-        .userCredentials(user.id)
-        .patch({password, userId: user.id});
-    } else {
-      user = await this.userRepository.create(user);
-      await this.userRepository.userCredentials(user.id).create({password});
-    }
 
-    // TODO: hash password and persist into db;
-    return user;
+    try {
+      if (existUser) {
+        user = Object.assign({}, existUser, user, {deleted: false});
+        await this.userRepository.replaceById(user.id, user);
+        await this.userRepository
+          .userCredentials(user.id)
+          .patch({password, userId: user.id});
+      } else {
+        user = await this.userRepository.create(user);
+        await this.userRepository.userCredentials(user.id).create({password});
+      }
+
+      // TODO: hash password and persist into db;
+      return user;
+    } catch (err) {
+      if (existUser) {
+        await this.userRepository
+          .replaceById(user.id, Object.assign({}, existUser, {deleted: true}))
+          .catch(error => console.error(error));
+      } else {
+        await this.userRepository
+          .userCredentials(user.id)
+          .delete()
+          .catch(error => console.error(error));
+        await this.userRepository
+          .deleteById(user.id)
+          .catch(error => console.error(error));
+      }
+      throw err;
+    }
   }
 
   @get('/users/{id}', GET_USER_RESPONSE_SPEC)
@@ -130,6 +148,6 @@ export class UserController {
 
   isExist(user: User | null): boolean {
     if (!user) return false;
-    return user && !user.deleted;
+    return !user.deleted;
   }
 }
