@@ -4,8 +4,23 @@ import {
   LifeCycleObserver,
   ValueOrPromise,
 } from '@loopback/core';
-import {juggler} from '@loopback/repository';
+import {AnyObject, juggler} from '@loopback/repository';
+import {
+  mongoDbName,
+  mongoHost,
+  mongoPassword,
+  mongoPort,
+  mongoUserName,
+} from '../config.js';
 import config from './mongo.datasource.config.json';
+
+function updateConfig(dsConfig: AnyObject) {
+  dsConfig.host = mongoHost;
+  dsConfig.port = mongoPort;
+  dsConfig.user = mongoUserName;
+  dsConfig.password = mongoPassword;
+  dsConfig.database = mongoDbName;
+}
 
 @lifeCycleObserver('datasource')
 export class MongoDataSource extends juggler.DataSource
@@ -16,6 +31,7 @@ export class MongoDataSource extends juggler.DataSource
     @inject('datasources.config.mongo', {optional: true})
     dsConfig: object = config,
   ) {
+    updateConfig(dsConfig);
     super(dsConfig);
   }
 

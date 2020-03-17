@@ -1,3 +1,4 @@
+env:=dev
 MONGO_CONTAINER_NAME:=mongodb-wiredcraft
 
 start-dbs:
@@ -6,3 +7,6 @@ start-dbs:
 
 stop-dbs:
 	docker rm -f $(MONGO_CONTAINER_NAME)
+
+fetch-env:
+	cp ./environments/${env}.env ./.env

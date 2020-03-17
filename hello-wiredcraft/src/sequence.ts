@@ -64,6 +64,8 @@ export class MyAuthenticationSequence implements SequenceHandler {
       const result = await this.invoke(route, args);
       this.send(response, result);
     } catch (error) {
+      // TODO: https://loopback.io/doc/en/lb4/Sequence.html#handling-errors
+      // handling errors when prod env.
       if (
         error.code === AUTHENTICATION_STRATEGY_NOT_FOUND ||
         error.code === USER_PROFILE_NOT_FOUND
