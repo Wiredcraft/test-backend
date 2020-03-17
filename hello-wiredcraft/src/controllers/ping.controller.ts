@@ -1,5 +1,6 @@
-import {Request, RestBindings, get, ResponseObject} from '@loopback/rest';
-import {inject} from '@loopback/context';
+import {inject, intercept} from '@loopback/context';
+import {get, Request, ResponseObject, RestBindings} from '@loopback/rest';
+import {profile} from '../interceptors';
 
 /**
  * OpenAPI response for ping()
@@ -35,6 +36,7 @@ export class PingController {
   constructor(@inject(RestBindings.Http.REQUEST) private req: Request) {}
 
   // Map to `GET /ping`
+  @intercept(profile)
   @get('/ping', {
     responses: {
       '200': PING_RESPONSE,
