@@ -45,6 +45,22 @@ describe('UsersService', () => {
     expect(user.description).toBeFalsy();
   });
 
+  it.each([
+    ['miffyliye', 'Miffy Liye', 'Alex'],
+    ['wangtao', 'Wang Tao', 'Bob'],
+  ])(
+    'should not create user when id is used by existing user',
+    async (id, name, newName) => {
+      await userService.create(id, { name });
+
+      expect(userService.create(id, { name: newName })).rejects.toThrow();
+
+      const user = await userService.getById(id);
+      expect(user.id).toBe(id);
+      expect(user.name).toBe(name);
+    },
+  );
+
   it.each([[''], ['123$456'], ['abc#789']])(
     'should not create user with invalid id containing charaters other than alphabets and digits',
     async id => {

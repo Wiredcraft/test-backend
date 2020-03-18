@@ -3,7 +3,6 @@ import { MongoClient } from 'mongodb';
 export default class DBManager {
   constructor(configService) {
     this.uri = configService.database.uri;
-    this.databaseString = configService.database.database;
     this.db = null;
     this.connection = null;
   }
@@ -13,7 +12,7 @@ export default class DBManager {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    this.db = this.connection.db(this.databaseString);
+    this.db = this.connection.db();
   }
 
   async drop() {

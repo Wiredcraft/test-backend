@@ -18,7 +18,6 @@ export class ConfigService {
       uri:
         process.env.DATABASE_CONNECTION_STRING ||
         `mongodb://localhost/users-service-${this.env}`,
-      database: process.env.DATABASE_DATABASE || `users-service-${this.env}`,
     };
   }
 }
