@@ -1,5 +1,10 @@
 # A General User Management Service
 
+### Development environments
+
+* nodejs (version 12 or later)
+* mongodb (version 4 or later)
+
 ## Installation
 
 ```bash
