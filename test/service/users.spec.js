@@ -104,7 +104,7 @@ describe('UsersService', () => {
     ['miffyliye', 'Miffy Liye', '2012-12-31', 'Xiangyang', 'DEV'],
     ['wangtao', 'Wang Tao', '2015-01-01', 'Wuhan', 'PM'],
   ])('should update user', async (id, name, dob, address, description) => {
-    await userService.create(id, { });
+    await userService.create(id, {});
 
     await userService.update(id, { name, dob, address, description });
 
@@ -122,7 +122,28 @@ describe('UsersService', () => {
       const id = 'miffyliye';
       await userService.create(id, {});
 
-      expect(userService.update(id, {dob: invalidDateOfBirth})).rejects.toThrow();
+      expect(
+        userService.update(id, { dob: invalidDateOfBirth }),
+      ).rejects.toThrow();
+    },
+  );
+
+  it.each([['miffyliye'], ['wangtao']])('should delete user', async id => {
+    await userService.create(id, {});
+
+    await userService.delete(id);
+
+    const user = await userService.getById(id);
+    expect(user).toBeFalsy();
+  });
+
+  it.each([['miffyliye'], ['wangtao']])(
+    'should not throw if user not exist',
+    async id => {
+      await userService.delete(id);
+
+      const user = await userService.getById(id);
+      expect(user).toBeFalsy();
     },
   );
 });

@@ -24,7 +24,7 @@ Parameters
 
 | Name | Required | Description |
 | -- | -- | --|
-| id | true | user name, it consists of alphabets and digits |
+| id | true | user id, it consists of alphabets and digits |
 | name | false | user name |
 | dob | false | date of birth, it should be in YYYY-MM-DD format |
 | address | false | user address |
@@ -134,7 +134,6 @@ Results
 
 ### Update User
 
-
 #### 1. Generate Auth Headers using [HMAC Auth Strategy](./authentication.md).
 
 #### 2. Send HTTP request
@@ -156,7 +155,7 @@ Parameters
 
 | Name | Required | Description |
 | -- | -- | --|
-| id | true | user name, in the uri path, the "miffyliye" in the example |
+| id | true | user id, in the uri path, the "miffyliye" in the example |
 | name | false | user name |
 | dob | false | date of birth, it should be in YYYY-MM-DD format |
 | address | false | user address |
@@ -219,3 +218,28 @@ Results
 | -- | -- |
 | message | error message |
 
+### Delete User
+
+#### 1. Generate Auth Headers using [HMAC Auth Strategy](./authentication.md).
+
+#### 2. Send HTTP request
+
+```
+DELETE /users/miffyliye
+Headers
+  - HMAC Auth Headers
+```
+
+Parameters
+
+| Name | Required | Description |
+| -- | -- | --|
+| id | true | user id, in the uri path, the "miffyliye" in the example |
+
+##### Response
+
+If the user is deleted, or the user does not exist, the response will be
+```
+Status
+  - 200 OK
+```

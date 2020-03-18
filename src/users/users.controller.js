@@ -5,6 +5,7 @@ import {
   Get,
   Post,
   Put,
+  Delete,
   Bind,
   Body,
   Param,
@@ -72,7 +73,12 @@ export class UsersController {
 
     let user;
     try {
-      user = await this.usersService.update(id, { name, dob, address, description });
+      user = await this.usersService.update(id, {
+        name,
+        dob,
+        address,
+        description,
+      });
     } catch (err) {
       if (err.name === 'ValidationError') {
         throw new BadRequestException(err.message);
@@ -84,5 +90,16 @@ export class UsersController {
       throw new NotFoundException('User does not exist');
     }
     return user.toJSON();
+  }
+
+  @UseGuards(AuthGuard('HMAC'))
+  @Delete(':id')
+  @Bind(Param())
+  async delete(params) {
+    const { id } = params;
+
+    await this.usersService.delete(id);
+
+    return {};
   }
 }

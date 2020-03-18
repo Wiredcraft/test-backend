@@ -126,14 +126,14 @@ describe('Users', () => {
         appSecret: 'wrong_secret',
       });
 
-      const createRes = await httpClient
+      const res = await httpClient
         .post('/users')
         .set(authHeaders)
         .send({
           id,
         });
 
-      expect(createRes.status).toBe(401);
+      expect(res.status).toBe(401);
     },
   );
 
@@ -144,46 +144,43 @@ describe('Users', () => {
         appSecret: 'wrong_secret',
       });
 
-      const getRes = await httpClient.get(`/users/${id}`).set(authHeaders);
+      const res = await httpClient.get(`/users/${id}`).set(authHeaders);
 
-      expect(getRes.status).toBe(401);
+      expect(res.status).toBe(401);
     },
   );
 
   it.each([
     ['miffyliye', 'Miffy Liye', '2012-12-31', 'Xiangyang', 'DEV'],
     ['wangtao', 'Wang Tao', '2015-01-01', 'Wuhan', 'PM'],
-  ])(
-    'should update user',
-    async (id, name, dob, address, description) => {
-      const authHeaders = await appManager.getAuthHeaders();
-      await httpClient
-        .post('/users')
-        .set(authHeaders)
-        .send({ id });
+  ])('should update user', async (id, name, dob, address, description) => {
+    const authHeaders = await appManager.getAuthHeaders();
+    await httpClient
+      .post('/users')
+      .set(authHeaders)
+      .send({ id });
 
-      const updateRes = await httpClient
-        .put(`/users/${id}`)
-        .set(authHeaders)
-        .send({
-          name,
-          dob,
-          address,
-          description,
-        });
-      expect(updateRes.status).toBe(200);
+    const updateRes = await httpClient
+      .put(`/users/${id}`)
+      .set(authHeaders)
+      .send({
+        name,
+        dob,
+        address,
+        description,
+      });
+    expect(updateRes.status).toBe(200);
 
-      const getRes = await httpClient.get(`/users/${id}`).set(authHeaders);
-      expect(getRes.status).toBe(200);
-      const user = getRes.body;
-      expect(user.id).toBe(id);
-      expect(user.name).toBe(name);
-      expect(user.dob).toBe(dob);
-      expect(user.address).toBe(address);
-      expect(user.description).toBe(description);
-      expect(user.createdAt).toBeTruthy();
-    },
-  );
+    const getRes = await httpClient.get(`/users/${id}`).set(authHeaders);
+    expect(getRes.status).toBe(200);
+    const user = getRes.body;
+    expect(user.id).toBe(id);
+    expect(user.name).toBe(name);
+    expect(user.dob).toBe(dob);
+    expect(user.address).toBe(address);
+    expect(user.description).toBe(description);
+    expect(user.createdAt).toBeTruthy();
+  });
 
   it.each([
     ['miffyliye', 'Miffy Liye', '2012-12-31', 'Xiangyang', 'DEV'],
@@ -200,7 +197,8 @@ describe('Users', () => {
           name,
           dob,
           address,
-          description, });
+          description,
+        });
 
       const updateRes = await httpClient
         .put(`/users/${id}`)
@@ -247,12 +245,9 @@ describe('Users', () => {
     },
   );
 
-  it.each([
-    ['miffyliye'],
-    ['wangtao'],
-  ])(
+  it.each([['miffyliye'], ['wangtao']])(
     'should not update not existing user',
-    async (id) => {
+    async id => {
       const authHeaders = await appManager.getAuthHeaders();
 
       const updateRes = await httpClient
@@ -263,6 +258,73 @@ describe('Users', () => {
         });
 
       expect(updateRes.status).toBe(404);
+    },
+  );
+
+  it.each([['miffyliye'], ['wangtao']])(
+    'should not update user without right auth',
+    async id => {
+      const authHeaders = await appManager.getAuthHeaders({
+        appSecret: 'wrong_secret',
+      });
+
+      const res = await httpClient
+        .put(`/users/${id}`)
+        .set(authHeaders)
+        .send({
+          id,
+        });
+
+      expect(res.status).toBe(401);
+    },
+  );
+
+  it.each([['miffyliye'], ['wangtao']])('should delete user', async id => {
+    const authHeaders = await appManager.getAuthHeaders();
+    await httpClient
+      .post('/users')
+      .set(authHeaders)
+      .send({
+        id,
+      });
+
+    const deleteRes = await httpClient.delete(`/users/${id}`).set(authHeaders);
+
+    expect(deleteRes.status).toBe(200);
+    const getRes = await httpClient.get(`/users/${id}`).set(authHeaders);
+    expect(getRes.status).toBe(404);
+  });
+
+  it.each([['miffyliye'], ['wangtao']])(
+    'should return OK when delete not existing user',
+    async id => {
+      const authHeaders = await appManager.getAuthHeaders();
+
+      const deleteRes = await httpClient
+        .delete(`/users/${id}`)
+        .set(authHeaders);
+
+      expect(deleteRes.status).toBe(200);
+      const getRes = await httpClient.get(`/users/${id}`).set(authHeaders);
+      expect(getRes.status).toBe(404);
+    },
+  );
+
+  it.each([['miffyliye'], ['wangtao']])(
+    'should not delete user without right auth',
+    async id => {
+      const authHeaders = await appManager.getAuthHeaders({
+        appSecret: 'wrong_secret',
+      });
+
+      const res = await httpClient
+        .delete(`/users/${id}`)
+        .set(authHeaders)
+        .send({
+          id,
+        });
+
+      expect(res.status).toBe(401);
     },
   );
 });
