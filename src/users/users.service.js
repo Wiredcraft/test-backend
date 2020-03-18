@@ -8,6 +8,15 @@ export class UsersService {
     this.userModel = userModel;
   }
 
+  async list(offset, limit) {
+    return this.userModel
+      .find({})
+      .sort({ id: 1 })
+      .skip(offset)
+      .limit(limit)
+      .exec();
+  }
+
   async create(id, { name, dob, address, description }) {
     const user = this.userModel({
       id,

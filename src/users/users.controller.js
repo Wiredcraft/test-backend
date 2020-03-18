@@ -9,6 +9,7 @@ import {
   Bind,
   Body,
   Param,
+  Query,
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
@@ -50,6 +51,23 @@ export class UsersController {
       }
     }
     return user.toJSON();
+  }
+
+  @UseGuards(AuthGuard('HMAC'))
+  @Get('')
+  @Bind(Query())
+  async list(query) {
+    const offset = query.offset ? parseInt(query.offset, 10) : 0;
+    const limit = query.limit ? parseInt(query.limit, 10) : 10;
+
+    const users = await this.usersService.list(offset, limit);
+    return {
+      meta: {
+        offset,
+        limit,
+      },
+      data: users.map(u => u.toJSON()),
+    };
   }
 
   @UseGuards(AuthGuard('HMAC'))

@@ -243,3 +243,67 @@ If the user is deleted, or the user does not exist, the response will be
 Status
   - 200 OK
 ```
+
+### List Users
+
+#### 1. Generate Auth Headers using [HMAC Auth Strategy](./authentication.md).
+
+#### 2. Send HTTP request
+
+```
+GET /users?offset=1&limit=2
+Headers
+  - HMAC Auth Headers
+```
+
+Parameters
+
+| Name | Place | Required | Description |
+| -- | -- | -- | --|
+| offset | query | false | default value is 0 |
+| limit | query | false | default value is 10 |
+
+The users are ordered by id.
+
+##### Response
+
+The response will be
+```
+Status
+  - 200 OK
+Body
+  - {
+      "meta": {
+          "offset": 1,
+          "limit": 2
+      },
+      "data": [
+          {
+            "id": "miffyliye",
+            "name": "MiffyLiye",
+            "dob": "2012-12-31",
+            "address": "China",
+            "description": "DEV",
+            "updatedAt": "2020-03-18T09:44:52.780Z",
+            "createdAt": "2020-03-18T09:44:52.780Z"
+          },
+          {
+            "id": "wangtao",
+            "name": "Wang Tao",
+            "dob": "2012-12-31",
+            "address": "China",
+            "description": "DEV",
+            "updatedAt": "2020-03-18T13:27:12.129Z",
+            "createdAt": "2020-03-18T13:27:12.129Z"
+          }
+      ]
+    }
+```
+Results
+
+| Name | Place | Description |
+| -- | -- | --|
+| meta.offset | body | offset used when list users |
+| meta.limit | body | limit used when list users |
+| data | body | a list of users |
+

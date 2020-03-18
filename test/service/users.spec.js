@@ -146,4 +146,17 @@ describe('UsersService', () => {
       expect(user).toBeFalsy();
     },
   );
+
+  it('should list users', async () => {
+    for (let i = 0; i < 20; i++) {
+      await userService.create(`0${i + 1}`.slice(-2), {});
+    }
+
+    const users = await userService.list(2, 3);
+
+    expect(users.length).toBe(3);
+    expect(users[0].id).toBe('03');
+    expect(users[1].id).toBe('04');
+    expect(users[2].id).toBe('05');
+  });
 });

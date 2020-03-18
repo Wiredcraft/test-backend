@@ -327,4 +327,49 @@ describe('Users', () => {
       expect(res.status).toBe(401);
     },
   );
+
+  it('should list users', async () => {
+    const authHeaders = await appManager.getAuthHeaders();
+    for (let i = 0; i < 20; i++) {
+      await httpClient
+        .post('/users')
+        .set(authHeaders)
+        .send({ id: `0${i + 1}`.slice(-2) });
+    }
+    const offset = 2;
+    const limit = 3;
+
+    const res = await httpClient
+      .get(`/users?offset=${offset}&limit=${limit}`)
+      .set(authHeaders);
+
+    expect(res.status).toBe(200);
+    const meta = res.body.meta;
+    expect(meta.offset).toBe(offset);
+    expect(meta.limit).toBe(limit);
+    const data = res.body.data;
+    expect(data.length).toBe(3);
+    expect(data[0].id).toBe('03');
+    expect(data[1].id).toBe('04');
+    expect(data[2].id).toBe('05');
+  });
+
+  it('should list users with default offset of 0 and default limit of 10', async () => {
+    const authHeaders = await appManager.getAuthHeaders();
+    for (let i = 0; i < 20; i++) {
+      await httpClient
+        .post('/users')
+        .set(authHeaders)
+        .send({ id: `0${i + 1}`.slice(-2) });
+    }
+
+    const res = await httpClient.get(`/users`).set(authHeaders);
+
+    expect(res.status).toBe(200);
+    const meta = res.body.meta;
+    expect(meta.offset).toBe(0);
+    expect(meta.limit).toBe(10);
+    const data = res.body.data;
+    expect(data.length).toBe(10);
+  });
 });
