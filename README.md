@@ -37,3 +37,4 @@ npm run test:cov
 ## Documents
 
 * [Design documents](./docs/README.md)
+* [API Reference](./docs/api/README.md)

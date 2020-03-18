@@ -10,3 +10,12 @@ It provides the capabilities of managing users so that other systems can use it 
 
 1. Other system can get/create/update/delete user data. 
 
+## Architecture design decisions
+
+1. Use a progressive framework (e.g., nestjs) so that we can keep it simple for current requirements, and grow progressively to meet future requrements.
+
+2. Decompose the system into modules. Use modules to separate different domains such as config, users, auth, each module should keep exports simple and reliable.
+
+3. Decompose the modules into layers. Service layer should encapsulate business logic. Controller layer should be thin.
+
+4. Use BDD style tests. A unit in this system corresponds to a layer or a layer of a module in unit test. Test should cover service layer and api layer.
