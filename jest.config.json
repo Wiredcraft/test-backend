@@ -1,0 +1,25 @@
+{
+  "collectCoverageFrom": [
+    "src/**/*.js",
+    "!index.js",
+    "!src/main.js",
+    "!src/config/**",
+    "!**/node_modules/**",
+    "!test/**"
+  ],
+  "moduleFileExtensions": [
+    "js",
+    "json"
+  ],
+  "rootDir": ".",
+  "testRegex": ".spec.js$",
+  "coverageDirectory": "../coverage",
+  "coverageThreshold": {
+    "global": {
+      "lines": 80,
+      "branches": 80,
+      "functions": 80
+    }
+  },
+  "testEnvironment": "node"
+}

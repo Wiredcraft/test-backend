@@ -66,6 +66,23 @@ describe('Users', () => {
   );
 
   it.each([
+    ['miffyliye', '12345'],
+    ['wangtao', 'abcdef'],
+  ])(
+    'should not create user when date of birth is invalid',
+    async (id, dateOfBirth) => {
+      const createRes = await httpClient.post('/users').send({
+        id,
+        dob: dateOfBirth,
+      });
+
+      expect(createRes.status).toBe(400);
+      const getRes = await httpClient.get(`/users/${id}`);
+      expect(getRes.status).toBe(404);
+    },
+  );
+
+  it.each([
     ['miffyliye', 'alex'],
     ['wangtao', 'bob'],
   ])('should not get not exist user', async (id, notExistUserId) => {
