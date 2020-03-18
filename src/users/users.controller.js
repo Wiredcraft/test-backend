@@ -1,6 +1,7 @@
 import {
   Controller,
   Dependencies,
+  UseGuards,
   Get,
   Post,
   Bind,
@@ -9,6 +10,7 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -18,6 +20,7 @@ export class UsersController {
     this.usersService = usersService;
   }
 
+  @UseGuards(AuthGuard('HMAC'))
   @Post('')
   @Bind(Body())
   async create(body) {
@@ -49,6 +52,7 @@ export class UsersController {
     };
   }
 
+  @UseGuards(AuthGuard('HMAC'))
   @Get(':id')
   @Bind(Param())
   async get(params) {

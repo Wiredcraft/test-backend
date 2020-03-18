@@ -3,6 +3,8 @@ import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { ConfigService } from '../../src/config/config.service';
+import crypto from 'crypto';
+import moment from 'moment';
 
 export default class AppManager {
   constructor() {
@@ -42,5 +44,23 @@ export default class AppManager {
 
   getHttpClient() {
     return request(this.app.getHttpServer());
+  }
+
+  getAuthHeaders({ appId, appSecret, timestamp } = {}) {
+    appId = appId || this.configService.auth.appId;
+    appSecret = appSecret || this.configService.auth.appSecret;
+    const hmacAlgorithm = this.configService.auth.hmacAlgorithm;
+    timestamp = timestamp || moment().toISOString();
+
+    const signature = crypto
+      .createHmac(hmacAlgorithm, appSecret)
+      .update(timestamp)
+      .digest('hex');
+
+    return {
+      'X-Application-ID': appId,
+      'X-Timestamp': timestamp,
+      'X-Signature': signature,
+    };
   }
 }

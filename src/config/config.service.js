@@ -20,6 +20,17 @@ export class ConfigService {
         `mongodb://localhost/users-service-${this.env}`,
     };
   }
+  get auth() {
+    return {
+      appId: process.env.AUTH_APP_ID || 'miffyliye',
+      appSecret: process.env.AUTH_APP_SECRET || '5R6Ja8xl8l91viUt',
+      hmacAlgorithm: process.env.AUTH_HMAC_ALGORITHM || 'sha256',
+      timestampToleranceInMs: parseInt(
+        process.env.AUTH_TIMESTAMP_TOLERANCE_IN_MS || '300000',
+        10,
+      ),
+    };
+  }
 }
 
 export const configuration = new ConfigService();

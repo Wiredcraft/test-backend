@@ -20,16 +20,21 @@ describe('Users', () => {
   ])(
     'should create user then get created user',
     async (id, name, dob, address, description) => {
-      const createRes = await httpClient.post('/users').send({
-        id,
-        name,
-        dob,
-        address,
-        description,
-      });
+      const authHeaders = await appManager.getAuthHeaders();
+
+      const createRes = await httpClient
+        .post('/users')
+        .set(authHeaders)
+        .send({
+          id,
+          name,
+          dob,
+          address,
+          description,
+        });
 
       expect(createRes.status).toBe(201);
-      const getRes = await httpClient.get(`/users/${id}`);
+      const getRes = await httpClient.get(`/users/${id}`).set(authHeaders);
       expect(getRes.status).toBe(200);
       const user = getRes.body;
       expect(user.id).toBe(id);
@@ -47,18 +52,25 @@ describe('Users', () => {
   ])(
     'should not create user when id is used by existing user',
     async (id, name, newName) => {
-      await httpClient.post('/users').send({
-        id,
-        name,
-      });
+      const authHeaders = await appManager.getAuthHeaders();
+      await httpClient
+        .post('/users')
+        .set(authHeaders)
+        .send({
+          id,
+          name,
+        });
 
-      const createRes = await httpClient.post('/users').send({
-        id,
-        name: newName,
-      });
+      const createRes = await httpClient
+        .post('/users')
+        .set(authHeaders)
+        .send({
+          id,
+          name: newName,
+        });
 
       expect(createRes.status).toBe(400);
-      const getRes = await httpClient.get(`/users/${id}`);
+      const getRes = await httpClient.get(`/users/${id}`).set(authHeaders);
       expect(getRes.status).toBe(200);
       const existingUser = getRes.body;
       expect(existingUser.id).toBe(id);
@@ -72,13 +84,18 @@ describe('Users', () => {
   ])(
     'should not create user when date of birth is invalid',
     async (id, dateOfBirth) => {
-      const createRes = await httpClient.post('/users').send({
-        id,
-        dob: dateOfBirth,
-      });
+      const authHeaders = await appManager.getAuthHeaders();
+
+      const createRes = await httpClient
+        .post('/users')
+        .set(authHeaders)
+        .send({
+          id,
+          dob: dateOfBirth,
+        });
 
       expect(createRes.status).toBe(400);
-      const getRes = await httpClient.get(`/users/${id}`);
+      const getRes = await httpClient.get(`/users/${id}`).set(authHeaders);
       expect(getRes.status).toBe(404);
     },
   );
@@ -87,12 +104,49 @@ describe('Users', () => {
     ['miffyliye', 'alex'],
     ['wangtao', 'bob'],
   ])('should not get not exist user', async (id, notExistUserId) => {
-    await httpClient.post('/users').send({
-      id,
-    });
+    const authHeaders = await appManager.getAuthHeaders();
+    await httpClient
+      .post('/users')
+      .set(authHeaders)
+      .send({
+        id,
+      });
 
-    const getRes = await httpClient.get(`/users/${notExistUserId}`);
+    const getRes = await httpClient
+      .get(`/users/${notExistUserId}`)
+      .set(authHeaders);
 
     expect(getRes.status).toBe(404);
   });
+
+  it.each([['miffyliye'], ['wangtao']])(
+    'should not create user without right auth',
+    async id => {
+      const authHeaders = await appManager.getAuthHeaders({
+        appSecret: 'wrong_secret',
+      });
+
+      const createRes = await httpClient
+        .post('/users')
+        .set(authHeaders)
+        .send({
+          id,
+        });
+
+      expect(createRes.status).toBe(401);
+    },
+  );
+
+  it.each([['miffyliye'], ['wangtao']])(
+    'should not get user without right auth',
+    async id => {
+      const authHeaders = await appManager.getAuthHeaders({
+        appSecret: 'wrong_secret',
+      });
+
+      const getRes = await httpClient.get(`/users/${id}`).set(authHeaders);
+
+      expect(getRes.status).toBe(401);
+    },
+  );
 });
