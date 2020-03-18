@@ -30,6 +30,7 @@ describe('UsersService', () => {
     expect(user.dob).toBe(dob);
     expect(user.address).toBe(address);
     expect(user.description).toBe(description);
+    expect(user.createdAt).toBeTruthy();
   });
 
   it('should create user without optional fields', async () => {

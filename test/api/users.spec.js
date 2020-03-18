@@ -37,6 +37,7 @@ describe('Users', () => {
       expect(user.dob).toBe(dob);
       expect(user.address).toBe(address);
       expect(user.description).toBe(description);
+      expect(user.createdAt).toBeTruthy();
     },
   );
 
