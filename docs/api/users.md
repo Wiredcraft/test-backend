@@ -11,7 +11,7 @@ POST /users
 Headers
   - HMAC Auth Headers
 Body
-  - { 
+  - {
       "id": "miffyliye",
       "name": "MiffyLiye",
       "dob": "2012-12-31",
@@ -38,15 +38,15 @@ Status
   - 201 Created
 Body
   - {
-      "id": "miffyliye"
+      "id": "miffyliye",
+      "name": "MiffyLiye",
+      "dob": "2012-12-31",
+      "address": "China",
+      "description": "DEV",
+      "updatedAt": "2020-03-18T09:44:52.780Z",
+      "createdAt": "2020-03-18T09:44:52.780Z"
     }
 ```
-
-Results
-
-| Name | Description |
-| -- | -- |
-| id | user name |
 
 If the request failed, the response will contain the error message
 ```
@@ -106,7 +106,7 @@ Results
 
 | Name | Description |
 | -- | -- |
-| id | user name, it consists of alphabets and digits |
+| id | user id, it consists of alphabets and digits |
 | name | user name |
 | dob | date of birth, it should be in YYYY-MM-DD format |
 | address | user address |
@@ -131,3 +131,91 @@ Results
 | Name | Description |
 | -- | -- |
 | message | error message |
+
+### Update User
+
+
+#### 1. Generate Auth Headers using [HMAC Auth Strategy](./authentication.md).
+
+#### 2. Send HTTP request
+
+```
+PUT /users/miffyliye
+Headers
+  - HMAC Auth Headers
+Body
+  - {
+      "name": "MiffyLiye",
+      "dob": "2012-12-31",
+      "address": "China",
+      "description": "ARCH"
+    }
+```
+
+Parameters
+
+| Name | Required | Description |
+| -- | -- | --|
+| id | true | user name, in the uri path, the "miffyliye" in the example |
+| name | false | user name |
+| dob | false | date of birth, it should be in YYYY-MM-DD format |
+| address | false | user address |
+| description | false | user description |
+
+##### Response
+
+If the user is updated, the response will be
+```
+Status
+  - 200 OK
+Body
+  - {
+      "id": "miffyliye",
+      "name": "MiffyLiye",
+      "dob": "2012-12-31",
+      "address": "China",
+      "description": "ARCH",
+      "updatedAt": "2020-03-18T13:37:02.281Z",
+      "createdAt": "2020-03-18T13:29:31.520Z"
+    }
+```
+
+If the request failed, the response will contain the error message
+
+For example if the request body is
+```
+{
+  "dob": "123456"
+}
+```
+The response will be
+```
+Status
+  - 400 Bad Request
+Body
+  - {
+      "statusCode": 400,
+      "message": "User validation failed: dob: 12345 is not a valid date!",
+      "error": "Bad Request"
+    }
+```
+
+If the user does not exist, the response will be
+```
+Status
+  - 404 Not Found
+Body
+  - {
+      "statusCode": 404,
+      "message": "User does not exist",
+      "error": "Not Found"
+    }
+```
+
+
+Results
+
+| Name | Description |
+| -- | -- |
+| message | error message |
+
