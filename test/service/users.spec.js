@@ -99,4 +99,30 @@ describe('UsersService', () => {
       expect(user.dob).toBe(dateOfBirth);
     },
   );
+
+  it.each([
+    ['miffyliye', 'Miffy Liye', '2012-12-31', 'Xiangyang', 'DEV'],
+    ['wangtao', 'Wang Tao', '2015-01-01', 'Wuhan', 'PM'],
+  ])('should update user', async (id, name, dob, address, description) => {
+    await userService.create(id, { });
+
+    await userService.update(id, { name, dob, address, description });
+
+    const user = await userService.getById(id);
+    expect(user.id).toBe(id);
+    expect(user.name).toBe(name);
+    expect(user.dob).toBe(dob);
+    expect(user.address).toBe(address);
+    expect(user.description).toBe(description);
+  });
+
+  it.each([['123456'], ['abcdef']])(
+    'should not update user with invalid date of birth',
+    async invalidDateOfBirth => {
+      const id = 'miffyliye';
+      await userService.create(id, {});
+
+      expect(userService.update(id, {dob: invalidDateOfBirth})).rejects.toThrow();
+    },
+  );
 });

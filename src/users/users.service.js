@@ -23,4 +23,16 @@ export class UsersService {
     const user = await this.userModel.findOne({ id }).exec();
     return user;
   }
+
+  async update(id, { name, dob, address, description }) {
+    const user = await this.userModel.findOne({ id }).exec();
+    if (!user){
+      return null;
+    }
+    user.name = name;
+    user.dob = dob;
+    user.address = address;
+    user.description = description;
+    return user.save();
+  }
 }

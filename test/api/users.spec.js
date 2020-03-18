@@ -149,4 +149,120 @@ describe('Users', () => {
       expect(getRes.status).toBe(401);
     },
   );
+
+  it.each([
+    ['miffyliye', 'Miffy Liye', '2012-12-31', 'Xiangyang', 'DEV'],
+    ['wangtao', 'Wang Tao', '2015-01-01', 'Wuhan', 'PM'],
+  ])(
+    'should update user',
+    async (id, name, dob, address, description) => {
+      const authHeaders = await appManager.getAuthHeaders();
+      await httpClient
+        .post('/users')
+        .set(authHeaders)
+        .send({ id });
+
+      const updateRes = await httpClient
+        .put(`/users/${id}`)
+        .set(authHeaders)
+        .send({
+          name,
+          dob,
+          address,
+          description,
+        });
+      expect(updateRes.status).toBe(200);
+
+      const getRes = await httpClient.get(`/users/${id}`).set(authHeaders);
+      expect(getRes.status).toBe(200);
+      const user = getRes.body;
+      expect(user.id).toBe(id);
+      expect(user.name).toBe(name);
+      expect(user.dob).toBe(dob);
+      expect(user.address).toBe(address);
+      expect(user.description).toBe(description);
+      expect(user.createdAt).toBeTruthy();
+    },
+  );
+
+  it.each([
+    ['miffyliye', 'Miffy Liye', '2012-12-31', 'Xiangyang', 'DEV'],
+    ['wangtao', 'Wang Tao', '2015-01-01', 'Wuhan', 'PM'],
+  ])(
+    'should update user properties to undefined if value not provided',
+    async (id, name, dob, address, description) => {
+      const authHeaders = await appManager.getAuthHeaders();
+      await httpClient
+        .post('/users')
+        .set(authHeaders)
+        .send({
+          id,
+          name,
+          dob,
+          address,
+          description, });
+
+      const updateRes = await httpClient
+        .put(`/users/${id}`)
+        .set(authHeaders)
+        .send({});
+      expect(updateRes.status).toBe(200);
+
+      const getRes = await httpClient.get(`/users/${id}`).set(authHeaders);
+      expect(getRes.status).toBe(200);
+      const user = getRes.body;
+      expect(user.id).toBe(id);
+      expect(user.name).toBe(undefined);
+      expect(user.dob).toBe(undefined);
+      expect(user.address).toBe(undefined);
+      expect(user.description).toBe(undefined);
+    },
+  );
+
+  it.each([
+    ['miffyliye', '2012-12-31', '12345'],
+    ['wangtao', '2015-01-01', 'abcdef'],
+  ])(
+    'should not update user with invalid date of birth',
+    async (id, validDateOfBirth, invalidDateOfBirth) => {
+      const authHeaders = await appManager.getAuthHeaders();
+      await httpClient
+        .post('/users')
+        .set(authHeaders)
+        .send({ id, dob: validDateOfBirth });
+
+      const updateRes = await httpClient
+        .put(`/users/${id}`)
+        .set(authHeaders)
+        .send({
+          dob: invalidDateOfBirth,
+        });
+
+      expect(updateRes.status).toBe(400);
+      const getRes = await httpClient.get(`/users/${id}`).set(authHeaders);
+      expect(getRes.status).toBe(200);
+      const user = getRes.body;
+      expect(user.id).toBe(id);
+      expect(user.dob).toBe(validDateOfBirth);
+    },
+  );
+
+  it.each([
+    ['miffyliye'],
+    ['wangtao'],
+  ])(
+    'should not update not existing user',
+    async (id) => {
+      const authHeaders = await appManager.getAuthHeaders();
+
+      const updateRes = await httpClient
+        .put(`/users/${id}`)
+        .set(authHeaders)
+        .send({
+          name: id,
+        });
+
+      expect(updateRes.status).toBe(404);
+    },
+  );
 });

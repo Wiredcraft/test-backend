@@ -4,6 +4,7 @@ import {
   UseGuards,
   Get,
   Post,
+  Put,
   Bind,
   Body,
   Param,
@@ -47,9 +48,7 @@ export class UsersController {
         throw err;
       }
     }
-    return {
-      id: user.id,
-    };
+    return user.toJSON();
   }
 
   @UseGuards(AuthGuard('HMAC'))
@@ -57,7 +56,30 @@ export class UsersController {
   @Bind(Param())
   async get(params) {
     const { id } = params;
-    const user = await this.usersService.getById(id);
+    const user = await this.usersService.getById(id, {});
+    if (!user) {
+      throw new NotFoundException('User does not exist');
+    }
+    return user.toJSON();
+  }
+
+  @UseGuards(AuthGuard('HMAC'))
+  @Put(':id')
+  @Bind(Param(), Body())
+  async update(params, body) {
+    const { id } = params;
+    const { name, dob, address, description } = body;
+
+    let user;
+    try {
+      user = await this.usersService.update(id, { name, dob, address, description });
+    } catch (err) {
+      if (err.name === 'ValidationError') {
+        throw new BadRequestException(err.message);
+      } else {
+        throw err;
+      }
+    }
     if (!user) {
       throw new NotFoundException('User does not exist');
     }
