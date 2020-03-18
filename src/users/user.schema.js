@@ -4,7 +4,16 @@ import moment from 'moment';
 
 export const UserSchema = new mongoose.Schema(
   {
-    id: { type: String, required: true },
+    id: {
+      type: String,
+      required: true,
+      validate: {
+        validator: function(v) {
+          return /^[a-zA-Z0-9]+$/.test(v);
+        },
+        message: props => `${props.value} is not a valid id!`,
+      },
+    },
     name: { type: String, required: false },
     dob: {
       type: String,

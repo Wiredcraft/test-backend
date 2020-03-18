@@ -44,6 +44,23 @@ describe('UsersService', () => {
     expect(user.description).toBeFalsy();
   });
 
+  it.each([[''], ['123$456'], ['abc#789']])(
+    'should not create user with invalid id containing charaters other than alphabets and digits',
+    async id => {
+      expect(userService.create(id, {})).rejects.toThrow();
+    },
+  );
+
+  it.each([['123456'], ['abedf'], ['123abc']])(
+    'should create user with valid id consists of alphabets and digits',
+    async id => {
+      await userService.create(id, {});
+
+      const user = await userService.getById(id);
+      expect(user.id).toBe(id);
+    },
+  );
+
   it.each([['12345'], ['abcd']])(
     'should not create user with invalid date of birth',
     async invalidDateOfBirth => {
