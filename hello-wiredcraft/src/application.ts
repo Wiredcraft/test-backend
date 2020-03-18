@@ -14,8 +14,13 @@ import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {jwtTokenExpiresIn, jwtTokenSecret} from './config';
 import {MyAuthenticationSequence} from './sequence';
-import {TokenServiceBindings, UserServiceBindings} from './services';
+import {
+  PasswordHasherBindings,
+  TokenServiceBindings,
+  UserServiceBindings,
+} from './services';
 import {JWTService} from './services/jwt-service';
+import {BcryptHasher} from './services/password-service';
 import {MyUserService} from './services/user-service';
 import {SECURITY_SCHEMA_SPEC} from './specs/security-spec';
 import {JWTAuthenticationStrategy} from './strategies/jwt-strategy';
@@ -82,5 +87,8 @@ export class HelloWiredcraftApplication extends BootMixin(
     this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService);
 
     this.bind(UserServiceBindings.USER_SERVICE).toClass(MyUserService);
+
+    this.bind(PasswordHasherBindings.ROUNDS).to(10);
+    this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher);
   }
 }

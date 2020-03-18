@@ -18,7 +18,12 @@ import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import _ from 'lodash';
 import {NewUser, User} from '../models';
 import {Credentials, UserRepository} from '../repositories';
-import {TokenServiceBindings, UserServiceBindings} from '../services';
+import {
+  PasswordHasherBindings,
+  TokenServiceBindings,
+  UserServiceBindings,
+} from '../services';
+import {PasswordHasher} from '../services/password-service';
 import {
   CREATE_USER_REQUEST_SPEC,
   CREATE_USER_RESPONSE_SPEC,
@@ -38,6 +43,8 @@ export class UserController {
     @inject(TokenServiceBindings.TOKEN_SERVICE) public jwtService: TokenService,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>,
+    @inject(PasswordHasherBindings.PASSWORD_HASHER)
+    public passwordHasher: PasswordHasher,
   ) {}
 
   @post('/users', CREATE_USER_RESPONSE_SPEC)
@@ -53,7 +60,7 @@ export class UserController {
     }
 
     let user: User = _.omit(newUser, 'password');
-    const password = newUser.password;
+    const password = await this.passwordHasher.hashPassword(newUser.password);
 
     try {
       if (existUser) {
@@ -67,7 +74,6 @@ export class UserController {
         await this.userRepository.userCredentials(user.id).create({password});
       }
 
-      // TODO: hash password and persist into db;
       return user;
     } catch (err) {
       if (existUser) {

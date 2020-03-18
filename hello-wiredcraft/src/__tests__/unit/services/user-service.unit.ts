@@ -8,6 +8,7 @@ import sinon from 'sinon';
 import {UserCredentials} from '../../../models';
 import {UserRepository} from '../../../repositories';
 import {givenUser} from '../../helpers/database.helpers';
+import {BcryptHasher} from './../../../services/password-service';
 import {MyUserService} from './../../../services/user-service';
 
 describe('MyUserService (unit)', () => {
@@ -21,7 +22,7 @@ describe('MyUserService (unit)', () => {
 
   beforeEach(function() {
     stubRepository();
-    userService = new MyUserService(userRepository);
+    userService = new MyUserService(userRepository, new BcryptHasher(10));
   });
 
   describe('verifyCredentials()', () => {
@@ -55,7 +56,7 @@ describe('MyUserService (unit)', () => {
       );
       try {
         // eslint-disable-next-line
-        await userService.verifyCredentials({} as any);
+        await userService.verifyCredentials({password: 'test'} as any);
       } catch (err) {
         expect(err).match(/Invalid name or password/);
       }

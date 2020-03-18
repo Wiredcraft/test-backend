@@ -10,6 +10,7 @@ import sinon from 'sinon';
 import {UserController} from '../../../controllers';
 import {User, UserCredentials} from '../../../models';
 import {Credentials, UserRepository} from '../../../repositories';
+import {BcryptHasher} from '../../../services/password-service';
 import {
   givenUser,
   givenUserCredentials,
@@ -338,6 +339,7 @@ describe('UserController (unit)', () => {
       userRepository,
       jwtService,
       userService,
+      new BcryptHasher(10),
     );
   }
 });
