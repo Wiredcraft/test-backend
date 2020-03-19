@@ -11,12 +11,12 @@ System uses HMAC signature to authenticate requests.
 | appId | Application ID, e.g., "cookding" |
 | appSecret | Secret, e.g., "8Am6UxWuFDfyMGKx" |
 
-* Consumer system needs to generate timestamp and signature before each request 
+* Consumer system needs to generate timestamp and signature before each request
 
 | Field | Meaning |
 | -- | -- |
 | timestamp | Current timestamp，e.g., 2019-11-25T09:45:18.587Z |
-| signature | Signature, calculates from HMAC_SHA256(appSecret, timestamp |
+| signature | Signature, calculates from HMAC_SHA256(appSecret, timestamp) |
 
 In JavaScript, HMAC_SHA256 can be implemented as
 ```javascript
@@ -53,3 +53,7 @@ Body
       "message": "Unauthorized"
     }
 ```
+
+### Example
+
+* [Consumer client](../../example/)
