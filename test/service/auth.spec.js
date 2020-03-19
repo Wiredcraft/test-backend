@@ -4,7 +4,7 @@ import AppManager from '../manager/app-manager';
 import { AuthService } from '../../src/auth/auth.service';
 import { ConfigService } from '../../src/config/config.service';
 
-describe('UsersService', () => {
+describe('AuthService', () => {
   let appManager;
   let app;
   let authService;
