@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import mongooseHidden from 'mongoose-hidden';
 import moment from 'moment';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 export const UserSchema = new mongoose.Schema(
   {
@@ -46,6 +47,7 @@ export const UserSchema = new mongoose.Schema(
 );
 
 UserSchema.plugin(mongooseHidden(), { hidden: { _id: true, __v: true } });
+UserSchema.plugin(updateIfCurrentPlugin);
 
 UserSchema.index(
   {
