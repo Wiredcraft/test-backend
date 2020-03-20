@@ -6,6 +6,9 @@
   "scripts": {
     "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\"",
     "build": "babel src -d dist -s",
+    "db:init": "docker run --name mongodb -p 127.0.0.1:27017:27017 -d mongo:4",
+    "db:start": "docker start mongodb",
+    "db:stop": "docker stop mongodb",
     "start": "node index.js",
     "start:dev": "nodemon",
     "start:prod": "node dist/main.js",

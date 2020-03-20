@@ -4,6 +4,14 @@
 
 * nodejs (version 12 or later)
 * mongodb (version 4 or later)
+* docker
+
+## Preparing database
+
+```bash
+# create mongodb
+npm run db:init
+```
 
 ## Installation
 
