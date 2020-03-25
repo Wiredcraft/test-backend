@@ -2,11 +2,13 @@
 
 const Controller = require('egg').Controller;
 
-class HomeController extends Controller {
+class PingController extends Controller {
   async index() {
     const { ctx } = this;
-    ctx.body = 'hi, egg';
+    ctx.status = 200;
+    ctx.body = 'hi, I\'m ok!';
   }
 }
 
-module.exports = HomeController;
+module.exports = PingController;
+  
