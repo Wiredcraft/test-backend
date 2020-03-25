@@ -11,4 +11,3 @@ class PingController extends Controller {
 }
 
 module.exports = PingController;
-  

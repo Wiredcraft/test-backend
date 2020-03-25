@@ -6,5 +6,5 @@
 module.exports = app => {
   const { router, controller } = app;
   // health inspection interface
-  router.get('/ping', controller.home.index);
+  router.get('/ping', controller.ping.index);
 };
