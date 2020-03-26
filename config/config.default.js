@@ -33,6 +33,12 @@ module.exports = appInfo => {
     },
   };
 
+  config.passportAuth0 = {
+    domain: process.env.AUTH0_DOMAIN,
+    clientID: process.env.AUTH0_CLIENTID,
+    clientSecret: process.env.AUTH0_CLIENT_SECRET,
+  };
+
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',

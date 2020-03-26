@@ -183,6 +183,14 @@ class UsersController extends Controller {
       return this.ctx.status = 500;
     }
   }
+
+  async logout() {
+    const ctx = this.ctx;
+
+    ctx.logout();
+    ctx.redirect(ctx.get('referer') || '/');
+  }
+
 }
 
 module.exports = UsersController;
