@@ -25,6 +25,14 @@ module.exports = appInfo => {
     match: '/api',
   };
 
+  config.mongoose = {
+    client: {
+      url: 'mongodb://127.0.0.1/test',
+      options: {},
+      plugins: [],
+    },
+  };
+
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',

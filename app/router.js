@@ -7,4 +7,5 @@ module.exports = app => {
   const { router, controller } = app;
   // health inspection interface
   router.get('/ping', controller.ping.index);
+  router.resources('users', '/api/v1/users', app.controller.users);
 };
