@@ -2,6 +2,8 @@
 
 'use strict';
 
+const path = require('path');
+
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
@@ -42,6 +44,17 @@ module.exports = appInfo => {
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
+  };
+
+  config.logger = {
+    level: 'DEBUG',
+    allowDebugAtProd: true,
+  };
+  config.logrotator = {
+    filesRotateBySize: [
+      path.join(appInfo.root, 'logs', appInfo.name, 'egg-web.log'),
+    ],
+    maxFileSize: 2 * 1024 * 1024 * 1024,
   };
 
   return {

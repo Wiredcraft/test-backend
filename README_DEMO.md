@@ -23,6 +23,18 @@ $ npm start
 $ npm stop
 ```
 
+### Code Review
+
+- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth. Just open [http://localhost:7001/](http://localhost:7001/) with Chrome and click `auth0` to login
+- Provide a complete logging (when/how/etc.) strategy. Logger features:
+  - Levels
+  - Universal logging, .error() will save ERROR level logs into a file for later debugging
+  - Logs from dispatch and runtime are separated
+  - Automatic sharding
+- Realized the friend function， design the model structure, follow/unfollow and a list of "followers/following", but no API for now
+- Only design the model structure for geographic coordinate
+
+
 ### npm scripts
 
 - Use `npm run lint` to check code style.

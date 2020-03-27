@@ -13,7 +13,7 @@ class AppBootHook {
     // Note: This function only supports synchronous calls.
 
     // as early as possible require
-    require('appoptics-apm');
+    // require('appoptics-apm');
   }
 
   async willReady() {
