@@ -6,8 +6,10 @@ describe('test/app/service/oauth.test.js', () => {
   let newUser;
   after(async () => {
     const ctx = app.mockContext({});
-    await ctx.model.User.deleteOne({ _id: newUser._id });
-    return;
+    return await Promise.all([
+      ctx.model.User.deleteOne({ _id: newUser._id }),
+      ctx.model.Authorization.deleteOne({ userId: newUser._id }),
+    ]);
   });
   it('should assert', () => {
     const pkg = require('../../../package.json');
