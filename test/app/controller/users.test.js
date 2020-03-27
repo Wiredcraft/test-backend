@@ -17,11 +17,13 @@ describe('test/app/controller/users.test.js', () => {
         coordinates: [ '27.68', '120.32' ], // mock
       },
     }]))[0];
+    return;
   });
-  afterEach(async () => {
-    const ctx = app.mockContext({});
-    await ctx.model.User.deleteOne({ _id: newUser._id });
-  });
+  // afterEach(async () => {
+  //   const ctx = app.mockContext({});
+  //   await ctx.model.User.deleteOne({ _id: newUser._id });
+  //   return;
+  // });
   it('should assert', () => {
     const pkg = require('../../../package.json');
     assert(app.config.keys.startsWith(pkg.name));
@@ -45,5 +47,13 @@ describe('test/app/controller/users.test.js', () => {
 
     assert(result.body.message === 'ok');
     assert(result.body.data.list.length > 0);
+  });
+
+  it('should GET /api/v1/users/:id', async () => {
+    const result = await app.httpRequest()
+      .get(`/api/v1/users/${newUser._id}`)
+      .expect(200);
+    assert(result.body.message === 'ok');
+    assert(result.body.data._id === newUser._id.toString());
   });
 });
