@@ -75,4 +75,30 @@ describe('test/app/service/friend.test.js', () => {
     });
     assert(result === true);
   });
+
+  it('should get followings', async () => {
+    const ctx = app.mockContext({});
+    await Promise.all([ ctx.service.friend.follow({
+      userId: firstNewUser._id,
+      target: secondNewUser._id,
+    }), ctx.service.friend.follow({
+      userId: secondNewUser._id,
+      target: firstNewUser._id,
+    }) ]);
+
+    const result = await ctx.service.friend.getFollowings({
+      userId: firstNewUser._id,
+      nextId: secondNewUser._id,
+      limit: 20,
+    });
+
+    await Promise.all([ ctx.service.friend.unfollow({
+      userId: firstNewUser._id,
+      target: secondNewUser._id,
+    }), ctx.service.friend.unfollow({
+      userId: secondNewUser._id,
+      target: firstNewUser._id,
+    }) ]);
+    assert(result.result.length === 1);
+  });
 });
