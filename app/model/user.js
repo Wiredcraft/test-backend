@@ -35,6 +35,8 @@ module.exports = app => {
     return this._id.toHexString();
   });
 
+  UserSchema.index({ isAdmin: 1 });
+
   return mongoose.model('User', UserSchema);
 };
 

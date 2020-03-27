@@ -13,6 +13,8 @@ module.exports = app => {
 
   AuthorizationSchema.index({ uid: 1, provider: 1 }, { unique: true });
 
+  AuthorizationSchema.index({ userId: 1 });
+
   return mongoose.model('Authorization', AuthorizationSchema);
 };
 
