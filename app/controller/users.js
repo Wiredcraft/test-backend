@@ -100,19 +100,20 @@ class UsersController extends Controller {
    * @param {String} userId the user to update's ID
    * @param {Object} data properties of the user to update
    */
-  async edit() {
+  async update() {
     const { ctx } = this;
     this.logger.debug(`[controller.edit] params: ${JSON.stringify(ctx.params)}, body: JSON.stringify(ctx.body)`);
     try {
       // singin user
       const currentUser = ctx.user.userId;
       const body = ctx.body || {};
-      const dob = new Date(body.birthday);
+      const dob = body.birthday && new Date(body.birthday);
       const location = body.location;
-      const address = body.address || '';
-      const description = body.description || '';
-      const userId = ctx.params.userId;
+      const address = body.address;
+      const description = body.description;
+      const userId = ctx.params.id;
       const _user = await ctx.model.User.findById(userId);
+      console.log(_user, '....._user', userId);
       if (!_user) {
         ctx.status = 404;
         ctx.body = {
@@ -132,7 +133,7 @@ class UsersController extends Controller {
         return;
       }
 
-      if (dob.toString() !== 'Invalid Date') {
+      if (dob && dob.toString() !== 'Invalid Date') {
         _user.dob = dob;
       }
 
@@ -144,7 +145,7 @@ class UsersController extends Controller {
         _user.description = description;
       }
 
-      if (Array.isArray(location) && location.length === 2) {
+      if (location && Array.isArray(location) && location.length === 2) {
         _user.location = location;
       }
 

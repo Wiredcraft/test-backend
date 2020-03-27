@@ -10,7 +10,7 @@ describe('test/app/controller/users.test.js', () => {
       name: 'everybody knows', // user name
       avatar: 'https://lh3.googleusercontent.com/a-/AOh14Ggql38qroReOlg40DdKxbuLQY696-hudg9RRjK3',
       dob: new Date(), // date of birth
-      address: 'zhejiang.hangzhou', // user address
+      address: 'hangzhou.zhejiang', // user address
       description: 'I\'m a test man.', // user description
       location: {
         type: 'Point',
@@ -55,5 +55,22 @@ describe('test/app/controller/users.test.js', () => {
       .expect(200);
     assert(result.body.message === 'ok');
     assert(result.body.data._id === newUser._id.toString());
+  });
+
+  it('should PUT /api/v1/users/:id', async () => {
+    const _address = 'wenzhou.zhejiang';
+    app.mockContext({
+      user: {
+        userId: newUser._id.toString(),
+        isAdmin: true,
+      },
+    });
+    app.mockCsrf();
+    await app.httpRequest()
+      .put(`/api/v1/users/${newUser._id}`)
+      .send({
+        address: _address,
+      })
+      .expect(204);
   });
 });
