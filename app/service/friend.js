@@ -17,13 +17,13 @@ class FriendService extends Service {
         userId,
         target,
       }]);
-      await ctx.model.Following.create([{
+      await ctx.model.Follower.create([{
         userId: target,
         target: userId,
       }]);
       await Promise.all([
-        ctx.model.Following.findOneAndUpdate({ userId }, { $inc: { followingCount: 1 } }),
-        ctx.model.Following.findOneAndUpdate({ userId: target }, { $inc: { followerCount: 1 } }),
+        ctx.model.FollowCount.findOneAndUpdate({ userId }, { $inc: { followingCount: 1 } }, { upsert: true }),
+        ctx.model.FollowCount.findOneAndUpdate({ userId: target }, { $inc: { followerCount: 1 } }, { upsert: true }),
       ]);
       // transaction session end
       return true;
@@ -42,9 +42,9 @@ class FriendService extends Service {
       await ctx.model.Following.findOneAndRemove({ userId, target });
       await ctx.model.FollowCount.findOneAndUpdate({ userId }, { $inc: { followingCount: -1 } });
       await ctx.model.Follower.findOneAndRemove({ userId: target, target: userId });
-      await ctx.model.FollowCount.findOneAndUpdate({ userId }, { $inc: { followerCount: -1 } });
+      await ctx.model.FollowCount.findOneAndUpdate({ userId: target }, { $inc: { followerCount: -1 } });
       // Clean up the data to save space
-      await ctx.model.FollowCount.findOneAndRemove({ userId: { $in: [ userId, target ], followingCount: 0, followerCount: 0 } });
+      await ctx.model.FollowCount.deleteMany({ userId: { $in: [ userId, target ] }, followingCount: 0, followerCount: 0 });
       // transaction session end
       return true;
     } catch (error) {
