@@ -5,11 +5,11 @@ const Controller = require('egg').Controller;
 class UsersController extends Controller {
   /**
    * Retrieves users with optional query params, e.g limit or skip
-   * 
+   *
    * @param {Number} [limit] the users to retrieve limit
    * @param {Number} [pageNum] the users to retrieve pageNum
    * @param {Number} [nextId] start the query with this user ID in sikp mode
-   * @param {String="page", "skip"} mode paging mode 
+   * @param {String="page", "skip"} mode paging mode
    */
   async index() {
     const { ctx } = this;
@@ -19,31 +19,34 @@ class UsersController extends Controller {
     const mode = ctx.query.mode;
     let ret;
     if (mode === 'page') {
-      ret = await ctx.service.user.getUsersViaPageMode({page, limit});
+      ret = await ctx.service.user.getUsersViaPageMode({ page, limit });
     } else if (mode === 'skip') {
       if (!nextId) {
-        return ctx.body = {
+        ctx.body = {
           message: 'invalid params, nextId must be provided in skip mode',
-          code: 10400
-        }
+          code: 10400,
+        };
+        return;
       }
-      ret = await ctx.service.user.getUsersViaSkipMode({nextId, limit});
+      ret = await ctx.service.user.getUsersViaSkipMode({ nextId, limit });
     } else {
-      return ctx.body = {
+      ctx.body = {
         message: 'invalid params, mode must be provided',
-        code: 10400
-      }
+        code: 10400,
+      };
+      return;
     }
 
-    return ctx.body = {
+    ctx.body = {
       message: 'ok',
       code: 0,
-      data: ret
+      data: ret,
     };
+    return;
   }
   /**
    * Retrieves a user with the given ID
-   * 
+   *
    * @param {String} userId the users ID to retrieve
    */
   async show() {
@@ -55,30 +58,33 @@ class UsersController extends Controller {
         required: true,
         allowEmpty: false,
         trim: true,
-        format: /^[a-z_0-9]{24}$/
+        format: /^[a-z_0-9]{24}$/,
       },
     };
     // throws exceptions if the verification fails
     const errors = app.validator.validate(showRule, ctx.params);
     if (errors) {
-      return ctx.body = {
+      ctx.body = {
         message: `filed ${errors[0].field} ${errors[0].message}`,
-        code: 10500
-      }
+        code: 10500,
+      };
+      return;
     }
     const userId = ctx.params.id;
     const user = await ctx.model.User.findById(userId);
     if (!user) {
-      return ctx.body = {
+      ctx.body = {
         message: 'user not found',
-        code: 10404
-      }
+        code: 10404,
+      };
+      return;
     }
-    return ctx.body = {
+    ctx.body = {
       message: 'ok',
       code: 0,
-      data: user
+      data: user,
     };
+    return;
   }
   /**
    * Validates the given data and creates a user
@@ -90,11 +96,12 @@ class UsersController extends Controller {
   }
   /**
    * Validates the given data and then updates the user
-   * 
-   * @param {String} userId the user to update's ID 
+   *
+   * @param {String} userId the user to update's ID
    * @param {Object} data properties of the user to update
    */
   async edit() {
+    const { ctx } = this;
     this.logger.debug(`[controller.edit] params: ${JSON.stringify(ctx.params)}, body: JSON.stringify(ctx.body)`);
     try {
       // singin user
@@ -108,18 +115,21 @@ class UsersController extends Controller {
       const _user = await ctx.model.User.findById(userId);
       if (!_user) {
         ctx.status = 404;
-        return ctx.body = {
+        ctx.body = {
           message: 'user not found',
-          code: 10404
+          code: 10404,
         };
+        return;
       }
 
       // only owner or admin can edit this
       if (currentUser !== userId && !ctx.user.isAdmin) {
-        return res.status(401).json({
+        ctx.status = 401;
+        ctx.body = {
           message: 'permission deny',
-          code: 10401
-        });
+          code: 10401,
+        };
+        return;
       }
 
       if (dob.toString() !== 'Invalid Date') {
@@ -139,36 +149,42 @@ class UsersController extends Controller {
       }
 
       await _user.save();
-      return this.ctx.status = 204;
-    } catch (err) {
+      this.ctx.status = 204;
+      return;
+    } catch (error) {
       this.logger.error('[controller.users.edit] internal error', error);
-      return this.ctx.status = 500;
+      this.ctx.status = 500;
+      return;
     }
   }
   /**
    * Deletes the user
-   * 
+   *
    * @param {String} userId the user to delete's ID
    */
-  async destroy () {
+  async destroy() {
+    const { ctx } = this;
     this.logger.debug(`[controller.destroy] params: ${JSON.stringify(ctx.params)}, body: JSON.stringify(ctx.body)`);
     try {
       const isAdmin = ctx.user.isAdmin;
       const userId = ctx.params.userId;
       const _user = await ctx.model.User.findById(userId);
-      if (!record) {
-        return res.status(404).json({
+      if (!_user) {
+        this.ctx.status = 404;
+        this.ctx.body = {
           message: 'message not found',
-          code: 10404
-        });
+          code: 10404,
+        };
+        return;
       }
       // only admin can delete this
       if (!isAdmin) {
         this.ctx.status = 401;
-        return this.ctx.body = {
+        this.ctx.body = {
           message: 'permission deny',
-          code: 10401
+          code: 10401,
         };
+        return;
       }
 
       _user.status = -1;
@@ -176,11 +192,12 @@ class UsersController extends Controller {
 
       this.ctx.body = {
         message: 'ok',
-        code: 0
+        code: 0,
       };
-    } catch (err) {
+    } catch (error) {
       this.logger.error('[controller.users.destroy] internal error', error);
-      return this.ctx.status = 500;
+      this.ctx.status = 500;
+      return;
     }
   }
 

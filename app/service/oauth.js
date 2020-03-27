@@ -19,14 +19,14 @@ class OauthService extends Service {
       const newUser = (await ctx.model.User.create([{
         name: meta.displayName, // user name
         avatar: meta.photo,
-        dob: '',  // date of birth
+        dob: '', // date of birth
         address: '', // user address
         description: '', // user description
         location: {
           type: 'Point',
-          coordinates: ['27.68', '120.32'] // mock
+          coordinates: [ '27.68', '120.32' ], // mock
         },
-      }]))[0]; // TODO: Add Transaction option 
+      }]))[0]; // TODO: Add Transaction option
       await ctx.model.Authorization.findOneAndUpdate({
         uid: meta.id,
         provider: meta.provider,

@@ -21,5 +21,5 @@ module.exports = {
   passportAuth0: {
     enable: true,
     package: '@dyhpoon/egg-passport-auth0',
-  }
+  },
 };

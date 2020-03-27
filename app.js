@@ -23,7 +23,7 @@ class AppBootHook {
       // Check user
       assert(user.provider, 'user.provider should exists');
       assert(user.id, 'user.id should exists');
-  
+
       // Find user information from the database
       //
       // Authorization Collection
@@ -44,14 +44,14 @@ class AppBootHook {
       const newUser = await ctx.service.oauth.register(user);
       return newUser;
     });
-  
+
     // // Serialize and store the user information into session. Generally, only a few fields need to be streamlined/saved.
     // this.app.passport.serializeUser(async (ctx, user) => {
     //   // process user
     //   // ...
     //   // return user;
     // });
-  
+
     // // Deserialize the user information from the session, check the database to get the complete information
     // this.app.passport.deserializeUser(async (ctx, user) => {
     //   // process user
