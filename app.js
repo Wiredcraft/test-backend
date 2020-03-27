@@ -17,6 +17,8 @@ class AppBootHook {
   }
 
   async willReady() {
+    // When signing in for the first time, you generally need to put user information into the repository and record the Session.
+    // In the second login, the user information obtained from OAuth or Session, and the database is read to get the complete user information.
     this.app.passport.verify(async (ctx, user) => {
       // Check user
       assert(user.provider, 'user.provider should exists');

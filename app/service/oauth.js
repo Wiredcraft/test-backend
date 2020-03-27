@@ -24,7 +24,7 @@ class OauthService extends Service {
         description: '', // user description
         location: {
           type: 'Point',
-          coordinates: ['27.68', '120.32'] 
+          coordinates: ['27.68', '120.32'] // mock
         },
       }]))[0]; // TODO: Add Transaction option 
       await ctx.model.Authorization.findOneAndUpdate({
