@@ -82,9 +82,8 @@ class FriendService extends Service {
     const { ctx, app } = this;
     const condition = { userId };
     if (nextId) {
-      Object.assign(condition, { _id: { $lte: app.mongoose.Types.ObjectId(nextId) } });
+      Object.assign(condition, { _id: { $gte: app.mongoose.Types.ObjectId(nextId) } });
     }
-    console.log(condition, 'condition');
     const result = await ctx.model.Follower
       .find(condition)
       .populate('target').sort({ _id: 'asc' })
