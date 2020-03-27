@@ -14,7 +14,7 @@ describe('test/app/controller/users.test.js', () => {
       description: 'I\'m a test man.', // user description
       location: {
         type: 'Point',
-        coordinates: [ '27.68', '120.32' ], // mock
+        coordinates: [ '27.68', '40.32' ], // mock
       },
     }]))[0];
     return;

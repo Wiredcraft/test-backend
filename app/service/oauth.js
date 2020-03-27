@@ -24,14 +24,14 @@ class OauthService extends Service {
         description: '', // user description
         location: {
           type: 'Point',
-          coordinates: [ '27.68', '120.32' ], // mock
+          coordinates: [ '27.68', '60.32' ], // mock
         },
       }]))[0]; // TODO: Add Transaction option
       await ctx.model.Authorization.findOneAndUpdate({
         uid: meta.id,
         provider: meta.provider,
         userId: newUser._id,
-      }, { $set: { meta: meta.profile._json } }, { upsert: true }); // TODO: Add Transaction option
+      }, { $set: { meta } }, { upsert: true }); // TODO: Add Transaction option
       // await session.commitTransaction();
       // session.endSession();
       return newUser;
