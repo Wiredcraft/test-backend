@@ -19,11 +19,11 @@ describe('test/app/controller/users.test.js', () => {
     }]))[0];
     return;
   });
-  // afterEach(async () => {
-  //   const ctx = app.mockContext({});
-  //   await ctx.model.User.deleteOne({ _id: newUser._id });
-  //   return;
-  // });
+  afterEach(async () => {
+    const ctx = app.mockContext({});
+    await ctx.model.User.deleteOne({ _id: newUser._id });
+    return;
+  });
   it('should assert', () => {
     const pkg = require('../../../package.json');
     assert(app.config.keys.startsWith(pkg.name));
