@@ -73,4 +73,21 @@ describe('test/app/controller/users.test.js', () => {
       })
       .expect(204);
   });
+
+  it('should DELETE /api/v1/users/:id', async () => {
+    app.mockContext({
+      user: {
+        userId: newUser._id.toString(),
+        isAdmin: true,
+      },
+    });
+    app.mockCsrf();
+    await app.httpRequest()
+      .delete(`/api/v1/users/${newUser._id}`)
+      .expect({
+        message: 'ok',
+        code: 0,
+      })
+      .expect(200);
+  });
 });

@@ -113,7 +113,6 @@ class UsersController extends Controller {
       const description = body.description;
       const userId = ctx.params.id;
       const _user = await ctx.model.User.findById(userId);
-      console.log(_user, '....._user', userId);
       if (!_user) {
         ctx.status = 404;
         ctx.body = {
@@ -168,7 +167,7 @@ class UsersController extends Controller {
     this.logger.debug(`[controller.destroy] params: ${JSON.stringify(ctx.params)}, body: JSON.stringify(ctx.body)`);
     try {
       const isAdmin = ctx.user.isAdmin;
-      const userId = ctx.params.userId;
+      const userId = ctx.params.id;
       const _user = await ctx.model.User.findById(userId);
       if (!_user) {
         this.ctx.status = 404;
