@@ -11,11 +11,13 @@ router.register('users', UserdataViewSet, basename='users')
 
 urlpatterns = [
 	path('', include(router.urls)),
+	# auto-generated OpenAPI schema url
 	path('schema/', get_schema_view(
 		title='Wiredcraft Backend Test',
 		description='API for managing of user data',
 		version='1.0.0',
 	), name='openapi-schema'),
+	# Swagger-based auto-generated doc
 	path('docs/', TemplateView.as_view(
 		template_name='swagger.html',
 		extra_context={'schema_url': 'openapi-schema'}
