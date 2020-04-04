@@ -10,6 +10,24 @@ from users.serializers import UserdataSerializer
 class UserdataViewSet(viewsets.ModelViewSet):
 	"""
 	API endpoint for CRUD actions over user data.
+
+	list:
+	Returns a list of all the existing users.
+
+	retrieve:
+	Returns the given user.
+
+	create:
+	Creates a new user instance.
+
+	update:
+	Update a given user instance.
+
+	partial_update:
+	Updates a given user instance.
+
+	destroy:
+	Deletes a given user instance.
 	"""
 
 	serializer_class = UserdataSerializer
