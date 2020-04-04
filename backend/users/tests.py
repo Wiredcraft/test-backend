@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AnonymousUser
 from django.urls import reverse
+from django.utils import timezone
 
 from rest_framework.test import APIClient, APITestCase
 
@@ -84,6 +85,10 @@ class UserdataCRUDTest(APITestCase):
 		user2.refresh_from_db()
 		self.assertEqual(user2.name, 'Bob Snow')
 		self.assertEqual(str(user2.dob), '1984-01-01')
+		# createdAt field is read only and cannot be changed
+		response = self.client.patch(reverse('users-detail', args=(self.USER_ID_1,)), {'createdAt': '2020-01-01'})
+		user1.refresh_from_db()
+		self.assertEqual(response.data['createdAt'], timezone.localtime(user1.createdAt).isoformat())
 
 	def test_user_deleting(self):
 		Userdata.objects.create(id=self.USER_ID_1, name='Alice')
