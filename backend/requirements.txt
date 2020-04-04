@@ -2,3 +2,5 @@ django~=3.0
 psycopg2-binary==2.8.4
 django-environ==0.4.5
 djangorestframework~=3.11
+pyyaml~=5.3
+uritemplate~=3.0
