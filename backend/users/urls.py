@@ -14,7 +14,7 @@ urlpatterns = [
 	# auto-generated OpenAPI schema url
 	path('schema/', get_schema_view(
 		title='Wiredcraft Backend Test',
-		description='API for managing of user data',
+		description='API for managing user data',
 		version='1.0.0',
 	), name='openapi-schema'),
 	# Swagger-based auto-generated doc
