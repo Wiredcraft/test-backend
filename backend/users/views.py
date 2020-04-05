@@ -63,6 +63,13 @@ class FriendshipViewSet(
 	serializer_class = UserdataSerializer
 	audit_trail_label = 'friendship'
 
+	def get_audit_trail_context(self, request, **kwargs):
+		# returns additional data for audit log
+		return {
+			'user_pk': kwargs.get('user_pk'),
+			'pk': request.data.get('id'),
+		}
+
 	def create(self, request, **kwargs):
 		friend = Userdata.objects.get(pk=request.data['id'])
 		Userdata.objects.get(pk=kwargs['user_pk']).friends.add(friend)

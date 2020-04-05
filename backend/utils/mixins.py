@@ -11,9 +11,12 @@ class AuditTrailMixin:
 	Please set either `audit_trail_label` or `queryset` param for model resolution.
 	"""
 
-	def _audit_trail(self, user=None, action=None, model='default', pk=None):
+	def _audit_trail(self, user=None, action=None, model='default', context=None):
 		logger = logging.getLogger(f'audit.{model}.{action}')
-		logger.error(f'{timezone.now().isoformat()} {user} {action} {model} pk:{pk}')
+		logger.info(f'{timezone.now().isoformat()} {user} {action} {model} context:{context}')
+
+	def get_audit_trail_context(self, request, **kwargs):
+		return {}
 
 	def _get_model(self):
 		return getattr(self, 'audit_trail_label', None) or self.get_queryset().model.__name__
@@ -22,15 +25,16 @@ class AuditTrailMixin:
 		if not data:
 			return
 		model = self._get_model()
+		context = self.get_audit_trail_context(self.request, **self.kwargs)
 		# FIXME: should we use pk/id consistently? django's opinion is "pk" but
 		# I keep "id" for compliance with the initial API spec
-		pk = data.get('id')
-		if pk:
+		context['pk'] = data.get('id')
+		if context['pk']:
 			self._audit_trail(
 				user=self.request.user,
 				action=self.action,
 				model=model,
-				pk=pk,
+				context=context,
 			)
 
 	def perform_create(self, serializer):
@@ -44,18 +48,19 @@ class AuditTrailMixin:
 	def perform_destroy(self, instance):
 		pk = instance.pk
 		super().perform_destroy(instance)
-		self._log_change({'id': pk})
+		self._log_change({'id': str(pk)})
 
 	def initial(self, request, *args, **kwargs):
 		# idempotent actions are safe to pre-log
 		# writing actions are logged separately
 		if self.action in ['list', 'retrieve']:
 			model = self._get_model()
-			pk = kwargs.get(self.lookup_url_kwarg or self.lookup_field)
+			context = self.get_audit_trail_context(request, **kwargs)
+			context['pk'] = kwargs.get(self.lookup_url_kwarg or self.lookup_field)
 			self._audit_trail(
 				user=request.user,
 				action=self.action,
 				model=model,
-				pk=pk,
+				context=context,
 			)
 		return super().initial(request, *args, **kwargs)
