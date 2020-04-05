@@ -5,7 +5,6 @@ from django.utils import timezone
 from rest_framework.test import APIClient, APITestCase
 
 from users.models import Userdata
-from users.views import UserdataViewSet
 
 class UserdataCRUDTest(APITestCase):
 
@@ -98,3 +97,67 @@ class UserdataCRUDTest(APITestCase):
 		self.assertEqual(Userdata.objects.count(), 1)
 		response = self.client.delete(reverse('users-detail', args=(self.USER_ID_2,)))
 		self.assertEqual(Userdata.objects.count(), 0)
+
+
+class FriendshipTest(APITestCase):
+
+	@classmethod
+	def setUpTestData(cls):
+		cls.user1 = Userdata.objects.create(name='Alice')
+		cls.user2 = Userdata.objects.create(name='Bob')
+		cls.user3 = Userdata.objects.create(name='Jon')
+
+	def test_friendship_list(self):
+		# empty list by default
+		response = self.client.get(reverse('friends-list', kwargs={'user_pk': self.user1.pk}))
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual(response.data, [])
+		# add some friends and check list
+		self.user1.friends.add(self.user2)
+		response = self.client.get(reverse('friends-list', kwargs={'user_pk': self.user1.pk}))
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual(len(response.data), 1)
+		self.assertEqual(response.data[0]['id'], str(self.user2.pk))
+		# check if user is in friends
+		response = self.client.get(reverse('friends-detail', kwargs={'user_pk': self.user1.pk, 'pk': self.user2.pk}))
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual(response.data['id'], str(self.user2.pk))
+		# backwards
+		response = self.client.get(reverse('friends-detail', kwargs={'user_pk': self.user2.pk, 'pk': self.user1.pk}))
+		self.assertEqual(response.data['id'], str(self.user1.pk))
+
+	def test_friendship_creation(self):
+		# create a friend
+		response = self.client.post(reverse('friends-list', kwargs={'user_pk': self.user1.pk}), {'id': self.user2.pk})
+		self.assertEqual(response.status_code, 201)
+		# and list it
+		response = self.client.get(reverse('friends-list', kwargs={'user_pk': self.user1.pk}))
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual(len(response.data), 1)
+		self.assertEqual(response.data[0]['id'], str(self.user2.pk))
+		# check the other side
+		response = self.client.get(reverse('friends-list', kwargs={'user_pk': self.user2.pk}))
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual(len(response.data), 1)
+		self.assertEqual(response.data[0]['id'], str(self.user1.pk))
+		# create one more time, no problem but silently ignore
+		# FIXME: is this the desired behavior?
+		response = self.client.post(reverse('friends-list', kwargs={'user_pk': self.user1.pk}), {'id': self.user2.pk})
+		self.assertEqual(response.status_code, 201)
+
+	def test_friendship_removal(self):
+		self.user1.friends.add(self.user2)
+		response = self.client.get(reverse('friends-list', kwargs={'user_pk': self.user1.pk}))
+		self.assertEqual(len(response.data), 1)
+		response = self.client.delete(reverse('friends-detail', kwargs={'user_pk': self.user1.pk, 'pk': self.user2.pk}))
+		self.assertEqual(response.status_code, 204)
+		response = self.client.get(reverse('friends-list', kwargs={'user_pk': self.user1.pk}))
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual(response.data, [])
+		# test removal from the other side
+		self.user1.friends.add(self.user2)
+		response = self.client.delete(reverse('friends-detail', kwargs={'user_pk': self.user2.pk, 'pk': self.user1.pk}))
+		self.assertEqual(response.status_code, 204)
+		response = self.client.get(reverse('friends-list', kwargs={'user_pk': self.user1.pk}))
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual(response.data, [])

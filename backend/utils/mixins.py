@@ -8,15 +8,15 @@ class AuditTrailMixin:
 	"""
 	Add this mixin to ViewSet-s for logging a complete API audit trail.
 
-	Please set either `audit_trail_model` or `queryset` param for model resolution.
+	Please set either `audit_trail_label` or `queryset` param for model resolution.
 	"""
 
 	def _audit_trail(self, user=None, action=None, model='default', pk=None):
 		logger = logging.getLogger(f'audit.{model}.{action}')
-		logger.info(f'{timezone.now().isoformat()} {user} {action} {model} pk:{pk}')
+		logger.error(f'{timezone.now().isoformat()} {user} {action} {model} pk:{pk}')
 
 	def _get_model(self):
-		return getattr(self, 'audit_trail_model', self.get_queryset().model.__name__)
+		return getattr(self, 'audit_trail_label', None) or self.get_queryset().model.__name__
 
 	def _log_change(self, data=None):
 		if not data:

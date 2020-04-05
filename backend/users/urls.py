@@ -1,16 +1,22 @@
 
 from django.urls import path, include
 from django.views.generic import TemplateView
+
 from rest_framework.schemas import get_schema_view
 from rest_framework.routers import DefaultRouter
+from rest_framework_nested import routers
 
-from users.views import UserdataViewSet
+from users.views import UserdataViewSet, FriendshipViewSet
 
 router = DefaultRouter()
 router.register('users', UserdataViewSet, basename='users')
 
+friends_router = routers.NestedSimpleRouter(router, r'users', lookup='user')
+friends_router.register(r'friends', FriendshipViewSet, basename='friends')
+
 urlpatterns = [
 	path('', include(router.urls)),
+	path('', include(friends_router.urls)),
 	# auto-generated OpenAPI schema url
 	path('schema/', get_schema_view(
 		title='Wiredcraft Backend Test',
