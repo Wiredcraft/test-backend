@@ -12,9 +12,9 @@ Clone the repo and run `docker-compose up -d`, then navigate to http://localhost
 
 ## Notes & Thinking process
 
-I understand that you want to see coding skills, but I wanted to emphasize "not reinventing the wheel" as well, and used several well-documented and stable Python packages: Django + REST Framework, Swagger for the docs. I've been working with Django since 0.96, have a few commits in the core, and used DRF extensively in the past too.
+I understand that you want to see coding skills, however I wanted to emphasize "not reinventing the wheel" as well, and used several well-documented and stable Python packages: Django + REST Framework, Swagger for the docs. I've been working with Django since 0.96, have a few commits in the core, and used DRF extensively in the past too.
 
-For the DB I picked Postgres. It's not NoSQL, but there are many Postgres deployments at scale, it has (indexed) JSON(B) support out of the box for some NoSQL-ish goodness, and it's GIS capabilities are top notch. I've worked with Citus and TimescaleDB at scale, performance is not a bottleneck.
+For the DB I picked Postgres. It's not NoSQL, but there are many Postgres deployments at scale, it has (indexed) JSON(B) support out of the box for some NoSQL-ish goodness, and its GIS capabilities are top notch. I've worked with Citus and TimescaleDB at scale, performance is not a bottleneck.
 
 I tried to follow the spec step by step, without "knowing" the "advanced requirements" beforehand. So the code evolved organically and you can check the commit history to see the major changes involved.
 
@@ -28,7 +28,7 @@ Tests are in backend/users/tests.py, I cover every API endpoint in an integratio
 
 > Provide proper API document
 
-The document uses annotations with an auto-generated OpenAPI schema rendered by Swagger.
+The document uses annotations with an auto-generated OpenAPI schema rendered by Swagger. Has room for improvement.
 
 > Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth
 
@@ -40,14 +40,14 @@ I've added a mixin called `AuditTrailMixin` that hooks in the APIView descendant
 
 > Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
 
-I used a symmetric M2M field on the user model for this, and also created an intermediary table. It's not strictly necessary with these requirements, but going forward I thought it might be important to have ability to add friend requests, statuses and so on. The API follows REST practice here with a 2nd-level endpoint `/api/users/{id}/friends/`. So "unfriending" is a simple `DELETE` request from either side.
+I used a symmetric M2M field on the user data model for this, and also created an intermediary table. It's not strictly necessary with these requirements, but going forward I thought it might be important to have the ability to add friend requests, statuses and so on. The API follows REST practices here with a 2nd-level endpoint `/api/users/{id}/friends/`. So "unfriending" is a simple `DELETE` request from either side.
 
 > Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that, given a user name, return the nearby friends
 
-This was the biggest "change" as it required me to switch to PostGIS. It's never a good idea to reinvent the wheel with geographic coordinates, so I used GeoJSON for respresentation, and WGS84 projection that gives me distances in meters out of the box. Perhaps I "prematurely overoptimized" this one (`spatial_index=True` creates a SP-GiST index), but in my experience this kind of queries ("nearby" things over m2m relations) tend to become bottlenecks real quick. The API for this one breaks REST a bit in favor of RPC-ish call: `/api/users/{id}/friends/nearby/`.
+This was the biggest "change" as it required me to switch to PostGIS. It's never a good idea to reinvent the wheel with geographic coordinates, so I used GeoJSON for respresentation, and WGS84 projection that gives us distances in meters out of the box. Perhaps I "prematurely overoptimized" this one (`spatial_index=True` creates a SP-GiST index), but in my experience this kind of queries ("nearby" things over m2m relations) tend to become bottlenecks real quick. The API for this one breaks REST a bit in favor of RPC-ish call: `/api/users/{id}/friends/nearby/`.
 
 Going forward, I would probably split user data and addresses in separate models, which is usually the case for e-commerce and many other scenarios (users can have more than one address).
 
 ## PS
 
-Thanks for reading! I'm in Shanghai and happy to chat anytime: michael@smartmeal.cn or Wechat 13122231231.
+Thanks for reading! I'm in Shanghai and happy to chat anytime at michael@smartmeal.cn or Wechat 13122231231.
