@@ -53,7 +53,7 @@ class AuditTrailMixin:
 	def initial(self, request, *args, **kwargs):
 		# idempotent actions are safe to pre-log
 		# writing actions are logged separately
-		if self.action in ['list', 'retrieve']:
+		if self.action not in ['create', 'update', 'partial_update', 'destroy']:
 			model = self._get_model()
 			context = self.get_audit_trail_context(request, **kwargs)
 			context['pk'] = kwargs.get(self.lookup_url_kwarg or self.lookup_field)

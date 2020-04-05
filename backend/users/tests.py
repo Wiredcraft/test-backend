@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AnonymousUser
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib.gis.geos import Point
 
 from rest_framework.test import APIClient, APITestCase
 
@@ -98,6 +99,15 @@ class UserdataCRUDTest(APITestCase):
 		response = self.client.delete(reverse('users-detail', args=(self.USER_ID_2,)))
 		self.assertEqual(Userdata.objects.count(), 0)
 
+	def test_user_coords(self):
+		# test normal GeoJSON coords
+		response = self.client.post(reverse('users-list'), {
+			'name': 'Alice',
+			'coords': {'type': 'Point', 'coordinates': [121, 31]},
+		}, format='json')
+		self.assertEqual(response.status_code, 201)
+		self.assertTrue(response.data['coords'].items() >= {'type': 'Point', 'coordinates': [121.0, 31.0]}.items())
+
 
 class FriendshipTest(APITestCase):
 
@@ -161,3 +171,15 @@ class FriendshipTest(APITestCase):
 		response = self.client.get(reverse('friends-list', kwargs={'user_pk': self.user1.pk}))
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.data, [])
+
+	def test_nearby_friends_lookup(self):
+		user1 = Userdata.objects.create(name='Alice', coords=Point(121, 31, srid=4326))
+		user2 = Userdata.objects.create(name='Bob', coords=Point(122, 31, srid=4326))
+		user3 = Userdata.objects.create(name='Jon', coords=Point(122, 32, srid=4326))
+		user1.friends.set([user2, user3])
+		response = self.client.get(reverse('friends-nearby', kwargs={'user_pk': user1.pk}) + '?distance=200000')
+		self.assertEqual(len(response.data), 2)
+		self.assertEqual(response.data[1]['distance'], 146009)
+		response = self.client.get(reverse('friends-nearby', kwargs={'user_pk': user1.pk}) + '?distance=100000')
+		self.assertEqual(len(response.data), 1)
+		self.assertEqual(response.data[0]['distance'], 95503)

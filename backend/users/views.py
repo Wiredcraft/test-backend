@@ -1,11 +1,16 @@
 
 from django.shortcuts import get_object_or_404
+from django.contrib.gis.db.models.functions import Distance
+from django.contrib.gis.measure import D
+from django.db.models import IntegerField
+
 from rest_framework import viewsets
 from rest_framework import mixins
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from users.models import Userdata, Friendship
-from users.serializers import UserdataSerializer
+from users.serializers import UserdataSerializer, NearbyFriendSerializer
 from utils.mixins import AuditTrailMixin
 
 
@@ -58,6 +63,10 @@ class FriendshipViewSet(
 
 	destroy:
 	Deletes a given friendship connection.
+
+	nearby:
+	Finds nearby friends. Please use `distance` GET parameter to limit distance. Defaults to 10000m (10km).
+	Returns an additional field `distance` representing the distance in meters in WGS84 projection.
 	"""
 
 	serializer_class = UserdataSerializer
@@ -70,6 +79,12 @@ class FriendshipViewSet(
 			'pk': request.data.get('id'),
 		}
 
+	def get_queryset(self):
+		if self.action == 'list':
+			return Userdata.objects.get(pk=self.kwargs['user_pk']).friends.all()
+		if self.action == 'retrieve':
+			return Userdata.objects.get(pk=self.kwargs['user_pk']).friends.filter(pk=self.kwargs['pk'])
+
 	def create(self, request, **kwargs):
 		friend = Userdata.objects.get(pk=request.data['id'])
 		Userdata.objects.get(pk=kwargs['user_pk']).friends.add(friend)
@@ -80,8 +95,15 @@ class FriendshipViewSet(
 		Userdata.objects.get(pk=kwargs['user_pk']).friends.remove(friend)
 		return Response({}, status=204)
 
-	def get_queryset(self):
-		if self.action == 'list':
-			return Userdata.objects.get(pk=self.kwargs['user_pk']).friends.all()
-		if self.action == 'retrieve':
-			return Userdata.objects.get(pk=self.kwargs['user_pk']).friends.filter(pk=self.kwargs['pk'])
+	@action(detail=False, methods=['GET'])
+	def nearby(self, request, **kwargs):
+		me = Userdata.objects.get(pk=self.kwargs['user_pk'])
+		if not me.coords:
+			return Response({'success': False, 'error': 'Can only lookup nearby friends if coords are given.'}, status=400)
+		distance = int(request.GET.get('distance') or 10000)
+		# using PostGIS ST_DWithin and ST_Distance for efficient index-based lookup
+		nearby_friends = me.friends\
+			.filter(coords__dwithin=(me.coords, D(m=distance)))\
+			.annotate(distance=Distance('coords', me.coords, output_field=IntegerField()))\
+			.order_by('distance')
+		return Response(NearbyFriendSerializer(nearby_friends, many=True).data)

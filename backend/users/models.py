@@ -1,4 +1,4 @@
-from django.db import models
+from django.contrib.gis.db import models
 
 import uuid
 
@@ -13,6 +13,8 @@ class Userdata(models.Model):
 	name = models.CharField(max_length=250)
 	dob = models.DateField(null=True)
 	address = models.CharField(max_length=250, null=True)
+	# FIXME: chose SRID 4326 (WGS 84), but for China-compatible coordinates it would be 4555
+	coords = models.PointField(null=True, srid=4326, spatial_index=True, geography=True)
 	description = models.TextField(null=True)
 
 	friends = models.ManyToManyField('self', blank=True, symmetrical=True, through='users.Friendship')
