@@ -8,7 +8,7 @@ This is my take on the test, written in Python / Django with DRF, with Postgres 
 
 ## Installation
 
-Clone the repo and run `docker-compose up -d`, then navigate to http://localhost:8080/api/docs/ to view the documentation.
+Clone the repo and run `docker-compose up -d`, then navigate to http://localhost:8000/api/docs/ to view the documentation.
 
 ## Notes & Thinking process
 
@@ -20,7 +20,7 @@ I tried to follow the spec step by step, without "knowing" the "advanced require
 
 > The API should follow typical RESTful API design pattern
 
-Please see http://localhost:8080/api/docs/ for the auto-generated API docs. I used verb-based REST API, without any versioning, pagination or auth for now.
+Please see http://localhost:8000/api/docs/ for the auto-generated API docs. I used verb-based REST API, without any versioning, pagination or auth for now.
 
 > Provide proper unit test
 
