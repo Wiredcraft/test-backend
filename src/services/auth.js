@@ -1,16 +1,15 @@
-import * as jwt from "jsonwebtoken";
 import axios from "axios";
 import { pick } from "lodash";
 
 import API from "../api/auth";
 import { SessionModel, PasswordModel, UserModel } from "../models";
-import { isObjectId, pwdEncrypt } from "../lib/utils";
 import {
-  JWT_KEY,
-  JWT_EXPIRES,
-  GITHUB_CLIENT_ID,
-  GITHUB_CLIENT_SECRET,
-} from "../config";
+  isObjectId,
+  pwdEncrypt,
+  genJwtToken,
+  decodeJwtToken,
+} from "../lib/utils";
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "../config";
 
 export class Service extends API {
   /**
@@ -121,9 +120,14 @@ export class Service extends API {
       type: "password",
     };
 
-    await SessionModel.create(sessionPayload);
+    const session = await SessionModel.create(sessionPayload);
 
-    return { body: { token: genToken(sessionPayload), user: userDoc } };
+    return {
+      body: {
+        token: genJwtToken({ ...sessionPayload, session: session.id }),
+        user: userDoc,
+      },
+    };
   }
 
   /**
@@ -132,11 +136,14 @@ export class Service extends API {
    * @param {LogoutRequest} req logout request
    * @param {import("koa").Context} ctx koa context
    */
-  async logout(req, ctx) {}
+  async logout(req, ctx) {
+    const { authorization } = req;
+    const access_token = authorization.split(" ")[1];
+    const sessionId = decodeJwtToken(access_token).session;
+    const session = await SessionModel.get(sessionId);
+    await session.delete();
+  }
 }
-
-const genToken = payload =>
-  jwt.sign(payload, JWT_KEY, { expiresIn: JWT_EXPIRES });
 
 const service = new Service();
 export default service;

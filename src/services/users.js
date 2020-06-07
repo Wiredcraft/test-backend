@@ -61,7 +61,7 @@ export class Service extends API {
     }
     const repeatUser = await UserModel.findOne({ name });
     if (repeatUser) {
-      if (ctx) throw ctx.throw(404, "user name was used by others");
+      if (ctx) throw ctx.throw(404, "user already exsists");
       else return;
     }
     const user = await UserModel.create(body);

@@ -2,6 +2,14 @@
 # yarn lockfile v1
 
 
+"@36node/query-normalizr@^0.4.5":
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/@36node/query-normalizr/-/query-normalizr-0.4.8.tgz#481323d4d2d51f3c5fd014e975ee297c0020b856"
+  integrity sha512-hVoU5xHDtV+KaMM1hR7GHq/3TyD39sznB0KrpMqvmWsn+qdXFc4ql6tw0x98jxHGBvyWAhGjIV2KRAnZJq5u4g==
+  dependencies:
+    humps "^2.0.1"
+    lodash "^4.17.11"
+
 "@babel/cli@^7.7.0":
   version "7.10.1"
   resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.10.1.tgz#b6e5cd43a17b8f639442ab027976408ebe6d79a0"

@@ -46,6 +46,13 @@ export default class API {
       ctx.status = 200;
     };
 
+    const logout = async ctx => {
+      const req = { authorization: ctx.header.authorization };
+      await this.logout(req, ctx);
+
+      ctx.status = 204;
+    };
+
     router.get("/auth/github", ...this.middlewares("reqGithub"), reqGithub);
     router.get(
       "/auth/github/callback",
@@ -53,6 +60,7 @@ export default class API {
       reqGithubCallback
     );
     router.post("/auth/login", ...this.middlewares("login"), login);
+    router.delete("/auth/logout", ...this.middlewares("logout"), logout);
   }
 
   /**

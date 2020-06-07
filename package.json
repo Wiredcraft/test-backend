@@ -29,6 +29,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@36node/query-normalizr": "^0.4.5",
     "@babel/cli": "^7.7.0",
     "@babel/core": "^7.7.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",

@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 info:
   version: 0.1.0
-  title: User Service
+  title: test-backend Service
   license:
     name: MIT
 servers:
@@ -9,7 +9,7 @@ servers:
     description: The production API server
     variables:
       basePath:
-        default: /test-backend/v0
+        default: http://devhost:9527/test-backend/v0
 paths:
   /users:
     get:
@@ -27,13 +27,14 @@ paths:
               examples:
                 default:
                   value: |
-                    {
-                      "id": 3,
-                      "name": "cc",
-                      "tag": "red",
-                      "age": 6,
-                      "grade": 3
-                    }
+                    [
+                      {
+                        "name": "admin",
+                        "updatedAt": "2020-06-07T01:04:31.408Z",
+                        "createdAt": "2020-06-07T01:04:31.408Z",
+                        "id": "5edc3d1f34c65e5d33ac1d40"
+                      }
+                    ]
         "401":
           $ref: "#/components/responses/Unauthorized"
         "404":
@@ -179,13 +180,13 @@ paths:
               examples:
                 default:
                   value: |
-                    {
-                      "id": 3,
-                      "name": "cc",
-                      "tag": "red",
-                      "age": 6,
-                      "grade": 3
-                    }
+                    [{
+                      "from": 3,
+                      "to": "cc",
+                      "id": "red",
+                      "createdAt": 6,
+                      "updatedAt": 3
+                    }]
         "401":
           $ref: "#/components/responses/Unauthorized"
         "404":
@@ -228,7 +229,7 @@ paths:
           $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/InternalError"
-  /friendships/{from}/{to}:
+  /friendships/edit/{from}/{to}:
     post:
       summary: Create a friendship
       operationId: createFriendship
@@ -378,6 +379,22 @@ paths:
           $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/InternalError"
+  /auth/logout:
+    delete:
+      summary: logout
+      operationId: logout
+      tags:
+        - authentication
+      responses:
+        "204":
+          description: session deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
 security:
   - bearerAuth: []
 
@@ -407,21 +424,21 @@ components:
     Friendship:
       type: object
       required:
-        - followerId
-        - followingId
+        - from
+        - to
       properties:
-        followerId:
+        from:
           type: string
-        followingId:
+        to:
           type: string
 
     LoginReqDoc:
       type: object
       required:
-        - id
+        - user
         - password
       properties:
-        id:
+        user:
           type: string
         password:
           type: string
@@ -439,9 +456,7 @@ components:
           type: string
         description:
           type: string
-        createdAt:
-          type: string
-        updatedAt:
+        github:
           type: string
 
     User:

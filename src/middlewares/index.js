@@ -1,3 +1,3 @@
-import someMid from "./some";
+import sessionValid from "./sessionValid";
 
-export { someMid };
+export { sessionValid };
