@@ -15,7 +15,7 @@ export function env(name, init) {
   if (value === undefined) {
     throw new Error(`environment ${name} is missing`);
   }
-  console.log(`${name} = ${value}`);
+
   return value;
 }
 
@@ -33,6 +33,11 @@ export const LOG_LEVEL = env("LOG_LEVEL", "info");
 export const MONGODB_CONNECTION = env(
   "MONGODB_CONNECTION",
   `mongodb://localhost/test-backend-${NODE_ENV}`
+);
+
+export const MONGODB_TEST_CONNECTION = env(
+  "MONGODB_TEST_CONNECTION",
+  "mongodb://localhost/test-backend-test"
 );
 
 /**

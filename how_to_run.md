@@ -57,6 +57,18 @@ You also need to save the `Client ID` and `Client Secret` from this page for you
 yarn dev
 ```
 
+## Deployment
+
+```sh
+yarn start
+```
+
+## Test
+
+```sh
+yarn test
+```
+
 ## For Api User
 
 ### API Info

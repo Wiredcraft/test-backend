@@ -15,7 +15,8 @@
     "clean": "rimraf dist",
     "build": "npm run clean && mkdir -p dist && babel src -s -D -d dist",
     "test": "jest",
-    "lint": "esw -w src test"
+    "lint": "esw -w src test",
+    "format": "esw -w src test --fix"
   },
   "keywords": [
     "koa2",
