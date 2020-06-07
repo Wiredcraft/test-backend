@@ -1,0 +1,141 @@
+{
+  "name": "test-backend-service",
+  "version": "1.0.0",
+  "description": "A simple RESTful API service",
+  "author": "Wei Lu <lalawow@gmail.com>",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=8.12.0",
+    "npm": ">=6.4.1"
+  },
+  "scripts": {
+    "prestart": "npm run -s build",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/server.js --exec \"node -r dotenv/config -r @babel/register --trace-warnings\"",
+    "clean": "rimraf dist",
+    "build": "npm run clean && mkdir -p dist && babel src -s -D -d dist",
+    "test": "jest",
+    "lint": "esw -w src test"
+  },
+  "keywords": [
+    "koa2",
+    "babel",
+    "es6",
+    "es2015",
+    "es2016",
+    "es2017",
+    "jest",
+    "eslint"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@babel/cli": "^7.7.0",
+    "@babel/core": "^7.7.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
+    "@babel/preset-env": "^7.1.0",
+    "@koa/cors": "^3.0.0",
+    "axios": "^0.19.2",
+    "crypto-js": "^4.0.0",
+    "dotenv": "^8.2.0",
+    "humps": "^2.0.1",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.11.0",
+    "koa-body": "^4.1.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-compress": "^3.0.0",
+    "koa-helmet": "^4.1.0",
+    "koa-jwt": "^4.0.0",
+    "koa-logger": "^3.2.0",
+    "koa-morgan": "^1.0.1",
+    "koa-pino-logger": "^2.1.3",
+    "koa-router": "^7.4.0",
+    "koa-tree-router": "^0.4.5",
+    "lodash": "^4.17.10",
+    "moment": "^2.24.0",
+    "mongoose": "^5.9.17",
+    "mongoose-hidden": "^1.9.0",
+    "pino": "^5.11.1",
+    "rimraf": "^3.0.0",
+    "uid": "^1.0.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.10.1",
+    "@babel/register": "^7.0.0",
+    "@commitlint/cli": "^6.1.0",
+    "@commitlint/config-conventional": "^6.1.0",
+    "@shelf/jest-mongodb": "^1.0.1",
+    "@types/jest": "^24.0.12",
+    "@types/koa": "^2.0.46",
+    "@types/lodash": "^4.14.116",
+    "@types/mongoose": "^5.2.19",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "^10.0.3",
+    "babel-jest": "^24.9.0",
+    "eslint": "^6.6.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^23.0.4",
+    "eslint-watch": "^6.0.1",
+    "husky": "^1.3.1",
+    "jest": "^24.9.0",
+    "jest-runner-newman": "^1.0.5",
+    "lint-staged": "^8.1.5",
+    "newman": "^4.4.1",
+    "nodemon": "^1.19.4",
+    "pino-pretty": "^3.2.0",
+    "prettier": "^1.18.2",
+    "standard-version": "^6.0.1",
+    "supertest": "^4.0.2"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-object-rest-spread",
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        }
+      ]
+    ],
+    "sourceMaps": true,
+    "retainLines": true
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "plugins": [
+      "import",
+      "jest"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2017,
+      "sourceType": "module"
+    },
+    "env": {
+      "node": true,
+      "jest": true,
+      "es6": true
+    },
+    "extends": [
+      "eslint:recommended"
+    ],
+    "rules": {
+      "jest/no-focused-tests": 2,
+      "jest/no-identical-title": 2
+    }
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "directories": {
+    "test": "test"
+  }
+}

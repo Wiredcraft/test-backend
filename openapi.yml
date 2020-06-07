@@ -1,0 +1,477 @@
+openapi: "3.0.0"
+info:
+  version: 0.1.0
+  title: User Service
+  license:
+    name: MIT
+servers:
+  - url: http://{basePath}
+    description: The production API server
+    variables:
+      basePath:
+        default: /test-backend/v0
+paths:
+  /users:
+    get:
+      summary: List users
+      operationId: listUsers
+      tags:
+        - users
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              examples:
+                default:
+                  value: |
+                    {
+                      "id": 3,
+                      "name": "cc",
+                      "tag": "red",
+                      "age": 6,
+                      "grade": 3
+                    }
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      summary: Create a user
+      operationId: createUser
+      tags:
+        - users
+      requestBody:
+        description: User to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserDoc"
+      responses:
+        "200":
+          description: The user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /users/{id}:
+    get:
+      summary: Get user by ID
+      operationId: getUserById
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to retrieve
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              examples:
+                default:
+                  value: |
+                    {
+                      "id": 3,
+                      "name": "cc",
+                      "tag": "red",
+                      "age": 6,
+                      "grade": 3
+                    }
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    patch:
+      summary: Update user
+      operationId: updateUser
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of user
+          schema:
+            type: string
+      requestBody:
+        description: User to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserDoc"
+      responses:
+        "200":
+          description: The user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    delete:
+      summary: deletes a single user by id
+      operationId: deleteUser
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: user deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /friendships/to/{userId}:
+    get:
+      summary: Get who is following user {userId}
+      operationId: getFollowersById
+      tags:
+        - friendships
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The id of the user
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              examples:
+                default:
+                  value: |
+                    {
+                      "id": 3,
+                      "name": "cc",
+                      "tag": "red",
+                      "age": 6,
+                      "grade": 3
+                    }
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /friendships/from/{userId}:
+    get:
+      summary: Get who user {userId} is following
+      operationId: getFollowingsById
+      tags:
+        - friendships
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The id of the user
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              examples:
+                default:
+                  value: |
+                    {
+                      "id": 3,
+                      "name": "cc",
+                      "tag": "red",
+                      "age": 6,
+                      "grade": 3
+                    }
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /friendships/{from}/{to}:
+    post:
+      summary: Create a friendship
+      operationId: createFriendship
+      tags:
+        - friendships
+      parameters:
+        - name: from
+          in: path
+          required: true
+          description: The id of the user
+          schema:
+            type: string
+        - name: to
+          in: path
+          required: true
+          description: The id of the user
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      summary: deletes a friendship
+      operationId: deleteFriendship
+      tags:
+        - friendships
+      parameters:
+        - name: from
+          in: path
+          required: true
+          description: The id of the user
+          schema:
+            type: string
+        - name: to
+          in: path
+          required: true
+          description: The id of the user
+          schema:
+            type: string
+      responses:
+        "204":
+          description: user deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /auth/github:
+    get:
+      summary: Request Github OAuth
+      operationId: reqGit
+      tags:
+        - authentication
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              examples:
+                default:
+                  value: |
+                    {
+                      "id": 3,
+                      "name": "cc",
+                      "tag": "red",
+                      "age": 6,
+                      "grade": 3
+                    }
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /auth/github/callback:
+    get:
+      summary: Github OAuth request callback
+      operationId: reqGitCallback
+      tags:
+        - authentication
+      parameters:
+        - name: _limit
+          in: query
+          description: callback code from Github
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              examples:
+                default:
+                  value: |
+                    {
+                      "id": 3,
+                      "name": "cc",
+                      "tag": "red",
+                      "age": 6,
+                      "grade": 3
+                    }
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /auth/login:
+    post:
+      summary: Create a login by password
+      operationId: login
+      tags:
+        - authentication
+      requestBody:
+        description: login to request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginReqDoc"
+      responses:
+        "200":
+          description: The user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+security:
+  - bearerAuth: []
+
+components:
+  responses:
+    NoContent:
+      description: The resource was deleted successfully.
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Err"
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Err"
+    InternalError:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Err"
+  schemas:
+    Friendship:
+      type: object
+      required:
+        - followerId
+        - followingId
+      properties:
+        followerId:
+          type: string
+        followingId:
+          type: string
+
+    LoginReqDoc:
+      type: object
+      required:
+        - id
+        - password
+      properties:
+        id:
+          type: string
+        password:
+          type: string
+
+    UserDoc:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        dob:
+          type: string
+        address:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    User:
+      allOf:
+        - $ref: "#/components/schemas/UserDoc"
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: string
+
+    UserOrDoc:
+      oneOf:
+        - $ref: "#/components/schemas/UserDoc"
+        - $ref: "#/components/schemas/User"
+
+    Err:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

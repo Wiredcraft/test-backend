@@ -1,0 +1,16 @@
+[
+  {
+    "name": "bob1",
+    "tag": "happy",
+    "owner": "36node",
+    "age": 2,
+    "category": "CAT"
+  },
+  {
+    "name": "bob2",
+    "tag": "happy",
+    "owner": "36node",
+    "age": 3,
+    "category": "CAT"
+  }
+]

@@ -1,0 +1,6 @@
+*
+!dist
+!ssl
+!openapi.yml
+!package.json
+!yarn.lock
