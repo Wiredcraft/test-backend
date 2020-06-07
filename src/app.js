@@ -12,7 +12,7 @@ import { queryNormalizr } from "@36node/query-normalizr";
 import logger from "./lib/log";
 import { BASE, NODE_ENV, JWT_KEY } from "./config";
 import { usersService, friendshipService, authService } from "./services";
-import { sessionValid } from "./middlewares";
+import { authorizationValid, sessionValid } from "./middlewares";
 
 const app = new Koa2();
 const router = new Router({ prefix: BASE });
@@ -47,6 +47,7 @@ app
   )
   .use(body())
   .use(sessionValid())
+  .use(authorizationValid())
   .use(queryNormalizr())
   .use(compress({ threshold: 2048 }))
   .use(router.routes());

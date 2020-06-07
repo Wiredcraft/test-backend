@@ -15,7 +15,7 @@ export function env(name, init) {
   if (value === undefined) {
     throw new Error(`environment ${name} is missing`);
   }
-
+  console.log(`${name} = ${value}`);
   return value;
 }
 

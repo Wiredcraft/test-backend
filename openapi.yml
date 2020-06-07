@@ -159,8 +159,8 @@ paths:
           $ref: "#/components/responses/InternalError"
   /friendships/to/{userId}:
     get:
-      summary: Get who is following user {userId}
-      operationId: getFollowersById
+      summary: List who is following user {userId}
+      operationId: listFollowersById
       tags:
         - friendships
       parameters:
@@ -195,8 +195,8 @@ paths:
           $ref: "#/components/responses/InternalError"
   /friendships/from/{userId}:
     get:
-      summary: Get who user {userId} is following
-      operationId: getFollowingsById
+      summary: List who user {userId} is following
+      operationId: listFollowingsById
       tags:
         - friendships
       parameters:
@@ -262,7 +262,7 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
     delete:
-      summary: deletes a friendship
+      summary: Deletes a friendship
       operationId: deleteFriendship
       tags:
         - friendships
