@@ -40,8 +40,7 @@ export default class API {
     };
 
     const createFriendship = async ctx => {
-      if (!ctx.params.to)
-        throw createError(400, "two ids in path are required.");
+      if (!ctx.params.to) { throw createError(400, "two ids in path are required."); }
 
       const req = {
         from: ctx.params.from,
@@ -57,8 +56,7 @@ export default class API {
     };
 
     const deleteFriendship = async ctx => {
-      if (!ctx.params.to)
-        throw createError(400, "two ids in path are required.");
+      if (!ctx.params.to) { throw createError(400, "two ids in path are required."); }
 
       const req = {
         from: ctx.params.from,

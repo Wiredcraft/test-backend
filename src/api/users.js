@@ -16,8 +16,7 @@ export default class API {
 
       if (!res.body) throw createError(500, "should have body in response");
 
-      if (!res.headers || res.headers.xTotalCount === undefined)
-        throw createError(500, "should have header X-Total-Count in response");
+      if (!res.headers || res.headers.xTotalCount === undefined) { throw createError(500, "should have header X-Total-Count in response"); }
 
       ctx.body = res.body;
       ctx.set("X-Total-Count", res.headers.xTotalCount);

@@ -14,7 +14,7 @@ export class Service extends API {
    */
   middlewares(operation) {
     const load = async (ctx, next) => {
-      let { id } = ctx.params;
+      const { id } = ctx.params;
       if (id) {
         ctx.state.user = await UserModel.get(id);
         if (!ctx.state.user) {
@@ -57,7 +57,7 @@ export class Service extends API {
     const { body } = req;
     const { name } = body;
     if (!name) {
-      throw ctx.throw(404, `user name not found.`);
+      throw ctx.throw(404, "user name not found.");
     }
     const repeatUser = await UserModel.findOne({ name });
     if (repeatUser) {

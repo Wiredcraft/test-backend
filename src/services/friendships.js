@@ -1,5 +1,3 @@
-import { pick } from "lodash";
-
 import API from "../api/friendships";
 import { FriendshipModel, UserModel } from "../models";
 import { isObjectId } from "../lib/utils";
@@ -13,7 +11,7 @@ export class Service extends API {
    */
   middlewares(operation) {
     const load = async (ctx, next) => {
-      let { id } = ctx.params;
+      const { id } = ctx.params;
       if (id) {
         ctx.state.friendship = await FriendshipModel.get(id);
         if (!ctx.state.friendship) {

@@ -57,7 +57,7 @@ export default function build(raw, schema) {
       return acc;
     }
 
-    if (key === "q") acc["$text"] = { $search: quote(val) };
+    if (key === "q") acc.$text = { $search: quote(val) };
     // TODO: should use schema.Path(key) to get type
     else if (val === "true") acc[key] = true;
     else if (val === "false") acc[key] = false;
