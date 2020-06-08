@@ -14,7 +14,8 @@
     "dev": "nodemon src/server.js --exec \"node -r dotenv/config -r @babel/register --trace-warnings\"",
     "clean": "rimraf dist",
     "build": "npm run clean && mkdir -p dist && babel src -s -D -d dist",
-    "test": "jest --verbose",
+    "test": "jest --verbose --coverage",
+    "dev:test": "jest --verbose --watch",
     "lint": "esw -w src test",
     "format": "esw -w src test --fix"
   },

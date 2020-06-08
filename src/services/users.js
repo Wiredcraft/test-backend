@@ -60,6 +60,7 @@ export class Service extends API {
       throw ctx.throw(404, "user name not found.");
     }
     const repeatUser = await UserModel.findOne({ name });
+
     if (repeatUser) {
       if (ctx) throw ctx.throw(404, "user already exsists");
       else return;

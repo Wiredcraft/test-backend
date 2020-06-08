@@ -72,5 +72,10 @@ describe("Password model", () => {
     expect(
       (await Password.list({ offset: 10, limit: 10 })).docs[0].toJSON()
     ).toEqual(passwords[12]);
+    expect(
+      (
+        await Password.list({ offset: 10, limit: 10, sort: "updated" })
+      ).docs[0].toJSON()
+    ).toEqual(passwords[10]);
   });
 });

@@ -75,5 +75,11 @@ describe("Friendship model", () => {
     expect(
       (await Friendship.list({ offset: 10, limit: 10 })).docs[0].toJSON()
     ).toEqual(friendships[12]);
+
+    expect(
+      (
+        await Friendship.list({ offset: 10, limit: 10, sort: "updated" })
+      ).docs[0].toJSON()
+    ).toEqual(friendships[10]);
   });
 });

@@ -3,6 +3,7 @@ import supertest from "supertest";
 import { app, config } from "../src/index";
 import { DEFAULT_PWD } from "../src/config";
 import { usersService } from "../src/services";
+import { UserModel } from "../src/models";
 
 export class AppManager {
   constructor() {
@@ -19,8 +20,11 @@ export class AppManager {
     });
     await mongoose.connection.db.dropDatabase();
     this._server = app.listen();
+
     await usersService.createUser({ body: { name: "admin" } });
-    this._token = "";
+    const checkAdmin = await UserModel.find({ name: "admin" });
+    if (checkAdmin.length > 1) await checkAdmin[0].delete();
+
     this._request = await supertest(this._server);
     await this.getToken();
   }

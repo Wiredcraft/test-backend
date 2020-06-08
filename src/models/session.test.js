@@ -72,5 +72,10 @@ describe("Session model", () => {
     expect(
       (await Session.list({ offset: 10, limit: 10 })).docs[0].toJSON()
     ).toEqual(sessions[12]);
+    expect(
+      (
+        await Session.list({ offset: 10, limit: 10, sort: "updated" })
+      ).docs[0].toJSON()
+    ).toEqual(sessions[10]);
   });
 });

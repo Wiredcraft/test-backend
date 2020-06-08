@@ -71,5 +71,10 @@ describe("User model", () => {
     expect(
       (await User.list({ offset: 10, limit: 10 })).docs[0].toJSON()
     ).toEqual(users[12]);
+    expect(
+      (
+        await User.list({ offset: 10, limit: 10, sort: "updated" })
+      ).docs[0].toJSON()
+    ).toEqual(users[10]);
   });
 });

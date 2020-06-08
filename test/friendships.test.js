@@ -1,7 +1,7 @@
 import app from "./app-manager";
 import { createUser, createFriendship } from "./util";
 
-describe("Authentication service", () => {
+describe("Friendships service", () => {
   beforeEach(async () => {
     await app.start();
   });
