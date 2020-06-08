@@ -66,16 +66,17 @@
     "@commitlint/cli": "^6.1.0",
     "@commitlint/config-conventional": "^6.1.0",
     "@shelf/jest-mongodb": "^1.0.1",
-    "@types/jest": "^24.0.12",
-    "@types/koa": "^2.0.46",
-    "@types/lodash": "^4.14.116",
-    "@types/mongoose": "^5.2.19",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
     "eslint": "^6.6.0",
-    "eslint-plugin-import": "^2.18.2",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-html": "^6.0.2",
+    "eslint-plugin-import": "^2.21.0",
     "eslint-plugin-jest": "^23.0.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "eslint-watch": "^6.0.1",
     "husky": "^1.3.1",
     "jest": "^24.9.0",
@@ -86,7 +87,8 @@
     "pino-pretty": "^3.2.0",
     "prettier": "^1.18.2",
     "standard-version": "^6.0.1",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "typescript": "^3.9.5"
   },
   "babel": {
     "presets": [
@@ -131,7 +133,13 @@
     ],
     "rules": {
       "jest/no-focused-tests": 2,
-      "jest/no-identical-title": 2
+      "jest/no-identical-title": 2,
+      "no-unused-vars": [
+        "error",
+        {
+          "args": "none"
+        }
+      ]
     }
   },
   "jest": {

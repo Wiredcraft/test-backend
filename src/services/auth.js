@@ -1,10 +1,8 @@
 import axios from "axios";
-import { pick } from "lodash";
 
 import API from "../api/auth";
 import { SessionModel, PasswordModel, UserModel } from "../models";
 import {
-  isObjectId,
   pwdEncrypt,
   genJwtToken,
   decodeJwtToken,
@@ -20,13 +18,6 @@ export class Service extends API {
    */
   middlewares(operation) {
     const load = async (ctx, next) => {
-      let { id } = ctx.params;
-      if (id) {
-        ctx.state.friendship = await FriendshipModel.get(id);
-        if (!ctx.state.friendship) {
-          throw ctx.throw(404, `friendship ${id} not found.`);
-        }
-      }
       await next();
     };
     return [load];
@@ -91,7 +82,7 @@ export class Service extends API {
 
     await SessionModel.create(sessionPayload);
 
-    return { body: { token: genToken(sessionPayload), user: userDoc } };
+    return { body: { token: genJwtToken(sessionPayload), user: userDoc } };
   }
 
   /**
