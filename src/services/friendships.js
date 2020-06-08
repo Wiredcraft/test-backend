@@ -11,26 +11,19 @@ export class Service extends API {
    */
   middlewares(operation) {
     const load = async (ctx, next) => {
-      const { id } = ctx.params;
-      if (id) {
-        ctx.state.friendship = await FriendshipModel.get(id);
-        if (!ctx.state.friendship) {
-          throw ctx.throw(404, `friendship ${id} not found.`);
-        }
-      }
       await next();
     };
     return [load];
   }
 
   /**
-   * Get who is following user {userId}
+   * List who is following user {userId}
    *
-   * @param {GetFriendshipsToIdRequest} req getFriendshipsToId request
+   * @param {ListFriendshipsToIdRequest} req listFriendshipsToId request
    * @param {import("koa").Context} ctx koa context
-   * @returns {GetFriendshipsToIdResponse} Expected response to a valid request
+   * @returns {ListFriendshipsToIdResponse} Expected response to a valid request
    */
-  async getFriendshipsToId(req, ctx) {
+  async listFriendshipsToId(req, ctx) {
     const { limit = 10, offset = 0, sort, filter = {} } = req.query;
     filter.to = ctx.params.userId;
     const friendships = await FriendshipModel.list({
@@ -51,13 +44,13 @@ export class Service extends API {
   }
 
   /**
-   * Get who user {userId} is following
+   * List who user {userId} is following
    *
-   * @param {GetFriendshipsFromIdRequest} req getFriendshipsFromId request
+   * @param {LlistFriendshipsFromIdRequest} req listFriendshipsFromId request
    * @param {import("koa").Context} ctx koa context
-   * @returns {GetFriendshipsFromIdResponse} Expected response to a valid request
+   * @returns {ListFriendshipsFromIdResponse} Expected response to a valid request
    */
-  async getFriendshipsFromId(req, ctx) {
+  async listFriendshipsFromId(req, ctx) {
     const { limit = 10, offset = 0, sort, filter = {} } = req.query;
     filter.from = ctx.params.userId;
     const friendships = await FriendshipModel.list({
@@ -98,7 +91,7 @@ export class Service extends API {
   }
 
   /**
-   * Delete friendship by id
+   * Delete friendship by users id
    *
    * @param {DeleteFriendshipRequest} req deleteFriendship request
    * @param {import("koa").Context} ctx koa context
@@ -107,6 +100,7 @@ export class Service extends API {
     const { from, to } = ctx.params;
     const friendship = await FriendshipModel.findOne({ from, to });
     if (friendship) await friendship.delete();
+    else throw ctx.throw(404, "Friendship dosen't exist!");
   }
 }
 

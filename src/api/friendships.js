@@ -7,7 +7,7 @@ export default class API {
    * @param {Object} router the koa compatible router
    */
   bind(router) {
-    const getFriendshipsToId = async ctx => {
+    const listFriendshipsToId = async ctx => {
       if (!ctx.params.userId) throw createError(400, "id in path is required.");
 
       const req = {
@@ -15,7 +15,7 @@ export default class API {
         query: ctx.normalizedQuery || {},
       };
 
-      const res = await this.getFriendshipsToId(req, ctx);
+      const res = await this.listFriendshipsToId(req, ctx);
 
       if (!res.body) throw createError(500, "should have body in response");
 
@@ -23,7 +23,7 @@ export default class API {
       ctx.status = 200;
     };
 
-    const getFriendshipsFromId = async ctx => {
+    const listFriendshipsFromId = async ctx => {
       if (!ctx.params.userId) throw createError(400, "id in path is required.");
 
       const req = {
@@ -31,7 +31,7 @@ export default class API {
         query: ctx.normalizedQuery || {},
       };
 
-      const res = await this.getFriendshipsFromId(req, ctx);
+      const res = await this.listFriendshipsFromId(req, ctx);
 
       if (!res.body) throw createError(500, "should have body in response");
 
@@ -40,7 +40,9 @@ export default class API {
     };
 
     const createFriendship = async ctx => {
-      if (!ctx.params.to) { throw createError(400, "two ids in path are required."); }
+      if (!ctx.params.to) {
+        throw createError(400, "two ids in path are required.");
+      }
 
       const req = {
         from: ctx.params.from,
@@ -52,11 +54,13 @@ export default class API {
       if (!res.body) throw createError(500, "should have body in response");
 
       ctx.body = res.body;
-      ctx.status = 200;
+      ctx.status = 201;
     };
 
     const deleteFriendship = async ctx => {
-      if (!ctx.params.to) { throw createError(400, "two ids in path are required."); }
+      if (!ctx.params.to) {
+        throw createError(400, "two ids in path are required.");
+      }
 
       const req = {
         from: ctx.params.from,
@@ -70,13 +74,13 @@ export default class API {
 
     router.get(
       "/friendships/to/:userId",
-      ...this.middlewares("getFriendshipsToId"),
-      getFriendshipsToId
+      ...this.middlewares("listFriendshipsToId"),
+      listFriendshipsToId
     );
     router.get(
       "/friendships/from/:userId",
-      ...this.middlewares("getFriendshipsFromId"),
-      getFriendshipsFromId
+      ...this.middlewares("listFriendshipsFromId"),
+      listFriendshipsFromId
     );
     router.post(
       "/friendships/edit/:from/:to",

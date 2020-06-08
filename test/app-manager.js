@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
+import supertest from "supertest";
 import { app, config } from "../src/index";
 import { DEFAULT_PWD } from "../src/config";
-import supertest from "supertest";
+import { usersService } from "../src/services";
 
 export class AppManager {
   constructor() {
@@ -18,8 +19,9 @@ export class AppManager {
     });
     await mongoose.connection.db.dropDatabase();
     this._server = app.listen();
+    await usersService.createUser({ body: { name: "admin" } });
     this._token = "";
-    this._request = supertest(this._server);
+    this._request = await supertest(this._server);
     await this.getToken();
   }
 
@@ -86,12 +88,12 @@ export class AppManager {
   }
 
   async getToken() {
-    this._token = "";
+    this.token = "";
     const res = await this.post("/auth/login").send({
       user: "admin",
       password: DEFAULT_PWD,
     });
-    this._token = res.body.token;
+    this.token = res.body.token;
   }
 }
 

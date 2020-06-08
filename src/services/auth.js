@@ -2,11 +2,7 @@ import axios from "axios";
 
 import API from "../api/auth";
 import { SessionModel, PasswordModel, UserModel } from "../models";
-import {
-  pwdEncrypt,
-  genJwtToken,
-  decodeJwtToken,
-} from "../lib/utils";
+import { pwdEncrypt, genJwtToken, decodeJwtToken } from "../lib/utils";
 import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "../config";
 
 export class Service extends API {
@@ -94,7 +90,6 @@ export class Service extends API {
    */
   async login(req, ctx) {
     const { user, password } = req.body;
-
     if (!user || !password) throw ctx.throw(404, `user or password not found.`);
 
     const userDoc = await UserModel.findOne({ name: user });
