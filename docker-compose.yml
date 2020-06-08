@@ -4,4 +4,4 @@ services:
     restart: always
     image: mongo
     ports:
-      - 27017:27017
+      - 27017
