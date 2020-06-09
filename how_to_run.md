@@ -65,8 +65,16 @@ yarn start
 
 ## Test
 
+Run a full test
+
 ```sh
 yarn test
+```
+
+Run continues test during development
+
+```sh
+yarn dev:test
 ```
 
 ## For Api User
