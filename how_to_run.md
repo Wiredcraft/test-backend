@@ -63,6 +63,18 @@ yarn dev
 yarn start
 ```
 
+With the default setting, the service's API base url will be
+
+```sh
+http://localhost:9527/test-backend/v0
+```
+
+For example, list users API will be
+
+```sh
+http://localhost:9527/test-backend/v0/users
+```
+
 ## Test
 
 Run a full test
