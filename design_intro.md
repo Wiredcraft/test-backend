@@ -5,6 +5,7 @@
 - Nodejs and Koa2
 - MongoDB and Mongoose
 - RESTful API design
+- Jest and supertest
 
 ## Features
 
@@ -65,6 +66,8 @@ Service running code in the `./src` folder.
 - `index.js`: reference catalog
 
 - `server.js`: server start up entrance
+
+Service test code in the `./test` folder.
 
 ## API design
 
@@ -229,3 +232,56 @@ app.use(
 
 `authorizationValid` will check whether the user get the authorization to request the api.
 Now no actual authorization limit is applied yet.
+
+## Test
+
+We use Jest and supertest to run the test.
+
+Run test script will start a full test. It will give a coverage report in the end.
+
+```sh
+yarn test
+```
+
+### Unit tests for mongoose models
+
+Unit tests for mongoose models are wrote in the `./src/models` with those model files.
+
+Each model has its own test file.
+
+Currently the service didn't use complicated methods of models. So the tests here are very basic.
+
+### Service integrated tests
+
+Service integrated tests are wrote in the `./test`.
+
+Each service has its own test file.
+
+We use `./test/app-manager.js` to run `supertest` to request our API to run the tests.
+
+\* I need more time to figure out Github OAuth's test. It's not there yet.
+
+## To-do list
+
+- Save sessions data in the `Redis` instead of MongoDB, due to `sessionValid` and `authorizationValid` workload
+
+- Test for Github Oauth login
+
+- Adjust API response body structure as
+
+```sh
+  {
+    success: true,
+    code: 200,
+    data: {},
+    message: "job done."
+  }
+```
+
+- Use `moment` to format user's dob info
+
+- Convert user's address info into geographic coordinates, and use it search close range friend.
+
+```sh
+UserModel.find({"addressGeo": {$near: fromUser.addressGeo}, $maxDistance:0.1})
+```
