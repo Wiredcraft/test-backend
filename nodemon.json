@@ -1,0 +1,13 @@
+{
+  "watch": ["config/", "src/"],
+  "ext": "js,json,ts,yaml",
+  "env": {
+    "TS_NODE_FILES": "true",
+    "APP_ENV": "development"
+  },
+  "execMap": {
+    "ts": "ts-node --transpile-only",
+    "js": "node"
+  },
+  "ignore": [".git", "node_modules/**/node_modules"]
+}
