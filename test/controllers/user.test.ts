@@ -54,7 +54,7 @@ test('UserController should update', async (t) => {
   let index = 0;
   for (const item of items) {
     ++index;
-    const expectedLocation: Location = [index, index + 1];
+    const expectedLocation: Location = [index, index];
     const user = await userController.update(item.id, {
       location: expectedLocation,
     });
@@ -125,6 +125,15 @@ test('UserController should list followers', async (t) => {
   }
 });
 
+test('UserController should search neighbors', async (t) => {
+  const users = buildUsers();
+  const userController = new UserController();
+  const me = users[0];
+  const items = await userController.searchNeighbors(me.id, 1);
+  t.deepEqual(items.length, 1);
+  t.deepEqual(items[0].id, 2);
+});
+
 test('UserController should unfollow', async (t) => {
   const users = buildUsers();
   const userController = new UserController();
@@ -137,6 +146,14 @@ test('UserController should unfollow', async (t) => {
     t.deepEqual(count, total - 1);
     --total;
   }
+});
+
+test('UserController should search neighbors without links', async (t) => {
+  const users = buildUsers();
+  const userController = new UserController();
+  const me = users[0];
+  const items = await userController.searchNeighbors(me.id, 1);
+  t.deepEqual(items.length, 0);
 });
 
 test('UserController should delete', async (t) => {

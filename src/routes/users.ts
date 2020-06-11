@@ -112,6 +112,20 @@ const userFollowerResponseSchema = {
   },
 };
 
+const searchNeighborQueryString = {
+  limit: { type: 'number', minmum: 1, maximum: 100 },
+};
+
+const searchNeighborResponseSchema = {
+  type: 'object',
+  properties: {
+    data: {
+      type: 'array',
+      items: userItemSchema,
+    },
+  },
+};
+
 const extractOffsetLimit = (data: any) => {
   const offset = data.offset || 1;
   const limit = data.limit || 20;
@@ -331,6 +345,27 @@ export const users = async (fastify: FastifyInstance) => {
       const toId = request.params.targetId;
       await userController.unfollow(fromId, toId);
       reply.send({ data: null });
+    }
+  );
+
+  // search neighbors
+  fastify.get(
+    '/users/:id/neighbors',
+    {
+      schema: {
+        params: userParams,
+        querystring: searchNeighborQueryString,
+        response: {
+          200: searchNeighborResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const userController = new UserController();
+      const id = request.params.id;
+      const limit = request.query.limit || 10;
+      const neighbors = await userController.searchNeighbors(id, limit);
+      reply.send({ data: neighbors });
     }
   );
 };

@@ -201,6 +201,38 @@ export class UserController {
     });
   }
 
+  async searchNeighbors(id: number, limit: number) {
+    const origin = await this.get(id);
+    if (!origin.location) {
+      return [];
+    }
+    const [latitude, longtitude] = origin.location;
+    const [results] = await context.sequelize.query(`select id, location,
+    DEGREES(ACOS(LEAST(1.0, COS(RADIANS(${latitude}))
+             * COS(RADIANS(X(location)))
+             * COS(RADIANS(${longtitude} - Y(location)))
+             + SIN(RADIANS(${latitude}))
+             * SIN(RADIANS(X(location)))))) as distance
+    from user where
+    location is not null
+    and deletedAt is null
+    and id in (
+      select \`from\` as id from user_link where \`to\` = ${origin.id}
+      union
+      select \`to\` as id from user_link where \`from\` = ${origin.id}
+    )
+    order by distance asc limit ${limit};`);
+    const neighborIds = (results as { id: number }[]).map((item) => item.id);
+    return models.UserModel.findAll({
+      where: {
+        id: {
+          [Op.in]: neighborIds,
+        },
+        deletedAt: null,
+      },
+    });
+  }
+
   async ensureActive(ids: number[]) {
     const count = await models.UserModel.count({
       where: {
