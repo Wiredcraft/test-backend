@@ -87,6 +87,9 @@
     "exclude": [
       "src/context",
       "src/providers",
+      "src/migrations",
+      "src/controllers/migration.ts",
+      "src/models/migration.ts",
       "test"
     ]
   }
