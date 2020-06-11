@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+
+  database:
+    image: mongo:4
+    container_name: test-backend-db
+    ports:
+      - 27017:27017
+    restart: on-failure
+
+  server:
+    container_name: test-backend-api
+    depends_on:
+      - database
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    working_dir: /usr/src/app
+    networks:
+      - backend
+    ports:
+      - 3000:3000
+volumes:
+  db-data:
+
+networks:
+  backend:
