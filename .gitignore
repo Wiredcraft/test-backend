@@ -1,0 +1,31 @@
+# dependencies
+node_modules/
+yarn.lock
+package-lock.json
+
+# IDE
+/.idea
+/.awcache
+/.vscode
+*.code-workspace
+
+# bundle
+packages/**/*.d.ts
+packages/**/*.js
+
+# misc
+.DS_Store
+lerna-debug.log
+npm-debug.log
+yarn-error.log
+/**/npm-debug.log
+/packages/**/.npmignore
+/packages/**/LICENSE
+
+# tests
+/test
+/benchmarks/memory
+/coverage
+/.nyc_output
+/packages/graphql
+build/config\.gypi
