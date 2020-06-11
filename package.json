@@ -29,6 +29,7 @@
     "dag-maker": "^1.0.1",
     "deepmerge": "^4.2.2",
     "fastify": "^2.14.1",
+    "fastify-jwt": "^1.4.0",
     "forwardit": "^1.0.2",
     "ioredis": "^4.17.3",
     "luxon": "^1.24.1",

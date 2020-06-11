@@ -17,6 +17,7 @@ const prepareDatabase = async () => {
 };
 
 const main = async () => {
+  console.log('Init test...');
   await prepareDatabase();
   await shutdown();
 };

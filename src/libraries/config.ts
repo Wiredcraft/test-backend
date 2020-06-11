@@ -23,6 +23,9 @@ export interface SequelizeProviderConfig {
 export interface HttpApplicationConfig {
   address: string;
   port: number;
+  jwt: {
+    secret: string;
+  };
 }
 
 export interface Config {

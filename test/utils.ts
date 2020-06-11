@@ -1,5 +1,6 @@
 import test, { ExecutionContext } from 'ava';
 import Fastify from 'fastify';
+import jwtPlugin from 'fastify-jwt';
 import { VertexFactory } from 'dag-maker';
 import { context } from '../src/context';
 import * as providers from '../src/providers';
@@ -7,6 +8,9 @@ import * as providers from '../src/providers';
 export function initContext(...providerFactories: VertexFactory<any>[]) {
   test.before(async () => {
     await context.initialize({ providerFactories: providerFactories });
+  });
+  test.after(async () => {
+    await context.finalize();
   });
 }
 
@@ -21,6 +25,9 @@ export async function buildFastify(t: ExecutionContext<unknown>, ...routePlugins
   for (const plugin of routePlugins) {
     fastify.register(plugin);
   }
+  fastify.register(jwtPlugin, {
+    secret: 'secret',
+  });
   await fastify.ready();
   t.teardown(() => fastify.close());
   return fastify;

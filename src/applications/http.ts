@@ -1,4 +1,5 @@
 import Fastify from 'fastify';
+import jwtPlugin from 'fastify-jwt';
 import { ServerResponse } from 'http';
 import { bootstrap, context } from '../context';
 import * as providers from '../providers';
@@ -6,6 +7,8 @@ import * as routes from '../routes';
 import * as exceptions from '../libraries/errors';
 
 const main = async () => {
+  const config = context.config.applications.http;
+
   const server = Fastify({
     ajv: {
       customOptions: {
@@ -48,12 +51,13 @@ const main = async () => {
   // setup plugins
   server.register(routes.health);
   server.register(routes.users, { prefix: 'v1' });
+  server.register(jwtPlugin, {
+    secret: config.jwt.secret,
+  });
   await server.ready();
 
   const rouetList = server.printRoutes();
   context.logger.info(`Server routes:\n${rouetList}`);
-
-  const config = context.config.applications.http;
   await server.listen(config.port, config.address);
 
   context.cleaner.push(async () => {

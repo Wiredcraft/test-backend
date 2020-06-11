@@ -20,3 +20,5 @@ applications:
   http:
     address: 'localhost'
     port: 3000
+    jwt:
+      secret: 'a-top-secret'
