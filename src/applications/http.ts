@@ -1,19 +1,53 @@
 import Fastify from 'fastify';
+import { ServerResponse } from 'http';
 import { bootstrap, context } from '../context';
 import * as providers from '../providers';
 import * as routes from '../routes';
+import * as exceptions from '../libraries/errors';
 
 const main = async () => {
   const server = Fastify({
     ajv: {
       customOptions: {
-        coerceTypes: false,
+        coerceTypes: true,
+        allErrors: true,
       },
     },
     logger: context.logger,
   });
 
+  // setup error handlers
+  const errorHandler = (
+    error: Fastify.FastifyError,
+    _request: Fastify.FastifyRequest,
+    reply: Fastify.FastifyReply<ServerResponse>
+  ) => {
+    let errorName = error.name;
+    let statusCode: number;
+    if (error.statusCode) {
+      statusCode = error.statusCode;
+    } else if (error.validation) {
+      errorName = 'ValidationError';
+      statusCode = 400;
+    } else {
+      statusCode = 500;
+    }
+    reply.code(statusCode).send({
+      error: errorName,
+      message: error.message,
+      statusCode,
+    });
+  };
+  server.setNotFoundHandler((request, reply) => {
+    const message = `Resource not found: ${request.req.url}, method: ${request.req.method}`;
+    const error = new exceptions.NotFound(message);
+    errorHandler(error, request, reply);
+  });
+  server.setErrorHandler(errorHandler);
+
+  // setup plugins
   server.register(routes.health);
+  server.register(routes.users, { prefix: 'v1' });
   await server.ready();
 
   const rouetList = server.printRoutes();
