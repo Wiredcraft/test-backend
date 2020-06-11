@@ -37,17 +37,6 @@
             "error",
             "always"
         ],
-        "space-before-function-paren": [
-            "error",
-            "always"
-        ],
-        "no-trailing-spaces": [
-            "error",
-            "always"
-        ],
-        "sort-imports": [
-            "error",
-            "always"
-        ]
+        "no-trailing-spaces": "error"
     }
 }
