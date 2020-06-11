@@ -14,6 +14,7 @@ const buildUsers = () => {
       dob: unixTime(),
       address: `address-${i}`,
       description: `description-${i}`,
+      email: `email-${i}@gmail.com`,
       password: `password-${i}`,
     });
   }
@@ -32,6 +33,16 @@ test('UserController should create', async (t) => {
   await t.notThrowsAsync(async () => {
     for (const user of users) {
       await userController.create(user);
+    }
+  });
+});
+
+test('UserController should verify', async (t) => {
+  const users = buildUsers();
+  const userController = new UserController();
+  await t.notThrowsAsync(async () => {
+    for (const user of users) {
+      await userController.verify({ email: user.email, password: user.password });
     }
   });
 });

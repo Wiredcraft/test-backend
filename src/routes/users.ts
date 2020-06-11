@@ -1,130 +1,8 @@
-import { FastifyInstance } from 'fastify';
+import { ServerResponse } from 'http';
+import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { UserController } from '../controllers';
-
-const nullResponseSchema = {
-  type: 'object',
-  properties: {
-    data: { type: 'null' },
-  },
-};
-
-const userParams = {
-  id: { type: 'number', minimum: 1 },
-};
-
-const userListQueryString = {
-  offset: { type: 'number', minimum: 1 },
-  limit: { type: 'number', minmum: 1, maximum: 100 },
-};
-
-const userCreateSchema = {
-  type: 'object',
-  properties: {
-    name: { type: 'string', minLength: 1 },
-    dob: { type: 'number' },
-    address: { type: 'string' },
-    description: { type: 'string' },
-    password: { type: 'string', minLength: 8, maxLength: 16 },
-  },
-  required: ['name', 'dob', 'address', 'description', 'password'],
-};
-
-const userUpdateSchema = {
-  type: 'object',
-  properties: {
-    name: { type: 'string', minLength: 1 },
-    dob: { type: 'number' },
-    address: { type: 'string' },
-    description: { type: 'string' },
-    password: { type: 'string', minLength: 8, maxLength: 16 },
-    location: {
-      type: 'array',
-      minItems: 2,
-      maxItems: 2,
-      items: [
-        { type: 'number', minimum: -90, maximum: 90 },
-        { type: 'number', minimum: -180, maximum: 180 },
-      ],
-    },
-  },
-};
-
-const userItemSchema = {
-  type: 'object',
-  properties: {
-    id: { type: 'number' },
-    name: { type: 'string' },
-    dob: { type: 'number' },
-    address: { type: 'string' },
-    description: { type: 'string' },
-    location: {
-      oneOf: [
-        { type: 'null' },
-        {
-          type: 'array',
-          minItems: 2,
-          maxItems: 2,
-          items: [
-            { type: 'number', minimum: -90, maximum: 90 },
-            { type: 'number', minimum: -180, maximum: 180 },
-          ],
-        },
-      ],
-    },
-    createdAt: { type: 'number' },
-  },
-};
-
-const userResponseSchema = {
-  type: 'object',
-  properties: {
-    data: userItemSchema,
-  },
-};
-
-const userListResponseSchema = {
-  type: 'object',
-  properties: {
-    data: {
-      type: 'object',
-      properties: {
-        total: { type: 'number' },
-        offset: { type: 'number' },
-        limit: { type: 'number' },
-        count: { type: 'number' },
-        items: { type: 'array', items: userItemSchema },
-      },
-    },
-  },
-};
-
-const userFollowerCreateSchema = {
-  type: 'object',
-  properties: {
-    id: { type: 'number', minimum: 1 },
-  },
-};
-
-const userFollowerResponseSchema = {
-  type: 'object',
-  properties: {
-    data: userFollowerCreateSchema,
-  },
-};
-
-const searchNeighborQueryString = {
-  limit: { type: 'number', minmum: 1, maximum: 100 },
-};
-
-const searchNeighborResponseSchema = {
-  type: 'object',
-  properties: {
-    data: {
-      type: 'array',
-      items: userItemSchema,
-    },
-  },
-};
+import * as errors from '../libraries/errors';
+import * as schemas from './schemas';
 
 const extractOffsetLimit = (data: any) => {
   const offset = data.offset || 1;
@@ -132,15 +10,75 @@ const extractOffsetLimit = (data: any) => {
   return { offset, limit };
 };
 
+type Payload = {
+  id: number;
+};
+
 export const users = async (fastify: FastifyInstance) => {
+  const authenticate = async (request: FastifyRequest, _reply: FastifyReply<ServerResponse>) => {
+    const payload = await request.jwtVerify<Payload>();
+    const id = request.params.id;
+    if (id !== undefined && payload.id.toString() !== id) {
+      throw new errors.Forbidden();
+    }
+  };
+
+  // create user
+  fastify.post(
+    '/users',
+    {
+      schema: {
+        body: schemas.userCreateSchema,
+        response: {
+          201: schemas.userResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const userController = new UserController();
+      const user = await userController.create({
+        name: request.body.name,
+        dob: request.body.dob,
+        address: request.body.address,
+        description: request.body.description,
+        email: request.body.email,
+        password: request.body.password,
+      });
+      reply.status(201).send({ data: user });
+    }
+  );
+
+  // create user token
+  fastify.post(
+    '/user-tokens',
+    {
+      schema: {
+        body: schemas.userTokenCreateSchema,
+        response: {
+          201: schemas.userTokenResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const email = request.body.email;
+      const password = request.body.password;
+      const userController = new UserController();
+      const user = await userController.verify({ email, password });
+      const payload = { id: user.id };
+      const token = fastify.jwt.sign(payload);
+      reply.status(201).send({ data: { token, userId: user.id } });
+    }
+  );
+
   // list users
   fastify.get(
     '/users',
     {
+      preValidation: [authenticate],
       schema: {
-        querystring: userListQueryString,
+        querystring: schemas.userListQueryString,
         response: {
-          200: userListResponseSchema,
+          200: schemas.userListResponseSchema,
         },
       },
     },
@@ -163,38 +101,15 @@ export const users = async (fastify: FastifyInstance) => {
     }
   );
 
-  // create user
-  fastify.post(
-    '/users',
-    {
-      schema: {
-        body: userCreateSchema,
-        response: {
-          201: userResponseSchema,
-        },
-      },
-    },
-    async (request, reply) => {
-      const userController = new UserController();
-      const user = await userController.create({
-        name: request.body.name,
-        dob: request.body.dob,
-        address: request.body.address,
-        description: request.body.description,
-        password: request.body.password,
-      });
-      reply.status(201).send({ data: user });
-    }
-  );
-
   // get user
   fastify.get(
     '/users/:id',
     {
+      preValidation: [authenticate],
       schema: {
-        params: userParams,
+        params: schemas.userParams,
         response: {
-          200: userResponseSchema,
+          200: schemas.userResponseSchema,
         },
       },
     },
@@ -209,11 +124,12 @@ export const users = async (fastify: FastifyInstance) => {
   fastify.put(
     '/users/:id',
     {
+      preValidation: [authenticate],
       schema: {
-        params: userParams,
-        body: userUpdateSchema,
+        params: schemas.userParams,
+        body: schemas.userUpdateSchema,
         response: {
-          200: userResponseSchema,
+          200: schemas.userResponseSchema,
         },
       },
     },
@@ -229,10 +145,11 @@ export const users = async (fastify: FastifyInstance) => {
   fastify.delete(
     '/users/:id',
     {
+      preValidation: [authenticate],
       schema: {
-        params: userParams,
+        params: schemas.userParams,
         response: {
-          200: nullResponseSchema,
+          200: schemas.nullResponseSchema,
         },
       },
     },
@@ -247,11 +164,12 @@ export const users = async (fastify: FastifyInstance) => {
   fastify.get(
     '/users/:id/followers',
     {
+      preValidation: [authenticate],
       schema: {
-        params: userParams,
-        querystring: userListQueryString,
+        params: schemas.userParams,
+        querystring: schemas.userListQueryString,
         response: {
-          200: userListResponseSchema,
+          200: schemas.userListResponseSchema,
         },
       },
     },
@@ -279,11 +197,12 @@ export const users = async (fastify: FastifyInstance) => {
   fastify.get(
     '/users/:id/followings',
     {
+      preValidation: [authenticate],
       schema: {
-        params: userParams,
-        querystring: userListQueryString,
+        params: schemas.userParams,
+        querystring: schemas.userListQueryString,
         response: {
-          200: userListResponseSchema,
+          200: schemas.userListResponseSchema,
         },
       },
     },
@@ -311,11 +230,12 @@ export const users = async (fastify: FastifyInstance) => {
   fastify.post(
     '/users/:id/followings',
     {
+      preValidation: [authenticate],
       schema: {
-        params: userParams,
-        body: userFollowerCreateSchema,
+        params: schemas.userParams,
+        body: schemas.userFollowerCreateSchema,
         response: {
-          201: userFollowerResponseSchema,
+          201: schemas.userFollowerResponseSchema,
         },
       },
     },
@@ -332,10 +252,11 @@ export const users = async (fastify: FastifyInstance) => {
   fastify.delete(
     '/users/:id/followings/:targetId',
     {
+      preValidation: [authenticate],
       schema: {
-        params: { ...userParams, targetId: userParams.id },
+        params: { ...schemas.userParams, targetId: schemas.userParams.id },
         response: {
-          200: nullResponseSchema,
+          200: schemas.nullResponseSchema,
         },
       },
     },
@@ -352,11 +273,12 @@ export const users = async (fastify: FastifyInstance) => {
   fastify.get(
     '/users/:id/neighbors',
     {
+      preValidation: [authenticate],
       schema: {
-        params: userParams,
-        querystring: searchNeighborQueryString,
+        params: schemas.userParams,
+        querystring: schemas.searchNeighborQueryString,
         response: {
-          200: searchNeighborResponseSchema,
+          200: schemas.searchNeighborResponseSchema,
         },
       },
     },

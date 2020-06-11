@@ -28,6 +28,13 @@ export class InternalServerError extends Error {
   name = 'InternalServerError';
 }
 
+export class InvalidUserAccount extends Unauthorized {
+  name = 'InvalidUserAccount';
+  constructor() {
+    super('Invalid user account');
+  }
+}
+
 export class UserNotFound extends NotFound {
   name = 'UserNotFound';
   constructor() {

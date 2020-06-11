@@ -5,6 +5,24 @@ import * as errors from '../libraries/errors';
 import { context } from '../context';
 
 export class UserController {
+  async verify(options: { email: string; password: string }) {
+    const user = await models.UserModel.findOne({
+      where: {
+        email: options.email,
+      },
+    });
+    if (!user) {
+      throw new errors.InvalidUserAccount();
+    }
+    const password = new Password(options.password);
+    const passwordHash = JSON.parse(user.password);
+    const ok = await password.verify(passwordHash);
+    if (!ok) {
+      throw new errors.InvalidUserAccount();
+    }
+    return user;
+  }
+
   count() {
     return models.UserModel.count({
       where: {
@@ -33,6 +51,7 @@ export class UserController {
     description: string;
     location?: Location;
     role?: string;
+    email: string;
     password: string;
   }) {
     const now = unixTime();
@@ -46,7 +65,15 @@ export class UserController {
         updatedAt: now,
       }
     );
-    return models.UserModel.create(values);
+    try {
+      return await models.UserModel.create(values);
+    } catch (err) {
+      if (err instanceof UniqueConstraintError) {
+        throw new errors.UserAlreadyExists();
+      } else {
+        throw err;
+      }
+    }
   }
 
   async get(id: number) {
@@ -121,6 +148,8 @@ export class UserController {
     } catch (err) {
       if (err instanceof UniqueConstraintError) {
         throw new errors.UserLinkAlreadyExists();
+      } else {
+        throw err;
       }
     }
   }

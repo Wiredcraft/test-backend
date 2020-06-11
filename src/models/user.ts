@@ -14,6 +14,14 @@ export class UserModel extends Model<UserModel> {
   })
   id!: number;
 
+  @Column({
+    type: DataType.STRING(32),
+    allowNull: false,
+    defaultValue: '',
+    unique: true,
+  })
+  email!: string;
+
   @Index
   @Column({
     type: DataType.STRING(16),
