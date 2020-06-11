@@ -1,7 +1,8 @@
-import { Op } from 'sequelize';
+import { UniqueConstraintError, Op } from 'sequelize';
 import * as models from '../models';
 import { unixTime, Password } from '../libraries';
 import * as errors from '../libraries/errors';
+import { context } from '../context';
 
 export class UserController {
   count() {
@@ -60,8 +61,24 @@ export class UserController {
 
   async delete(id: number) {
     const user = await this.get(id);
-    await user.update({
-      deletedAt: unixTime(),
+    await context.transactional(async (transaction) => {
+      // mark deleted
+      await user.update(
+        {
+          deletedAt: unixTime(),
+        },
+        { transaction }
+      );
+      // cleanup links
+      await models.UserLinkModel.destroy({
+        where: {
+          [Op.or]: {
+            from: id,
+            to: id,
+          },
+        },
+        transaction,
+      });
     });
   }
 
@@ -88,5 +105,113 @@ export class UserController {
     });
     const user = await this.get(id);
     return user.update(values);
+  }
+
+  async follow(fromId: number, toId: number) {
+    if (fromId === toId) {
+      throw new errors.InvalidUserLink();
+    }
+    await this.ensureActive([fromId, toId]);
+    try {
+      await models.UserLinkModel.create({
+        from: fromId,
+        to: toId,
+        createdAt: unixTime(),
+      });
+    } catch (err) {
+      if (err instanceof UniqueConstraintError) {
+        throw new errors.UserLinkAlreadyExists();
+      }
+    }
+  }
+
+  async unfollow(fromId: number, toId: number) {
+    await this.ensureActive([fromId, toId]);
+    const link = await models.UserLinkModel.findOne({
+      where: {
+        from: fromId,
+        to: toId,
+      },
+    });
+    if (!link) {
+      throw new errors.UserLinkNotFound();
+    }
+    await link.destroy();
+  }
+
+  countFollowers(id: number) {
+    return models.UserLinkModel.count({
+      where: {
+        to: id,
+      },
+    });
+  }
+
+  async listFollowers(id: number, offset: number, limit: number) {
+    const links = await models.UserLinkModel.findAll({
+      attributes: ['from'],
+      where: {
+        to: id,
+        from: {
+          [Op.gte]: offset,
+        },
+      },
+      order: [['id', 'ASC']],
+      limit,
+    });
+    const followerIds = links.map((item) => item.from);
+    return models.UserModel.findAll({
+      where: {
+        id: {
+          [Op.in]: followerIds,
+        },
+        deletedAt: null,
+      },
+    });
+  }
+
+  countFollowings(id: number) {
+    return models.UserLinkModel.count({
+      where: {
+        from: id,
+      },
+    });
+  }
+
+  async listFollowings(id: number, offset: number, limit: number) {
+    const links = await models.UserLinkModel.findAll({
+      attributes: ['to'],
+      where: {
+        from: id,
+        to: {
+          [Op.gte]: offset,
+        },
+      },
+      order: [['id', 'ASC']],
+      limit,
+    });
+    const followerIds = links.map((item) => item.to);
+    return models.UserModel.findAll({
+      where: {
+        id: {
+          [Op.in]: followerIds,
+        },
+        deletedAt: null,
+      },
+    });
+  }
+
+  async ensureActive(ids: number[]) {
+    const count = await models.UserModel.count({
+      where: {
+        id: {
+          [Op.in]: ids,
+        },
+        deletedAt: null,
+      },
+    });
+    if (count !== ids.length) {
+      throw new errors.UserNotFound();
+    }
   }
 }

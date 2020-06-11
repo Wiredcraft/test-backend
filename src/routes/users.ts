@@ -1,8 +1,20 @@
 import { FastifyInstance } from 'fastify';
 import { UserController } from '../controllers';
 
+const nullResponseSchema = {
+  type: 'object',
+  properties: {
+    data: { type: 'null' },
+  },
+};
+
 const userParams = {
   id: { type: 'number', minimum: 1 },
+};
+
+const userListQueryString = {
+  offset: { type: 'number', minimum: 1 },
+  limit: { type: 'number', minmum: 1, maximum: 100 },
 };
 
 const userCreateSchema = {
@@ -86,24 +98,40 @@ const userListResponseSchema = {
   },
 };
 
+const userFollowerCreateSchema = {
+  type: 'object',
+  properties: {
+    id: { type: 'number', minimum: 1 },
+  },
+};
+
+const userFollowerResponseSchema = {
+  type: 'object',
+  properties: {
+    data: userFollowerCreateSchema,
+  },
+};
+
+const extractOffsetLimit = (data: any) => {
+  const offset = data.offset || 1;
+  const limit = data.limit || 20;
+  return { offset, limit };
+};
+
 export const users = async (fastify: FastifyInstance) => {
   // list users
   fastify.get(
     '/users',
     {
       schema: {
-        querystring: {
-          offset: { type: 'number', minimum: 0 },
-          limit: { type: 'number', minmum: 1, maximum: 100 },
-        },
+        querystring: userListQueryString,
         response: {
           200: userListResponseSchema,
         },
       },
     },
     async (request, reply) => {
-      const offset = request.query.offset || 0;
-      const limit = request.query.limit || 20;
+      const { offset, limit } = extractOffsetLimit(request.query);
       const userController = new UserController();
       const [total, items] = await Promise.all([
         userController.count(),
@@ -190,18 +218,118 @@ export const users = async (fastify: FastifyInstance) => {
       schema: {
         params: userParams,
         response: {
-          200: {
-            type: 'object',
-            properties: {
-              data: { type: 'null' },
-            },
-          },
+          200: nullResponseSchema,
         },
       },
     },
     async (request, reply) => {
       const userController = new UserController();
       await userController.delete(request.params.id);
+      reply.send({ data: null });
+    }
+  );
+
+  // list followers
+  fastify.get(
+    '/users/:id/followers',
+    {
+      schema: {
+        params: userParams,
+        querystring: userListQueryString,
+        response: {
+          200: userListResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const id = request.params.id;
+      const { offset, limit } = extractOffsetLimit(request.query);
+      const userController = new UserController();
+      const [total, items] = await Promise.all([
+        userController.countFollowers(id),
+        userController.listFollowers(id, offset, limit),
+      ]);
+      reply.send({
+        data: {
+          total,
+          offset,
+          limit,
+          count: items.length,
+          items: items,
+        },
+      });
+    }
+  );
+
+  // list followings
+  fastify.get(
+    '/users/:id/followings',
+    {
+      schema: {
+        params: userParams,
+        querystring: userListQueryString,
+        response: {
+          200: userListResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const id = request.params.id;
+      const { offset, limit } = extractOffsetLimit(request.query);
+      const userController = new UserController();
+      const [total, items] = await Promise.all([
+        userController.countFollowings(id),
+        userController.listFollowings(id, offset, limit),
+      ]);
+      reply.send({
+        data: {
+          total,
+          offset,
+          limit,
+          count: items.length,
+          items: items,
+        },
+      });
+    }
+  );
+
+  // create following
+  fastify.post(
+    '/users/:id/followings',
+    {
+      schema: {
+        params: userParams,
+        body: userFollowerCreateSchema,
+        response: {
+          201: userFollowerResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const userController = new UserController();
+      const fromId = request.params.id;
+      const toId = request.body.id;
+      await userController.follow(fromId, toId);
+      reply.status(201).send({ data: { id: toId } });
+    }
+  );
+
+  // delete following
+  fastify.delete(
+    '/users/:id/followings/:targetId',
+    {
+      schema: {
+        params: { ...userParams, targetId: userParams.id },
+        response: {
+          200: nullResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const userController = new UserController();
+      const fromId = request.params.id;
+      const toId = request.params.targetId;
+      await userController.unfollow(fromId, toId);
       reply.send({ data: null });
     }
   );

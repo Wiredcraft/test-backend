@@ -41,3 +41,24 @@ export class UserAlreadyExists extends Conflict {
     super('User already exists');
   }
 }
+
+export class UserLinkNotFound extends NotFound {
+  name = 'UserLinkNotFound';
+  constructor() {
+    super('User link not found');
+  }
+}
+
+export class UserLinkAlreadyExists extends Conflict {
+  name = 'UserLinkAlreadyExists';
+  constructor() {
+    super('User link already exists');
+  }
+}
+
+export class InvalidUserLink extends BadRequest {
+  name = 'InvalidUserLink';
+  constructor() {
+    super('Invalid user link');
+  }
+}
