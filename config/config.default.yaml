@@ -2,6 +2,7 @@ providers:
   logger:
     file: null
     pretty: true
+    enabled: true
 
   redis:
     host: 'localhost'

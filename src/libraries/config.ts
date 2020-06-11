@@ -1,6 +1,7 @@
 import { Dialect } from 'sequelize';
 
 export interface LoggerProviderConfig {
+  enabled: boolean;
   pretty: boolean;
   file: string | null;
 }

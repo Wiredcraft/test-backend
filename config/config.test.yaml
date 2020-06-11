@@ -1,3 +1,5 @@
 providers:
+  logger:
+    enabled: false
   sequelize:
     database: 'barebone-test'

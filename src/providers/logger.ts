@@ -22,6 +22,7 @@ export class LoggerProvider {
   static async create(options: { configProvider: ConfigProvider }) {
     const config = options.configProvider.config.providers.logger;
     const loggerOptions = {
+      enabled: config.enabled,
       formatters: {
         // Log levels as labels instead of numbers
         // see: https://getpino.io/#/docs/help?id=level-string
