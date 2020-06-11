@@ -22,7 +22,9 @@ export class ConfigService {
 		const envVarsSchema: Joi.ObjectSchema = Joi.object( {
 			APP_NAME: Joi.string().default( "Wiredcraft Test API" ),
 			NODE_ENV: Joi.string().valid( "testing", "development", "staging", "production" ).default( "development" ),
-			APP_PORT: Joi.number().default( 3333 )
+			APP_PORT: Joi.number().default( 3333 ),
+			MONGO_URI: Joi.string().uri().required(),
+			MONGO_TESTING_URI: Joi.string().uri().required()
 		} );
 
 		const { error, value: validatedEnvConfig } = envVarsSchema.validate( config );
@@ -42,6 +44,14 @@ export class ConfigService {
 
 	public get appPort (): number {
 		return Number( this.envConfig.APP_PORT );
+	}
+
+	public get mongoUri(): string {
+		return this.envConfig.MONGO_URI;
+	}
+
+	public get mongoTestingUri(): string {
+		return this.envConfig.MONGO_TESTING_URI;
 	}
 
 }
