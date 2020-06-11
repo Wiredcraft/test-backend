@@ -21,7 +21,7 @@
     "http:prod": "cross-env NODE_ENV=production node dist/src/applications/http.js",
     "cron:dev": "cross-env NODE_ENV=development nodemon src/applications/cron.ts",
     "cron:prod": "cross-env NODE_ENV=production node dist/src/applications/cron.js",
-    "cli:dev": "cross-env NODE_ENV=development npx ts-node src/applications/cli.ts",
+    "cli:dev": "cross-env NODE_ENV=development npx ts-node --files src/applications/cli.ts",
     "cli:prod": "cross-env NODE_ENV=production node ./dist/src/applications/cli.js"
   },
   "dependencies": {

@@ -5,6 +5,7 @@
     "TS_NODE_FILES": "true",
     "APP_ENV": "development"
   },
+  "exec": "ts-node --files",
   "execMap": {
     "ts": "ts-node --transpile-only",
     "js": "node"
