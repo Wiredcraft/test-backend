@@ -201,9 +201,9 @@ The `role` field in user model and token payload is reserved for more complicate
 A sample case of RBAC:
 
 - Suppose we need an "admin" which has access to all users:
- - reset user password
- - update user information
- - delete user account
+	- reset user password
+	- update user information
+	- delete user account
 - The "admin" account is created via existing API, except its privileges is granted by system operator.
 
 Possible solution based on this project:
