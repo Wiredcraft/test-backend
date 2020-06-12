@@ -1,5 +1,4 @@
-import { ServerResponse } from 'http';
-import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyInstance, FastifyRequest } from 'fastify';
 import { UserController } from '../controllers';
 import * as errors from '../libraries/errors';
 import * as schemas from './schemas';
@@ -15,7 +14,7 @@ type Payload = {
 };
 
 export const users = async (fastify: FastifyInstance) => {
-  const authenticate = async (request: FastifyRequest, _reply: FastifyReply<ServerResponse>) => {
+  const authenticate = async (request: FastifyRequest) => {
     const payload = await request.jwtVerify<Payload>();
     const id = request.params.id;
     if (id !== undefined && payload.id.toString() !== id) {
