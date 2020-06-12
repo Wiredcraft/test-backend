@@ -30,8 +30,6 @@ CREATE DATABASE playground_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
 
 The first one is will be use during development, the seconds one is for test.
 
-
-
 _4_. Create config files for development and test:
 
 ```
@@ -67,6 +65,7 @@ _5_. Execute migrations:
 npm run cli:dev migration:init
 npm run cli:dev migration:up
 ```
+
 _6_. Run unit test:
 
 ```
@@ -80,7 +79,6 @@ npm run http:dev -- --swagger
 ```
 
 To examine available APIs, open this link: [http://127.0.0.1:3000/documentation](http://127.0.0.1:3000/documentation)
-
 
 ## Development
 
@@ -180,4 +178,19 @@ curl \
  -H "Authorization: Bearer ${TOKEN}"
 ```
 
+### User Authentication
 
+Basic access authentication is employed by this project. The usage as follows:
+
+1. Client use email and password to request a token.
+2. Server verify the request. On success, create a payload with user ID and user role, return the encrypted payload to client.
+3. Client use the returned token for further requests.
+4. Server will validate API request which has an `:id` component against the actual user ID in token.
+
+Currently, following APIs don't need authentication:
+
+- GET /health
+- POST /v1/users
+- POST /v1/user-tokens
+
+The `role` field in user model and token payload is reserved for more complicated authentication mechanism like RBAC. It is unused at this moment.
