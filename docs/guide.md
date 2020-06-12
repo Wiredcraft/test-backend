@@ -186,6 +186,7 @@ Basic access authentication is employed by this project. The usage as follows:
 2. Server verify the request. On success, create a payload with user ID and user role, return the encrypted payload to client.
 3. Client use the returned token for further requests.
 4. Server will validate API request which has an `:id` component against the actual user ID in token.
+5. If the requested API does not has an `:id` component, only token itself will be validated, other information inside the token will be omitted,
 
 Currently, following APIs don't need authentication:
 
