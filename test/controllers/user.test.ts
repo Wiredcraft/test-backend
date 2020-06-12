@@ -177,3 +177,13 @@ test('UserController should delete', async (t) => {
   const count = await userController.count();
   t.deepEqual(count, 0);
 });
+
+test('UserController should not verify after deletion', async (t) => {
+  const users = buildUsers();
+  const userController = new UserController();
+  for (const user of users) {
+    await t.throwsAsync(async () => {
+      await userController.verify({ email: user.email, password: user.password });
+    });
+  }
+});

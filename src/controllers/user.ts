@@ -9,6 +9,7 @@ export class UserController {
     const user = await models.UserModel.findOne({
       where: {
         email: options.email,
+        deletedAt: null,
       },
     });
     if (!user) {
