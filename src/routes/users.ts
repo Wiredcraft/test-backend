@@ -9,9 +9,10 @@ const extractOffsetLimit = (data: any) => {
   return { offset, limit };
 };
 
-type Payload = {
+interface Payload {
   id: number;
-};
+  role: string;
+}
 
 export const users = async (fastify: FastifyInstance) => {
   const authenticate = async (request: FastifyRequest) => {
@@ -63,7 +64,7 @@ export const users = async (fastify: FastifyInstance) => {
       const password = request.body.password;
       const userController = new UserController();
       const user = await userController.verify({ email, password });
-      const payload = { id: user.id };
+      const payload = { id: user.id, role: user.role };
       const token = fastify.jwt.sign(payload);
       reply.status(201).send({ data: { token, userId: user.id } });
     }
