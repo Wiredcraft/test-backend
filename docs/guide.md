@@ -128,13 +128,15 @@ npm run cli:dev migration:down
 
 ### Use Evaluation Data
 
-Generate 10 users with password "12345678":
+Create users with API requests is quite tedious. Luckily, there is a shortcut in this project:
 
 ```
 npm run cli:dev user:fill
 ```
 
-Get token for the first user (user-1@gmail.com):
+The above command will generate 10 users with password "12345678".
+
+Now let's get token for the first user (user-1@gmail.com):
 
 ```sh
 curl \
