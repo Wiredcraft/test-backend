@@ -47,6 +47,26 @@ test('UserController should verify', async (t) => {
   });
 });
 
+test('UserController should not verify for invalid email', async (t) => {
+  const users = buildUsers();
+  const userController = new UserController();
+  for (const user of users) {
+    await t.throwsAsync(async () => {
+      await userController.verify({ email: '', password: user.password });
+    });
+  }
+});
+
+test('UserController should not verify for invalid password', async (t) => {
+  const users = buildUsers();
+  const userController = new UserController();
+  for (const user of users) {
+    await t.throwsAsync(async () => {
+      await userController.verify({ email: user.email, password: '' });
+    });
+  }
+});
+
 test('UserController should list', async (t) => {
   const users = buildUsers();
   const userController = new UserController();
