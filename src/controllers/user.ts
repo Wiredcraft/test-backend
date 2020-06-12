@@ -57,14 +57,12 @@ export class UserController {
     const now = unixTime();
     const password = new Password(options.password);
     const passwordHash = await password.hash();
-    const values = Object.assign(
-      { ...options },
-      {
-        password: JSON.stringify(passwordHash),
-        createdAt: now,
-        updatedAt: now,
-      }
-    );
+    const values = {
+      ...options,
+      password: JSON.stringify(passwordHash),
+      createdAt: now,
+      updatedAt: now,
+    };
     try {
       return await models.UserModel.create(values);
     } catch (err) {
@@ -121,15 +119,12 @@ export class UserController {
       password?: string;
     }
   ) {
-    const values = { ...options };
+    const values = { ...options, updatedAt: unixTime() };
     if (values.password) {
       const password = new Password(values.password);
       const passwordHash = await password.hash();
       values.password = JSON.stringify(passwordHash);
     }
-    Object.assign(values, {
-      updatedAt: unixTime(),
-    });
     const user = await this.get(id);
     return user.update(values);
   }
