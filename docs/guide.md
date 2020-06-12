@@ -28,7 +28,7 @@ CREATE DATABASE playground CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE DATABASE playground_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-The first one is will be use during development, the seconds one is for test.
+The first one will be use during development, the seconds one is for unit test.
 
 _4_. Create config files for development and test:
 
@@ -49,7 +49,7 @@ providers:
 
 The content of the second config as follows:
 
-```
+```yaml
 providers:
   sequelize:
     username: 'user name'
@@ -180,7 +180,7 @@ curl \
 
 ### User Authentication
 
-Basic access authentication is employed by this project. The usage as follows:
+Basic access authentication is employed by this project. The authenticate flow as follows:
 
 1. Client use email and password to request a token.
 2. Server verify the request. On success, create a payload with user ID and user role, return the encrypted payload to client.
@@ -194,4 +194,23 @@ Currently, following APIs don't need authentication:
 - POST /v1/users
 - POST /v1/user-tokens
 
+#### RBAC
+
 The `role` field in user model and token payload is reserved for more complicated authentication mechanism like RBAC. It is unused at this moment.
+
+A sample case of RBAC:
+
+- Suppose we need an "admin" which has access to all users:
+ - reset user password
+ - update user information
+ - delete user account
+- The "admin" account is created via existing API, except its privileges is granted by system operator.
+
+Possible solution based on this project:
+
+1. Implement new a command named "rbac:grant", which can be used in command line: `npm run cli:dev rbac:grant --admin --userId=?`
+2. This command will invoke `UserController` to update the `role` attribute of a user to "admin".
+3. Update [authenticate](https://github.com/bsdelf/test-backend/blob/master/src/routes/users.ts#L18) function to inspect `payload.role` and bypass `payload.id` check for "admin" role.
+4. Execute the command to grant "admin" privileges to a specific user.
+
+Note, the lifetime of "admin" is determined by the lifetime of JWT token. To implement features like revoke, the JWT token's "issued at" attribute might be a good way to go.
