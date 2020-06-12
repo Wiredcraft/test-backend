@@ -1,4 +1,5 @@
-import Fastify from 'fastify';
+import yargsParser from 'yargs-parser';
+import Fastify, { FastifyInstance } from 'fastify';
 import jwtPlugin from 'fastify-jwt';
 import { ServerResponse } from 'http';
 import { bootstrap, context } from '../context';
@@ -6,7 +7,62 @@ import * as providers from '../providers';
 import * as routes from '../routes';
 import * as exceptions from '../libraries/errors';
 
+const enableSwagger = (server: FastifyInstance) => {
+  server.register(require('fastify-swagger'), {
+    routePrefix: '/documentation',
+    swagger: {
+      info: {
+        title: 'Test swagger',
+        description: 'testing the fastify swagger api',
+        version: '0.1.0',
+      },
+      externalDocs: {
+        url: 'https://swagger.io',
+        description: 'Find more info here',
+      },
+      host: 'localhost',
+      schemes: ['http'],
+      consumes: ['application/json'],
+      produces: ['application/json'],
+      tags: [
+        { name: 'user', description: 'User related end-points' },
+        { name: 'code', description: 'Code related end-points' },
+      ],
+      definitions: {
+        User: {
+          $id: 'User',
+          type: 'object',
+          required: ['id', 'email'],
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            firstName: { type: 'string', nullable: true },
+            lastName: { type: 'string', nullable: true },
+            email: { type: 'string', format: 'email' },
+          },
+        },
+      },
+      securityDefinitions: {
+        apiKey: {
+          type: 'apiKey',
+          name: 'apiKey',
+          in: 'header',
+        },
+      },
+    },
+    exposeRoute: true,
+  });
+};
+
+interface Options {
+  swagger?: boolean;
+}
+
 const main = async () => {
+  const parserOptions = {
+    boolean: ['swagger'],
+  };
+  const options = yargsParser(process.argv.slice(2), parserOptions) as Options;
+
   const config = context.config.applications.http;
 
   const server = Fastify({
@@ -49,11 +105,14 @@ const main = async () => {
   server.setErrorHandler(errorHandler);
 
   // setup plugins
-  server.register(routes.health);
-  server.register(routes.users, { prefix: 'v1' });
+  if (options.swagger) {
+    enableSwagger(server);
+  }
   server.register(jwtPlugin, {
     secret: config.jwt.secret,
   });
+  server.register(routes.health);
+  server.register(routes.users, { prefix: 'v1' });
   await server.ready();
 
   const rouetList = server.printRoutes();
@@ -76,6 +135,5 @@ bootstrap(
   providers.CleanerProvider,
   providers.ConfigProvider,
   providers.LoggerProvider,
-  providers.RedisProvider,
   providers.SequelizeProvider
 );
