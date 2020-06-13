@@ -31,6 +31,7 @@ export class RedisProvider {
     const redis = new Redis({
       port: config.port,
       host: config.host,
+      keyPrefix: config.keyPrefix,
       lazyConnect: true,
     });
     await redis.connect();

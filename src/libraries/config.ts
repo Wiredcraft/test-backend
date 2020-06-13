@@ -9,6 +9,7 @@ export interface LoggerProviderConfig {
 export interface RedisProviderConfig {
   host: string;
   port: number;
+  keyPrefix: string;
 }
 
 export interface SequelizeProviderConfig {
