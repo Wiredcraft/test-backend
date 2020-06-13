@@ -8,9 +8,10 @@ export const userTokenCreateSchema = {
     data: {
       type: 'object',
       properties: {
-        email: { format: 'email' },
+        email: { type: 'string', format: 'email' },
         password: { type: 'string', minLength: 8, maxLength: 16 },
       },
+      required: ['email', 'password'],
     },
   },
 };
@@ -40,7 +41,7 @@ export const userCreateSchema = {
     dob: { type: 'number' },
     address: { type: 'string' },
     description: { type: 'string' },
-    email: { format: 'email' },
+    email: { type: 'string', format: 'email' },
     password: { type: 'string', minLength: 8, maxLength: 16 },
   },
   required: ['name', 'dob', 'address', 'description', 'email', 'password'],
