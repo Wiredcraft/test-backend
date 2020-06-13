@@ -152,7 +152,7 @@ export class UserController {
     if (fromId === toId) {
       throw new errors.InvalidUserLink();
     }
-    await this.ensureActive([fromId, toId]);
+    await this.assertIsActive([fromId, toId]);
     try {
       await models.UserLinkModel.create({
         from: fromId,
@@ -169,7 +169,7 @@ export class UserController {
   }
 
   async unfollow(fromId: number, toId: number) {
-    await this.ensureActive([fromId, toId]);
+    await this.assertIsActive([fromId, toId]);
     const link = await models.UserLinkModel.findOne({
       where: {
         from: fromId,
@@ -276,7 +276,7 @@ export class UserController {
     });
   }
 
-  async ensureActive(ids: number[]) {
+  async assertIsActive(ids: number[]) {
     const count = await models.UserModel.count({
       where: {
         id: {
