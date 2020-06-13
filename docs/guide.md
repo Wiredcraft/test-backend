@@ -197,6 +197,23 @@ Currently, following APIs don't need authentication:
 - POST /v1/users
 - POST /v1/user-tokens
 
+### Session Expire Strategy
+
+Session expire can be triggered by:
+
+- Update user password.
+- Session expire cron job.
+- Clear Redis keys.
+
+To start session expire cron job:
+
+```sh
+npm run cron:dev
+```
+
+The cron job will expire user sessions created before 30 days at 03:01 every day.
+
+
 #### RBAC
 
 The `role` field in user model and session is reserved for RBAC. It is unused at this moment.
