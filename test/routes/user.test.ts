@@ -113,38 +113,39 @@ test('GET /users/:id should reject if :id does not match token', async (t) => {
 test('PUT /users/:id with password should invalidate existing tokens', async (t) => {
   const fastify = await buildFastify(t, userRoute);
   const user = buildUser();
+  const { userId, headers } = await buildUserRequestMeta(fastify, user);
+
+  // update password
   {
-    const { userId, headers } = await buildUserRequestMeta(fastify, user);
-    // update password
-    {
-      const response = await fastify.inject({
-        method: 'PUT',
-        url: `/users/${userId}`,
-        headers,
-        payload: {
-          password: user.password,
-        },
-      });
-      t.deepEqual(response.statusCode, 200);
-    }
-    // should fail with old token
-    {
-      const response = await fastify.inject({
-        method: 'GET',
-        url: `/users/${userId}`,
-        headers,
-      });
-      t.deepEqual(response.statusCode, 401);
-    }
+    const response = await fastify.inject({
+      method: 'PUT',
+      url: `/users/${userId}`,
+      headers,
+      payload: {
+        password: user.password,
+      },
+    });
+    t.deepEqual(response.statusCode, 200);
   }
+
+  // should success with new token
   {
-    // should success with new token
-    const { userId, headers } = await buildUserRequestMeta(fastify, user);
+    const { headers: newHeaders } = await buildUserRequestMeta(fastify, user);
+    const response = await fastify.inject({
+      method: 'GET',
+      url: `/users/${userId}`,
+      headers: newHeaders,
+    });
+    t.deepEqual(response.statusCode, 200);
+  }
+
+  // should fail with old token
+  {
     const response = await fastify.inject({
       method: 'GET',
       url: `/users/${userId}`,
       headers,
     });
-    t.deepEqual(response.statusCode, 200);
+    t.deepEqual(response.statusCode, 401);
   }
 });
