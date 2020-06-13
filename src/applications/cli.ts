@@ -70,5 +70,6 @@ bootstrap(
   providers.EnvProvider,
   providers.ConfigProvider,
   providers.LoggerProvider,
+  providers.RedisProvider,
   providers.SequelizeProvider
 );
