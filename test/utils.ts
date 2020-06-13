@@ -15,7 +15,7 @@ export function initContext(...providerFactories: VertexFactory<any>[]) {
 }
 
 export function initBasicContext() {
-  initContext(providers.ConfigProvider, providers.SequelizeProvider);
+  initContext(providers.ConfigProvider, providers.RedisProvider, providers.SequelizeProvider);
 }
 
 type RoutePlugin = (fastify: Fastify.FastifyInstance) => Promise<void>;
