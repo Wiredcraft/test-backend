@@ -154,8 +154,7 @@ export const userRoute = async (fastify: FastifyInstance) => {
     async (request, reply) => {
       const userController = new UserController();
       const user = await userController.update(request.params.id, request.body);
-      const data = user;
-      reply.send({ data });
+      reply.send({ data: user });
     }
   );
 
