@@ -112,7 +112,7 @@ const main = async () => {
     secret: config.jwt.secret,
   });
   server.register(routes.health);
-  server.register(routes.users, { prefix: 'v1' });
+  server.register(routes.user, { prefix: 'v1' });
   await server.ready();
 
   const rouetList = server.printRoutes();

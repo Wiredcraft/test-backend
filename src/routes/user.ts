@@ -14,7 +14,7 @@ interface TokenPayload {
   userId: number;
 }
 
-export const users = async (fastify: FastifyInstance) => {
+export const user = async (fastify: FastifyInstance) => {
   const authenticate = async (request: FastifyRequest) => {
     // verify token
     const payload = await request.jwtVerify<TokenPayload>();

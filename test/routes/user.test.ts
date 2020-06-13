@@ -1,6 +1,6 @@
 import test from 'ava';
 import { buildFastify } from '../utils';
-import { users } from '../../src/routes/users';
+import { user as userRoute } from '../../src/routes/user';
 import { unixTime } from '../../src/libraries';
 import { initBasicContext } from '../utils';
 import { FastifyInstance } from 'fastify';
@@ -19,7 +19,7 @@ const buildUser = () => {
 };
 
 test('POST /users should create', async (t) => {
-  const fastify = await buildFastify(t, users);
+  const fastify = await buildFastify(t, userRoute);
   const user = buildUser();
   const response = await fastify.inject({
     method: 'POST',
@@ -50,14 +50,14 @@ const buildUserRequestMeta = async (fastify: FastifyInstance, user: any) => {
 };
 
 test('POST /user-tokens should create', async (t) => {
-  const fastify = await buildFastify(t, users);
+  const fastify = await buildFastify(t, userRoute);
   const user = buildUser();
   const response = await requestUserToken(fastify, user);
   t.deepEqual(response.statusCode, 201);
 });
 
 test('GET /users should reject without token', async (t) => {
-  const fastify = await buildFastify(t, users);
+  const fastify = await buildFastify(t, userRoute);
   const response = await fastify.inject({
     method: 'GET',
     url: '/users',
@@ -66,7 +66,7 @@ test('GET /users should reject without token', async (t) => {
 });
 
 test('GET /users/:id should reject without token', async (t) => {
-  const fastify = await buildFastify(t, users);
+  const fastify = await buildFastify(t, userRoute);
   const response = await fastify.inject({
     method: 'GET',
     url: '/users/1',
@@ -75,7 +75,7 @@ test('GET /users/:id should reject without token', async (t) => {
 });
 
 test('GET /users should get with token', async (t) => {
-  const fastify = await buildFastify(t, users);
+  const fastify = await buildFastify(t, userRoute);
   const user = buildUser();
   const { headers } = await buildUserRequestMeta(fastify, user);
   const response = await fastify.inject({
@@ -87,7 +87,7 @@ test('GET /users should get with token', async (t) => {
 });
 
 test('GET /users/:id should get with token', async (t) => {
-  const fastify = await buildFastify(t, users);
+  const fastify = await buildFastify(t, userRoute);
   const user = buildUser();
   const { userId, headers } = await buildUserRequestMeta(fastify, user);
   const response = await fastify.inject({
@@ -99,7 +99,7 @@ test('GET /users/:id should get with token', async (t) => {
 });
 
 test('GET /users/:id should reject if token is not match with :id', async (t) => {
-  const fastify = await buildFastify(t, users);
+  const fastify = await buildFastify(t, userRoute);
   const user = buildUser();
   const { userId, headers } = await buildUserRequestMeta(fastify, user);
   const response = await fastify.inject({
