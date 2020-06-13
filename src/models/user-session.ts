@@ -12,7 +12,7 @@ export interface UserSession {
 }
 
 export class UserSessionModel {
-  static buildKey(userId: number) {
+  static buildKey(userId: number | string) {
     return `user:session:${userId}`;
   }
 
@@ -29,7 +29,7 @@ export class UserSessionModel {
     return session;
   }
 
-  static async find(userId: number) {
+  static async find(userId: number | string) {
     const key = this.buildKey(userId);
     const data = await context.redis.get(key);
     if (!data) {
@@ -39,7 +39,22 @@ export class UserSessionModel {
     return session;
   }
 
-  static async delete(userId: number) {
+  static async delete(userId: number | string) {
     await context.redis.del(this.buildKey(userId));
+  }
+
+  static async list() {
+    const wildcard = this.buildKey('*');
+    const pattern = this.buildKey(`(\\d+)$`);
+    const prefixedKeys = await context.redis.keys(wildcard);
+    return prefixedKeys.reduce<string[]>((ids, key) => {
+      const re = new RegExp(pattern);
+      const matched = re.exec(key);
+      if (!matched) {
+        return ids;
+      }
+      const id = matched[1];
+      return [...ids, id];
+    }, []);
   }
 }

@@ -1,7 +1,9 @@
+import { DateTime } from 'luxon';
 import { Command } from './command';
 import { context } from '../context';
 import { unixTime } from '../libraries';
 import * as controllers from '../controllers';
+import * as models from '../models';
 
 const buildUser = (i: number, password: string) => ({
   name: `user-${i}`,
@@ -30,7 +32,7 @@ export class UserFillCommand implements Command {
   }
 
   async run(options: { count: number; password: string }) {
-    context.logger.info('Creating user...');
+    context.logger.info('Creating users...');
     const userController = new controllers.UserController();
     const userModels = [];
     for (let i = 1; i <= options.count; ++i) {
@@ -70,7 +72,7 @@ export class UserClearCommand implements Command {
   }
 
   async run(options: { count: number; password: string }) {
-    context.logger.info('Clear user...');
+    context.logger.info('Clear users...');
     const userController = new controllers.UserController();
     for (let i = 1; i <= options.count; ++i) {
       context.logger.info(`Delete user ${i}`);
@@ -84,6 +86,34 @@ export class UserClearCommand implements Command {
         await userModel.destroy();
       } catch (err) {
         context.logger.warn(err);
+      }
+    }
+  }
+}
+
+export class UserSessionExpireCommand implements Command {
+  get name() {
+    return 'user:session:expire';
+  }
+
+  get options() {
+    return {
+      number: ['days'],
+      default: {
+        days: 30,
+      },
+    };
+  }
+
+  async run(options: { days: number }) {
+    context.logger.info('Expire user sessions...');
+    const endAt = DateTime.fromSeconds(unixTime()).minus({ days: options.days }).toSeconds();
+    const ids = await models.UserSessionModel.list();
+    for (const id of ids) {
+      const session = await models.UserSessionModel.find(id);
+      if (session && session.createdAt < endAt) {
+        context.logger.info(`Expire user session: ${id}`);
+        await models.UserSessionModel.delete(id);
       }
     }
   }
