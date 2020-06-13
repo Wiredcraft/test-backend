@@ -5,15 +5,10 @@ export const userParams = {
 export const userTokenCreateSchema = {
   type: 'object',
   properties: {
-    data: {
-      type: 'object',
-      properties: {
-        email: { type: 'string', format: 'email' },
-        password: { type: 'string', minLength: 8, maxLength: 16 },
-      },
-      required: ['email', 'password'],
-    },
+    email: { type: 'string', format: 'email' },
+    password: { type: 'string', minLength: 8, maxLength: 16 },
   },
+  required: ['email', 'password'],
 };
 
 export const userTokenResponseSchema = {
