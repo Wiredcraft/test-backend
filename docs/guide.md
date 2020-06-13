@@ -203,6 +203,7 @@ Session expire can be triggered by:
 
 - Update user password.
 - Session expire cron job.
+- Session expire command.
 - Clear Redis keys.
 
 To start session expire cron job:
@@ -213,6 +214,11 @@ npm run cron:dev
 
 The cron job will expire user sessions created before 30 days at 03:01 every day.
 
+To expire all sessions:
+
+```sh
+npm run cli:dev user:session:expire -- --days=0
+```
 
 #### RBAC
 
