@@ -223,3 +223,7 @@ npm run cli:dev user:session:expire -- --days=0
 #### RBAC
 
 The `role` field in user model and session is reserved for RBAC. It is unused at this moment.
+
+## Architecture
+
+![architecture](arch.svg)
