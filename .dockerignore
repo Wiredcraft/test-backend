@@ -1,5 +1,5 @@
-.git/
+./.*
 dist/
 node_modules/
 tsconfig.tsbuildinfo
-configs/config.local.yaml
+configs/config.local*
