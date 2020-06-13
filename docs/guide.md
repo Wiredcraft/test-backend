@@ -5,6 +5,7 @@
 - curl
 - jq (optional)
 - Node.js: 14.4.0
+- Redis: 6.0.4
 - MySQL: 5.7.29
 
 ## Get Started
@@ -182,11 +183,13 @@ curl \
 
 Basic access authentication is employed by this project. The authenticate flow as follows:
 
-1. Client use email and password to request a token.
-2. Server verify the request. On success, create a payload with user ID and user role, return the encrypted payload to client.
-3. Client use the returned token for further requests.
-4. Server will validate API request which has an `:id` component against the actual user ID in token.
-5. If the requested API does not has an `:id` component, only token itself will be validated, other information inside the token will be omitted,
+1. Client: use email and password to request a token.
+2. Server: verify the request. On success, create a session in Redis, and return a token which has user ID and session ID encrypted in.
+3. Client: use the returned token for further requests.
+4. Server: validate requests in following steps:
+   1. Verify token
+   2. Verify session
+   3. If there is an `:id` component in API, compare `:id` against the actual user ID (which is stored in user session and token payload, both of them can be trusted).
 
 Currently, following APIs don't need authentication:
 
@@ -196,21 +199,4 @@ Currently, following APIs don't need authentication:
 
 #### RBAC
 
-The `role` field in user model and token payload is reserved for more complicated authentication mechanism like RBAC. It is unused at this moment.
-
-A sample case of RBAC:
-
-- Suppose we need an "admin" which has access to all users:
-	- reset user password
-	- update user information
-	- delete user account
-- The "admin" account is created via existing API, except its privileges is granted by system operator.
-
-Possible solution based on this project:
-
-1. Implement new a command named "rbac:grant", which can be used in command line: `npm run cli:dev rbac:grant --admin --userId=?`
-2. This command will invoke `UserController` to update the `role` attribute of a user to "admin".
-3. Update [authenticate](https://github.com/bsdelf/test-backend/blob/master/src/routes/users.ts#L18) function to inspect `payload.role` and bypass `payload.id` check for "admin" role.
-4. Execute the command to grant "admin" privileges to a specific user.
-
-Note, the lifetime of "admin" is determined by the lifetime of JWT token. To implement features like revoke, the JWT token's "issued at" attribute might be a good way to go.
+The `role` field in user model and session is reserved for RBAC. It is unused at this moment.
