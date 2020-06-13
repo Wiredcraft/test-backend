@@ -111,8 +111,8 @@ const main = async () => {
   server.register(jwtPlugin, {
     secret: config.jwt.secret,
   });
-  server.register(routes.health);
-  server.register(routes.user, { prefix: 'v1' });
+  server.register(routes.healthRoute);
+  server.register(routes.userRoute, { prefix: 'v1' });
   await server.ready();
 
   const rouetList = server.printRoutes();

@@ -1,6 +1,6 @@
 import test from 'ava';
 import { buildFastify } from '../utils';
-import { user as userRoute } from '../../src/routes/user';
+import { userRoute } from '../../src/routes/user';
 import { unixTime } from '../../src/libraries';
 import { initBasicContext } from '../utils';
 import { FastifyInstance } from 'fastify';
