@@ -5,7 +5,7 @@ import { ServerResponse } from 'http';
 import { bootstrap, context } from '../context';
 import * as providers from '../providers';
 import * as routes from '../routes';
-import * as exceptions from '../libraries/errors';
+import * as errors from '../libraries/errors';
 
 const enableSwagger = (server: FastifyInstance) => {
   server.register(require('fastify-swagger'), {
@@ -99,7 +99,7 @@ const main = async () => {
   };
   server.setNotFoundHandler((request, reply) => {
     const message = `Resource not found: ${request.req.url}, method: ${request.req.method}`;
-    const error = new exceptions.NotFound(message);
+    const error = new errors.NotFound(message);
     errorHandler(error, request, reply);
   });
   server.setErrorHandler(errorHandler);
@@ -115,10 +115,12 @@ const main = async () => {
   server.register(routes.userRoute, { prefix: 'v1' });
   await server.ready();
 
+  // start server
   const rouetList = server.printRoutes();
   context.logger.info(`Server routes:\n${rouetList}`);
   await server.listen(config.port, config.address);
 
+  // setup graceful shutdown
   context.cleaner.push(async () => {
     context.logger.info(`Server shutdown...`);
     try {
