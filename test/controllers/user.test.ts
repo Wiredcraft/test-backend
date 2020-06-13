@@ -234,7 +234,7 @@ test('UserController should delete', async (t) => {
   t.deepEqual(count, 0);
 });
 
-test('UserController should not verify after deletion', async (t) => {
+test('UserController should not verify account after deletion', async (t) => {
   const users = buildUsers();
   const userController = new UserController();
   for (const user of users) {
