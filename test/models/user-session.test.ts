@@ -11,8 +11,10 @@ const buildUser = () => ({
 
 test('UserSessionModel should put', async (t) => {
   const user = buildUser();
-  const session = await UserSessionModel.put(user);
+  const tainted = { ...user, oops: 'oops' };
+  const session = await UserSessionModel.put(tainted);
   t.assert(session.id && session.id.length == 8);
+  t.deepEqual(session.user, user);
 });
 
 test('UserSessionModel should find', async (t) => {

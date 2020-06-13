@@ -20,7 +20,10 @@ export class UserSessionModel {
     const session: UserSession = {
       id: nanoid(8),
       createdAt: unixTime(),
-      user,
+      user: {
+        id: user.id,
+        role: user.role,
+      },
     };
     await context.redis.set(this.buildKey(user.id), JSON.stringify(session));
     return session;
