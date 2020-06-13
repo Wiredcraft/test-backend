@@ -197,7 +197,7 @@ Currently, following APIs don't need authentication:
 - POST /v1/users
 - POST /v1/user-tokens
 
-### Session Expire Strategy
+#### Session Expire Strategy
 
 Session expire can be triggered by:
 
