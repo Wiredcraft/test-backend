@@ -76,7 +76,7 @@ export class UserClearCommand implements Command {
       context.logger.info(`Delete user ${i}`);
       const user = buildUser(i, options.password);
       try {
-        const userModel = await userController.verify({
+        const userModel = await userController.verifyAccount({
           email: user.email,
           password: options.password,
         });

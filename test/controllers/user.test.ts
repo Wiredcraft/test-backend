@@ -37,34 +37,70 @@ test('UserController should create', async (t) => {
   });
 });
 
-test('UserController should verify', async (t) => {
+test('UserController should verify account', async (t) => {
   const users = buildUsers();
   const userController = new UserController();
   await t.notThrowsAsync(async () => {
     for (const user of users) {
-      await userController.verify({ email: user.email, password: user.password });
+      await userController.verifyAccount(user);
     }
   });
 });
 
-test('UserController should not verify for invalid email', async (t) => {
+test('UserController should not verify account for invalid email', async (t) => {
   const users = buildUsers();
   const userController = new UserController();
   for (const user of users) {
     await t.throwsAsync(async () => {
-      await userController.verify({ email: '', password: user.password });
+      await userController.verifyAccount({ email: '', password: user.password });
     });
   }
 });
 
-test('UserController should not verify for invalid password', async (t) => {
+test('UserController should not verify account for invalid password', async (t) => {
   const users = buildUsers();
   const userController = new UserController();
   for (const user of users) {
     await t.throwsAsync(async () => {
-      await userController.verify({ email: user.email, password: '' });
+      await userController.verifyAccount({ email: user.email, password: '' });
     });
   }
+});
+
+test('UserController should get or create session', async (t) => {
+  const users = buildUsers();
+  const userController = new UserController();
+  const me = users[0];
+  const userModel = await userController.verifyAccount(me);
+  const userSession1 = await userController.getOrCreateSession(userModel);
+  t.assert(userSession1);
+  const userSession2 = await userController.getOrCreateSession(userModel);
+  t.deepEqual(userSession2, userSession1);
+});
+
+test('UserController should verify session', async (t) => {
+  const users = buildUsers();
+  const userController = new UserController();
+  const me = users[0];
+  const userModel = await userController.verifyAccount(me);
+  const userSession = await userController.getOrCreateSession(userModel);
+  await userController.verifySession(userSession.user.id, userSession.id);
+  await t.throwsAsync(async () => {
+    await userController.verifySession(userSession.user.id + 1, userSession.id);
+  });
+});
+
+test('UserController should invalidate session after reset password', async (t) => {
+  const users = buildUsers();
+  const userController = new UserController();
+  const me = users[0];
+  const userModel = await userController.verifyAccount(me);
+  const userSession = await userController.getOrCreateSession(userModel);
+  await userController.verifySession(userSession.user.id, userSession.id);
+  await userController.update(userModel.id, { password: 'a new password' });
+  await t.throwsAsync(async () => {
+    await userController.verifySession(userSession.user.id, userSession.id);
+  });
 });
 
 test('UserController should list', async (t) => {
@@ -203,7 +239,7 @@ test('UserController should not verify after deletion', async (t) => {
   const userController = new UserController();
   for (const user of users) {
     await t.throwsAsync(async () => {
-      await userController.verify({ email: user.email, password: user.password });
+      await userController.verifyAccount({ email: user.email, password: user.password });
     });
   }
 });

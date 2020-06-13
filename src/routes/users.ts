@@ -9,17 +9,26 @@ const extractOffsetLimit = (data: any) => {
   return { offset, limit };
 };
 
-interface Payload {
-  id: number;
-  role: string;
+interface TokenPayload {
+  sessionId: string;
+  userId: number;
 }
 
 export const users = async (fastify: FastifyInstance) => {
   const authenticate = async (request: FastifyRequest) => {
-    const payload = await request.jwtVerify<Payload>();
-    const id = request.params.id;
-    if (id !== undefined && payload.id.toString() !== id) {
-      throw new errors.Forbidden();
+    // verify token
+    const payload = await request.jwtVerify<TokenPayload>();
+
+    // verify session
+    const userController = new UserController();
+    const userSession = await userController.verifySession(payload.userId, payload.sessionId);
+
+    // verify permission
+    const requestUserId = request.params.id;
+    if (requestUserId !== undefined) {
+      if (requestUserId !== userSession.user.id.toString()) {
+        throw new errors.UserPermissionDenied();
+      }
     }
   };
 
@@ -63,10 +72,19 @@ export const users = async (fastify: FastifyInstance) => {
       const email = request.body.email;
       const password = request.body.password;
       const userController = new UserController();
-      const user = await userController.verify({ email, password });
-      const payload = { id: user.id, role: user.role };
+      const user = await userController.verifyAccount({ email, password });
+      const userSession = await userController.getOrCreateSession(user);
+      const payload: TokenPayload = {
+        sessionId: userSession.id,
+        userId: userSession.user.id,
+      };
       const token = fastify.jwt.sign(payload);
-      reply.status(201).send({ data: { token, userId: user.id } });
+      reply.status(201).send({
+        data: {
+          token,
+          userId: userSession.user.id,
+        },
+      });
     }
   );
 

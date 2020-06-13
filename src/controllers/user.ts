@@ -5,7 +5,7 @@ import * as errors from '../libraries/errors';
 import { context } from '../context';
 
 export class UserController {
-  async verify(options: { email: string; password: string }) {
+  async verifyAccount(options: { email: string; password: string }) {
     const user = await models.UserModel.findOne({
       where: {
         email: options.email,
@@ -22,6 +22,22 @@ export class UserController {
       throw new errors.InvalidUserAccount();
     }
     return user;
+  }
+
+  async getOrCreateSession(user: models.UserModel) {
+    const session = await models.UserSessionModel.find(user.id);
+    if (session) {
+      return session;
+    }
+    return models.UserSessionModel.put(user);
+  }
+
+  async verifySession(userId: number, sessionId: string) {
+    const session = await models.UserSessionModel.find(userId);
+    if (!session || session.id !== sessionId) {
+      throw new errors.UserSessionExpired();
+    }
+    return session;
   }
 
   count() {
@@ -87,6 +103,7 @@ export class UserController {
 
   async delete(id: number) {
     const user = await this.get(id);
+    await models.UserSessionModel.delete(user.id);
     await context.transactional(async (transaction) => {
       // mark deleted
       await user.update(
@@ -95,7 +112,7 @@ export class UserController {
         },
         { transaction }
       );
-      // cleanup links
+      // clear links
       await models.UserLinkModel.destroy({
         where: {
           [Op.or]: {
@@ -120,13 +137,14 @@ export class UserController {
       password?: string;
     }
   ) {
+    const user = await this.get(id);
     const values = { ...options, updatedAt: unixTime() };
     if (values.password) {
       const password = new Password(values.password);
       const passwordHash = await password.hash();
       values.password = JSON.stringify(passwordHash);
+      await models.UserSessionModel.delete(user.id);
     }
-    const user = await this.get(id);
     return user.update(values);
   }
 

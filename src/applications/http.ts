@@ -135,5 +135,6 @@ bootstrap(
   providers.CleanerProvider,
   providers.ConfigProvider,
   providers.LoggerProvider,
+  providers.RedisProvider,
   providers.SequelizeProvider
 );

@@ -35,6 +35,20 @@ export class InvalidUserAccount extends Unauthorized {
   }
 }
 
+export class UserSessionExpired extends Unauthorized {
+  name = 'UserSessionExpired';
+  constructor() {
+    super('User session expired');
+  }
+}
+
+export class UserPermissionDenied extends Forbidden {
+  name = 'UserPermissionDenied';
+  constructor() {
+    super('User permission denied');
+  }
+}
+
 export class UserNotFound extends NotFound {
   name = 'UserNotFound';
   constructor() {
