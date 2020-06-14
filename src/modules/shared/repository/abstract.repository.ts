@@ -16,10 +16,6 @@ export abstract class AbstractRepository<A extends Document> {
 		return this.model.findById( id );
 	}
 
-	public async find( query = {} ) {
-		return this.model.find( query );
-	}
-
 	public async findByIdAndUpdate( id: string, update: any ) {
 		return this.model.findByIdAndUpdate( id, update );
 	}

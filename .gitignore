@@ -27,7 +27,6 @@ yarn-error.log
 /packages/**/LICENSE
 
 # tests
-/test
 /benchmarks/memory
 /coverage
 /.nyc_output
