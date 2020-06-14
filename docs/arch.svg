@@ -55,11 +55,11 @@
 <path fill="none" stroke="black" d="M151,-231.7C151,-223.98 151,-214.71 151,-206.11"/>
 <polygon fill="black" stroke="black" points="154.5,-206.1 151,-196.1 147.5,-206.1 154.5,-206.1"/>
 </g>
-<!-- restful -->
+<!-- http -->
 <g id="node3" class="node">
-<title>restful</title>
+<title>http</title>
 <polygon fill="lightgrey" stroke="black" points="105.5,-268 16.5,-268 16.5,-232 105.5,-232 105.5,-268"/>
-<text text-anchor="middle" x="61" y="-246.3" font-family="Times,serif" font-size="14.00">RESTful API</text>
+<text text-anchor="middle" x="61" y="-246.3" font-family="Times,serif" font-size="14.00">HTTP Server</text>
 </g>
 <!-- route -->
 <g id="node5" class="node">
@@ -67,9 +67,9 @@
 <polygon fill="lightgrey" stroke="black" points="96,-196 42,-196 42,-160 96,-160 96,-196"/>
 <text text-anchor="middle" x="69" y="-174.3" font-family="Times,serif" font-size="14.00">Route</text>
 </g>
-<!-- restful&#45;&gt;route -->
+<!-- http&#45;&gt;route -->
 <g id="edge3" class="edge">
-<title>restful&#45;&gt;route</title>
+<title>http&#45;&gt;route</title>
 <path fill="none" stroke="black" d="M62.98,-231.7C63.86,-223.98 64.92,-214.71 65.9,-206.11"/>
 <polygon fill="black" stroke="black" points="69.39,-206.44 67.05,-196.1 62.43,-205.64 69.39,-206.44"/>
 </g>
