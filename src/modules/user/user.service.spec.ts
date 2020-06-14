@@ -45,7 +45,7 @@ describe( "UserService", () => {
 	} );
 
 	it( "should find retrieve all users", async () => {
-		expect( await service.findAll() ).toHaveLength( 0 );
+		expect( await service.find() ).toHaveLength( 0 );
 	} );
 
 	it( "should store user information", async () => {
@@ -56,7 +56,7 @@ describe( "UserService", () => {
 
 		const testUser = await service.create( testUserRequest );
 
-		const user = await service.findById( testUser._id.toString() );
+		const user = await service.findByIdOrFail( testUser._id.toString() );
 		expect( user.name ).toStrictEqual( testUserRequest.name );
 		expect( user.address ).toStrictEqual( testUserRequest.address );
 		expect( user.dob ).toStrictEqual( testUserRequest.dob );

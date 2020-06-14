@@ -8,7 +8,7 @@ Content-Type: application/json
   "description": "Alive Again"
 }
 
-> {% client.global.set("id", response.body._id); %}
+> {% client.global.set("id", response.body.id); %}
 
 ###
 
@@ -17,3 +17,6 @@ Accept: application/json
 
 ###
 
+
+GET http://localhost:3333/users
+Accept: application/json
