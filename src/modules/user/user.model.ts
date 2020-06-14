@@ -24,6 +24,7 @@ export class User extends Document {
 
 	updatedAt: Date;
 
+
 	public static toResource( resource: User ) {
 		return {
 			id: resource._id.toString(),
