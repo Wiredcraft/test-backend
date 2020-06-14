@@ -1,0 +1,19 @@
+POST http://localhost:3333/users
+Content-Type: application/json
+
+{
+  "name": "cyrilselasi",
+  "address": "No 632 XiZang Middle Road",
+  "dob": "1994-11-19",
+  "description": "Alive Again"
+}
+
+> {% client.global.set("id", response.body._id); %}
+
+###
+
+GET http://localhost:3333/users/{{id}}
+Accept: application/json
+
+###
+
