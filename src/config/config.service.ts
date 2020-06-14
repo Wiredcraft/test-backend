@@ -21,7 +21,7 @@ export class ConfigService {
 		// Describes Configuration Schema
 		const envVarsSchema: Joi.ObjectSchema = Joi.object( {
 			APP_NAME: Joi.string().default( "Wiredcraft Test API" ),
-			NODE_ENV: Joi.string().valid( "testing", "development", "staging", "production" ).default( "development" ),
+			NODE_ENV: Joi.string().valid( "test", "development", "staging", "production" ).default( "development" ),
 			APP_PORT: Joi.number().default( 3333 ),
 			MONGO_URI: Joi.string().uri().required(),
 			MONGO_TESTING_URI: Joi.string().uri().required()

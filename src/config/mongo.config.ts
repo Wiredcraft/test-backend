@@ -10,7 +10,7 @@ export class MongoConfig implements MongooseOptionsFactory {
 
 	public createMongooseOptions(): MongooseModuleOptions {
 		return {
-			uri: this.config.nodeEnv === "testing" ? this.config.mongoUri : this.config.mongoTestingUri,
+			uri: this.config.nodeEnv === "test" ? this.config.mongoTestingUri : this.config.mongoUri,
 			retryAttempts: 3,
 			retryDelay: 15,
 			useNewUrlParser: true,
