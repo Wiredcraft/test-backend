@@ -31,7 +31,7 @@ export abstract class AbstractRepository<A extends Document> {
 	}
 
 	public async findByIdAndUpdate( id: string, update: any ) {
-		return this.model.findByIdAndUpdate( id, update );
+		return this.model.findByIdAndUpdate( id, update, { new: true } );
 	}
 
 	public async findByIdAndDelete( id: string ) {

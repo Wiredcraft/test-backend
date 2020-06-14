@@ -17,6 +17,15 @@ Accept: application/json
 
 ###
 
+PATCH http://localhost:3333/users/5ee680d3d4070e25deeeb364
+Content-Type: application/json
+
+{
+  "dob": "1992-11-19"
+}
+
+###
+
 
 GET http://localhost:3333/users
 Accept: application/json

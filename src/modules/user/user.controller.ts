@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Inject, Logger, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Logger, Param, Patch, Post } from "@nestjs/common";
 import { ValidateObjectIdPipe } from "../shared/pipes/validate-object-id.pipe";
 import { CreateUserRequest } from "./dtos/requests/create-user.request";
+import { UpdateUserRequest } from "./dtos/requests/update-user.request";
 import { User } from "./user.model";
 import { UserService } from "./user.service";
 
@@ -31,11 +32,13 @@ export class UserController {
 	}
 
 	@Patch( ":id" )
-	public async update( @Param( "id", ValidateObjectIdPipe ) id: string ) {
-
+	public async update( @Param( "id", ValidateObjectIdPipe ) id: string, @Body() updateUserRequest: UpdateUserRequest ) {
+		const user = await this.userService.findByIdAndUpdate( id, updateUserRequest );
+		return User.toResource( user );
 	}
 
 	@Delete( ":id" )
+	@HttpCode( HttpStatus.NO_CONTENT )
 	public async delete( @Param( "id", ValidateObjectIdPipe ) id: string ) {
 		await this.userService.findByIdAndDelete( id );
 	}
