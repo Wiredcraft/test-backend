@@ -1,9 +1,13 @@
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import { WinstonModule } from "nest-winston";
 import { AppModule } from "./app.module";
+import LogConfig from "./config/log.config";
 
 async function bootstrap() {
-	const app = await NestFactory.create( AppModule );
+	const app = await NestFactory.create( AppModule, {
+		logger: WinstonModule.createLogger( LogConfig() )
+	} );
 
 	// Add Middleware
 	app.useGlobalPipes( new ValidationPipe( {
