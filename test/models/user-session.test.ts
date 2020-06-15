@@ -34,3 +34,15 @@ test('UserSessionModel should delete', async (t) => {
   const session = await UserSessionModel.find(user.id);
   t.assert(session === undefined);
 });
+
+test('UserSessionModel should list', async (t) => {
+  {
+    const ids = await UserSessionModel.list();
+    t.deepEqual(ids, []);
+  }
+  {
+    const { user } = await putSession();
+    const ids = await UserSessionModel.list();
+    t.deepEqual(ids, [user.id.toString()]);
+  }
+});

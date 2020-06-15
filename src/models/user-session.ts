@@ -44,8 +44,8 @@ export class UserSessionModel {
   }
 
   static async list() {
-    const wildcard = this.buildKey('*');
-    const pattern = this.buildKey(`(\\d+)$`);
+    const wildcard = context.redisKeyPrefix + this.buildKey('*');
+    const pattern = context.redisKeyPrefix + this.buildKey(`(\\d+)$`);
     const prefixedKeys = await context.redis.keys(wildcard);
     return prefixedKeys.reduce<string[]>((ids, key) => {
       const re = new RegExp(pattern);
