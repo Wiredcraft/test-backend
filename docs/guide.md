@@ -105,6 +105,16 @@ Use this command to inspect the merged config object:
 npm run cli:dev config:dump
 ```
 
+### Logging
+
+Logging is unstructured by default. To enable structured logging, add following config to "config.local.yaml" or "config.production.yaml":
+
+```yaml
+providers:
+  logger:
+    pretty: false
+```
+
 ### Migrations
 
 Create new migration in `./src/migrations`:
