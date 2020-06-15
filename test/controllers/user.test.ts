@@ -85,6 +85,17 @@ test('UserController should not verify account for invalid password', async (t) 
   }
 });
 
+test('UserController should not verify account after deletion', async (t) => {
+  const userController = new UserController();
+  const users = await createUsers();
+  for (const user of users) {
+    await userController.delete(user.id);
+    await t.throwsAsync(async () => {
+      await userController.verifyAccount({ email: user.email, password: user.password });
+    });
+  }
+});
+
 test('UserController should get or create session', async (t) => {
   const userController = new UserController();
   const users = await createUsers();
@@ -271,16 +282,5 @@ test('UserController should delete', async (t) => {
       const count = await userController.countFollowings(friend.id);
       t.deepEqual(count, 0);
     }
-  }
-});
-
-test('UserController should not verify account after deletion', async (t) => {
-  const userController = new UserController();
-  const { users } = await createUsersAndLinks();
-  for (const user of users) {
-    await userController.delete(user.id);
-    await t.throwsAsync(async () => {
-      await userController.verifyAccount({ email: user.email, password: user.password });
-    });
   }
 });
