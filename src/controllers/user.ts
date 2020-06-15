@@ -199,7 +199,7 @@ export class UserController {
           [Op.gte]: offset,
         },
       },
-      order: [['id', 'ASC']],
+      order: [['from', 'ASC']],
       limit,
     });
     const followerIds = links.map((item) => item.from);
@@ -230,7 +230,7 @@ export class UserController {
           [Op.gte]: offset,
         },
       },
-      order: [['id', 'ASC']],
+      order: [['to', 'ASC']],
       limit,
     });
     const followerIds = links.map((item) => item.to);
