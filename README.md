@@ -10,7 +10,7 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 
 ```
 {
-  "id": "xxx",                  // user ID 
+  "id": "xxx",                  // user ID
   "name": "test",               // user name
   "dob": "",                    // date of birth
   "address": "",                // user address
@@ -42,7 +42,7 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 
 ### Advanced requirements
 
-*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
+_These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out._
 
 - Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
 - Provide a complete logging (when/how/etc.) strategy.
@@ -50,7 +50,6 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 - Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
   - given a user name
   - return the nearby friends
-
 
 ## What We Care About
 
