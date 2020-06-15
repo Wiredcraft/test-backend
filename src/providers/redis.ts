@@ -6,7 +6,7 @@ import { LoggerProvider } from './logger';
 import { Logger } from '../libraries';
 
 declare module './utils' {
-  interface Forwards extends Pick<RedisProvider, 'redis'> {}
+  interface Forwards extends Pick<RedisProvider, 'redis' | 'redisKeyPrefix'> {}
 }
 
 @dependencies({
@@ -17,11 +17,15 @@ export class RedisProvider {
   @forward
   readonly redis: Redis.Redis;
 
+  @forward
+  readonly redisKeyPrefix: string;
+
   readonly logger: Logger;
 
-  constructor(logger: Logger, redis: Redis.Redis) {
+  constructor(logger: Logger, redis: Redis.Redis, redisKeyPrefix: string) {
     this.logger = logger;
     this.redis = redis;
+    this.redisKeyPrefix = redisKeyPrefix;
   }
 
   static async create(options: { configProvider: ConfigProvider; loggerProvider: LoggerProvider }) {
@@ -35,7 +39,7 @@ export class RedisProvider {
       lazyConnect: true,
     });
     await redis.connect();
-    return new RedisProvider(logger, redis);
+    return new RedisProvider(logger, redis, config.keyPrefix);
   }
 
   static async destroy(redisProvider: RedisProvider) {
