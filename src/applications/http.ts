@@ -59,7 +59,6 @@ class HttpApplication extends Application {
 bootstrap(
   HttpApplication,
   providers.EnvProvider,
-  providers.CleanerProvider,
   providers.ConfigProvider,
   providers.LoggerProvider,
   providers.RedisProvider,
