@@ -38,6 +38,9 @@ export class LoggerProvider {
         },
       });
     }
+    if (config.level) {
+      Object.assign(loggerOptions, { level: config.level });
+    }
     const loggerStream = pino.destination(config.file || undefined);
     const logger = pino(loggerOptions, loggerStream);
     logger.info('Create LoggerProvider');
