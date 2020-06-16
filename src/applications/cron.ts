@@ -1,17 +1,34 @@
-import { bootstrap, context } from '../context';
+import { Cron } from 'recron';
+import { bootstrap, context, Application } from '../context';
 import * as providers from '../providers';
 import * as commands from '../commands';
 
-const main = async () => {
-  // expire user sessions created before 30 days at 03:01 every day
-  context.cron.schedule('1 3 * * *', async () => {
-    const command = new commands.UserSessionExpireCommand();
-    await command.run({ days: 30 });
-  });
-};
+class CronApplication extends Application {
+  private cron?: Cron;
+
+  async start() {
+    const cron = new Cron();
+    await cron.start();
+
+    // expire user sessions created before 30 days at 03:01 every day
+    context.cron.schedule('1 3 * * *', async () => {
+      const command = new commands.UserSessionExpireCommand();
+      await command.run({ days: 30 });
+    });
+
+    this.cron = cron;
+  }
+
+  async stop() {
+    if (this.cron) {
+      await this.cron.stop();
+      this.cron = undefined;
+    }
+  }
+}
 
 bootstrap(
-  main,
+  CronApplication,
   providers.EnvProvider,
   providers.LoggerProvider,
   providers.CronProvider,

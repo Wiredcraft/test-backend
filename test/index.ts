@@ -1,16 +1,18 @@
 import * as providers from '../src/providers';
-import { bootstrap, shutdown } from '../src/context';
+import { bootstrap, Application } from '../src/context';
 import { clearRedis, resetSequelize } from './utils';
 
-const main = async () => {
-  console.log('Init test...');
-  await clearRedis();
-  await resetSequelize();
-  await shutdown();
-};
+class InitTestApplication extends Application {
+  async start() {
+    console.log('Init test...');
+    await clearRedis();
+    await resetSequelize();
+    await this.exit();
+  }
+}
 
 bootstrap(
-  main,
+  InitTestApplication,
   providers.EnvProvider,
   providers.ConfigProvider,
   providers.LoggerProvider,
