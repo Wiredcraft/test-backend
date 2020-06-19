@@ -32,7 +32,8 @@ export class User extends Document {
 			dob: resource.dob,
 			address: resource.address,
 			description: resource.description,
-			createdAt: resource.createdAt
+			createdAt: resource.createdAt,
+			updatedAt: resource.updatedAt
 		};
 	}
 

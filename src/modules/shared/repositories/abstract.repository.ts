@@ -14,12 +14,6 @@ export abstract class AbstractRepository<A extends Document> {
 		return this.model.find( conditions );
 	}
 
-	public async findOrFail( conditions = {} ) {
-		const resources = await this.find( conditions );
-		if ( !resources || resources.length < 1 ) throw new NotFoundException( "Resources Not Found!" );
-		return resources;
-	}
-
 	public async findById( id: string ) {
 		return this.model.findById( id );
 	}

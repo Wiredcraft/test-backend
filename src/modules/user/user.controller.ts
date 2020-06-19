@@ -15,7 +15,7 @@ export class UserController {
 
 	@Get()
 	public async index() {
-		const users = await this.userService.findOrFail();
+		const users = await this.userService.find();
 		return User.toCollection( users );
 	}
 
