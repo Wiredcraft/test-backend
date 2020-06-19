@@ -11,12 +11,12 @@ export type EnvConfig = Record<string, string>;
 export class ConfigService {
 	private readonly envConfig: EnvConfig;
 
-	constructor ( filePath: string ) {
+	constructor( filePath: string ) {
 		const config = dotenv.parse( fs.readFileSync( filePath ) );
 		this.envConfig = this.validate( config );
 	}
 
-	private validate ( config: EnvConfig ) {
+	private validate( config: EnvConfig ) {
 
 		// Describes Configuration Schema
 		const envVarsSchema: Joi.ObjectSchema = Joi.object( {
@@ -34,15 +34,15 @@ export class ConfigService {
 		return validatedEnvConfig;
 	}
 
-	public get appName (): string {
+	public get appName(): string {
 		return this.envConfig.APP_NAME;
 	}
 
-	public get nodeEnv (): string {
+	public get nodeEnv(): string {
 		return this.envConfig.NODE_ENV;
 	}
 
-	public get appPort (): number {
+	public get appPort(): number {
 		return Number( this.envConfig.APP_PORT );
 	}
 

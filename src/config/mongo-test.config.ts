@@ -1,9 +1,9 @@
-import { MongooseModule } from "@nestjs/mongoose";
+import { MongooseModule, MongooseModuleOptions } from "@nestjs/mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 
 const mongod = new MongoMemoryServer();
 
-export default ( customOptions: any = {} ) => MongooseModule.forRootAsync( {
+export default ( customOptions: any = {} ): MongooseModuleOptions => MongooseModule.forRootAsync( {
 	useFactory: async () => {
 		const uri = await mongod.getUri();
 

@@ -24,8 +24,8 @@ describe( "HealtcheckController (e2e)", () => {
 
 	it( "/healthcheck (GET)", () => {
 		return request( app.getHttpServer() )
-		.get( "/healthcheck" )
-		.expect( 200 )
-		.expect( "true" );
+			.get( "/healthcheck" )
+			.expect( 200 )
+			.expect( "true" );
 	} );
 } );

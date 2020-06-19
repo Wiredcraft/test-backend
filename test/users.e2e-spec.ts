@@ -53,32 +53,32 @@ describe( "UserController (e2e)", () => {
 
 	it( "should GET /users", () => {
 		return request( app.getHttpServer() )
-		.get( "/users" )
-		.expect( HttpStatus.OK )
-		.expect( [] );
+			.get( "/users" )
+			.expect( HttpStatus.OK )
+			.expect( [] );
 	} );
 
 	it( "should POST /users", () => {
 		return request( app.getHttpServer() )
-		.post( "/users" )
-		.send( testUserRequest )
-		.expect( HttpStatus.CREATED )
-		.then( ( { body } ) => {
-			expect( body ).toBeTruthy();
-			expect( body.id ).toBeTruthy();
-			expect( body.name ).toEqual( testUserRequest.name );
-			expect( body.address ).toEqual( testUserRequest.address );
-			expect( new Date( body.dob ) ).toEqual( testUserRequest.dob );
-			expect( body.description ).toEqual( testUserRequest.description );
-		} );
+			.post( "/users" )
+			.send( testUserRequest )
+			.expect( HttpStatus.CREATED )
+			.then( ( { body } ) => {
+				expect( body ).toBeTruthy();
+				expect( body.id ).toBeTruthy();
+				expect( body.name ).toEqual( testUserRequest.name );
+				expect( body.address ).toEqual( testUserRequest.address );
+				expect( new Date( body.dob ) ).toEqual( testUserRequest.dob );
+				expect( body.description ).toEqual( testUserRequest.description );
+			} );
 	} );
 
 	it( "should FAIL to POST /users if data is missing", async () => {
 
 		return request( app.getHttpServer() )
-		.post( "/users" )
-		.send( { name: faker.name } )
-		.expect( HttpStatus.BAD_REQUEST );
+			.post( "/users" )
+			.send( { name: faker.name } )
+			.expect( HttpStatus.BAD_REQUEST );
 	} );
 
 	it( "should PATCH /users/:id", async () => {
@@ -86,30 +86,30 @@ describe( "UserController (e2e)", () => {
 
 		const name = faker.name.firstName();
 		return request( app.getHttpServer() )
-		.patch( `/users/${ user.id }` )
-		.send( { name } )
-		.expect( HttpStatus.OK )
-		.then( ( { body } ) => {
-			expect( body.name ).toStrictEqual( name );
-			expect( body.id ).toStrictEqual( user.id );
-			expect( new Date( body.createdAt ).getTime() ).toBeLessThan( new Date( body.updatedAt ).getTime() );
-		} );
+			.patch( `/users/${ user.id }` )
+			.send( { name } )
+			.expect( HttpStatus.OK )
+			.then( ( { body } ) => {
+				expect( body.name ).toStrictEqual( name );
+				expect( body.id ).toStrictEqual( user.id );
+				expect( new Date( body.createdAt ).getTime() ).toBeLessThan( new Date( body.updatedAt ).getTime() );
+			} );
 	} );
 
 	it( "should FAIL to POST /users if data is missing", async () => {
 
 		const { body: user } = await request( app.getHttpServer() ).post( "/users" ).send( testUserRequest ).expect( HttpStatus.CREATED );
 		return request( app.getHttpServer() )
-		.patch( `/users/${ user.id }` )
-		.send( { dob: "20" } )
-		.expect( HttpStatus.BAD_REQUEST );
+			.patch( `/users/${ user.id }` )
+			.send( { dob: "20" } )
+			.expect( HttpStatus.BAD_REQUEST );
 	} );
 
 	it( "should DELETE /users/:id", async () => {
 		const { body: user } = await request( app.getHttpServer() ).post( "/users" ).send( testUserRequest ).expect( HttpStatus.CREATED );
 
 		return request( app.getHttpServer() )
-		.delete( `/users/${ user.id }` )
-		.expect( HttpStatus.NO_CONTENT );
+			.delete( `/users/${ user.id }` )
+			.expect( HttpStatus.NO_CONTENT );
 	} );
 } );

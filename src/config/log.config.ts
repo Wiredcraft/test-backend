@@ -1,8 +1,9 @@
+import { WinstonModuleOptions } from "nest-winston";
 import { join } from "upath";
 import { format, transports } from "winston";
 
 
-export default () => {
+export default (): WinstonModuleOptions => {
 
 	const logDir = join( process.cwd(), "src/storage/logs" );
 
@@ -41,4 +42,4 @@ export default () => {
 		]
 	};
 
-}
+};
