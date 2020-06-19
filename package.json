@@ -85,7 +85,8 @@
     "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
       ".module.ts",
-      ".request.ts"
+      ".request.ts",
+      ".config.ts"
     ]
   }
 }
