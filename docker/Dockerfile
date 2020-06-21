@@ -39,11 +39,14 @@ ENV SERVER_ROOT /usr/src/app
 WORKDIR ${SERVER_ROOT}
 
 COPY package.json .
+
+COPY .env .
+
 COPY --from=node_modules /tmp/node_modules ./node_modules
 COPY --from=base ${SERVER_ROOT}/dist ./dist
 
-EXPOSE 3000
-HEALTHCHECK --interval=60s --timeout=120s --retries=3 CMD curl -sS 127.0.0.1:${API_PORT}/healthcheck || exit 1
+EXPOSE $APP_PORT
+HEALTHCHECK --interval=60s --timeout=120s --retries=3 CMD curl -sS 127.0.0.1:$APP_PORT/healthcheck || exit 1
 
 ENTRYPOINT [ "npm", "run" ]
 CMD [ "start:prod" ]

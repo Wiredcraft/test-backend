@@ -6,6 +6,8 @@ services:
     container_name: test-backend-db
     ports:
       - 27017:27017
+    networks:
+      - backend
     restart: on-failure
 
   server:
@@ -21,7 +23,7 @@ services:
     networks:
       - backend
     ports:
-      - 3000:3000
+      - ${APP_PORT}:${APP_PORT}
 volumes:
   db-data:
 
