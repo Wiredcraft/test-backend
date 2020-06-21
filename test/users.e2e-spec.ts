@@ -35,8 +35,6 @@ describe( "UserController (e2e)", () => {
 
 		connection = moduleFixture.get( getConnectionToken() );
 
-		const config = app.get<ConfigService>( ConfigService );
-		config.nodeEnv = "test";
 		await app.init();
 	} );
 
