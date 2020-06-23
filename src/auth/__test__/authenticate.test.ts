@@ -13,7 +13,7 @@ describe('Register', () => {
       .post('/register')
       .send({ username: 'testUser', password: '123456' });
     expect(response.status).toBe(200);
-    expect(response.text).toEqual({ message: 'register successful' });
+    expect(response.body).toEqual({ message: 'register successful' });
   });
 });
 
@@ -23,6 +23,6 @@ describe('Login', () => {
       .post('/login')
       .send({ username: 'testUser', password: '123456' });
     expect(response.status).toBe(200);
-    expect(response.text).toEqual({ message: 'login successful' });
+    expect(response.body).toEqual({ message: 'login successful' });
   });
 });
