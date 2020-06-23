@@ -12,6 +12,7 @@
     "paths": {
       "*": ["node_modules/*", "src/types/*"]
     },
+    "skipLibCheck": true,
     "typeRoots": ["node_modules/@types", "src/types"],
     "outDir": "./built"
   },
