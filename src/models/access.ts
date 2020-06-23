@@ -1,9 +1,9 @@
 import mongoose, { Schema, model } from 'mongoose';
 
-export enum accessType {
+export enum AccessType {
   noAccess = 'noAccess',
   readOnly = 'readOnly',
-  fullAccess = 'fullAccess'
+  fullAccess = 'fullAccess',
 }
 
 /**
@@ -11,10 +11,10 @@ export enum accessType {
  * everyone, user fullAccess to most things
  */
 export interface AccessInterface {
-  everyone: accessType;
-  user: accessType;
-  operator: accessType;
-  self: accessType;
+  everyone: AccessType;
+  user: AccessType;
+  operator: AccessType;
+  self: AccessType;
 }
 
 export const predefinedAccess = {
@@ -22,56 +22,56 @@ export const predefinedAccess = {
    * Everyone can read, operator and owner have full access
    */
   public: {
-    everyone: accessType.readOnly,
-    user: accessType.readOnly,
-    operator: accessType.fullAccess,
-    self: accessType.fullAccess
+    everyone: AccessType.readOnly,
+    user: AccessType.readOnly,
+    operator: AccessType.fullAccess,
+    self: AccessType.fullAccess,
   } as AccessInterface,
   /**
    * Only authed user can read, operator and owner have full access
    */
   userOnly: {
-    everyone: accessType.noAccess,
-    user: accessType.readOnly,
-    operator: accessType.fullAccess,
-    self: accessType.fullAccess
+    everyone: AccessType.noAccess,
+    user: AccessType.readOnly,
+    operator: AccessType.fullAccess,
+    self: AccessType.fullAccess,
   } as AccessInterface,
   /**
    * Operator and owner have full access
    */
   operatorOnly: {
-    everyone: accessType.noAccess,
-    user: accessType.noAccess,
-    operator: accessType.fullAccess,
-    self: accessType.fullAccess
+    everyone: AccessType.noAccess,
+    user: AccessType.noAccess,
+    operator: AccessType.fullAccess,
+    self: AccessType.fullAccess,
   } as AccessInterface,
   /**
    * Operator can read and only owner have full access
    */
   operatorLimited: {
-    everyone: accessType.noAccess,
-    user: accessType.noAccess,
-    operator: accessType.readOnly,
-    self: accessType.fullAccess
+    everyone: AccessType.noAccess,
+    user: AccessType.noAccess,
+    operator: AccessType.readOnly,
+    self: AccessType.fullAccess,
   } as AccessInterface,
   /**
    * Only owner have full access
    */
   personal: {
-    everyone: accessType.noAccess,
-    user: accessType.noAccess,
-    operator: accessType.noAccess,
-    self: accessType.fullAccess
+    everyone: AccessType.noAccess,
+    user: AccessType.noAccess,
+    operator: AccessType.noAccess,
+    self: AccessType.fullAccess,
   } as AccessInterface,
   /**
    * Only admin have full access
    */
   adminOnly: {
-    everyone: accessType.noAccess,
-    user: accessType.noAccess,
-    operator: accessType.noAccess,
-    self: accessType.noAccess
-  } as AccessInterface
+    everyone: AccessType.noAccess,
+    user: AccessType.noAccess,
+    operator: AccessType.noAccess,
+    self: AccessType.noAccess,
+  } as AccessInterface,
 };
 
 const accessSchema = new Schema(
@@ -79,23 +79,23 @@ const accessSchema = new Schema(
     everyone: {
       required: true,
       type: String,
-      enum: Object.values(accessType)
+      enum: Object.values(AccessType),
     },
     user: {
       required: true,
       type: String,
-      enum: Object.values(accessType)
+      enum: Object.values(AccessType),
     },
     operator: {
       required: true,
       type: String,
-      enum: Object.values(accessType)
+      enum: Object.values(AccessType),
     },
     self: {
       required: true,
       type: String,
-      enum: Object.values(accessType)
-    }
+      enum: Object.values(AccessType),
+    },
   },
   { timestamps: true, collection: 'access' }
 );

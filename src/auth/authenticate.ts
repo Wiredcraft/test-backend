@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { body } from 'express-validator';
 import asyncHandler from '../util/errorHandler';
 import validate from '../util/apiValidator';
-import User, { roles } from '../models/user';
+import User, { Roles } from '../models/user';
 import getLogger from '../util/logger';
 
 const router = express.Router();
@@ -23,9 +23,7 @@ router.post(
           throw Error('username already taken');
         }
       }),
-    body('password')
-      .exists()
-      .withMessage('password required'),
+    body('password').exists().withMessage('password required'),
   ]),
   asyncHandler(async (req: Request, res: Response) => {
     const { username, password } = req.body;
@@ -33,14 +31,14 @@ router.post(
     try {
       const hashedPassword = await bcrypt.hash(password, hashCost);
       // first user will become admin
-      let role = roles.user;
+      let role = Roles.user;
       const hasUser = await User.findOne({});
       if (!hasUser) {
-        role = roles.admin;
+        role = Roles.admin;
       }
-      const newUser = new User({ username, role, hashedPassword });
+      const newUser = new User({ name: username, role, hashedPassword });
       await newUser.save();
-      logger.debug(`New user ${newUser.username} registered`);
+      logger.debug(`New user ${newUser.name} registered`);
       res.status(200).send('register successful');
     } catch (err) {
       logger.error(err);
@@ -52,12 +50,8 @@ router.post(
 router.post(
   '/login',
   validate([
-    body('username')
-      .exists()
-      .withMessage('username required'),
-    body('password')
-      .exists()
-      .withMessage('password required'),
+    body('username').exists().withMessage('username required'),
+    body('password').exists().withMessage('password required'),
   ]),
   (req, res) => {
     passport.authenticate('local', { session: false }, (error, user) => {
@@ -68,9 +62,7 @@ router.post(
       // Content of the Jwt
       const payload = {
         username: user.username,
-        expires:
-          Date.now() +
-          parseInt(process.env.JWT_EXPIRATION_MS || '259200000', 10),
+        expires: Date.now() + parseInt(process.env.JWT_EXPIRATION_MS || '259200000', 10),
       };
 
       // assigns payload to req.user
@@ -79,7 +71,14 @@ router.post(
           return res.status(400).send(`${err}`);
         }
         // sign the Jwt token and send it to the response
-        const token = jwt.sign(JSON.stringify(payload), process.env.SECRET);
+        let token;
+        if (process.env.SECRET) {
+          token = jwt.sign(JSON.stringify(payload), process.env.SECRET);
+        } else {
+          throw Error(
+            'No secret provided, you need to add SECRET in environment variables or .env'
+          );
+        }
 
         logger.debug(`Generated jwt toke: ${token}`);
         // store Jwt token in cookie */
@@ -87,7 +86,7 @@ router.post(
         return res.status(200).send('login successful');
       });
 
-      logger.debug(`User ${req.user.username} logged in`);
+      logger.debug(`User ${req.user?.name} logged in`);
       return null;
     })(req, res);
   }
@@ -97,7 +96,7 @@ router.get('/logout', (req, res) => {
   req.logout();
   res.clearCookie('jwt', { httpOnly: true });
   if (req.user) {
-    logger.debug(`User ${req.user.username} logged out`);
+    logger.debug(`User ${req.user.name} logged out`);
   }
   res.status(200).send('logout successful');
 });

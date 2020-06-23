@@ -3,36 +3,32 @@ import { Request, Response, NextFunction, RequestHandler } from 'express';
 import passport from 'passport';
 import getLogger from '../util/logger';
 import asyncHandler from '../util/errorHandler';
-import getModelList from '../util/modelScanner';
-import importHandler from '../util/importHandler';
-import { path } from '../util/consts';
-import { AccessInterface, accessType } from '../models/access';
+import { getModelList } from '../util/modelScanner';
+import importHelper from '../util/importHelper';
+
+import { AccessInterface, AccessType } from '../models/access';
 import User, { roles } from '../models/user';
-import builder from '../modelBuilders/mongooseBuilder';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
-export default (
-  modelName: string,
-  requiredAccess: accessType
-): RequestHandler =>
+export default (modelName: string, requiredAccess: AccessType): RequestHandler =>
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     logger.info('Authorize begin');
     logger.info(`required access ${requiredAccess}`);
     let statusCode = 403;
     let authorized = false;
 
-    const accessMap: { [key in accessType]: number } = {
-      [accessType.noAccess]: 0,
-      [accessType.readOnly]: 1,
-      [accessType.fullAccess]: 2,
+    const accessMap: { [key in AccessType]: number } = {
+      [AccessType.noAccess]: 0,
+      [AccessType.readOnly]: 1,
+      [AccessType.fullAccess]: 2,
     };
 
     const Item = await builder.getModel(modelName);
     const modelAccess = builder.acl[modelName];
 
     // auth not needed
-    if (accessMap[modelAccess.everyone] >= accessMap[accessType.readOnly]) {
+    if (accessMap[modelAccess.everyone] >= accessMap[AccessType.readOnly]) {
       next();
       authorized = true;
     } else {
@@ -46,7 +42,7 @@ export default (
       }
 
       // current logged in user
-      const authUser = await User.findOne({ username: req.user.username });
+      const authUser = await User.findOne({ username: req.user?.name });
 
       if (authUser) {
         // setup user for next middleware use
@@ -100,8 +96,6 @@ export default (
     }
 
     if (!authorized) {
-      res
-        .status(statusCode)
-        .send(statusCode === 401 ? 'Unauthorized' : 'Forbidden');
+      res.status(statusCode).send(statusCode === 401 ? 'Unauthorized' : 'Forbidden');
     }
   });

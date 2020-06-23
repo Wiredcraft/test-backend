@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import express, { Request, Response, Router } from 'express';
 import mongoose from 'mongoose';
 import { param } from 'express-validator';
@@ -7,9 +6,9 @@ import authorize from '../auth/authorize';
 import getLogger from '../util/logger';
 import getModelList from '../util/modelScanner';
 import asyncHandler from '../util/errorHandler';
-import { roles } from '../models/user';
+import { Roles } from '../models/user';
 import builder from '../modelBuilders/mongooseBuilder';
-import { accessType } from '../models/access';
+import { AccessType } from '../models/access';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
@@ -28,7 +27,7 @@ const getRestRouters = async (): Promise<Router[]> => {
           router
             .route(`/${modelName}`)
             .get(
-              authorize(modelName, accessType.readOnly),
+              authorize(modelName, AccessType.readOnly),
               asyncHandler(async (req: Request, res: Response) => {
                 const allModels = await Model.find({});
                 if (allModels) {
@@ -39,27 +38,29 @@ const getRestRouters = async (): Promise<Router[]> => {
               })
             )
             .post(
-              authorize(modelName, accessType.fullAccess),
+              authorize(modelName, AccessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 if (req.body.owner) {
                   // only admin can set different owner
-                  if (req.user!.role !== roles.admin) {
-                    req.body.owner = req.user!.id;
+                  if (req.user?.role !== Roles.admin) {
+                    req.body.owner = req.user?.id;
                   }
                 } else {
-                  req.body.owner = req.user!.id;
+                  req.body.owner = req.user?.id;
                 }
 
                 const model = await new Model(req.body).save();
+                // eslint-disable-next-line no-underscore-dangle
                 res.status(201).send({ Location: `${req.url}/${model._id}` });
               })
             )
             .put(
-              authorize(modelName, accessType.fullAccess),
+              authorize(modelName, AccessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 const allModels = req.body as mongoose.Document[];
                 const bulkOperation = Model.collection.initializeUnorderedBulkOp();
                 allModels.forEach((model) => {
+                  // eslint-disable-next-line no-underscore-dangle
                   const id = mongoose.Types.ObjectId(model._id);
                   bulkOperation.find({ _id: id }).updateOne({
                     $set: model,
@@ -73,7 +74,7 @@ const getRestRouters = async (): Promise<Router[]> => {
               res.status(405).end();
             })
             .delete(
-              authorize(modelName, accessType.fullAccess),
+              authorize(modelName, AccessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 await Model.deleteMany({});
                 res.status(204).end();
@@ -90,7 +91,7 @@ const getRestRouters = async (): Promise<Router[]> => {
               ])
             )
             .get(
-              authorize(modelName, accessType.readOnly),
+              authorize(modelName, AccessType.readOnly),
               asyncHandler(async (req: Request, res: Response) => {
                 const model = await Model.findOne({
                   _id: req.params[`${modelName}Id`],
@@ -103,45 +104,39 @@ const getRestRouters = async (): Promise<Router[]> => {
               })
             )
             .put(
-              authorize(modelName, accessType.fullAccess),
+              authorize(modelName, AccessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 if (req.body.owner) {
                   // only admin can set different owner
-                  if (req.user!.role !== roles.admin) {
-                    req.body.owner = req.user!.id;
+                  if (req.user?.role !== Roles.admin) {
+                    req.body.owner = req.user?.id;
                   }
                 } else {
-                  req.body.owner = req.user!.id;
+                  req.body.owner = req.user?.id;
                 }
-                const model = await Model.findByIdAndUpdate(
-                  req.params[`${modelName}Id`],
-                  req.body
-                );
+                const model = await Model.findByIdAndUpdate(req.params[`${modelName}Id`], req.body);
                 model.save();
                 res.status(204).end();
               })
             )
             .patch(
-              authorize(modelName, accessType.fullAccess),
+              authorize(modelName, AccessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
-                if (req.user!.role !== roles.admin) {
+                if (req.user?.role !== Roles.admin) {
                   // only admin can change ownership
                   if (Object.prototype.hasOwnProperty.call(req.body, 'owner')) {
                     delete req.body.owner;
                   }
                 }
-                const model = await Model.findByIdAndUpdate(
-                  req.params[`${modelName}Id`],
-                  {
-                    $set: req.body,
-                  }
-                );
+                const model = await Model.findByIdAndUpdate(req.params[`${modelName}Id`], {
+                  $set: req.body,
+                });
                 model.save();
                 res.status(204).end();
               })
             )
             .delete(
-              authorize(modelName, accessType.fullAccess),
+              authorize(modelName, AccessType.fullAccess),
               asyncHandler(async (req: Request, res: Response) => {
                 await Model.findByIdAndRemove(req.params[`${modelName}Id`]);
                 res.status(204).end();

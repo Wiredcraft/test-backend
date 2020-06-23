@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
-import { colors } from './consts';
+import { Colors } from './consts';
 
 /**
- * Enum for logger logLevel.
+ * Enum for logger LogLevel.
  * @readonly
  * @enum {string}
  */
-export const enum logLevel {
+export const enum LogLevel {
   Debug = 'Debug', // only enable in development env
   Info = 'Info', // get to stdout
   Warn = 'Warn', // get to stderr
@@ -30,34 +30,28 @@ class Logger {
   /**
    * private internal log function
    */
-  private static log(
-    level: logLevel,
-    componentName: string,
-    message: any
-  ): void {
+  private static log(level: LogLevel, componentName: string, message: any): void {
     const time = new Date();
-    let color = colors.FgWhite;
+    let color = Colors.FgWhite;
     switch (level) {
-      case logLevel.Debug:
-        color = colors.FgCyan;
+      case LogLevel.Debug:
+        color = Colors.FgCyan;
         break;
-      case logLevel.Info:
-        color = colors.FgGreen;
+      case LogLevel.Info:
+        color = Colors.FgGreen;
         break;
-      case logLevel.Warn:
-        color = colors.FgYellow;
+      case LogLevel.Warn:
+        color = Colors.FgYellow;
         break;
-      case logLevel.Error:
-        color = colors.FgRed;
+      case LogLevel.Error:
+        color = Colors.FgRed;
         break;
       default:
-        color = colors.FgWhite;
+        color = Colors.FgWhite;
         break;
     }
     console.log(
-      `${time.toISOString()} - ${color}[${level}][${componentName}]${message}${
-        colors.Reset
-      }`
+      `${time.toISOString()} - ${color}[${level}][${componentName}]${message}${Colors.Reset}`
     );
   }
 
@@ -70,26 +64,22 @@ class Logger {
   }
 
   info(message: any): void {
-    Logger.log(logLevel.Info, this.componentName, message);
+    Logger.log(LogLevel.Info, this.componentName, message);
   }
 
   error(message: any): void {
-    Logger.log(logLevel.Error, this.componentName, message);
+    Logger.log(LogLevel.Error, this.componentName, message);
   }
 
   debug(message: any): void {
-    Logger.log(logLevel.Debug, this.componentName, message);
+    Logger.log(LogLevel.Debug, this.componentName, message);
   }
 
   warn(message: any): void {
-    Logger.log(logLevel.Warn, this.componentName, message);
+    Logger.log(LogLevel.Warn, this.componentName, message);
   }
 }
 
-const getLogger = (
-  componentName = __filename.slice(__dirname.length + 1, -3)
-): Logger => {
-  new Logger(componentName);
-};
+const getLogger = (componentName: string): Logger => new Logger(componentName);
 
 export default getLogger;

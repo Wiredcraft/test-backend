@@ -3,28 +3,28 @@ import getLogger from './logger';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
-const asyncHandler = (fn: Function) => async (...args: any[]): Promise<any> => {
+const errorHandler = (fn: (...args: any[]) => any) => async (...args: any[]): Promise<any> => {
   try {
     await fn(...args);
   } catch (err) {
     logger.error(err);
-    const resFn = args.find(arg => arg.name === 'res');
+    const resFn = args.find((arg) => arg.name === 'res');
     if (resFn) {
       let errors = {
         message: 'Internal Sever Error',
-        error: err
+        error: err,
       };
 
       if (err instanceof mongoose.Error.ValidationError) {
         errors = {
           message: 'Mongoose Model Validation Error',
-          error: err
+          error: err,
         };
       }
       if (err instanceof mongoose.mongo.MongoError) {
         errors = {
           message: 'MongDB Error',
-          error: err
+          error: err,
         };
       }
 
@@ -33,4 +33,4 @@ const asyncHandler = (fn: Function) => async (...args: any[]): Promise<any> => {
   }
 };
 
-export default asyncHandler;
+export default errorHandler;

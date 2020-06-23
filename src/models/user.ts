@@ -1,6 +1,6 @@
 import mongoose, { Schema, model } from 'mongoose';
 
-export enum roles {
+export enum Roles {
   admin = 'admin',
   operator = 'operator',
   user = 'user',
@@ -32,10 +32,16 @@ export const userSchema = new Schema(
     description: {
       type: String,
     },
+    latitude: {
+      type: Number,
+    },
+    longitude: {
+      type: Number,
+    },
     role: {
       required: true,
       type: String,
-      enum: Object.values(roles),
+      enum: Object.values(Roles),
     },
     hashedPassword: {
       required: true,
@@ -53,7 +59,11 @@ export interface UserInterface {
   dob: Date;
   address: string;
   description: string;
-  role: roles;
+  following: UserInterface[];
+  followers: UserInterface[];
+  latitude: number;
+  longitude: number;
+  role: Roles;
   hashedPassword: string;
   lastLogin: Date;
 }

@@ -6,9 +6,7 @@ const validate = (validations: ValidationChain[]) => async (
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
-  await Promise.all(
-    validations.map((validation: ValidationChain) => validation.run(req))
-  );
+  await Promise.all(validations.map((validation: ValidationChain) => validation.run(req)));
 
   const errors = validationResult(req);
   if (errors.isEmpty()) {

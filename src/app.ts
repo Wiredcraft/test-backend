@@ -21,7 +21,7 @@ app.use(passport.initialize());
 app.use(apiLogger);
 
 // Application wide error handling
-app.use((req: any, res: any, next: any, err: any) => {
+app.use((err: any) => {
   logger.error(err);
 });
 
@@ -32,7 +32,7 @@ app.use(json());
 app.disable('x-powered-by');
 
 // Enable REST
-(async (): Promise<void> => {
+(async () => {
   const restRouters = await getRestRouters();
   if (restRouters && restRouters.length > 0) {
     restRouters.forEach((router) => {
@@ -55,9 +55,7 @@ db.connect();
 app
   .listen(process.env.PORT || 8000)
   .on('listening', () => {
-    logger.info(
-      `REST API server is listening on port ${process.env.PORT || 8000}`
-    );
+    logger.info(`REST API server is listening on port ${process.env.PORT || 8000}`);
   })
   .on('error', (err) => {
     logger.error(err);

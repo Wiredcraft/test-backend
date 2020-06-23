@@ -3,7 +3,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import getLogger from './util/logger';
 
-const logger = getLogger();
+const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
 const mongooseOptions: mongoose.ConnectionOptions = {
   autoReconnect: true,
@@ -29,13 +29,9 @@ export class TestDBManager {
 
   async start(): Promise<void> {
     const mongoUri = await this.server.getConnectionString();
-    this.connection = await mongoose.connect(
-      mongoUri,
-      mongooseOptions,
-      (err) => {
-        if (err) logger.error(err);
-      }
-    );
+    this.connection = await mongoose.connect(mongoUri, mongooseOptions, (err) => {
+      if (err) logger.error(err);
+    });
   }
 
   async stop(): Promise<boolean> {
@@ -49,6 +45,6 @@ export default {
     mongoose
       .connect(`${process.env.MONGODB_CONNECT_STRING}`, mongooseOptions)
       .then(() => logger.info('MongoDB connected'))
-      .catch((err: any) => logger.error(err));
+      .catch((err: Error) => logger.error(err));
   },
 };

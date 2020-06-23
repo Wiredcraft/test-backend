@@ -1,4 +1,4 @@
-export const enum colors {
+export const enum Colors {
   Reset = '\x1b[0m',
   Bright = '\x1b[1m',
   Dim = '\x1b[2m',
@@ -21,16 +21,11 @@ export const enum colors {
   BgBlue = '\x1b[44m',
   BgMagenta = '\x1b[45m',
   BgCyan = '\x1b[46m',
-  BgWhite = '\x1b[47m'
+  BgWhite = '\x1b[47m',
 }
 
-export const enum path {
-  model = 'src/model',
-  image = 'src/image'
-}
-
-export const enum fileOptions {
+export const enum FileOptions {
   files = 1,
   dirs = 2,
-  all = 3
+  all = 3,
 }

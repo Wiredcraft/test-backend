@@ -1,14 +1,10 @@
 import { UserInterface } from '../models/user';
 
-interface ExtendedUser extends UserInterface {
-  id: string;
-}
-
 declare module 'express-serve-static-core' {
   interface Request {
-    user?: ExtendedUser;
+    user?: UserInterface & { id: string };
   }
   interface Response {
-    user?: ExtendedUser;
+    user?: UserInterface & { id: string };
   }
 }

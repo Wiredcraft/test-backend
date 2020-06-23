@@ -25,7 +25,7 @@ export enum RngOption {
  * @param {number} min lower limit of the generated number (optional, defaults to 0)
  * @returns {number|string} a random value that fulfills the above requirements
  */
-export default function rng<T extends RngOption>(
+export function Rng<T extends RngOption>(
   option: T,
   max: number,
   min = 0,

@@ -14,10 +14,10 @@ const importOne = async (path: string, property = 'default'): Promise<any> => {
 
 const importMany = async (pathList: string[], property = 'default'): Promise<any[]> => {
   try {
-    let items = null;
+    let items = [];
     if (pathList && pathList.length > 0) {
       items = await Promise.all(
-        pathList.map(async path => {
+        pathList.map(async (path) => {
           try {
             const imported = await import(path);
             logger.debug(`Imported module: ${path}`);
@@ -29,7 +29,7 @@ const importMany = async (pathList: string[], property = 'default'): Promise<any
         })
       );
     }
-    return items;
+    return items.filter((i) => i !== null);
   } catch (err) {
     logger.error(err);
     return [];
