@@ -43,7 +43,7 @@
     "passport": "0.4.1",
     "passport-jwt": "4.0.0",
     "passport-local": "1.0.0",
-    "tiny-lru": "^7.0.6"
+    "tiny-lru": "7.0.6"
   },
   "scripts": {
     "start": "yarn dev",
@@ -51,7 +51,7 @@
     "build": "tsc",
     "lint": "eslint . & echo 'lint complete'",
     "dev": "ts-node-dev --respawn --transpileOnly ./src/app.ts",
-    "prod": "tsc && node ./built/src/app.js",
+    "prod": "tsc && node ./built/app.js",
     "debug": "tsc && node --inspect ./built/app.js"
   }
 }

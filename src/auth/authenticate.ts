@@ -41,7 +41,7 @@ router.post(
       const newUser = new User({ name: username, role, hashedPassword });
       await newUser.save();
       logger.debug(`New user ${newUser.name} registered`);
-      res.status(200).send('register successful');
+      res.status(200).json({ message: 'register successful' });
     } catch (err) {
       logger.error(err);
       res.status(400);
@@ -82,10 +82,10 @@ router.post(
           );
         }
 
-        logger.debug(`Generated jwt toke: ${token}`);
+        logger.debug(`Generated jwt token: ${token}`);
         // store Jwt token in cookie */
         res.cookie('jwt', token, { httpOnly: true });
-        return res.status(200).send('login successful');
+        return res.status(200).json({ message: 'login successful' });
       });
 
       logger.debug(`User ${(<RequestUser>req.user).name} logged in`);
@@ -100,7 +100,7 @@ router.get('/logout', (req, res) => {
   if (req.user) {
     logger.debug(`User ${req.user.name} logged out`);
   }
-  res.status(200).send('logout successful');
+  res.status(200).json({ message: 'logout successful' });
 });
 
 export default router;

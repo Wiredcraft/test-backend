@@ -1,5 +1,7 @@
 module.exports = {
   someSidebar: {
-    Introduction: ['GetStarted'],
+    Introduction: ['Introduction', 'Environment'],
+    API: ['Authentication', 'Authorization', 'ErrorHandling'],
+    Model: ['Models', 'User', 'Access'],
   },
 };

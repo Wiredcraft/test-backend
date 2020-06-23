@@ -65,7 +65,7 @@ export const getCustomRouters = async (): Promise<Router[]> => {
           )
           .slice(0, quantity ?? 10)
           .map((u) => u.name);
-        res.json(nearbyUsers);
+        res.status(200).json(nearbyUsers);
       } else {
         res.status(204).end();
       }

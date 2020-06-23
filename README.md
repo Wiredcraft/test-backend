@@ -1,3 +1,65 @@
+# Getting Started
+
+Note: Only the basic instruction are covered here, refer to inner documentation for more information
+
+#### Requirements
+
+You need [mongodb](https://www.mongodb.com/download-center/community) & [nodejs](https://nodejs.org/en/download/) installed to run this application
+
+Before you run, install the dependencies using:
+
+```bash
+yarn
+```
+
+Add a `.env` file with content like:
+
+```env
+PORT=7777
+SECRET='SOME_RANDOM_STRING'
+JWT_EXPIRATION_MS=259200000
+MONGODB_CONNECT_STRING='mongodb://127.0.0.1:27017/test-backend'
+```
+
+#### Start the application
+
+```bash
+yarn start
+```
+
+#### Debug
+
+```bash
+yarn debug
+```
+
+#### Test
+
+```bash
+yarn test
+```
+
+#### Serve documentation
+
+Before you run, install the dependencies using:
+
+```bash
+yarn
+```
+
+Then:
+
+```bash
+cd docs && yarn start
+```
+
+use search in documentation
+
+```bash
+cd docs && yarn build
+npx http-server docs/build
+```
+
 # Wiredcraft Back-end Developer Test
 
 Make sure you read the whole document carefully and follow the guidelines in it.
@@ -23,31 +85,31 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 
 ### Functionality
 
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper unit test.
-- Provide proper API document.
+- [x] The API should follow typical RESTful API design pattern.
+- [x] The data should be saved in the DB.
+- [x] Provide proper unit test.
+- [x] Provide proper API document.
 
 ### Tech stack
 
-- Use Node.js and any framework.
-- Use any DB. NoSQL DB is preferred.
+- [x] Use Node.js and any framework.
+- [x] Use any DB. NoSQL DB is preferred.
 
 ### Bonus
 
-- Write clear documentation on how it's designed and how to run the code.
-- Write good in-code comments.
-- Write good commit messages.
-- An online demo is always welcome.
+- [x] Write clear documentation on how it's designed and how to run the code.
+- [ ] Write good in-code comments.
+- [ ] Write good commit messages.
+- [ ] An online demo is always welcome.
 
 ### Advanced requirements
 
 _These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out._
 
-- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
-- Provide a complete logging (when/how/etc.) strategy.
-- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
-- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
+- [x] Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
+- [x] Provide a complete logging (when/how/etc.) strategy.
+- [ ] Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
+- [x] Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
   - given a user name
   - return the nearby friends
 
@@ -57,9 +119,9 @@ Feel free to use any open-source library as you see fit, but remember that we ar
 
 Here's what you should aim for:
 
-- Good use of current Node.js & API design best practices.
-- Good testing approach.
-- Extensible code.
+- [ ] Good use of current Node.js & API design best practices.
+- [ ] Good testing approach.
+- [ ] Extensible code.
 
 ## FAQ
 

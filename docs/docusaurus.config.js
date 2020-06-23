@@ -33,19 +33,18 @@ module.exports = {
     },
     footer: {
       style: 'dark',
-      copyright: `Copyright © ${new Date().getFullYear()} Test Backend, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Test Backend. Built with Docusaurus.`,
     },
   },
+  plugins: [require.resolve('docusaurus-lunr-search')],
   presets: [
     [
       '@docusaurus/preset-classic',
       {
         docs: {
-          homePageId: 'GetStarted',
+          homePageId: 'Introduction',
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/llldar/test-backend/edit/master/',
+          editUrl: 'https://github.com/llldar/test-backend/edit/master/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
