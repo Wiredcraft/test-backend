@@ -11,7 +11,14 @@ export const errorHandler = (fn: (...args: any[]) => any) => async (
     await fn(...args);
   } catch (err) {
     logger.error(err.stack || err);
-    const resFn = args.find((arg) => arg.name === 'res');
+    // find if it's express function
+    let resFn;
+    if (args && args.length >= 2) {
+      if (typeof args[1] === 'object' && args[1].constructor.name === 'ServerResponse') {
+        [, resFn] = args;
+      }
+    }
+
     if (resFn) {
       let errors = {
         message: 'Internal Sever Error',
@@ -30,7 +37,6 @@ export const errorHandler = (fn: (...args: any[]) => any) => async (
           error: err,
         };
       }
-
       resFn.status(500).json(errors);
     }
   }
