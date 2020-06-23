@@ -13,6 +13,9 @@ import { getModel, getModelList } from '../util/modelScanner';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
+/**
+ * Generate REST pattern APIs from model
+ */
 export const getRestRouters = async (): Promise<Router[]> => {
   let restRouters: (Router | undefined)[] = [];
   try {

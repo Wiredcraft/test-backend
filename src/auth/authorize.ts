@@ -3,7 +3,7 @@ import { RequestUser } from 'customUser';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import passport from 'passport';
 
-import { AccessType } from '../models/access';
+import { AccessType, predefinedAccess } from '../models/access';
 import User, { Roles } from '../models/user';
 import { errorHandler } from '../util/errorHandler';
 import { getLogger } from '../util/logger';
@@ -19,8 +19,13 @@ export default (modelName: string, requiredAccess: AccessType): RequestHandler =
     let authorized = false;
 
     const Item = await getModel(modelName);
-    const modelAccess = Item.access;
+    let modelAccess = Item.access;
 
+    if (!modelAccess) {
+      // if no access is defined for this model
+      // only allow it to be modified by admin
+      modelAccess = predefinedAccess.adminOnly;
+    }
     // auth not needed
     if (modelAccess.everyone >= AccessType.readOnly) {
       next();

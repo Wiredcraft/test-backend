@@ -20,6 +20,7 @@
     "eslint-plugin-import": "2.21.2",
     "eslint-plugin-jest": "23.13.2",
     "eslint-plugin-prettier": "3.1.3",
+    "eslint-plugin-no-null": "^1.0.2",
     "jest": "26.0.1",
     "prettier": "2.0.5",
     "supertest": "4.0.2",
@@ -33,9 +34,9 @@
     "body-parser": "1.19.0",
     "cookie-parser": "1.4.5",
     "dotenv": "8.2.0",
-    "eslint-plugin-no-null": "^1.0.2",
     "express": "4.17.1",
     "express-validator": "6.5.0",
+    "geolib": "3.3.1",
     "jsonwebtoken": "8.5.1",
     "mongodb-memory-server": "6.6.1",
     "mongoose": "5.9.18",
@@ -51,6 +52,6 @@
     "lint": "eslint . & echo 'lint complete'",
     "dev": "ts-node-dev --respawn --transpileOnly ./src/app.ts",
     "prod": "tsc && node ./built/src/app.js",
-    "debug": "tsc && node --inspect ./built/src/app.js"
+    "debug": "tsc && node --inspect ./built/app.js"
   }
 }

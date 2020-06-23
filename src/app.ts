@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import passport from 'passport';
 
+import { getCustomRouters } from './apiBuilders/custom';
 import { getRestRouters } from './apiBuilders/rest';
 import authenticate from './auth/authenticate';
 import initPassport from './auth/passport';
@@ -43,6 +44,16 @@ app.disable('x-powered-by');
   }
 })();
 
+// Attach custom routers
+(async () => {
+  const customRouters = await getCustomRouters();
+  if (customRouters && customRouters.length > 0) {
+    customRouters.forEach((router) => {
+      app.use('/', router);
+    });
+  }
+})();
+
 // Index page message
 app.get('/', (req, res) => {
   res.send('REST API server');
@@ -50,20 +61,19 @@ app.get('/', (req, res) => {
 
 // User authentication
 app.use(authenticate);
+
 // Database
 db.connect();
 
 // Listen
-if (process.env.NODE_ENV !== 'test') {
-  app
-    .listen(process.env.PORT || 8000)
-    .on('listening', () => {
-      logger.info(`REST API server is listening on port ${process.env.PORT || 8000}`);
-      logger.info(`You can access it by http://localhost:${process.env.PORT || 8000}`);
-    })
-    .on('error', (err) => {
-      logger.error(err);
-    });
-}
+app
+  .listen(process.env.PORT || 8000)
+  .on('listening', () => {
+    logger.info(`REST API server is listening on port ${process.env.PORT || 8000}`);
+    logger.info(`You can access it by http://localhost:${process.env.PORT || 8000}`);
+  })
+  .on('error', (err) => {
+    logger.error(err);
+  });
 
 export default app;

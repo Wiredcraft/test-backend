@@ -1,4 +1,4 @@
-import { FileOptions } from './consts';
+import { FileOptions, Path } from './consts';
 import { ListDir } from './fileHelper';
 import { importMany, importOne } from './importHelper';
 import { getLogger } from './logger';
@@ -11,7 +11,7 @@ const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 export const getModelList = async (): Promise<string[]> => {
   let result: string[] = [];
   try {
-    const models = await ListDir(`${__dirname}/../models`, FileOptions.files);
+    const models = await ListDir(`./src/${Path.model}/`, FileOptions.files);
     // remove file extension
     result = models.map((model: string) => model.slice(0, -3));
     logger.debug(`Scanned models: ${models}`);
@@ -26,12 +26,12 @@ export const getModelList = async (): Promise<string[]> => {
  */
 export const getModels = async (): Promise<any> => {
   const models = await getModelList();
-  return importMany(models.map((modelName) => `${__dirname}/../models/${modelName}`));
+  return importMany(models.map((modelName) => `../${Path.model}/${modelName}`));
 };
 
 /**
  * Find a import a specific model
  */
 export const getModel = async (modelName: string): Promise<any> => {
-  return importOne(`${__dirname}/../models/${modelName}`);
+  return importOne(`../${Path.model}/${modelName}`);
 };

@@ -63,7 +63,7 @@ router.post(
 
       // Content of the Jwt
       const payload = {
-        username: user.username,
+        name: user.name,
         expires: Date.now() + parseInt(process.env.JWT_EXPIRATION_MS || '259200000', 10),
       };
 
