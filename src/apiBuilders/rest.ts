@@ -1,26 +1,26 @@
 import express, { Request, Response, Router } from 'express';
-import mongoose from 'mongoose';
 import { param } from 'express-validator';
-import validate from '../util/apiValidator';
+import mongoose from 'mongoose';
+
 import authorize from '../auth/authorize';
-import getLogger from '../util/logger';
-import getModelList from '../util/modelScanner';
-import asyncHandler from '../util/errorHandler';
-import { Roles } from '../models/user';
-import builder from '../modelBuilders/mongooseBuilder';
 import { AccessType } from '../models/access';
+import { Roles } from '../models/user';
+import validate from '../util/apiValidator';
+import { errorHandler } from '../util/errorHandler';
+import { getLogger } from '../util/logger';
+import { getModel, getModelList } from '../util/modelScanner';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
-const getRestRouters = async (): Promise<Router[]> => {
-  let restRouters: (Router | null)[] = [];
+export const getRestRouters = async (): Promise<Router[]> => {
+  let restRouters: (Router | undefined)[] = [];
   try {
     // Import the models
     const modelList = await getModelList();
     restRouters = await Promise.all(
       modelList.map(async (modelName) => {
-        const Model = await builder.getModel(modelName);
-        let router = null;
+        const Model = await getModel(modelName);
+        let router;
         if (Model) {
           router = express.Router();
 
@@ -28,7 +28,7 @@ const getRestRouters = async (): Promise<Router[]> => {
             .route(`/${modelName}`)
             .get(
               authorize(modelName, AccessType.readOnly),
-              asyncHandler(async (req: Request, res: Response) => {
+              errorHandler(async (req: Request, res: Response) => {
                 const allModels = await Model.find({});
                 if (allModels) {
                   res.send(allModels);
@@ -39,7 +39,7 @@ const getRestRouters = async (): Promise<Router[]> => {
             )
             .post(
               authorize(modelName, AccessType.fullAccess),
-              asyncHandler(async (req: Request, res: Response) => {
+              errorHandler(async (req: Request, res: Response) => {
                 if (req.body.owner) {
                   // only admin can set different owner
                   if (req.user?.role !== Roles.admin) {
@@ -56,7 +56,7 @@ const getRestRouters = async (): Promise<Router[]> => {
             )
             .put(
               authorize(modelName, AccessType.fullAccess),
-              asyncHandler(async (req: Request, res: Response) => {
+              errorHandler(async (req: Request, res: Response) => {
                 const allModels = req.body as mongoose.Document[];
                 const bulkOperation = Model.collection.initializeUnorderedBulkOp();
                 allModels.forEach((model) => {
@@ -75,7 +75,7 @@ const getRestRouters = async (): Promise<Router[]> => {
             })
             .delete(
               authorize(modelName, AccessType.fullAccess),
-              asyncHandler(async (req: Request, res: Response) => {
+              errorHandler(async (req: Request, res: Response) => {
                 await Model.deleteMany({});
                 res.status(204).end();
               })
@@ -92,7 +92,7 @@ const getRestRouters = async (): Promise<Router[]> => {
             )
             .get(
               authorize(modelName, AccessType.readOnly),
-              asyncHandler(async (req: Request, res: Response) => {
+              errorHandler(async (req: Request, res: Response) => {
                 const model = await Model.findOne({
                   _id: req.params[`${modelName}Id`],
                 });
@@ -105,7 +105,7 @@ const getRestRouters = async (): Promise<Router[]> => {
             )
             .put(
               authorize(modelName, AccessType.fullAccess),
-              asyncHandler(async (req: Request, res: Response) => {
+              errorHandler(async (req: Request, res: Response) => {
                 if (req.body.owner) {
                   // only admin can set different owner
                   if (req.user?.role !== Roles.admin) {
@@ -121,7 +121,7 @@ const getRestRouters = async (): Promise<Router[]> => {
             )
             .patch(
               authorize(modelName, AccessType.fullAccess),
-              asyncHandler(async (req: Request, res: Response) => {
+              errorHandler(async (req: Request, res: Response) => {
                 if (req.user?.role !== Roles.admin) {
                   // only admin can change ownership
                   if (Object.prototype.hasOwnProperty.call(req.body, 'owner')) {
@@ -137,7 +137,7 @@ const getRestRouters = async (): Promise<Router[]> => {
             )
             .delete(
               authorize(modelName, AccessType.fullAccess),
-              asyncHandler(async (req: Request, res: Response) => {
+              errorHandler(async (req: Request, res: Response) => {
                 await Model.findByIdAndRemove(req.params[`${modelName}Id`]);
                 res.status(204).end();
               })
@@ -151,8 +151,6 @@ const getRestRouters = async (): Promise<Router[]> => {
   } catch (err) {
     logger.error(err);
   }
-  // prevent null from hitting the list;
-  return restRouters.filter((router): router is Router => router !== null);
+  // prevent undefined from hitting the list;
+  return restRouters.filter((router): router is Router => router !== undefined);
 };
-
-export default getRestRouters;

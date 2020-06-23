@@ -1,9 +1,12 @@
 import mongoose from 'mongoose';
-import getLogger from './logger';
+
+import { getLogger } from './logger';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
-const errorHandler = (fn: (...args: any[]) => any) => async (...args: any[]): Promise<any> => {
+export const errorHandler = (fn: (...args: any[]) => any) => async (
+  ...args: any[]
+): Promise<any> => {
   try {
     await fn(...args);
   } catch (err) {
@@ -32,5 +35,3 @@ const errorHandler = (fn: (...args: any[]) => any) => async (...args: any[]): Pr
     }
   }
 };
-
-export default errorHandler;

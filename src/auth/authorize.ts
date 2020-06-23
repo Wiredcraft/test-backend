@@ -1,18 +1,18 @@
 /* eslint-disable no-underscore-dangle */
-import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import passport from 'passport';
-import getLogger from '../util/logger';
-import asyncHandler from '../util/errorHandler';
-import { getModelList } from '../util/modelScanner';
-import importHelper from '../util/importHelper';
 
 import { AccessInterface, AccessType } from '../models/access';
-import User, { roles } from '../models/user';
+import User, { Roles } from '../models/user';
+import { errorHandler } from '../util/errorHandler';
+import { importHelper } from '../util/importHelper';
+import { getLogger } from '../util/logger';
+import { getModelList } from '../util/modelScanner';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
 export default (modelName: string, requiredAccess: AccessType): RequestHandler =>
-  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  errorHandler(async (req: Request, res: Response, next: NextFunction) => {
     logger.info('Authorize begin');
     logger.info(`required access ${requiredAccess}`);
     let statusCode = 403;

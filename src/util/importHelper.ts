@@ -1,18 +1,18 @@
-import getLogger from './logger';
+import { getLogger } from './logger';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
-const importOne = async (path: string, property = 'default'): Promise<any> => {
-  let module = null;
+export const importOne = async (path: string, property = 'default'): Promise<unknown> => {
+  let module;
   try {
     module = await import(path);
   } catch (err) {
     logger.error(err);
   }
-  return module ? module[property] : null;
+  return module ? module[property] : undefined;
 };
 
-const importMany = async (pathList: string[], property = 'default'): Promise<any[]> => {
+export const importMany = async (pathList: string[], property = 'default'): Promise<unknown[]> => {
   try {
     let items = [];
     if (pathList && pathList.length > 0) {
@@ -24,16 +24,14 @@ const importMany = async (pathList: string[], property = 'default'): Promise<any
             return imported[property];
           } catch (err) {
             logger.warn(`Failed to import: ${path}`);
-            return null;
+            return undefined;
           }
         })
       );
     }
-    return items.filter((i) => i !== null);
+    return items.filter((i) => i);
   } catch (err) {
     logger.error(err);
     return [];
   }
 };
-
-export default { importOne, importMany };

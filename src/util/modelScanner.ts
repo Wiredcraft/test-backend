@@ -1,6 +1,7 @@
-import getLogger from './logger';
-import { ListDir } from './fileHelper';
 import { FileOptions } from './consts';
+import { ListDir } from './fileHelper';
+import { importMany, importOne } from './importHelper';
+import { getLogger } from './logger';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
@@ -18,4 +19,19 @@ export const getModelList = async (): Promise<string[]> => {
     logger.error(err);
   }
   return result;
+};
+
+/**
+ * Scan the model path and return a list of models
+ */
+export const getModels = async (): Promise<any> => {
+  const models = await getModelList();
+  return importMany(models);
+};
+
+/**
+ * Find a import a specific model
+ */
+export const getModel = async (modelName: string): Promise<any> => {
+  return importOne(`../model/${modelName}`);
 };

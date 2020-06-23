@@ -1,12 +1,13 @@
-import express, { Request, Response } from 'express';
-import passport from 'passport';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
-import asyncHandler from '../util/errorHandler';
-import validate from '../util/apiValidator';
+import jwt from 'jsonwebtoken';
+import passport from 'passport';
+
 import User, { Roles } from '../models/user';
-import getLogger from '../util/logger';
+import validate from '../util/apiValidator';
+import { errorHandler } from '../util/errorHandler';
+import { getLogger } from '../util/logger';
 
 const router = express.Router();
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
@@ -25,7 +26,7 @@ router.post(
       }),
     body('password').exists().withMessage('password required'),
   ]),
-  asyncHandler(async (req: Request, res: Response) => {
+  errorHandler(async (req: Request, res: Response) => {
     const { username, password } = req.body;
     const hashCost = 10;
     try {
@@ -87,7 +88,7 @@ router.post(
       });
 
       logger.debug(`User ${req.user?.name} logged in`);
-      return null;
+      return undefined;
     })(req, res);
   }
 );

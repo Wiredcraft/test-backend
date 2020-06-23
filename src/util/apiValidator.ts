@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { validationResult, ValidationChain } from 'express-validator';
+import { ValidationChain, validationResult } from 'express-validator';
 
 const validate = (validations: ValidationChain[]) => async (
   req: Request,

@@ -16,7 +16,7 @@ export const enum LogLevel {
 /**
  * Custom Logger
  */
-class Logger {
+class Logger<T> {
   private componentName: string;
 
   /**
@@ -30,7 +30,7 @@ class Logger {
   /**
    * private internal log function
    */
-  private static log(level: LogLevel, componentName: string, message: any): void {
+  private static log<T>(level: LogLevel, componentName: string, message: T): void {
     const time = new Date();
     let color = Colors.FgWhite;
     switch (level) {
@@ -51,35 +51,31 @@ class Logger {
         break;
     }
     console.log(
-      `${time.toISOString()} - ${color}[${level}][${componentName}]${message}${Colors.Reset}`
+      `${time.toISOString()} - ${color}[${level}][${componentName}]${
+        typeof message === 'object' ? JSON.stringify(message) : message
+      }${Colors.Reset}`
     );
   }
 
-  static raw(message: any): void {
-    if (typeof message === 'object') {
-      console.log(JSON.stringify(message));
-    } else {
-      console.log(message);
-    }
+  static raw<T>(message: T): void {
+    console.log(typeof message === 'object' ? JSON.stringify(message) : message);
   }
 
-  info(message: any): void {
+  info(message: T): void {
     Logger.log(LogLevel.Info, this.componentName, message);
   }
 
-  error(message: any): void {
+  error(message: T): void {
     Logger.log(LogLevel.Error, this.componentName, message);
   }
 
-  debug(message: any): void {
+  debug(message: T): void {
     Logger.log(LogLevel.Debug, this.componentName, message);
   }
 
-  warn(message: any): void {
+  warn(message: T): void {
     Logger.log(LogLevel.Warn, this.componentName, message);
   }
 }
 
-const getLogger = (componentName: string): Logger => new Logger(componentName);
-
-export default getLogger;
+export const getLogger = <T>(componentName: string): Logger<T> => new Logger<T>(componentName);

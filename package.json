@@ -33,6 +33,7 @@
     "body-parser": "1.19.0",
     "cookie-parser": "1.4.5",
     "dotenv": "8.2.0",
+    "eslint-plugin-no-null": "^1.0.2",
     "express": "4.17.1",
     "express-validator": "6.5.0",
     "jsonwebtoken": "8.5.1",
@@ -40,10 +41,11 @@
     "mongoose": "5.9.18",
     "passport": "0.4.1",
     "passport-jwt": "4.0.0",
-    "passport-local": "1.0.0"
+    "passport-local": "1.0.0",
+    "tiny-lru": "^7.0.6"
   },
   "scripts": {
-    "start": "npm run dev",
+    "start": "yarn start",
     "test": "jest --forceExit",
     "build": "tsc",
     "lint": "eslint . & echo 'lint complete'",

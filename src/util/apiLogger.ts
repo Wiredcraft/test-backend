@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
-import getLogger from './logger';
 import { Colors } from './consts';
+import { getLogger } from './logger';
 
 const logger = getLogger('api');
 

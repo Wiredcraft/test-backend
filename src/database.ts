@@ -1,7 +1,9 @@
 import 'dotenv/config';
+
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
-import getLogger from './util/logger';
+
+import { getLogger } from './util/logger';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
@@ -20,11 +22,11 @@ const mongooseOptions: mongoose.ConnectionOptions = {
 export class TestDBManager {
   server: MongoMemoryServer;
 
-  connection: typeof mongoose | null;
+  connection: typeof mongoose | undefined;
 
   constructor() {
     this.server = new MongoMemoryServer();
-    this.connection = null;
+    this.connection = undefined;
   }
 
   async start(): Promise<void> {

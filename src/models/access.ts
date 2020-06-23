@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from 'mongoose';
+import mongoose, { model, Schema } from 'mongoose';
 
 export enum AccessType {
   noAccess = 'noAccess',

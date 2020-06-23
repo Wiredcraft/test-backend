@@ -1,14 +1,16 @@
-import express from 'express';
-import { urlencoded, json } from 'body-parser';
-import cookieParser from 'cookie-parser';
 import 'dotenv/config';
+
+import { json, urlencoded } from 'body-parser';
+import cookieParser from 'cookie-parser';
+import express from 'express';
 import passport from 'passport';
-import getLogger from './util/logger';
-import apiLogger from './util/apiLogger';
-import db from './database';
-import getRestRouters from './apiBuilders/rest';
-import initPassport from './auth/passport';
+
+import { getRestRouters } from './apiBuilders/rest';
 import authenticate from './auth/authenticate';
+import initPassport from './auth/passport';
+import db from './database';
+import apiLogger from './util/apiLogger';
+import { getLogger } from './util/logger';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 const app = express();

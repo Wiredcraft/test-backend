@@ -1,6 +1,6 @@
 import request from 'supertest';
-import app from '../app';
 
+import app from '../app';
 import { TestDBManager } from '../database';
 
 const testDB = new TestDBManager();
