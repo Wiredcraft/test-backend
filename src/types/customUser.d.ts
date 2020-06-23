@@ -1,10 +1,11 @@
 import { UserInterface } from '../models/user';
 
+export type RequestUser = UserInterface & { id: string };
 declare module 'express-serve-static-core' {
   interface Request {
-    user?: UserInterface & { id: string };
+    user?: RequestUser;
   }
   interface Response {
-    user?: UserInterface & { id: string };
+    user?: RequestUser;
   }
 }

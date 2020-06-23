@@ -8,9 +8,6 @@ import { getLogger } from './util/logger';
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
 const mongooseOptions: mongoose.ConnectionOptions = {
-  autoReconnect: true,
-  reconnectTries: Number.MAX_VALUE,
-  reconnectInterval: 1000,
   connectTimeoutMS: 30000,
   keepAlive: true,
   useNewUrlParser: true,

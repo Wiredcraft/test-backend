@@ -40,7 +40,7 @@ export default (pass: passport.PassportStatic): void => {
     new LocalStrategy(
       async (username, password, done): Promise<void> => {
         try {
-          const user = await User.findOne({ username });
+          const user = await User.findOne({ name: username });
           let passwordsMatch;
           if (user) {
             passwordsMatch = await bcrypt.compare(password, user.hashedPassword);

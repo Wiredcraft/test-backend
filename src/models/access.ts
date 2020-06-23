@@ -1,9 +1,9 @@
 import mongoose, { model, Schema } from 'mongoose';
 
 export enum AccessType {
-  noAccess = 'noAccess',
-  readOnly = 'readOnly',
-  fullAccess = 'fullAccess',
+  noAccess = 0,
+  readOnly = 1,
+  fullAccess = 2,
 }
 
 /**
@@ -26,16 +26,16 @@ export const predefinedAccess = {
     user: AccessType.readOnly,
     operator: AccessType.fullAccess,
     self: AccessType.fullAccess,
-  } as AccessInterface,
+  },
   /**
-   * Only authed user can read, operator and owner have full access
+   * Only authenticated user can read, operator and owner have full access
    */
   userOnly: {
     everyone: AccessType.noAccess,
     user: AccessType.readOnly,
     operator: AccessType.fullAccess,
     self: AccessType.fullAccess,
-  } as AccessInterface,
+  },
   /**
    * Operator and owner have full access
    */
@@ -44,7 +44,7 @@ export const predefinedAccess = {
     user: AccessType.noAccess,
     operator: AccessType.fullAccess,
     self: AccessType.fullAccess,
-  } as AccessInterface,
+  },
   /**
    * Operator can read and only owner have full access
    */
@@ -53,7 +53,7 @@ export const predefinedAccess = {
     user: AccessType.noAccess,
     operator: AccessType.readOnly,
     self: AccessType.fullAccess,
-  } as AccessInterface,
+  },
   /**
    * Only owner have full access
    */
@@ -62,7 +62,7 @@ export const predefinedAccess = {
     user: AccessType.noAccess,
     operator: AccessType.noAccess,
     self: AccessType.fullAccess,
-  } as AccessInterface,
+  },
   /**
    * Only admin have full access
    */
@@ -71,7 +71,7 @@ export const predefinedAccess = {
     user: AccessType.noAccess,
     operator: AccessType.noAccess,
     self: AccessType.noAccess,
-  } as AccessInterface,
+  },
 };
 
 const accessSchema = new Schema(

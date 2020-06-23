@@ -23,7 +23,7 @@ app.use(passport.initialize());
 app.use(apiLogger);
 
 // Application wide error handling
-app.use((err: any) => {
+app.use((req: any, res: any, next: any, err: any) => {
   logger.error(err);
 });
 
@@ -54,13 +54,16 @@ app.use(authenticate);
 db.connect();
 
 // Listen
-app
-  .listen(process.env.PORT || 8000)
-  .on('listening', () => {
-    logger.info(`REST API server is listening on port ${process.env.PORT || 8000}`);
-  })
-  .on('error', (err) => {
-    logger.error(err);
-  });
+if (process.env.NODE_ENV !== 'test') {
+  app
+    .listen(process.env.PORT || 8000)
+    .on('listening', () => {
+      logger.info(`REST API server is listening on port ${process.env.PORT || 8000}`);
+      logger.info(`You can access it by http://localhost:${process.env.PORT || 8000}`);
+    })
+    .on('error', (err) => {
+      logger.error(err);
+    });
+}
 
 export default app;

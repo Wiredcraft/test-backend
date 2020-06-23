@@ -45,7 +45,7 @@
     "tiny-lru": "^7.0.6"
   },
   "scripts": {
-    "start": "yarn start",
+    "start": "yarn dev",
     "test": "jest --forceExit",
     "build": "tsc",
     "lint": "eslint . & echo 'lint complete'",

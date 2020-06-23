@@ -1,40 +1,34 @@
 /* eslint-disable no-underscore-dangle */
+import { RequestUser } from 'customUser';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import passport from 'passport';
 
-import { AccessInterface, AccessType } from '../models/access';
+import { AccessType } from '../models/access';
 import User, { Roles } from '../models/user';
 import { errorHandler } from '../util/errorHandler';
-import { importHelper } from '../util/importHelper';
 import { getLogger } from '../util/logger';
-import { getModelList } from '../util/modelScanner';
+import { getModel } from '../util/modelScanner';
 
 const logger = getLogger(__filename.slice(__dirname.length + 1, -3));
 
 export default (modelName: string, requiredAccess: AccessType): RequestHandler =>
   errorHandler(async (req: Request, res: Response, next: NextFunction) => {
-    logger.info('Authorize begin');
-    logger.info(`required access ${requiredAccess}`);
+    logger.debug('Authorize begin');
+    logger.debug(`required access ${requiredAccess}`);
     let statusCode = 403;
     let authorized = false;
 
-    const accessMap: { [key in AccessType]: number } = {
-      [AccessType.noAccess]: 0,
-      [AccessType.readOnly]: 1,
-      [AccessType.fullAccess]: 2,
-    };
-
-    const Item = await builder.getModel(modelName);
-    const modelAccess = builder.acl[modelName];
+    const Item = await getModel(modelName);
+    const modelAccess = Item.access;
 
     // auth not needed
-    if (accessMap[modelAccess.everyone] >= accessMap[AccessType.readOnly]) {
+    if (modelAccess.everyone >= AccessType.readOnly) {
       next();
       authorized = true;
     } else {
       // jwt auth
       try {
-        await new Promise<void>((resolve): void => {
+        await new Promise((resolve): void => {
           passport.authenticate('jwt', { session: false })(req, res, resolve);
         });
       } catch (err) {
@@ -42,55 +36,45 @@ export default (modelName: string, requiredAccess: AccessType): RequestHandler =
       }
 
       // current logged in user
-      const authUser = await User.findOne({ username: req.user?.name });
+      const currentUser = await User.findOne({ name: (<RequestUser>req.user).name });
 
-      if (authUser) {
+      if (currentUser) {
         // setup user for next middleware use
-        req.user.id = authUser._id;
-        req.user.role = authUser.role;
+        (<RequestUser>req.user).id = currentUser._id;
+        (<RequestUser>req.user).role = currentUser.role;
 
         // admin will always have access
-        if (authUser.role === roles.admin) {
+        if (currentUser.role === Roles.admin) {
           next();
           authorized = true;
         }
 
         // operator
-        if (
-          authUser.role === roles.operator &&
-          accessMap[modelAccess.operator] >= accessMap[requiredAccess]
-        ) {
+        if (currentUser.role === Roles.operator && modelAccess.operator >= requiredAccess) {
           next();
           authorized = true;
         }
 
         // everyone
-        if (
-          authUser.role === roles.user &&
-          accessMap[modelAccess.user] >= accessMap[requiredAccess]
-        ) {
+        if (currentUser.role === Roles.user && modelAccess.user >= requiredAccess) {
           next();
           authorized = true;
         }
 
         // self
-        if (
-          authUser.role === roles.user &&
-          !authorized &&
-          accessMap[modelAccess.self] >= accessMap[requiredAccess]
-        ) {
+        if (currentUser.role === Roles.user && !authorized && modelAccess.self >= requiredAccess) {
           // ownership checking
           if (req.params && req.params[`${modelName}Id`]) {
             const itemId = req.params[`${modelName}Id`];
             const item = await Item.findOne({ _id: itemId });
-            if (item && item.owner && item.owner === authUser.id) {
+            if (item && item.owner && item.owner === currentUser.id) {
               next();
               authorized = true;
             }
           }
         }
       } else {
-        // not authed
+        // not authenticated
         statusCode = 401;
       }
     }

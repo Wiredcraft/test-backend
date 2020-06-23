@@ -51,9 +51,7 @@ class Logger<T> {
         break;
     }
     console.log(
-      `${time.toISOString()} - ${color}[${level}][${componentName}]${
-        typeof message === 'object' ? JSON.stringify(message) : message
-      }${Colors.Reset}`
+      `${time.toISOString()} - ${color}[${level}][${componentName}]${message}${Colors.Reset}`
     );
   }
 

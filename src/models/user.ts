@@ -1,4 +1,6 @@
-import mongoose, { Schema, model } from 'mongoose';
+import mongoose, { model, Schema } from 'mongoose';
+
+import { AccessInterface } from './access';
 
 export enum Roles {
   admin = 'admin',
@@ -21,6 +23,8 @@ export enum Roles {
 export const userSchema = new Schema(
   {
     name: {
+      unique: true,
+      index: true,
       type: String,
     },
     dob: {
@@ -32,6 +36,14 @@ export const userSchema = new Schema(
     description: {
       type: String,
     },
+    following: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    followers: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
     latitude: {
       type: Number,
     },
@@ -42,6 +54,9 @@ export const userSchema = new Schema(
       required: true,
       type: String,
       enum: Object.values(Roles),
+    },
+    access: {
+      type: Schema.Types.Mixed,
     },
     hashedPassword: {
       required: true,
@@ -56,6 +71,7 @@ export const userSchema = new Schema(
 
 export interface UserInterface {
   name: string;
+  access: AccessInterface;
   dob: Date;
   address: string;
   description: string;

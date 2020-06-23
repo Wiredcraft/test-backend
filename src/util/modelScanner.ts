@@ -26,12 +26,12 @@ export const getModelList = async (): Promise<string[]> => {
  */
 export const getModels = async (): Promise<any> => {
   const models = await getModelList();
-  return importMany(models);
+  return importMany(models.map((modelName) => `${__dirname}/../models/${modelName}`));
 };
 
 /**
  * Find a import a specific model
  */
 export const getModel = async (modelName: string): Promise<any> => {
-  return importOne(`../model/${modelName}`);
+  return importOne(`${__dirname}/../models/${modelName}`);
 };

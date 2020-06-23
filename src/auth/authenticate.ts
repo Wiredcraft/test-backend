@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { RequestUser } from 'customUser';
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
@@ -19,7 +20,7 @@ router.post(
       .exists()
       .withMessage('username required')
       .custom(async (username) => {
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ name: username });
         if (user) {
           throw Error('username already taken');
         }
@@ -87,7 +88,7 @@ router.post(
         return res.status(200).send('login successful');
       });
 
-      logger.debug(`User ${req.user?.name} logged in`);
+      logger.debug(`User ${(<RequestUser>req.user).name} logged in`);
       return undefined;
     })(req, res);
   }

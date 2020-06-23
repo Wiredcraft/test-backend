@@ -1,3 +1,4 @@
+import { RequestUser } from 'customUser';
 import express, { Request, Response, Router } from 'express';
 import { param } from 'express-validator';
 import mongoose from 'mongoose';
@@ -42,11 +43,11 @@ export const getRestRouters = async (): Promise<Router[]> => {
               errorHandler(async (req: Request, res: Response) => {
                 if (req.body.owner) {
                   // only admin can set different owner
-                  if (req.user?.role !== Roles.admin) {
-                    req.body.owner = req.user?.id;
+                  if ((<RequestUser>req.user).role !== Roles.admin) {
+                    req.body.owner = (<RequestUser>req.user).id;
                   }
                 } else {
-                  req.body.owner = req.user?.id;
+                  req.body.owner = (<RequestUser>req.user).id;
                 }
 
                 const model = await new Model(req.body).save();
@@ -108,11 +109,11 @@ export const getRestRouters = async (): Promise<Router[]> => {
               errorHandler(async (req: Request, res: Response) => {
                 if (req.body.owner) {
                   // only admin can set different owner
-                  if (req.user?.role !== Roles.admin) {
-                    req.body.owner = req.user?.id;
+                  if ((<RequestUser>req.user).role !== Roles.admin) {
+                    req.body.owner = (<RequestUser>req.user).id;
                   }
                 } else {
-                  req.body.owner = req.user?.id;
+                  req.body.owner = (<RequestUser>req.user).id;
                 }
                 const model = await Model.findByIdAndUpdate(req.params[`${modelName}Id`], req.body);
                 model.save();
@@ -122,7 +123,7 @@ export const getRestRouters = async (): Promise<Router[]> => {
             .patch(
               authorize(modelName, AccessType.fullAccess),
               errorHandler(async (req: Request, res: Response) => {
-                if (req.user?.role !== Roles.admin) {
+                if ((<RequestUser>req.user).role !== Roles.admin) {
                   // only admin can change ownership
                   if (Object.prototype.hasOwnProperty.call(req.body, 'owner')) {
                     delete req.body.owner;

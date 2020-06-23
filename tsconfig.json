@@ -5,9 +5,9 @@
     "allowJs": false,
     "strict": true,
     "moduleResolution": "node",
-    "lib": ["esnext"],
+    "lib": ["es2018"],
     "module": "commonjs",
-    "target": "esnext",
+    "target": "es2018",
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*", "src/types/*"]

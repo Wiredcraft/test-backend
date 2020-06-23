@@ -10,7 +10,7 @@ export const errorHandler = (fn: (...args: any[]) => any) => async (
   try {
     await fn(...args);
   } catch (err) {
-    logger.error(err);
+    logger.error(err.stack || err);
     const resFn = args.find((arg) => arg.name === 'res');
     if (resFn) {
       let errors = {
