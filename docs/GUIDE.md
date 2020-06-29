@@ -20,11 +20,13 @@ For testing, and development purpose, you can follow these instructions to build
 
 ### Steps
 1. Run `make env` in the project root to set the default environment variables to .env
-2. Run `yarn install` in the project root to install dependencies
-2. Run `yarn start` to start the application on PORT 3333 by default.
-3. (Alternatively) Run `yarn test` to run Unit tests, `yarn test:e2e` to run end to end tests and `yarn test:cov` to run Unit tests with a coverage report.
-4. Once the application is running, you may use various `*.rest` files to send requests to the application
-5. Note: The `.rest` files have the port hard coded, if you changed the port, you must change these to reflect those changes
+2. Modify the `.env` file to use `localhost` as mongodb host instead of `database`. Eg: Change `mongodb://database:27017/test-backend` to `mongodb:127.0.0.1:27017/test-backend` and same for the testing URL
+3. Run `yarn install` in the project root to install dependencies
+4. Run `yarn start` to start the application on PORT 3333 by default.
+5. Visit [localhost:3333/api/docs](http://localhost:3333/api/docs) to view the API docs.
+6. (Alternatively) Run `yarn test` to run Unit tests, `yarn test:e2e` to run end to end tests and `yarn test:cov` to run Unit tests with a coverage report.
+7. Once the application is running, you may use various `*.rest` files to send requests to the application
+8. Note: The `.rest` files have the port hard coded, if you changed the port, you must change these to reflect those changes
 
 ## Deployment
 To deploy this service or to run it as a closed unit, a Dockerfile with a related docker-compose file is attached.
