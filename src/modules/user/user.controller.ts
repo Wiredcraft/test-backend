@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Logger, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Logger, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "../shared/guards/jwt-auth.guard";
 import { ValidateObjectIdPipe } from "../shared/pipes/validate-object-id.pipe";
 import { CreateUserRequest } from "./dtos/requests/create-user.request";
 import { UpdateUserRequest } from "./dtos/requests/update-user.request";
@@ -7,6 +8,7 @@ import { UserService } from "./user.service";
 
 
 @Controller( "users" )
+@UseGuards( JwtAuthGuard )
 export class UserController {
 
 	constructor( private readonly userService: UserService, @Inject( Logger ) private readonly logger: Logger ) {

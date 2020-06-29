@@ -42,4 +42,8 @@ describe( "ConfigService", () => {
 	it( "should register an app name", () => {
 		expect( configService.mongoTestingUri ).toContain( "mongodb" );
 	} );
+
+	it( "should register a jwt key", () => {
+		expect( configService.jwtKey ).toBeTruthy();
+	} );
 } );

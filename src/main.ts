@@ -5,7 +5,6 @@ import { WinstonModule } from "nest-winston";
 import { AppModule } from "./app.module";
 import LogConfig from "./config/log.config";
 import RateLimitConfig from "./config/rate-limit.config";
-import { GlobalErrorFilter } from "./modules/shared/filters/global-error.filter";
 
 async function bootstrap() {
 	const app = await NestFactory.create( AppModule, {
@@ -21,7 +20,6 @@ async function bootstrap() {
 	app.use( helmet() ); // Setups up common http security measures
 	app.use( RateLimitConfig() ); // Sets rate limiter from defined configuration
 
-	app.useGlobalFilters( new GlobalErrorFilter() );
 	await app.listen( app.get( "ConfigService" ).appPort );
 
 }

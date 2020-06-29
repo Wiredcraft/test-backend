@@ -1,4 +1,4 @@
-import { IsISO8601, IsNotEmpty, IsString } from "class-validator";
+import { IsDateString, IsEmail, IsISO8601, IsNotEmpty, IsString } from "class-validator";
 
 
 export class CreateUserRequest {
@@ -16,7 +16,11 @@ export class CreateUserRequest {
 	description: string;
 
 	@IsNotEmpty()
-	@IsISO8601()
+	@IsDateString()
 	dob: Date;
+
+	@IsEmail()
+	@IsNotEmpty()
+	email: string;
 
 }

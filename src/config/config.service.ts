@@ -24,7 +24,8 @@ export class ConfigService {
 			NODE_ENV: Joi.string().valid( "test", "development", "staging", "production" ).default( "development" ),
 			APP_PORT: Joi.number(),
 			MONGO_URI: Joi.string().uri().required(),
-			MONGO_TESTING_URI: Joi.string().uri().required()
+			MONGO_TESTING_URI: Joi.string().uri().required(),
+			JWT_KEY: Joi.string().required()
 		} );
 
 		const { error, value: validatedEnvConfig } = envVarsSchema.validate( config );
@@ -52,6 +53,10 @@ export class ConfigService {
 
 	public get mongoTestingUri(): string {
 		return this.envConfig.MONGO_TESTING_URI;
+	}
+
+	public get jwtKey(): string {
+		return this.envConfig.JWT_KEY;
 	}
 
 }

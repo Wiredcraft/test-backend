@@ -14,6 +14,10 @@ export abstract class AbstractRepository<A extends Document> {
 		return this.model.find( conditions );
 	}
 
+	public async findOne( conditions = {} ) {
+		return this.model.findOne( conditions );
+	}
+
 	public async findById( id: string ) {
 		return this.model.findById( id );
 	}

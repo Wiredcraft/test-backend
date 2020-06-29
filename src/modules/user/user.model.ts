@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document, Types } from "mongoose";
+import { Document, HookNextFunction, Types } from "mongoose";
+import * as argon from "argon2";
 
 
 @Schema( { timestamps: true } )
@@ -20,6 +21,12 @@ export class User extends Document {
 	@Prop()
 	description: string;
 
+	@Prop( { unique: true, required: true } )
+	email: string;
+
+	@Prop()
+	password: string;
+
 	createdAt: Date;
 
 	updatedAt: Date;
@@ -32,6 +39,7 @@ export class User extends Document {
 			dob: resource.dob,
 			address: resource.address,
 			description: resource.description,
+			email: resource.email,
 			createdAt: resource.createdAt,
 			updatedAt: resource.updatedAt
 		};
@@ -42,5 +50,25 @@ export class User extends Document {
 	}
 }
 
+function hashPassword( next: HookNextFunction ) {
+	// @ts-ignore
+	const user: User = this;
+	if ( user.password ) {
+		argon.hash( user.password ).then( password => {
+			user.password = password;
+			next();
+		} ).catch( err => next( err ) );
+	}
+	next();
+}
 
-export const UserSchema = SchemaFactory.createForClass( User );
+function parseDateOfBirth( next: HookNextFunction ) {
+	// @ts-ignore
+	const user: User = this;
+	if ( user.dob ) {
+		user.dob = new Date( user.dob );
+	}
+	next();
+}
+
+export const UserSchema = SchemaFactory.createForClass( User ).pre( "save", hashPassword ).pre( "save", parseDateOfBirth );

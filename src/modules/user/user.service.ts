@@ -10,4 +10,9 @@ export class UserService extends AbstractRepository<User> {
 	constructor( @InjectModel( User.name ) private userModel: Model<User> ) {
 		super( userModel );
 	}
+
+	public async findByEmail( email: string ): Promise<User> {
+		return this.findOne( { email } );
+	}
+
 }

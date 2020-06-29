@@ -5,6 +5,7 @@ Content-Type: application/json
   "name": "cyrilselasi",
   "address": "No 632 XiZang Middle Road",
   "dob": "1994-11-19",
+  "email": "test@test-backend.com",
   "description": "Alive Again"
 }
 

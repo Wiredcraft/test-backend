@@ -1,0 +1,11 @@
+POST http://localhost:3333/auth/register
+Content-Type: application/x-www-form-urlencoded
+
+name=charles&email=cyril@test-backend.com&password=123456&passwordConfirmation=123456&dob=2019-18-13T22:14:14.761Z&description=test&address=test
+
+### Register a User
+
+POST http://localhost:3333/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+email=cyril@test-backend.com&password=123456

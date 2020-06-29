@@ -7,17 +7,19 @@ import { UserService } from "./user.service";
 import MongoTestModule, { closeMongoConnection } from "../../config/mongo-test.config";
 import * as faker from "faker";
 
+function getTestUser(): CreateUserRequest {
+	return {
+		name: faker.internet.userName(),
+		address: faker.address.streetAddress(),
+		dob: faker.date.past( 18 ),
+		description: faker.random.words(),
+		email: faker.internet.email()
+	}
+}
 describe( "UserService", () => {
 
 	let service: UserService;
 	let connection: Connection;
-
-	const testUserRequest: CreateUserRequest = {
-		name: faker.internet.userName(),
-		address: faker.address.streetAddress(),
-		dob: faker.date.past( 18 ),
-		description: faker.random.words()
-	};
 
 	beforeAll( async () => {
 
@@ -49,11 +51,12 @@ describe( "UserService", () => {
 	} );
 
 	it( "should store user information", async () => {
-		expect( await service.create( testUserRequest ) ).toBeTruthy();
+		expect( await service.create( getTestUser() ) ).toBeTruthy();
 	} );
 
 	it( "should retrieve one user information", async () => {
 
+		const testUserRequest = getTestUser();
 		const testUser = await service.create( testUserRequest );
 
 		const user = await service.findByIdOrFail( testUser._id.toString() );
@@ -66,13 +69,13 @@ describe( "UserService", () => {
 	} );
 
 	it( "should delete a user", async () => {
-		const testUser = await service.create( testUserRequest );
+		const testUser = await service.create( getTestUser() );
 		await service.findByIdAndDelete( testUser.id );
 		expect( await service.findById( testUser.id ) ).toBeFalsy();
 	} );
 
 	it( "should update a users details", async () => {
-		const testUser = await service.create( testUserRequest );
+		const testUser = await service.create( getTestUser() );
 		const description = faker.random.words();
 		await service.findByIdAndUpdate( testUser.id, { description } );
 		const updatedUser = await service.findById( testUser.id );
