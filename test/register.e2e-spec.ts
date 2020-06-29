@@ -3,7 +3,7 @@ import { getConnectionToken, getModelToken } from "@nestjs/mongoose";
 import { Test } from "@nestjs/testing";
 import { Connection } from "mongoose";
 import { AppModule } from "../src/app.module";
-import { RegisterUserDto } from "../src/modules/auth/dtos/register-user.dto";
+import { RegisterRequest } from "../src/modules/auth/requests/register.request";
 import { User } from "../src/modules/user/user.model";
 import * as request from "supertest";
 import { getRegisterUserDto } from "./util/register-user.mock";
@@ -54,7 +54,7 @@ describe( "RegisterController (e2e)", () => {
 	} );
 
 	it( "should FAIL to POST /auth/register if passwords do not match", () => {
-		const registerDto: RegisterUserDto = {
+		const registerDto: RegisterRequest = {
 			name: faker.name.firstName(), email: faker.internet.email(), dob: faker.date.past(), address: faker.address.streetAddress(),
 			password: faker.internet.password( 7 ), passwordConfirmation: faker.internet.password( 8 ), description: faker.random.words()
 		};

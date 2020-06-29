@@ -1,5 +1,6 @@
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import * as helmet from "helmet";
 import { WinstonModule } from "nest-winston";
 import { AppModule } from "./app.module";
@@ -19,6 +20,15 @@ async function bootstrap() {
 
 	app.use( helmet() ); // Setups up common http security measures
 	app.use( RateLimitConfig() ); // Sets rate limiter from defined configuration
+
+	// Setup Swagger documentation and bind to /api/docs
+	const options = new DocumentBuilder()
+		.setTitle( app.get( "ConfigService" ).appName )
+		.setDescription( "API Documentation" )
+		.setVersion( "1.0" )
+		.build();
+	const document = SwaggerModule.createDocument( app, options );
+	SwaggerModule.setup( "api/docs", app, document );
 
 	await app.listen( app.get( "ConfigService" ).appPort );
 

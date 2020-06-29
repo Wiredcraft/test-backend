@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, InternalServerErrorException, Logger, NotFoundException, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { ApiBearerAuth, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../shared/guards/jwt-auth.guard";
 import { ValidateObjectIdPipe } from "../shared/pipes/validate-object-id.pipe";
 import { CreateUserRequest } from "./dtos/requests/create-user.request";
@@ -8,6 +9,8 @@ import { UserService } from "./user.service";
 
 
 @Controller( "users" )
+@ApiBearerAuth()
+@ApiTags( "Users" )
 @UseGuards( JwtAuthGuard )
 export class UserController {
 
@@ -16,6 +19,7 @@ export class UserController {
 	}
 
 	@Get()
+	@ApiOkResponse()
 	public async index() {
 		try {
 			const users = await this.userService.find();
@@ -27,6 +31,7 @@ export class UserController {
 	}
 
 	@Post()
+	@ApiCreatedResponse()
 	public async store( @Body() createUserRequest: CreateUserRequest ) {
 		try {
 			const user = await this.userService.create( createUserRequest );
@@ -39,6 +44,7 @@ export class UserController {
 	}
 
 	@Get( ":id" )
+	@ApiOkResponse()
 	public async read( @Param( "id", ValidateObjectIdPipe ) id: string ) {
 		try {
 			const user = await this.userService.findByIdOrFail( id );
@@ -55,6 +61,7 @@ export class UserController {
 	}
 
 	@Patch( ":id" )
+	@ApiOkResponse()
 	public async update( @Param( "id", ValidateObjectIdPipe ) id: string, @Body() updateUserRequest: UpdateUserRequest ) {
 		try {
 			const user = await this.userService.findByIdAndUpdate( id, updateUserRequest );
@@ -66,6 +73,7 @@ export class UserController {
 	}
 
 	@Delete( ":id" )
+	@ApiNoContentResponse()
 	@HttpCode( HttpStatus.NO_CONTENT )
 	public async delete( @Param( "id", ValidateObjectIdPipe ) id: string ) {
 		try {

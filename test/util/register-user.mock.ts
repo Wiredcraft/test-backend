@@ -1,7 +1,7 @@
 import * as faker from "faker";
-import { RegisterUserDto } from "../../src/modules/auth/dtos/register-user.dto";
+import { RegisterRequest } from "../../src/modules/auth/requests/register.request";
 
-export function getRegisterUserDto(): RegisterUserDto {
+export function getRegisterUserDto(): RegisterRequest {
 	const password = faker.internet.password( 7 );
 	return {
 		name: faker.name.firstName(),

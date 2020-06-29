@@ -3,7 +3,7 @@ import { JwtService } from "@nestjs/jwt";
 import { User } from "../user/user.model";
 import { UserService } from "../user/user.service";
 import * as argon from "argon2";
-import { RegisterUserDto } from "./dtos/register-user.dto";
+import { RegisterRequest } from "./requests/register.request";
 
 
 @Injectable()
@@ -30,7 +30,7 @@ export class AuthService {
 		};
 	}
 
-	public async register( request: RegisterUserDto ) {
+	public async register( request: RegisterRequest ) {
 		const userExists = await this.userService.findByEmail( request.email );
 
 		if ( userExists ) {
