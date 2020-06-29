@@ -15,11 +15,12 @@
 For testing, and development purpose, you can follow these instructions to build and run the application
 
 ### Prerequisites
-1. Install `Node 12+`
+1. Install `Node 10+`
 2. MongoDB server running, you can run `docker-compose up -d database` in the project root to start a mongodb 4 instance.
 
 ### Steps
 1. Run `make env` in the project root to set the default environment variables to .env
+2. Run `yarn install` in the project root to install dependencies
 2. Run `yarn start` to start the application on PORT 3333 by default.
 3. (Alternatively) Run `yarn test` to run Unit tests, `yarn test:e2e` to run end to end tests and `yarn test:cov` to run Unit tests with a coverage report.
 4. Once the application is running, you may use various `*.rest` files to send requests to the application
