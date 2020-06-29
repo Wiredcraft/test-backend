@@ -40,7 +40,7 @@ export class ConfigService {
 	}
 
 	public get nodeEnv(): string {
-		return this.envConfig.NODE_ENV;
+		return process.env.NODE_ENV || this.envConfig.NODE_ENV;
 	}
 
 	public get appPort(): number {

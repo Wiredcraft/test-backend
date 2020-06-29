@@ -1,11 +1,29 @@
-POST http://localhost:3333/users
+POST http://localhost:3333/auth/register
 Content-Type: application/json
 
 {
   "name": "cyrilselasi",
   "address": "No 632 XiZang Middle Road",
-  "dob": "1994-11-19",
+  "dob": "2011-10-05T14:48:00.000",
   "email": "test@test-backend.com",
+  "description": "Alive Again",
+  "password": "password",
+  "passwordConfirmation": "password"
+}
+
+> {% client.global.set("token", response.body.access_token) %}}
+
+###
+
+POST http://localhost:3333/users
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+  "name": "cyrilselasi",
+  "address": "No 632 XiZang Middle Road",
+  "dob": "1994-10-05T14:48:00.000",
+  "email": "test2@test-backend.com",
   "description": "Alive Again"
 }
 
@@ -15,14 +33,16 @@ Content-Type: application/json
 
 GET http://localhost:3333/users/{{id}}
 Accept: application/json
+Authorization: Bearer {{ token }}
 
 ###
 
 PATCH http://localhost:3333/users/5ee680d3d4070e25deeeb364
 Content-Type: application/json
+Authorization: Bearer {{ token }}
 
 {
-  "dob": "1992-11-19"
+  "dob": "1911-10-05T14:48:00.000"
 }
 
 ###
@@ -30,3 +50,4 @@ Content-Type: application/json
 
 GET http://localhost:3333/users
 Accept: application/json
+Authorization: Bearer {{ token }}

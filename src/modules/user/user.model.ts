@@ -50,23 +50,17 @@ export class User extends Document {
 	}
 }
 
-function hashPassword( next: HookNextFunction ) {
-	// @ts-ignore
-	const user: User = this;
-	if ( user.password ) {
-		argon.hash( user.password ).then( password => {
-			user.password = password;
-			next();
-		} ).catch( err => next( err ) );
+
+async function hashPassword( next: HookNextFunction ) {
+	if ( this.password ) {
+		this.password = await argon.hash( this.password ).catch( err => next( err ) );
 	}
 	next();
 }
 
 function parseDateOfBirth( next: HookNextFunction ) {
-	// @ts-ignore
-	const user: User = this;
-	if ( user.dob ) {
-		user.dob = new Date( user.dob );
+	if ( this.dob ) {
+		this.dob = new Date( this.dob );
 	}
 	next();
 }

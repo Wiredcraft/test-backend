@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Logger, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, InternalServerErrorException, Logger, NotFoundException, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "../shared/guards/jwt-auth.guard";
 import { ValidateObjectIdPipe } from "../shared/pipes/validate-object-id.pipe";
 import { CreateUserRequest } from "./dtos/requests/create-user.request";
@@ -17,32 +17,64 @@ export class UserController {
 
 	@Get()
 	public async index() {
-		const users = await this.userService.find();
-		return User.toCollection( users );
+		try {
+			const users = await this.userService.find();
+			return User.toCollection( users );
+		} catch ( e ) {
+			this.logger.error( "users.get-all.failed", e );
+			throw new InternalServerErrorException( "Failed to get user list, Try again later!" );
+		}
 	}
 
 	@Post()
 	public async store( @Body() createUserRequest: CreateUserRequest ) {
-		const user = await this.userService.create( createUserRequest );
-		return User.toResource( user );
+		try {
+			const user = await this.userService.create( createUserRequest );
+			return User.toResource( user );
+		} catch ( e ) {
+			this.logger.error( "users.store.failed", e );
+			throw new InternalServerErrorException( "Failed to Create a New User!" );
+		}
+
 	}
 
 	@Get( ":id" )
 	public async read( @Param( "id", ValidateObjectIdPipe ) id: string ) {
-		const user = await this.userService.findByIdOrFail( id );
-		return User.toResource( user );
+		try {
+			const user = await this.userService.findByIdOrFail( id );
+			return User.toResource( user );
+		} catch ( e ) {
+			this.logger.error( "users.get-one.failed", e );
+			if ( e instanceof NotFoundException ) {
+				throw new NotFoundException( e.message );
+			} else {
+				throw new InternalServerErrorException( `Failed to get User with ID ${ id }` );
+			}
+		}
+
 	}
 
 	@Patch( ":id" )
 	public async update( @Param( "id", ValidateObjectIdPipe ) id: string, @Body() updateUserRequest: UpdateUserRequest ) {
-		const user = await this.userService.findByIdAndUpdate( id, updateUserRequest );
-		return User.toResource( user );
+		try {
+			const user = await this.userService.findByIdAndUpdate( id, updateUserRequest );
+			return User.toResource( user );
+		} catch ( e ) {
+			this.logger.error( "users.patch.failed", e );
+			throw new InternalServerErrorException( `Failed to Update User with ID ${ id }` );
+		}
 	}
 
 	@Delete( ":id" )
 	@HttpCode( HttpStatus.NO_CONTENT )
 	public async delete( @Param( "id", ValidateObjectIdPipe ) id: string ) {
-		await this.userService.findByIdAndDelete( id );
+		try {
+			await this.userService.findByIdAndDelete( id );
+		} catch ( e ) {
+			this.logger.error( "users.delete.failed", e );
+			throw new InternalServerErrorException( `Failed to Delete User with ID ${id}` );
+		}
+
 	}
 
 }

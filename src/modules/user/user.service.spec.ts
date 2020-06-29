@@ -14,8 +14,9 @@ function getTestUser(): CreateUserRequest {
 		dob: faker.date.past( 18 ),
 		description: faker.random.words(),
 		email: faker.internet.email()
-	}
+	};
 }
+
 describe( "UserService", () => {
 
 	let service: UserService;

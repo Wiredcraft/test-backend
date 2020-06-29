@@ -1,25 +1,17 @@
-import { getConnectionToken, getModelToken } from "@nestjs/mongoose";
+import { getConnectionToken } from "@nestjs/mongoose";
 import { Connection } from "mongoose";
 import * as request from "supertest";
 import { Test } from "@nestjs/testing";
 import { AppModule } from "../src/app.module";
 import { HttpStatus, INestApplication, ValidationPipe } from "@nestjs/common";
-import { ConfigService } from "../src/config/config.service";
 import * as faker from "faker";
-import { GlobalErrorFilter } from "../src/modules/shared/filters/global-error.filter";
-import { CreateUserRequest } from "../src/modules/user/dtos/requests/create-user.request";
-import { User } from "../src/modules/user/user.model";
+import { getCreateUserDto } from "./util/create-user";
+import { getRegisterUserDto } from "./util/register-user.mock";
 
 describe( "UserController (e2e)", () => {
 	let app: INestApplication;
 	let connection: Connection;
-
-	const testUserRequest: CreateUserRequest = {
-		name: faker.internet.userName(),
-		address: faker.address.streetAddress(),
-		dob: faker.date.past( 18 ),
-		description: faker.random.words()
-	};
+	let authToken: string;
 
 	beforeAll( async () => {
 		// Bootstrap Application
@@ -31,15 +23,16 @@ describe( "UserController (e2e)", () => {
 
 		// Replicate filters and pipes used in main application
 		app.useGlobalPipes( new ValidationPipe( { whitelist: true, transform: true } ) );
-		app.useGlobalFilters( new GlobalErrorFilter() );
 
 		connection = moduleFixture.get( getConnectionToken() );
 
 		await app.init();
-	} );
 
-	beforeEach( async () => {
-		await connection.collection( getModelToken( User.name ) ).deleteMany( {} );
+		const { body: authUser } = await request( app.getHttpServer() )
+			.post( "/auth/register" )
+			.send( getRegisterUserDto() )
+			.expect( HttpStatus.CREATED );
+		authToken = authUser.access_token;
 	} );
 
 	afterAll( async () => {
@@ -49,16 +42,29 @@ describe( "UserController (e2e)", () => {
 	} );
 
 
-	it( "should GET /users", () => {
+	it( "should GET /users", async () => {
+
 		return request( app.getHttpServer() )
 			.get( "/users" )
+			.set( "Authorization", `Bearer ${ authToken }` )
 			.expect( HttpStatus.OK )
-			.expect( [] );
+			.then( ( { body } ) => {
+				expect( body.length ).toBeGreaterThan( 0 );
+			} );
 	} );
 
-	it( "should POST /users", () => {
+	it( "should FAIL to GET /users if unauthorized", function () {
+		return request( app.getHttpServer() )
+			.get( "/users" )
+			.expect( HttpStatus.UNAUTHORIZED );
+	} );
+
+	it( "should POST /users", async () => {
+		const testUserRequest = getCreateUserDto();
+
 		return request( app.getHttpServer() )
 			.post( "/users" )
+			.set( "Authorization", `Bearer ${ authToken }` )
 			.send( testUserRequest )
 			.expect( HttpStatus.CREATED )
 			.then( ( { body } ) => {
@@ -75,17 +81,24 @@ describe( "UserController (e2e)", () => {
 
 		return request( app.getHttpServer() )
 			.post( "/users" )
+			.set( "Authorization", `Bearer ${ authToken }` )
 			.send( { name: faker.name } )
 			.expect( HttpStatus.BAD_REQUEST );
 	} );
 
 	it( "should PATCH /users/:id", async () => {
-		const { body: user } = await request( app.getHttpServer() ).post( "/users" ).send( testUserRequest ).expect( HttpStatus.CREATED );
+
+		const { body: user } = await request( app.getHttpServer() )
+			.post( "/users" )
+			.set( "Authorization", `Bearer ${ authToken }` )
+			.send( getCreateUserDto() )
+			.expect( HttpStatus.CREATED );
 
 		const name = faker.name.firstName();
 		return request( app.getHttpServer() )
 			.patch( `/users/${ user.id }` )
 			.send( { name } )
+			.set( "Authorization", `Bearer ${ authToken }` )
 			.expect( HttpStatus.OK )
 			.then( ( { body } ) => {
 				expect( body.name ).toStrictEqual( name );
@@ -96,18 +109,30 @@ describe( "UserController (e2e)", () => {
 
 	it( "should FAIL to POST /users if data is missing", async () => {
 
-		const { body: user } = await request( app.getHttpServer() ).post( "/users" ).send( testUserRequest ).expect( HttpStatus.CREATED );
+		const { body: user } = await request( app.getHttpServer() )
+			.post( "/users" )
+			.send( getCreateUserDto() )
+			.set( "Authorization", `Bearer ${ authToken }` )
+			.expect( HttpStatus.CREATED );
+
 		return request( app.getHttpServer() )
 			.patch( `/users/${ user.id }` )
+			.set( "Authorization", `Bearer ${ authToken }` )
 			.send( { dob: "20" } )
 			.expect( HttpStatus.BAD_REQUEST );
 	} );
 
 	it( "should DELETE /users/:id", async () => {
-		const { body: user } = await request( app.getHttpServer() ).post( "/users" ).send( testUserRequest ).expect( HttpStatus.CREATED );
+
+		const { body: user } = await request( app.getHttpServer() )
+			.post( "/users" )
+			.send( getCreateUserDto() )
+			.set( "Authorization", `Bearer ${ authToken }` )
+			.expect( HttpStatus.CREATED );
 
 		return request( app.getHttpServer() )
 			.delete( `/users/${ user.id }` )
+			.set( "Authorization", `Bearer ${ authToken }` )
 			.expect( HttpStatus.NO_CONTENT );
 	} );
 } );
