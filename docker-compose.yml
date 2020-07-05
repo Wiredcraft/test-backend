@@ -9,6 +9,8 @@ services:
     networks:
       - backend
     restart: on-failure
+    volumes:
+      - db-data:/data/db
 
   server:
     container_name: test-backend-api
@@ -24,6 +26,7 @@ services:
       - backend
     ports:
       - ${APP_PORT}:${APP_PORT}
+
 volumes:
   db-data:
 
