@@ -11,7 +11,7 @@ RUN mkdir -p ${SERVER_ROOT}
 WORKDIR ${SERVER_ROOT}
 COPY . .
 
-RUN yarn install --ignore-optional --link-duplicates
+RUN yarn install --ignore-optional --link-duplicates --frozen-lockfile
 RUN apk del .gyp && rm -rf /var/cache/apk/*
 
 RUN yarn build
