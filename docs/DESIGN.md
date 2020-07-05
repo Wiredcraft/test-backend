@@ -45,7 +45,7 @@ Logs are written to a number of `*.log` files depending on the log level. They a
 in production. This is useful when deploying to AWS or inside a docker container where the logs are read from standard output and 
 delivered to the appropriate logging agent. 
 
-The Nest Logger is a pretty standard Logger class with a number of log levels available; `info`, `debug`, `warn`, `error`, `verbose` with an additional helper to set the log context.
+The Nest Logger is a pretty standard Logger class with a number of log levels available; `log`, `debug`, `warn`, `error`, `verbose` with an additional helper to set the log context.
 The setContext function is handy for having scoped logs while allowing you to treat the logger as an injectable service. It is also possible to create new log objects for use in functions that don't use dependency injection.
 
 The log format of choice is JSON as its universal enough to be used by a number of different consumers.
