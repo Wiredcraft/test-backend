@@ -1,0 +1,55 @@
+{
+  "name": "test-backend",
+  "version": "1.0.0",
+  "description": "Make sure you read the whole document carefully and follow the guidelines in it.",
+  "main": "index.js",
+  "watch": {
+    "apidoc": "app/routers/*.js"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon -w app node app/index.js",
+    "lint": "standard --env mocha",
+    "lint:fix": "npm run lint -- --fix",
+    "watch_apidoc": "npm-watch apidoc",
+    "apidoc": "apidoc -i app/routers/ -o apidoc/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://ezio-hub@github.com/ezio-hub/test-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ezio-hub/test-backend/issues"
+  },
+  "homepage": "https://github.com/ezio-hub/test-backend#readme",
+  "dependencies": {
+    "config": "^3.3.1",
+    "joi": "^17.1.1",
+    "koa": "^2.13.0",
+    "koa-bodyparser": "^4.3.0",
+    "koa-jwt": "^4.0.0",
+    "koa-logger": "^3.2.1",
+    "koa-mount": "^4.0.0",
+    "koa-router": "^9.1.0",
+    "koa-static": "^5.0.0",
+    "lodash": "^4.17.19",
+    "mocha": "^8.0.1",
+    "moment": "^2.27.0",
+    "mongoose": "^5.9.25",
+    "mongoose-timestamp": "^0.6.0",
+    "npm-watch": "^0.6.0",
+    "tracer": "^1.1.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4",
+    "standard": "^14.3.4"
+  },
+  "apidoc": {
+    "name": "test backend",
+    "version": "1.0.0",
+    "title": "test backend api doc ",
+    "url": "/api/v1",
+    "sampleUrl": "http://127.0.0.1:9090/api/v1"
+  }
+}
