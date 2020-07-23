@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const timestamps = require('mongoose-timestamp')
+const mongoosePaginate = require('mongoose-paginate')
 
 const connection = require('../db')
 
@@ -7,6 +8,18 @@ const generateModel = (name, schema, indexList) => {
   const modelSchema = new mongoose.Schema(schema)
 
   modelSchema.plugin(timestamps)
+  modelSchema.plugin(mongoosePaginate)
+
+  modelSchema.methods.toData = function () {
+    // delete unused fields
+    const obj = this.toObject()
+    obj.id = obj._id
+    delete obj._id
+    delete obj.__v
+    delete obj.updatedAt
+    console.log('this.obj')
+    return obj
+  }
 
   if (indexList) {
     for (const index of indexList) {
