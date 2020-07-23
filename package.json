@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon -w app node app/index.js",
     "lint": "standard --env mocha",
+    "test": "NODE_ENV=test mocha 'test/**/*.js' --exit",
     "lint:fix": "npm run lint -- --fix",
     "watch_apidoc": "npm-watch apidoc",
     "apidoc": "apidoc -i app/routers/ -o apidoc/"
@@ -36,7 +37,6 @@
     "koa-router": "^9.1.0",
     "koa-static": "^5.0.0",
     "lodash": "^4.17.19",
-    "mocha": "^8.0.1",
     "moment": "^2.27.0",
     "mongoose": "^5.9.25",
     "mongoose-paginate": "^5.0.3",
@@ -45,8 +45,11 @@
     "tracer": "^1.1.2"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.0.1",
     "nodemon": "^2.0.4",
-    "standard": "^14.3.4"
+    "standard": "^14.3.4",
+    "supertest": "^4.0.2"
   },
   "apidoc": {
     "name": "test backend",
