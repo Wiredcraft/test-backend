@@ -17,7 +17,6 @@ const generateModel = (name, schema, indexList) => {
     delete obj._id
     delete obj.__v
     delete obj.updatedAt
-    console.log('this.obj')
     return obj
   }
 
@@ -27,15 +26,15 @@ const generateModel = (name, schema, indexList) => {
     }
   }
 
-  modelSchema.statics.upsert = async function (where, data) {
-    return await this.findOneAndUpdate(where, data, {
+  modelSchema.statics.upsert = function (where, data) {
+    return this.findOneAndUpdate(where, data, {
       upsert: true,
       new: true
     })
   }
 
-  modelSchema.statics.updateById = async function (id, data) {
-    return await this.findOneAndUpdate(id, data, {
+  modelSchema.statics.updateById = function (id, data) {
+    return this.findOneAndUpdate(id, data, {
       new: true
     })
   }

@@ -1,7 +1,6 @@
 const _ = require('lodash')
 const User = require('../models/user')
 const escapeStringRegexp = require('escape-string-regexp')
-const { panic } = require('../error')
 class UserServices {
   async createUser (data) {
     const user = new User(data)
@@ -13,12 +12,25 @@ class UserServices {
     return user.toData()
   }
 
+  async getUser (id) {
+    const user = await User.findById(id)
+    return user.toData()
+  }
+
+  async updateUser (id, data) {
+    const user = await User.updateById(id, data)
+    return user.toData()
+  }
+
+  deleteUser (id, data) {
+    return User.findById(id).remove()
+  }
+
   async searchUser (query, offset, limit) {
     let filters = {}
     if (query) {
       const $regex = escapeStringRegexp(query)
       filters = {
-        // name:new RegExp(`^${query}$`, "i")
         name: { $regex }
       }
     }
