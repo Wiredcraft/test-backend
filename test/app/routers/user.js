@@ -43,6 +43,7 @@ describe('User Api Test', () => {
     let id = ''
     let token = ''
     const checkUserFields = (user, data) => {
+      expect(data.id).to.equal(id)
       expect(data.name).to.equal(user.name)
       expect(moment(data.dob).format('YYYY-MM-DD')).to.equal(user.dob)
       expect(data.description).to.equal(user.description)

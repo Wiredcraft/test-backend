@@ -34,7 +34,7 @@ const generateModel = (name, schema, indexList) => {
   }
 
   modelSchema.statics.updateById = function (id, data) {
-    return this.findOneAndUpdate(id, data, {
+    return this.findOneAndUpdate({ _id: id }, data, {
       new: true
     })
   }
