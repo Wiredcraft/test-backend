@@ -80,10 +80,10 @@ router.put('/:id', JWTAuthentication, onlyAllowSelf, validate({
  * @apiVersion 1.0.0
  * @apiUse GeneralAuth
  * @apiParam {string} id
- * @apiParam {string} name
- * @apiParam {string} dob format eg: 2018-10-10
- * @apiParam {string} address
- * @apiParam {string} description
+ * @apiParam {string} [name]
+ * @apiParam {string} [dob] format eg: 2018-10-10
+ * @apiParam {string} [address]
+ * @apiParam {string} [description]
  * @apiName partiallyUpdateUser
  * @apiGroup users
  * @apiUse UserResponse
@@ -123,17 +123,17 @@ router.delete('/:id', JWTAuthentication, onlyAllowSelf, async ctx => {
 })
 
 /**
- * @api {get} /users/:id Get an user
+ * @api {get} /users/:id Get an user detail
  * @apiVersion 1.0.0
  * @apiUse GeneralAuth
- * @apiParam {string} the id you want to find, or pass me to find the user self
+ * @apiParam {string} id the id you want to find, or pass me to find the user self
  * @apiName getUser
  * @apiGroup users
  * @apiUse UserResponse
  *
  *
  */
-router.get('/:id', JWTAuthentication, async ctx => {
+router.get('/:id', async ctx => {
   const { id } = ctx.params
   const user = await userServices.getUser(id)
   ctx.body = user
