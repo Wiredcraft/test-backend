@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+  database:
+    image: mongo:4
+    container_name: test-mongo-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: obed_test
+      MONGO_INITDB_ROOT_PASSWORD: WiredCraftTest
+    ports:
+      - 27017:27017
+    volumes:
+      - test-mongo-data:/data/db
+
+  server:
+    container_name: test-backend
+    depends_on:
+      - database
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /usr/src/app
+    networks:
+      - test-network
+    ports:
+      - 3000:3000
+
+networks:
+  test-network:
+
+volumes:
+  test-mongo-data:
+
