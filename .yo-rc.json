@@ -1,0 +1,6 @@
+{
+  "@loopback/cli": {
+    "version": "2.12.0",
+    "packageManager": "yarn"
+  }
+}
