@@ -7,7 +7,11 @@ start:
 	docker-compose -f docker-compose.yml up -d database
 	@echo "\nInstalling Yarn Dependencies"
 	yarn install --frozen-lockfile
+	@echo "\nRunning migration"
+	yarn run migrate
+	@echo "\nStart Application migration"
 	yarn run start
+
 shutdown:
 	@echo "\Stopping Docker Services"
 	docker-compose down

@@ -14,12 +14,12 @@ WORKDIR /home/node/app
 # where available (npm@5+)
 COPY --chown=node package*.json ./
 
-RUN npm install
+RUN yarn install --ignore-optional --link-duplicates --frozen-lockfile
 
 # Bundle app source code
 COPY --chown=node . .
 
-RUN npm run build
+RUN yarn build
 
 # Bind to all network interfaces so that it can be mapped to the host OS
 ENV HOST=0.0.0.0 PORT=3000

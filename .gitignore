@@ -66,6 +66,3 @@ typings/
 
 # .vscode folder stores the settings specific to this project
 .vscode
-
-# Remove DS_STORE
-.DS_STORE
