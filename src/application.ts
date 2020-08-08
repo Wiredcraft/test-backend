@@ -39,7 +39,7 @@ export class TestBackendApplication extends BootMixin(
 
     // Customize @loopback/rest-explorer configuration here
     this.configure(RestExplorerBindings.COMPONENT).to({
-      path: '/explorer',
+      path: '/api/v1/swagger',
     });
     this.component(RestExplorerComponent);
 

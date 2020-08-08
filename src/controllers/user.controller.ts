@@ -1,116 +1,108 @@
-import {authenticate, TokenService, UserService} from '@loopback/authentication';
-import {TokenServiceBindings} from '@loopback/authentication-jwt';
+import {authenticate, UserService} from '@loopback/authentication';
 import {inject} from '@loopback/core';
 import {Filter, FilterExcludingWhere, repository} from '@loopback/repository';
 import {
-  del, get,
-
+  api, del, get,
   getModelSchemaRef,
-  HttpErrors, param,
-  patch, post,
+  param,
+  patch,
   requestBody
 } from '@loopback/rest';
-import _ from 'lodash';
-import {PasswordHasherBindings, UserServiceBindings} from '../keys';
+import {UserServiceBindings} from '../keys';
 import {User} from '../models';
-import {NewUserRequest} from '../models/user-request.model';
 import {UserRepository} from '../repositories';
 import {Credentials} from './../repositories/user.repository';
-import {PasswordHasher} from './../services/hash.password.bcrypt';
 
+@authenticate('jwt')
+@api({basePath: '/api/v1'})
 export class UserController {
   constructor(
     @repository(UserRepository) public userRepository: UserRepository,
-    @inject(PasswordHasherBindings.PASSWORD_HASHER)
-    public passwordHasher: PasswordHasher,
-    @inject(TokenServiceBindings.TOKEN_SERVICE)
-    public jwtService: TokenService,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>
 
   ) {}
 
-  @post('/users/signup', {
-    responses: {
-      '200': {
-        description: 'Registered User',
-        content: {
-          'application/json': {
-            schema: {
-              'x-ts-type': User,
-            }
-          }
-        }
-      }
-    }
-  })
-  async signUp(@requestBody({
-    content: {
-      'application/json': {
-        schema: getModelSchemaRef(NewUserRequest, {
-          title: 'NewUser',
-        }),
-      },
-    },
-  })
-  newUserRequest: NewUserRequest,
-  ): Promise<User> {
-    // FIXME: fix validation error.
-    // validate the email and password values.
-    // validateCredentials(_.pick(newUserRequest, ['email', 'password']));
+  // @post('/users/signup', {
+  //   responses: {
+  //     '200': {
+  //       description: 'Registered User',
+  //       content: {
+  //         'application/json': {
+  //           schema: {
+  //             'x-ts-type': User,
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // })
+  // async signUp(@requestBody({
+  //   content: {
+  //     'application/json': {
+  //       schema: getModelSchemaRef(NewUserRequest, {
+  //         title: 'NewUser',
+  //       }),
+  //     },
+  //   },
+  // })
+  // newUserRequest: NewUserRequest,
+  // ): Promise<User> {
+  //   // validate the email and password values.
+  //   validateCredentials(_.pick(newUserRequest, ['email', 'password']));
 
-    // Encrypt the incoming password
-    const password = await this.passwordHasher.hashPassword(newUserRequest.password);
+  //   // Encrypt the incoming password
+  //   const password = await this.passwordHasher.hashPassword(newUserRequest.password);
 
-    try {
-      const newUser = await this.userRepository.create(
-        _.omit(newUserRequest, 'password'),
-      );
-      // save hashed password.
-      await this.userRepository
-        .userCredentials(newUser.id)
-        .create({password});
-      return newUser;
-    } catch (error) {
-      // 11000 is a mongoDB error code thrown when there is for a duplicate key
-      if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
-        throw new HttpErrors.Conflict('Email is taken');
-      } else {
-        throw error;
-      }
-    }
-  }
+  //   try {
+  //     const newUser = await this.userRepository.create(
+  //       _.omit(newUserRequest, 'password'),
+  //     );
+  //     // save hashed password.
+  //     await this.userRepository
+  //       .userCredentials(newUser.id)
+  //       .create({password});
+  //     return newUser;
+  //   } catch (error) {
+  //     // 11000 is a mongoDB error code thrown when there is for a duplicate key
+  //     if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
+  //       throw new HttpErrors.Conflict('Email is taken');
+  //     } else {
+  //       throw error;
+  //     }
+  //   }
+  // }
 
-  @post('/users/login', {
-    responses: {
-      '200': {
-        description: 'Login user for JWT token',
-        content: {
-          'application/json': {
-            schema: {
-              type: 'object',
-              properties: {
-                token: {
-                  type: 'string',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  })
-  async login(
-    @requestBody() credentials: Credentials,
-  ): Promise<{token: string}> {
-    // check if user exists and password is correct
-    const user = await this.userService.verifyCredentials(credentials);
-    // convert user object into a user profile with the necessary properties
-    const userProfile = this.userService.convertToUserProfile(user);
-    // generate token with user profile
-    const token = await this.jwtService.generateToken(userProfile);
-    return {token};
-  }
+  // @post('/users/login', {
+  //   responses: {
+  //     '200': {
+  //       description: 'Login user for JWT token',
+  //       content: {
+  //         'application/json': {
+  //           schema: {
+  //             type: 'object',
+  //             properties: {
+  //               token: {
+  //                 type: 'string',
+  //               },
+  //             },
+  //           },
+  //         },
+  //       },
+  //     },
+  //   },
+  // })
+  // async login(
+  //   @requestBody() credentials: Credentials,
+  // ): Promise<{token: string}> {
+  //   // check if user exists and password is correct
+  //   const user = await this.userService.verifyCredentials(credentials);
+  //   // convert user object into a user profile with the necessary properties
+  //   const userProfile = this.userService.convertToUserProfile(user);
+  //   // generate token with user profile
+  //   const token = await this.jwtService.generateToken(userProfile);
+  //   return {token};
+  // }
 
   @get('/users', {
     responses: {
@@ -127,7 +119,6 @@ export class UserController {
       },
     },
   })
-  @authenticate('jwt')
   async find(
     @param.filter(User) filter?: Filter<User>,
   ): Promise<User[]> {
@@ -147,7 +138,6 @@ export class UserController {
       },
     },
   })
-  @authenticate('jwt')
   async findById(
     @param.path.string('id') id: string,
     @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
@@ -162,7 +152,6 @@ export class UserController {
       },
     },
   })
-  @authenticate('jwt')
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -184,7 +173,6 @@ export class UserController {
       },
     },
   })
-  @authenticate('jwt')
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.userRepository.deleteById(id);
   }

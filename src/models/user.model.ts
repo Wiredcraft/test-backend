@@ -42,7 +42,7 @@ export class User extends Entity {
     type: 'string',
     required: true
   })
-  email?: string;
+  email: string;
 
   @property({
     type: 'string',
