@@ -1,7 +1,7 @@
 import {Getter, inject} from '@loopback/core';
 import {DefaultCrudRepository, HasOneRepositoryFactory, repository} from '@loopback/repository';
 import {UserCredentialsRepository} from '.';
-import {BackendTestDbDataSource} from '../datasources';
+import {DbDataSource} from '../datasources';
 import {User, UserCredentials} from '../models';
 
 export type Credentials = {
@@ -18,7 +18,7 @@ export class UserRepository extends DefaultCrudRepository<
     typeof User.prototype.id
   >;
   constructor(
-    @inject('datasources.backend_test_db') dataSource: BackendTestDbDataSource,
+    @inject('datasources.db') dataSource: DbDataSource,
     @repository.getter('UserCredentialsRepository')
     protected userCredentialsRepositoryGetter: Getter<
       UserCredentialsRepository

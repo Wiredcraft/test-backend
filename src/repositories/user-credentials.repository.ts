@@ -1,5 +1,6 @@
 import {inject} from '@loopback/core';
-import {DefaultCrudRepository, juggler} from '@loopback/repository';
+import {DefaultCrudRepository} from '@loopback/repository';
+import {DbDataSource} from '../datasources';
 import {UserCredentials, UserCredentialsRelations} from '../models';
 
 export class UserCredentialsRepository extends DefaultCrudRepository<
@@ -8,7 +9,7 @@ export class UserCredentialsRepository extends DefaultCrudRepository<
   UserCredentialsRelations
   > {
   constructor(
-    @inject('datasources.backend_test_db') dataSource: juggler.DataSource,
+    @inject('datasources.db') dataSource: DbDataSource,
   ) {
     super(UserCredentials, dataSource);
   }
