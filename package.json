@@ -31,6 +31,7 @@
     "openapi-spec": "node ./dist/openapi-spec",
     "prestart": "npm run build",
     "start": "node -r source-map-support/register .",
+    "start:watch": "tsc-watch --target es2017 --outDir ./dist --onSuccess \"node .\"",
     "clean": "lb-clean dist *.tsbuildinfo .eslintcache"
   },
   "repository": {
@@ -56,6 +57,7 @@
     "bcryptjs": "^2.4.3",
     "isemail": "^3.2.0",
     "loopback-connector-mongodb": "^5.2.3",
+    "tsc-watch": "^4.2.9",
     "tslib": "^2.0.0"
   },
   "devDependencies": {

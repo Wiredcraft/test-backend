@@ -6,13 +6,16 @@ export class UserCredentials extends Entity {
     type: 'string',
     id: true,
     mongodb: {dataType: 'ObjectId'},
-    required: true,
   })
   id: string;
 
   @property({
     type: 'string',
     required: true,
+    jsonSchema: {
+      maxLength: 16,
+      minLength: 8,
+    }
   })
   password: string;
 

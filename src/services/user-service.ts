@@ -2,7 +2,7 @@ import {UserService} from '@loopback/authentication';
 import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
-import {UserProfile} from '@loopback/security';
+import {securityId, UserProfile} from '@loopback/security';
 import {PasswordHasherBindings} from '../keys';
 import {User} from './../models/user.model';
 import {Credentials, UserRepository} from './../repositories/user.repository';
@@ -14,6 +14,7 @@ export class CustomUserService implements UserService<User, Credentials> {
     @inject(PasswordHasherBindings.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
   ) {}
+
   async verifyCredentials(credentials: Credentials): Promise<User> {
     const {email, password} = credentials;
     const invalidCredentialsError = 'Invalid email or password.';
@@ -47,7 +48,17 @@ export class CustomUserService implements UserService<User, Credentials> {
     return foundUser;
   }
 
+  /**
+   * Create a user profile from the User model.
+   * This user profile forms part of the data used for the
+   * jwt token generation
+   */
   convertToUserProfile(user: User): UserProfile {
-    throw new Error('Method not implemented.');
+    const userProfile = {
+      [securityId]: user.id,
+      name: user.name,
+      id: user.id
+    };
+    return userProfile;
   }
 }

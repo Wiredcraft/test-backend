@@ -55,7 +55,7 @@ export class JWTService implements TokenService {
     let token: string;
     try {
       token = await signAsync(userDetails, this.jwtSecret, {
-        expires: Number(this.jwtExpires),
+        expiresIn: Number(this.jwtExpires),
       });
     } catch (error) {
       throw new HttpErrors.Unauthorized(`Error encoding token : ${error}`);

@@ -10,7 +10,7 @@ start:
 	@echo "\nRunning migration"
 	yarn run migrate
 	@echo "\nStart Application migration"
-	yarn run start
+	yarn run start:watch
 
 shutdown:
 	@echo "\Stopping Docker Services"
