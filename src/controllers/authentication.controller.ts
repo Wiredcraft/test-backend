@@ -3,16 +3,14 @@ import {TokenService, UserService} from '@loopback/authentication';
 import {
   TokenServiceBindings,
   User,
-  UserServiceBindings,
+  UserServiceBindings
 } from '@loopback/authentication-jwt';
 import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {
-  api,
-  getModelSchemaRef,
-  HttpErrors,
+  api, getModelSchemaRef, HttpErrors,
   post,
-  requestBody,
+  requestBody
 } from '@loopback/rest';
 import _ from 'lodash';
 import {PasswordHasherBindings} from '../keys';
@@ -20,9 +18,6 @@ import {NewUserRequest} from '../models';
 import {PasswordHasher} from '../services/hash.password.bcrypt';
 import {validateCredentials} from '../services/validator';
 import {Credentials, UserRepository} from './../repositories/user.repository';
-
-// import {inject} from '@loopback/core';
-
 @api({basePath: '/api/v1'})
 export class AuthenticationController {
   constructor(
@@ -34,6 +29,8 @@ export class AuthenticationController {
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>,
   ) {}
+
+
   @post('/signup', {
     responses: {
       '200': {
@@ -54,6 +51,7 @@ export class AuthenticationController {
         'application/json': {
           schema: getModelSchemaRef(NewUserRequest, {
             title: 'NewUser',
+            exclude: ['id', 'createdAt'],
           }),
         },
       },
@@ -86,6 +84,23 @@ export class AuthenticationController {
   }
 
   @post('/login', {
+    requestBody: {
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              email: {
+                type: 'string'
+              },
+              password: {
+                type: 'string'
+              }
+            }
+          }
+        }
+      }
+    },
     responses: {
       '200': {
         description: 'Login user for JWT token',
@@ -105,8 +120,23 @@ export class AuthenticationController {
     },
   })
   async login(
-    @requestBody() credentials: Credentials,
-  ): Promise<{token: string}> {
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              email: {
+                type: 'string'
+              },
+              password: {
+                type: 'string'
+              },
+            }
+          }
+        }
+      }
+    }) credentials: Credentials): Promise<{token: string}> {
     // check if user exists and password is correct
     const user = await this.userService.verifyCredentials(credentials);
     // convert user object into a user profile with the necessary properties

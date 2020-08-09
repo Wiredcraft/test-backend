@@ -1,5 +1,6 @@
 import {authenticate, UserService} from '@loopback/authentication';
 import {inject} from '@loopback/core';
+// import {Logger, logInvocation} from '@loopback/extension-logging';
 import {Filter, FilterExcludingWhere, repository} from '@loopback/repository';
 import {
   api,
@@ -8,7 +9,7 @@ import {
   getModelSchemaRef,
   param,
   patch,
-  requestBody,
+  requestBody
 } from '@loopback/rest';
 import {UserServiceBindings} from '../keys';
 import {User} from '../models';
@@ -22,56 +23,11 @@ export class UserController {
     @repository(UserRepository) public userRepository: UserRepository,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>,
+    // Injecting the logger
+    // @inject(LoggingBindings.WINSTON_LOGGER)
+    // private logger: Logger,
   ) {}
 
-  // @post('/users', {
-  //   responses: {
-  //     '200': {
-  //       description: 'Created User',
-  //       content: {
-  //         'application/json': {
-  //           schema: {
-  //             'x-ts-type': User,
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // })
-  // async signUp(@requestBody({
-  //   content: {
-  //     'application/json': {
-  //       schema: getModelSchemaRef(NewUserRequest, {
-  //         title: 'NewUser',
-  //       }),
-  //     },
-  //   },
-  // })
-  // newUserRequest: NewUserRequest,
-  // ): Promise<User> {
-  //   // validate the email and password values.
-  //   validateCredentials(_.pick(newUserRequest, ['email', 'password']));
-
-  //   // Encrypt the incoming password
-  //   const password = await this.passwordHasher.hashPassword(newUserRequest.password);
-  //   try {
-  //     const newUser = await this.userRepository.create(
-  //       _.omit(newUserRequest, 'password'),
-  //     );
-  //     // save hashed password.
-  //     await this.userRepository
-  //       .userCredentials(newUser.id)
-  //       .create({password});
-  //     return newUser;
-  //   } catch (error) {
-  //     // 11000 is a mongoDB error code thrown when there is for a duplicate key
-  //     if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
-  //       throw new HttpErrors.Conflict('Email is taken');
-  //     } else {
-  //       throw error;
-  //     }
-  //   }
-  // }
 
   @get('/users', {
     responses: {

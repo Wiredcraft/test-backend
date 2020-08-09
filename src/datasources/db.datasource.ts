@@ -6,12 +6,12 @@ const config = {
   name: 'db',
   connector: 'mongodb',
   // url: 'mongodb://root:WiredCraftTest@localhost:27017/wc-test-db.',
-  url: '',
-  host: 'localhost',
-  port: 27017,
-  user: '',
-  password: '',
-  database: 'wc-test-db',
+  url: process.env.DB_URL,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
   useNewUrlParser: true,
 };
 

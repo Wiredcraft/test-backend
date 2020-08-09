@@ -6,8 +6,8 @@ import {PasswordHasher} from './services/hash.password.bcrypt';
 
 // Change this .env variable
 export namespace TokenServiceConstants {
-  export const TOKEN_SECRET_VALUE = 'wcjwtk3454343';
-  export const TOKEN_EXPIRES_IN_VALUE = '21600';
+  export const TOKEN_SECRET_VALUE = process.env.JWT_SECRET;
+  export const TOKEN_EXPIRES_IN_VALUE = process.env.JWT_EXPIRE;
 }
 
 export namespace PasswordHasherBindings {
@@ -28,6 +28,8 @@ export namespace TokenServiceBindings {
     'services.jwt.service',
   );
 }
+
+// Bind keys for logging
 
 export namespace UserServiceBindings {
   export const USER_SERVICE = BindingKey.create<UserService<User, Credentials>>(

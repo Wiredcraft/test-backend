@@ -14,6 +14,8 @@ import {
   RestExplorerComponent
 } from '@loopback/rest-explorer';
 import {ServiceMixin} from '@loopback/service-proxy';
+import * as dotenv from 'dotenv';
+import * as dotenvExt from 'dotenv-extended';
 import path from 'path';
 import {PasswordHasherBindings, UserServiceBindings} from './keys';
 import {MySequence} from './sequence';
@@ -38,6 +40,16 @@ export class TestBackendApplication extends BootMixin(
     this.configure(HealthBindings.COMPONENT).to({
       healthPath: '/health',
     });
+
+    // Load environment variables
+    dotenv.config();
+    dotenvExt.load({
+      schema: '.env.example',
+      errorOnMissing: true,
+    });
+
+    // setup logger
+    // this.component(LoggingComponent);
 
     // Set up the custom sequence
     this.sequence(MySequence);
