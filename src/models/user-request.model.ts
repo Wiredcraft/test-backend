@@ -9,7 +9,7 @@ export class NewUserRequest extends User {
     jsonSchema: {
       maxLength: 16,
       minLength: 8,
-    }
+    },
   })
-  password: string
+  password: string;
 }

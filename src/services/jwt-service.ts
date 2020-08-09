@@ -6,8 +6,8 @@ import {securityId, UserProfile} from '@loopback/security';
 import {promisify} from 'util';
 
 const jwt = require('jsonwebtoken');
-const signAsync = promisify(jwt.sign)
-const verifyAsync = promisify(jwt.verify)
+const signAsync = promisify(jwt.sign);
+const verifyAsync = promisify(jwt.verify);
 
 export class JWTService implements TokenService {
   constructor(
@@ -20,7 +20,7 @@ export class JWTService implements TokenService {
   async verifyToken(token: string): Promise<UserProfile> {
     if (!token) {
       throw new HttpErrors.Unauthorized(
-        `Error occurred while verifying token: 'token' is null`
+        `Error occurred while verifying token: 'token' is null`,
       );
     }
 
@@ -44,7 +44,9 @@ export class JWTService implements TokenService {
   }
   async generateToken(userProfile: UserProfile): Promise<string> {
     if (!userProfile) {
-      throw new HttpErrors.Unauthorized(`Error when generating token : userProfile is null`);
+      throw new HttpErrors.Unauthorized(
+        `Error when generating token : userProfile is null`,
+      );
     }
     const userDetails = {
       id: userProfile[securityId],
@@ -60,6 +62,6 @@ export class JWTService implements TokenService {
     } catch (error) {
       throw new HttpErrors.Unauthorized(`Error encoding token : ${error}`);
     }
-    return token
+    return token;
   }
 }

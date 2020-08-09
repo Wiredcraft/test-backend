@@ -25,7 +25,7 @@ export class User extends Entity {
     type: 'string',
     required: true,
   })
-  name: string;
+  name?: string;
 
   @property({
     type: 'date',
@@ -40,7 +40,7 @@ export class User extends Entity {
 
   @property({
     type: 'string',
-    required: true
+    required: true,
   })
   email: string;
 
@@ -56,11 +56,9 @@ export class User extends Entity {
     type: 'date',
     default: () => new Date(),
   })
-  createdAt: Date;
-
+  createdAt?: Date;
 
   constructor(data?: Partial<User>) {
     super(data);
   }
 }
-

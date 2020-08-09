@@ -1,9 +1,19 @@
 // Uncomment these imports to begin using these cool features!
 import {TokenService, UserService} from '@loopback/authentication';
-import {TokenServiceBindings, User, UserServiceBindings} from '@loopback/authentication-jwt';
+import {
+  TokenServiceBindings,
+  User,
+  UserServiceBindings,
+} from '@loopback/authentication-jwt';
 import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
-import {api, getModelSchemaRef, HttpErrors, post, requestBody} from '@loopback/rest';
+import {
+  api,
+  getModelSchemaRef,
+  HttpErrors,
+  post,
+  requestBody,
+} from '@loopback/rest';
 import _ from 'lodash';
 import {PasswordHasherBindings} from '../keys';
 import {NewUserRequest} from '../models';
@@ -22,8 +32,7 @@ export class AuthenticationController {
     @inject(TokenServiceBindings.TOKEN_SERVICE)
     public jwtService: TokenService,
     @inject(UserServiceBindings.USER_SERVICE)
-    public userService: UserService<User, Credentials>
-
+    public userService: UserService<User, Credentials>,
   ) {}
   @post('/signup', {
     responses: {
@@ -33,37 +42,38 @@ export class AuthenticationController {
           'application/json': {
             schema: {
               'x-ts-type': User,
-            }
-          }
-        }
-      }
-    }
-  })
-  async signUp(@requestBody({
-    content: {
-      'application/json': {
-        schema: getModelSchemaRef(NewUserRequest, {
-          title: 'NewUser',
-        }),
+            },
+          },
+        },
       },
     },
   })
-  newUserRequest: NewUserRequest,
+  async signUp(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(NewUserRequest, {
+            title: 'NewUser',
+          }),
+        },
+      },
+    })
+    newUserRequest: NewUserRequest,
   ): Promise<User> {
     // validate the email and password values.
     validateCredentials(_.pick(newUserRequest, ['email', 'password']));
 
     // Encrypt the incoming password
-    const password = await this.passwordHasher.hashPassword(newUserRequest.password);
+    const password = await this.passwordHasher.hashPassword(
+      newUserRequest.password,
+    );
 
     try {
       const newUser = await this.userRepository.create(
         _.omit(newUserRequest, 'password'),
       );
       // save hashed password.
-      await this.userRepository
-        .userCredentials(newUser.id)
-        .create({password});
+      await this.userRepository.userCredentials(newUser.id).create({password});
       return newUser;
     } catch (error) {
       // 11000 is a mongoDB error code thrown when there is for a duplicate key

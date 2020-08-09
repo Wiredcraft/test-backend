@@ -2,11 +2,13 @@ import {authenticate, UserService} from '@loopback/authentication';
 import {inject} from '@loopback/core';
 import {Filter, FilterExcludingWhere, repository} from '@loopback/repository';
 import {
-  api, del, get,
+  api,
+  del,
+  get,
   getModelSchemaRef,
   param,
   patch,
-  requestBody
+  requestBody,
 } from '@loopback/rest';
 import {UserServiceBindings} from '../keys';
 import {User} from '../models';
@@ -19,14 +21,13 @@ export class UserController {
   constructor(
     @repository(UserRepository) public userRepository: UserRepository,
     @inject(UserServiceBindings.USER_SERVICE)
-    public userService: UserService<User, Credentials>
-
+    public userService: UserService<User, Credentials>,
   ) {}
 
-  // @post('/users/signup', {
+  // @post('/users', {
   //   responses: {
   //     '200': {
-  //       description: 'Registered User',
+  //       description: 'Created User',
   //       content: {
   //         'application/json': {
   //           schema: {
@@ -53,7 +54,6 @@ export class UserController {
 
   //   // Encrypt the incoming password
   //   const password = await this.passwordHasher.hashPassword(newUserRequest.password);
-
   //   try {
   //     const newUser = await this.userRepository.create(
   //       _.omit(newUserRequest, 'password'),
@@ -73,37 +73,6 @@ export class UserController {
   //   }
   // }
 
-  // @post('/users/login', {
-  //   responses: {
-  //     '200': {
-  //       description: 'Login user for JWT token',
-  //       content: {
-  //         'application/json': {
-  //           schema: {
-  //             type: 'object',
-  //             properties: {
-  //               token: {
-  //                 type: 'string',
-  //               },
-  //             },
-  //           },
-  //         },
-  //       },
-  //     },
-  //   },
-  // })
-  // async login(
-  //   @requestBody() credentials: Credentials,
-  // ): Promise<{token: string}> {
-  //   // check if user exists and password is correct
-  //   const user = await this.userService.verifyCredentials(credentials);
-  //   // convert user object into a user profile with the necessary properties
-  //   const userProfile = this.userService.convertToUserProfile(user);
-  //   // generate token with user profile
-  //   const token = await this.jwtService.generateToken(userProfile);
-  //   return {token};
-  // }
-
   @get('/users', {
     responses: {
       '200': {
@@ -119,12 +88,9 @@ export class UserController {
       },
     },
   })
-  async find(
-    @param.filter(User) filter?: Filter<User>,
-  ): Promise<User[]> {
+  async find(@param.filter(User) filter?: Filter<User>): Promise<User[]> {
     return this.userRepository.find(filter);
   }
-
 
   @get('/users/{id}', {
     responses: {
@@ -140,7 +106,7 @@ export class UserController {
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
+    @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>,
   ): Promise<User> {
     return this.userRepository.findById(id, filter);
   }

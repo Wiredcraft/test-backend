@@ -42,7 +42,7 @@ export class CustomUserService implements UserService<User, Credentials> {
     );
 
     if (!matchedPassword) {
-      throw new HttpErrors.Unauthorized(invalidCredentialsError)
+      throw new HttpErrors.Unauthorized(invalidCredentialsError);
     }
 
     return foundUser;
@@ -57,7 +57,7 @@ export class CustomUserService implements UserService<User, Credentials> {
     const userProfile = {
       [securityId]: user.id,
       name: user.name,
-      id: user.id
+      id: user.id,
     };
     return userProfile;
   }

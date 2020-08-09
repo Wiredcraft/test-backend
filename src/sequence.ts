@@ -1,10 +1,24 @@
-import {AuthenticateFn, AuthenticationBindings, AUTHENTICATION_STRATEGY_NOT_FOUND, USER_PROFILE_NOT_FOUND} from '@loopback/authentication';
+import {
+  AuthenticateFn,
+  AuthenticationBindings,
+  AUTHENTICATION_STRATEGY_NOT_FOUND,
+  USER_PROFILE_NOT_FOUND
+} from '@loopback/authentication';
 import {inject} from '@loopback/core';
-import {FindRoute, InvokeMethod, InvokeMiddleware, ParseParams, Reject, RequestContext, RestBindings, Send, SequenceHandler} from '@loopback/rest';
+import {
+  FindRoute,
+  InvokeMethod,
+  InvokeMiddleware,
+  ParseParams,
+  Reject,
+  RequestContext,
+  RestBindings,
+  Send,
+  SequenceHandler
+} from '@loopback/rest';
 
 const SequenceActions = RestBindings.SequenceActions;
 export class MySequence implements SequenceHandler {
-
   @inject(SequenceActions.INVOKE_MIDDLEWARE, {optional: true})
   protected invokeMiddlware: InvokeMiddleware = () => false;
 
@@ -17,7 +31,6 @@ export class MySequence implements SequenceHandler {
     @inject(AuthenticationBindings.AUTH_ACTION)
     protected authenticateRequest: AuthenticateFn,
   ) {}
-
 
   async handle(context: RequestContext): Promise<void> {
     try {

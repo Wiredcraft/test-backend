@@ -1,5 +1,10 @@
 import {Getter, inject} from '@loopback/core';
-import {DefaultCrudRepository, HasOneRepositoryFactory, juggler, repository} from '@loopback/repository';
+import {
+  DefaultCrudRepository,
+  HasOneRepositoryFactory,
+  juggler,
+  repository,
+} from '@loopback/repository';
 import {UserCredentialsRepository} from '.';
 import {User, UserCredentials} from '../models';
 
@@ -11,7 +16,7 @@ export type Credentials = {
 export class UserRepository extends DefaultCrudRepository<
   User,
   typeof User.prototype.id
-  > {
+> {
   public readonly userCredentials: HasOneRepositoryFactory<
     UserCredentials,
     typeof User.prototype.id

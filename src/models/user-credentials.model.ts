@@ -15,7 +15,7 @@ export class UserCredentials extends Entity {
     jsonSchema: {
       maxLength: 16,
       minLength: 8,
-    }
+    },
   })
   password: string;
 
@@ -35,4 +35,5 @@ export interface UserCredentialsRelations {
   // describe navigational properties here
 }
 
-export type UserCredentialsWithRelations = UserCredentials & UserCredentialsRelations;
+export type UserCredentialsWithRelations = UserCredentials &
+  UserCredentialsRelations;

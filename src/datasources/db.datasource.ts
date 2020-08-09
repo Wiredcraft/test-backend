@@ -12,7 +12,7 @@ const config = {
   user: '',
   password: '',
   database: 'wc-test-db',
-  useNewUrlParser: true
+  useNewUrlParser: true,
 };
 
 @lifeCycleObserver('datasource')

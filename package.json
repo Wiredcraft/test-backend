@@ -50,6 +50,7 @@
     "@loopback/authentication-jwt": "^0.5.0",
     "@loopback/boot": "^2.4.1",
     "@loopback/core": "^2.9.3",
+    "@loopback/extension-health": "^0.4.11",
     "@loopback/repository": "^2.11.0",
     "@loopback/rest": "^6.0.0",
     "@loopback/rest-explorer": "^2.2.8",

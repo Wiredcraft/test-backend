@@ -1,5 +1,9 @@
 import {TokenService, UserService} from '@loopback/authentication';
-import {Credentials, TokenServiceBindings, UserServiceBindings} from '@loopback/authentication-jwt';
+import {
+  Credentials,
+  TokenServiceBindings,
+  UserServiceBindings,
+} from '@loopback/authentication-jwt';
 import {HttpErrors} from '@loopback/rest';
 import {securityId} from '@loopback/security';
 import {expect} from '@loopback/testlab';
@@ -23,8 +27,8 @@ describe('Authentication service', function (this: Mocha.Suite) {
     dob: '2020-08-08T12:11:31.076Z',
     address: 'Shanghai',
     description: 'Hey, this is just a test',
-    createdAt: '2020-08-08T12:11:31.076Z'
-  }
+    createdAt: '2020-08-08T12:11:31.076Z',
+  };
   const userPassword = 'wcTesPa$$';
 
   let newUser: User;
@@ -35,7 +39,7 @@ describe('Authentication service', function (this: Mocha.Suite) {
 
   before(setupApp);
   after(async () => {
-    if (application != null) await application.stop()
+    if (application != null) await application.stop();
   });
 
   before(async () => {
@@ -54,9 +58,7 @@ describe('Authentication service', function (this: Mocha.Suite) {
     const expectedUserWithNoPassword = _.omit(newUser, 'password');
     const returnUserWithNoPassword = _.omit(returnedUser, 'password');
 
-    expect(returnUserWithNoPassword).to.deepEqual(
-      expectedUserWithNoPassword,
-    );
+    expect(returnUserWithNoPassword).to.deepEqual(expectedUserWithNoPassword);
   });
 
   it('user service verifyCredentials() fails with user not found', async () => {
@@ -151,18 +153,16 @@ describe('Authentication service', function (this: Mocha.Suite) {
 
   it('Validator validateCredentials() fails with invalid password', () => {
     const expectedError = new HttpErrors.UnprocessableEntity(
-      'password length should be greater than 8'
+      'password length should be greater than 8',
     );
     const credentials = {email: 'test@wc.com', password: 'test'};
     expect(() => validateCredentials(credentials)).to.throw(expectedError);
   });
 
-
-
   async function setupApp() {
     const applicationWithClient = await setupApplication();
     application = applicationWithClient.app;
-    application.bind(PasswordHasherBindings.ROUNDS).to(2)
+    application.bind(PasswordHasherBindings.ROUNDS).to(2);
   }
 
   async function testTokenService() {
@@ -178,12 +178,14 @@ describe('Authentication service', function (this: Mocha.Suite) {
   }
 
   async function createUser() {
-    bcryptHasher = await application.get(PasswordHasherBindings.PASSWORD_HASHER);
-    const encryptedPassword = await bcryptHasher.hashPassword(userPassword)
-    newUser = await userRepo.create(userDetails)
-    newUser.id = newUser.id.toString()
+    bcryptHasher = await application.get(
+      PasswordHasherBindings.PASSWORD_HASHER,
+    );
+    const encryptedPassword = await bcryptHasher.hashPassword(userPassword);
+    newUser = await userRepo.create(userDetails);
+    newUser.id = newUser.id.toString();
     await userRepo.userCredentials(newUser.id).create({
       password: encryptedPassword,
     });
   }
-})
+});

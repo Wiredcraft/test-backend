@@ -1,7 +1,12 @@
 import {AuthenticationComponent} from '@loopback/authentication';
-import {JWTAuthenticationComponent, SecuritySpecEnhancer, TokenServiceBindings} from '@loopback/authentication-jwt';
+import {
+  JWTAuthenticationComponent,
+  SecuritySpecEnhancer,
+  TokenServiceBindings
+} from '@loopback/authentication-jwt';
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig, createBindingFromClass} from '@loopback/core';
+import {HealthBindings, HealthComponent} from '@loopback/extension-health';
 import {RepositoryMixin} from '@loopback/repository';
 import {RestApplication} from '@loopback/rest';
 import {
@@ -28,12 +33,17 @@ export class TestBackendApplication extends BootMixin(
     this.component(AuthenticationComponent);
     this.component(JWTAuthenticationComponent);
 
+    // Bind health Check Component
+    this.component(HealthComponent);
+    this.configure(HealthBindings.COMPONENT).to({
+      healthPath: '/health',
+    });
+
     // Set up the custom sequence
     this.sequence(MySequence);
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
-
 
     this.setUpBindings();
 
@@ -57,8 +67,6 @@ export class TestBackendApplication extends BootMixin(
 
   // Add Bindings
   setUpBindings(): void {
-
-
     // Bind encryption serivces
     this.bind(PasswordHasherBindings.ROUNDS).to(10);
     this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher);
@@ -67,5 +75,4 @@ export class TestBackendApplication extends BootMixin(
     this.bind(UserServiceBindings.USER_SERVICE).toClass(CustomUserService);
     this.add(createBindingFromClass(SecuritySpecEnhancer));
   }
-
 }
