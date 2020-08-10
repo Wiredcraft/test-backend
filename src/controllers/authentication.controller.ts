@@ -71,7 +71,7 @@ export class AuthenticationController {
         'application/json': {
           schema: getModelSchemaRef(NewUserRequest, {
             title: 'NewUser',
-            exclude: ['id', 'createdAt'],
+            exclude: ['id'],
           }),
         },
       },
@@ -163,6 +163,7 @@ export class AuthenticationController {
         }
       }
     }) credentials: Credentials): Promise<{token: string}> {
+    validateCredentials(_.pick(credentials, ['email', 'password']));
     try {
       const user = await this.userService.verifyCredentials(credentials);
       const userProfile = this.userService.convertToUserProfile(user);
@@ -170,8 +171,7 @@ export class AuthenticationController {
       return {token};
     } catch (error) {
       this.logger.error("Login failed", error)
-      throw new HttpErrors.InternalServerError('Login Failed, Try again!')
+      throw new HttpErrors.Unauthorized('Invalid email or password.')
     }
-
   }
 }
