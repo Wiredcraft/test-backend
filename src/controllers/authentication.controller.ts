@@ -13,12 +13,15 @@ import {
   requestBody
 } from '@loopback/rest';
 import _ from 'lodash';
+import * as winston from 'winston';
+import {LogConfig} from '../config/logConfig';
 import {PasswordHasherBindings} from '../keys';
 import {NewUserRequest} from '../models';
 import {PasswordHasher} from '../services/hash.password.bcrypt';
 import {validateCredentials} from '../services/validator';
 import {Credentials, UserRepository} from './../repositories/user.repository';
-@api({basePath: '/api/v1'})
+
+@api({basePath: '/auth'})
 export class AuthenticationController {
   constructor(
     @repository(UserRepository) public userRepository: UserRepository,
@@ -28,17 +31,34 @@ export class AuthenticationController {
     public jwtService: TokenService,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>,
+    public logger = winston.loggers.get(LogConfig.logName),
+
   ) {}
 
 
+  /**
+   * Flow:
+   * Takes user details
+   * Extracts and hashes plain password
+   * Saves User details with hashed password
+   * Uses provided user details to generate
+   * JWT token.
+   * @param newUserRequest
+   * @returns token
+   */
   @post('/signup', {
     responses: {
       '200': {
-        description: 'Registered User',
+        description: 'JWT token for new user',
         content: {
           'application/json': {
             schema: {
-              'x-ts-type': User,
+              type: 'object',
+              properties: {
+                token: {
+                  type: 'string',
+                },
+              },
             },
           },
         },
@@ -57,32 +77,38 @@ export class AuthenticationController {
       },
     })
     newUserRequest: NewUserRequest,
-  ): Promise<User> {
-    // validate the email and password values.
+  ): Promise<{token: string}> {
     validateCredentials(_.pick(newUserRequest, ['email', 'password']));
-
-    // Encrypt the incoming password
     const password = await this.passwordHasher.hashPassword(
       newUserRequest.password,
     );
-
     try {
       const newUser = await this.userRepository.create(
         _.omit(newUserRequest, 'password'),
       );
-      // save hashed password.
       await this.userRepository.userCredentials(newUser.id).create({password});
-      return newUser;
+      const userProfile = this.userService.convertToUserProfile(newUser);
+      const token = await this.jwtService.generateToken(userProfile);
+      return {token};
     } catch (error) {
       // 11000 is a mongoDB error code thrown when there is for a duplicate key
       if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
+        this.logger.error('Duplicate email:', error)
         throw new HttpErrors.Conflict('Email is taken');
       } else {
-        throw error;
+        this.logger.error('User creation failed: ', error)
+        throw new HttpErrors.InternalServerError('Sign up failed, Try again!');
       }
     }
   }
 
+  /**
+   * Flow:
+   * Takes email and password
+   * Verifies the credential and then proceeds to generate the JWT token
+   * @param credentials
+   * @returns token
+   */
   @post('/login', {
     requestBody: {
       content: {
@@ -137,12 +163,15 @@ export class AuthenticationController {
         }
       }
     }) credentials: Credentials): Promise<{token: string}> {
-    // check if user exists and password is correct
-    const user = await this.userService.verifyCredentials(credentials);
-    // convert user object into a user profile with the necessary properties
-    const userProfile = this.userService.convertToUserProfile(user);
-    // generate token with user profile
-    const token = await this.jwtService.generateToken(userProfile);
-    return {token};
+    try {
+      const user = await this.userService.verifyCredentials(credentials);
+      const userProfile = this.userService.convertToUserProfile(user);
+      const token = await this.jwtService.generateToken(userProfile);
+      return {token};
+    } catch (error) {
+      this.logger.error("Login failed", error)
+      throw new HttpErrors.InternalServerError('Login Failed, Try again!')
+    }
+
   }
 }

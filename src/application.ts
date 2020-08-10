@@ -16,12 +16,19 @@ import {
 import {ServiceMixin} from '@loopback/service-proxy';
 import * as dotenv from 'dotenv';
 import * as dotenvExt from 'dotenv-extended';
+import moment from 'moment';
 import path from 'path';
+//Winston Import
+import * as winston from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
+import {LogConfig} from './config/logConfig';
 import {PasswordHasherBindings, UserServiceBindings} from './keys';
 import {MySequence} from './sequence';
 import {BcryptHasher} from './services/hash.password.bcrypt';
 import {JWTService} from './services/jwt-service';
 import {CustomUserService} from './services/user-service';
+
+
 
 export {ApplicationConfig};
 
@@ -49,7 +56,47 @@ export class TestBackendApplication extends BootMixin(
     });
 
     // setup logger
-    // this.component(LoggingComponent);
+    const customFormat = winston.format.combine(
+      winston.format.splat(),
+      winston.format.simple(),
+      winston.format.json(),
+      winston.format.align(),
+      winston.format.printf(
+        info =>
+          `${moment().format('YYYY-MM-DD HH:mm:ss:SS')} - ${info.level}: ${
+          info.message
+          }`,
+      ),
+    );
+
+    winston.loggers.add(LogConfig.logName, {
+      exitOnError: false,
+      format: winston.format.combine(customFormat),
+      transports: [
+        new DailyRotateFile({
+          filename: LogConfig.logDirectory + LogConfig.logFileError,
+          datePattern: LogConfig.logDatePattern,
+          zippedArchive: true,
+          level: 'error',
+        }),
+        new DailyRotateFile({
+          filename: LogConfig.logDirectory + LogConfig.logFileDebug,
+          datePattern: LogConfig.logDatePattern,
+          zippedArchive: true,
+          level: 'debug',
+        }),
+        new DailyRotateFile({
+          filename: LogConfig.logDirectory + LogConfig.logFileInfo,
+          datePattern: LogConfig.logDatePattern,
+          zippedArchive: true,
+          level: 'info',
+        }),
+        new winston.transports.Console({
+          handleExceptions: true,
+        }),
+      ],
+    });
+
 
     // Set up the custom sequence
     this.sequence(MySequence);
@@ -61,7 +108,7 @@ export class TestBackendApplication extends BootMixin(
 
     // Customize @loopback/rest-explorer configuration here
     this.configure(RestExplorerBindings.COMPONENT).to({
-      path: '/api/v1/swagger',
+      path: '/swagger',
     });
     this.component(RestExplorerComponent);
 

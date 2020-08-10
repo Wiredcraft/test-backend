@@ -61,8 +61,12 @@
     "dotenv-extended": "^2.8.0",
     "isemail": "^3.2.0",
     "loopback-connector-mongodb": "^5.2.3",
+    "moment": "^2.27.0",
+    "superagent": "^6.0.0",
     "tsc-watch": "^4.2.9",
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.0"
   },
   "devDependencies": {
     "@loopback/build": "^6.2.0",

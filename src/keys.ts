@@ -4,7 +4,6 @@ import {User} from './models/user.model';
 import {Credentials} from './repositories/user.repository';
 import {PasswordHasher} from './services/hash.password.bcrypt';
 
-// Change this .env variable
 export namespace TokenServiceConstants {
   export const TOKEN_SECRET_VALUE = process.env.JWT_SECRET;
   export const TOKEN_EXPIRES_IN_VALUE = process.env.JWT_EXPIRE;

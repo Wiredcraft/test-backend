@@ -3,29 +3,28 @@ import {inject} from '@loopback/core';
 // import {Logger, logInvocation} from '@loopback/extension-logging';
 import {Filter, FilterExcludingWhere, repository} from '@loopback/repository';
 import {
-  api,
   del,
   get,
   getModelSchemaRef,
+  HttpErrors,
   param,
   patch,
   requestBody
 } from '@loopback/rest';
+import * as winston from 'winston';
+import {LogConfig} from '../config/logConfig';
 import {UserServiceBindings} from '../keys';
 import {User} from '../models';
 import {UserRepository} from '../repositories';
 import {Credentials} from './../repositories/user.repository';
 
 @authenticate('jwt')
-@api({basePath: '/api/v1'})
 export class UserController {
   constructor(
     @repository(UserRepository) public userRepository: UserRepository,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>,
-    // Injecting the logger
-    // @inject(LoggingBindings.WINSTON_LOGGER)
-    // private logger: Logger,
+    public logger = winston.loggers.get(LogConfig.logName),
   ) {}
 
 
@@ -45,7 +44,12 @@ export class UserController {
     },
   })
   async find(@param.filter(User) filter?: Filter<User>): Promise<User[]> {
-    return this.userRepository.find(filter);
+    try {
+      return await this.userRepository.find(filter);
+    } catch (error) {
+      this.logger.error("Error retrieving Users", error)
+      throw new HttpErrors.InternalServerError(`Failed to retrieve users`);
+    }
   }
 
   @get('/users/{id}', {
@@ -64,7 +68,12 @@ export class UserController {
     @param.path.string('id') id: string,
     @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>,
   ): Promise<User> {
-    return this.userRepository.findById(id, filter);
+    try {
+      return await this.userRepository.findById(id, filter);
+    } catch (error) {
+      this.logger.error("Error retrieving user", error)
+      throw new HttpErrors.InternalServerError(`Failed to retrieve details of this user with id: ${id}`);
+    }
   }
 
   @patch('/users/{id}', {
@@ -85,7 +94,12 @@ export class UserController {
     })
     user: User,
   ): Promise<void> {
-    await this.userRepository.updateById(id, user);
+    try {
+      await this.userRepository.updateById(id, user);
+    } catch (error) {
+      this.logger.error("Error updating user", error)
+      throw new HttpErrors.InternalServerError(`Failed to update details of this user with this id: ${id}`);
+    }
   }
 
   @del('/users/{id}', {
@@ -96,6 +110,11 @@ export class UserController {
     },
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.userRepository.deleteById(id);
+    try {
+      await this.userRepository.deleteById(id);
+    } catch (error) {
+      this.logger.error("Error deleting user", error)
+      throw new HttpErrors.InternalServerError(`Failed to delete user with this id: ${id}`);
+    }
   }
 }

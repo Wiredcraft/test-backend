@@ -1,20 +1,17 @@
 import {TokenService, UserService} from '@loopback/authentication';
-import {
-  Credentials,
-  TokenServiceBindings,
-  UserServiceBindings,
-} from '@loopback/authentication-jwt';
+import {TokenServiceBindings} from '@loopback/authentication-jwt';
 import {HttpErrors} from '@loopback/rest';
 import {securityId} from '@loopback/security';
 import {expect} from '@loopback/testlab';
 import _ from 'lodash';
-import {TestBackendApplication} from '../..';
-import {PasswordHasherBindings} from '../../keys';
+import {PasswordHasherBindings, UserServiceBindings} from '../../keys';
 import {User} from '../../models/user.model';
-import {UserRepository} from '../../repositories/user.repository';
+import {Credentials, UserRepository} from '../../repositories/user.repository';
 import {PasswordHasher} from '../../services/hash.password.bcrypt';
 import {validateCredentials} from '../../services/validator';
+import {TestBackendApplication} from './../../application';
 import {setupApplication} from './test-helper';
+
 
 describe('Authentication service', function (this: Mocha.Suite) {
   let application: TestBackendApplication;
