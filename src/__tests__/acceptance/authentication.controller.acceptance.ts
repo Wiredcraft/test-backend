@@ -32,7 +32,6 @@ describe('AuthenticationController', () => {
     userRepo = await app.get('repositories.UserRepository')
   });
 
-  before(migrate);
   before(testPasswordHasher);
   beforeEach(cleanDB);
 
@@ -77,7 +76,7 @@ describe('AuthenticationController', () => {
         address: 'shanghai',
         description: 'test'
       })
-      .expect(422);
+      .expect(401);
 
     expect(res.body.error.message).to.equal('invalid email');
   });
@@ -158,9 +157,6 @@ describe('AuthenticationController', () => {
     await userRepo.deleteAll();
   }
 
-  async function migrate() {
-    await app.migrateSchema();
-  }
 
   async function createUser() {
     bcryptHasher = await app.get(

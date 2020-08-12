@@ -28,8 +28,6 @@ describe('UserController', () => {
     ({app, client} = await setupApplication());
     userRepo = await app.get('repositories.UserRepository')
   });
-  // before(migrateSchema);
-  // before()
 
   beforeEach(cleanDB);
 
