@@ -18,6 +18,8 @@ import {
 } from '@loopback/rest';
 
 const SequenceActions = RestBindings.SequenceActions;
+
+
 export class MySequence implements SequenceHandler {
   @inject(SequenceActions.INVOKE_MIDDLEWARE, {optional: true})
   protected invokeMiddlware: InvokeMiddleware = () => false;

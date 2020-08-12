@@ -143,13 +143,13 @@ describe('Authentication service', function (this: Mocha.Suite) {
   });
 
   it('Validator validateCredentials() fails with invalid email', () => {
-    const expectedError = new HttpErrors.UnprocessableEntity('invalid email');
+    const expectedError = new HttpErrors.Unauthorized('invalid email');
     const credentials = {email: 'wctestymail.com', password: 'wcTesPa$$'};
     expect(() => validateCredentials(credentials)).to.throw(expectedError);
   });
 
   it('Validator validateCredentials() fails with invalid password', () => {
-    const expectedError = new HttpErrors.UnprocessableEntity(
+    const expectedError = new HttpErrors.Unauthorized(
       'password length should be greater than 8',
     );
     const credentials = {email: 'test@wc.com', password: 'test'};

@@ -6,7 +6,7 @@ export class UserCredentialsRepository extends DefaultCrudRepository<
   UserCredentials,
   typeof UserCredentials.prototype.id,
   UserCredentialsRelations
-> {
+  > {
   constructor(@inject('datasources.db') dataSource: juggler.DataSource) {
     super(UserCredentials, dataSource);
   }

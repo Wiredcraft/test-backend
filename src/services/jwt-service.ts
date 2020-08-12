@@ -4,6 +4,8 @@ import {inject} from '@loopback/core';
 import {HttpErrors} from '@loopback/rest';
 import {securityId, UserProfile} from '@loopback/security';
 import {promisify} from 'util';
+import * as winston from 'winston';
+import {LogConfig} from '../config/logConfig';
 
 const jwt = require('jsonwebtoken');
 const signAsync = promisify(jwt.sign);
@@ -15,10 +17,13 @@ export class JWTService implements TokenService {
     private jwtSecret: string,
     @inject(TokenServiceBindings.TOKEN_EXPIRES_IN)
     private jwtExpires: string,
+    public logger = winston.loggers.get(LogConfig.logName),
+
   ) {}
 
   async verifyToken(token: string): Promise<UserProfile> {
     if (!token) {
+      this.logger.error("jwt-service-verify: token not available");
       throw new HttpErrors.Unauthorized(
         `Error occurred while verifying token: 'token' is null`,
       );
@@ -36,6 +41,7 @@ export class JWTService implements TokenService {
         },
       );
     } catch (error) {
+      this.logger.error("jwt-service-verify: ", error);
       throw new HttpErrors.Unauthorized(
         `Error occurred while verifying token : ${error.message}`,
       );
@@ -44,6 +50,7 @@ export class JWTService implements TokenService {
   }
   async generateToken(userProfile: UserProfile): Promise<string> {
     if (!userProfile) {
+      this.logger.error("jwt-service-generate: No user profile");
       throw new HttpErrors.Unauthorized(
         `Error when generating token : userProfile is null`,
       );
@@ -52,7 +59,6 @@ export class JWTService implements TokenService {
       id: userProfile[securityId],
       name: userProfile.name,
     };
-
     // Generate the JSON Web Token
     let token: string;
     try {
@@ -60,6 +66,7 @@ export class JWTService implements TokenService {
         expiresIn: Number(this.jwtExpires),
       });
     } catch (error) {
+      this.logger.error('jwt-service-generate: ', error);
       throw new HttpErrors.Unauthorized(`Error encoding token : ${error}`);
     }
     return token;

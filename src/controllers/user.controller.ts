@@ -3,7 +3,7 @@ import {inject} from '@loopback/core';
 // import {Logger, logInvocation} from '@loopback/extension-logging';
 import {Filter, FilterExcludingWhere, repository} from '@loopback/repository';
 import {
-  del,
+  api, del,
   get,
   getModelSchemaRef,
   HttpErrors,
@@ -19,6 +19,7 @@ import {UserRepository} from '../repositories';
 import {Credentials} from './../repositories/user.repository';
 
 @authenticate('jwt')
+@api({basePath: '/users'})
 export class UserController {
   constructor(
     @repository(UserRepository) public userRepository: UserRepository,
@@ -28,7 +29,7 @@ export class UserController {
   ) {}
 
 
-  @get('/users', {
+  @get('', {
     responses: {
       '200': {
         description: 'Collection of Registered Users',
@@ -52,7 +53,7 @@ export class UserController {
     }
   }
 
-  @get('/users/{id}', {
+  @get('/{id}', {
     responses: {
       '200': {
         description: 'User model instance',
@@ -76,7 +77,7 @@ export class UserController {
     }
   }
 
-  @patch('/users/{id}', {
+  @patch('/{id}', {
     responses: {
       '204': {
         description: 'User PATCH success',
@@ -102,7 +103,7 @@ export class UserController {
     }
   }
 
-  @del('/users/{id}', {
+  @del('/{id}', {
     responses: {
       '204': {
         description: 'User DELETE success',

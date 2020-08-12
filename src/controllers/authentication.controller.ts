@@ -13,7 +13,7 @@ import {
   requestBody
 } from '@loopback/rest';
 import _ from 'lodash';
-import * as winston from 'winston';
+import winston from 'winston';
 import {LogConfig} from '../config/logConfig';
 import {PasswordHasherBindings} from '../keys';
 import {NewUserRequest} from '../models';
@@ -31,6 +31,7 @@ export class AuthenticationController {
     public jwtService: TokenService,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>,
+    // Inject Winston logger here
     public logger = winston.loggers.get(LogConfig.logName),
 
   ) {}

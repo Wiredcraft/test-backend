@@ -18,8 +18,7 @@ import * as dotenv from 'dotenv';
 import * as dotenvExt from 'dotenv-extended';
 import moment from 'moment';
 import path from 'path';
-//Winston Import
-import * as winston from 'winston';
+import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import {LogConfig} from './config/logConfig';
 import {PasswordHasherBindings, UserServiceBindings} from './keys';
@@ -55,7 +54,8 @@ export class TestBackendApplication extends BootMixin(
       errorOnMissing: true,
     });
 
-    // setup logger
+    // FIXME: Extract to separate log config file.
+    // setup logger with winston
     const customFormat = winston.format.combine(
       winston.format.splat(),
       winston.format.simple(),
@@ -77,6 +77,7 @@ export class TestBackendApplication extends BootMixin(
           filename: LogConfig.logDirectory + LogConfig.logFileError,
           datePattern: LogConfig.logDatePattern,
           zippedArchive: true,
+          handleExceptions: true,
           level: 'error',
         }),
         new DailyRotateFile({
@@ -96,6 +97,7 @@ export class TestBackendApplication extends BootMixin(
         }),
       ],
     });
+
 
 
     // Set up the custom sequence
@@ -130,7 +132,6 @@ export class TestBackendApplication extends BootMixin(
     this.bind(PasswordHasherBindings.ROUNDS).to(10);
     this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher);
     this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService);
-
     this.bind(UserServiceBindings.USER_SERVICE).toClass(CustomUserService);
     this.add(createBindingFromClass(SecuritySpecEnhancer));
   }

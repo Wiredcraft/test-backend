@@ -7,12 +7,12 @@ import {PasswordHasherBindings} from '../keys';
 import {User} from './../models/user.model';
 import {Credentials, UserRepository} from './../repositories/user.repository';
 import {PasswordHasher} from './hash.password.bcrypt';
-
 export class CustomUserService implements UserService<User, Credentials> {
   constructor(
     @repository(UserRepository) public userRepostory: UserRepository,
     @inject(PasswordHasherBindings.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
+
   ) {}
 
   async verifyCredentials(credentials: Credentials): Promise<User> {
