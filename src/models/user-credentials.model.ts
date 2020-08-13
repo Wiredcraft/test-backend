@@ -35,5 +35,4 @@ export interface UserCredentialsRelations {
   // describe navigational properties here
 }
 
-export type UserCredentialsWithRelations = UserCredentials &
-  UserCredentialsRelations;
+export type UserCredentialsWithRelations = UserCredentials & UserCredentialsRelations;

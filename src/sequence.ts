@@ -2,7 +2,7 @@ import {
   AuthenticateFn,
   AuthenticationBindings,
   AUTHENTICATION_STRATEGY_NOT_FOUND,
-  USER_PROFILE_NOT_FOUND
+  USER_PROFILE_NOT_FOUND,
 } from '@loopback/authentication';
 import {inject} from '@loopback/core';
 import {
@@ -14,11 +14,10 @@ import {
   RequestContext,
   RestBindings,
   Send,
-  SequenceHandler
+  SequenceHandler,
 } from '@loopback/rest';
 
 const SequenceActions = RestBindings.SequenceActions;
-
 
 export class MySequence implements SequenceHandler {
   @inject(SequenceActions.INVOKE_MIDDLEWARE, {optional: true})
@@ -48,10 +47,7 @@ export class MySequence implements SequenceHandler {
 
       this.send(response, result);
     } catch (error) {
-      if (
-        error.code === AUTHENTICATION_STRATEGY_NOT_FOUND ||
-        error.code === USER_PROFILE_NOT_FOUND
-      ) {
+      if (error.code === AUTHENTICATION_STRATEGY_NOT_FOUND || error.code === USER_PROFILE_NOT_FOUND) {
         Object.assign(error, {statusCode: 401});
       }
       this.reject(context, error);

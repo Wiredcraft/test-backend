@@ -1,7 +1,4 @@
-import {
-  Client, createRestAppClient,
-  givenHttpServerConfig
-} from '@loopback/testlab';
+import {Client, createRestAppClient, givenHttpServerConfig} from '@loopback/testlab';
 import {TestBackendApplication} from '../..';
 
 export async function setupApplication(): Promise<AppWithClient> {

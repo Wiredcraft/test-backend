@@ -1,18 +1,11 @@
 import {AuthenticationComponent} from '@loopback/authentication';
-import {
-  JWTAuthenticationComponent,
-  SecuritySpecEnhancer,
-  TokenServiceBindings
-} from '@loopback/authentication-jwt';
+import {JWTAuthenticationComponent, SecuritySpecEnhancer, TokenServiceBindings} from '@loopback/authentication-jwt';
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig, createBindingFromClass} from '@loopback/core';
 import {HealthBindings, HealthComponent} from '@loopback/extension-health';
 import {RepositoryMixin} from '@loopback/repository';
 import {RestApplication} from '@loopback/rest';
-import {
-  RestExplorerBindings,
-  RestExplorerComponent
-} from '@loopback/rest-explorer';
+import {RestExplorerBindings, RestExplorerComponent} from '@loopback/rest-explorer';
 import {ServiceMixin} from '@loopback/service-proxy';
 import * as dotenv from 'dotenv';
 import * as dotenvExt from 'dotenv-extended';
@@ -27,13 +20,9 @@ import {BcryptHasher} from './services/hash.password.bcrypt';
 import {JWTService} from './services/jwt-service';
 import {CustomUserService} from './services/user-service';
 
-
-
 export {ApplicationConfig};
 
-export class TestBackendApplication extends BootMixin(
-  ServiceMixin(RepositoryMixin(RestApplication)),
-) {
+export class TestBackendApplication extends BootMixin(ServiceMixin(RepositoryMixin(RestApplication))) {
   constructor(options: ApplicationConfig = {}) {
     super(options);
 
@@ -61,12 +50,7 @@ export class TestBackendApplication extends BootMixin(
       winston.format.simple(),
       winston.format.json(),
       winston.format.align(),
-      winston.format.printf(
-        info =>
-          `${moment().format('YYYY-MM-DD HH:mm:ss:SS')} - ${info.level}: ${
-          info.message
-          }`,
-      ),
+      winston.format.printf(info => `${moment().format('YYYY-MM-DD HH:mm:ss:SS')} - ${info.level}: ${info.message}`),
     );
 
     winston.loggers.add(LogConfig.logName, {
@@ -97,8 +81,6 @@ export class TestBackendApplication extends BootMixin(
         }),
       ],
     });
-
-
 
     // Set up the custom sequence
     this.sequence(MySequence);

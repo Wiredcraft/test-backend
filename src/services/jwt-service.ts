@@ -18,15 +18,12 @@ export class JWTService implements TokenService {
     @inject(TokenServiceBindings.TOKEN_EXPIRES_IN)
     private jwtExpires: string,
     public logger = winston.loggers.get(LogConfig.logName),
-
   ) {}
 
   async verifyToken(token: string): Promise<UserProfile> {
     if (!token) {
-      this.logger.error("jwt-service-verify: token not available");
-      throw new HttpErrors.Unauthorized(
-        `Error occurred while verifying token: 'token' is null`,
-      );
+      this.logger.error('jwt-service-verify: token not available');
+      throw new HttpErrors.Unauthorized(`Error occurred while verifying token: 'token' is null`);
     }
 
     let userProfile: UserProfile;
@@ -41,19 +38,15 @@ export class JWTService implements TokenService {
         },
       );
     } catch (error) {
-      this.logger.error("jwt-service-verify: ", error);
-      throw new HttpErrors.Unauthorized(
-        `Error occurred while verifying token : ${error.message}`,
-      );
+      this.logger.error('jwt-service-verify: ', error);
+      throw new HttpErrors.Unauthorized(`Error occurred while verifying token : ${error.message}`);
     }
     return userProfile;
   }
   async generateToken(userProfile: UserProfile): Promise<string> {
     if (!userProfile) {
-      this.logger.error("jwt-service-generate: No user profile");
-      throw new HttpErrors.Unauthorized(
-        `Error when generating token : userProfile is null`,
-      );
+      this.logger.error('jwt-service-generate: No user profile');
+      throw new HttpErrors.Unauthorized(`Error when generating token : userProfile is null`);
     }
     const userDetails = {
       id: userProfile[securityId],

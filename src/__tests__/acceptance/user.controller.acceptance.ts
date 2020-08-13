@@ -17,10 +17,9 @@ describe('UserController', () => {
 
   const password = 'wcTesPa$$';
 
-
   before('setupApplication', async () => {
     ({app, client} = await setupApplication());
-    userRepo = await app.get('repositories.UserRepository')
+    userRepo = await app.get('repositories.UserRepository');
   });
 
   before(testPasswordHasher);
@@ -65,7 +64,6 @@ describe('UserController', () => {
   });
 
   describe('Successful Authorizations', () => {
-
     it('Success on invoking GET /users/{id}', async () => {
       userInfo = await createUser({
         email: 'obed@gmail.com',
@@ -73,19 +71,16 @@ describe('UserController', () => {
         dob: '2020-08-08T12:11:31.076Z',
       });
 
-      let response = await client
-        .post('/auth/login')
-        .send({email: userInfo.email, password: password})
-        .expect(200);
+      let response = await client.post('/auth/login').send({email: userInfo.email, password: password}).expect(200);
       token = response.body.token;
 
       response = await client
         .get(`/users/${userInfo.id}`)
         .set('Authorization', 'Bearer ' + token)
-        .expect(200)
+        .expect(200);
 
       expect(response.body.id).to.equal(userInfo.id);
-    })
+    });
 
     it('Success on invoking GET /users', async () => {
       userInfo = await createUser({
@@ -95,20 +90,17 @@ describe('UserController', () => {
         dob: '2020-08-08T12:11:31.076Z',
       });
 
-      let response = await client
-        .post('/auth/login')
-        .send({email: userInfo.email, password: password})
-        .expect(200);
+      let response = await client.post('/auth/login').send({email: userInfo.email, password: password}).expect(200);
       token = response.body.token;
 
       response = await client
         .get(`/users`)
-        .send({address: "Shanghai"})
+        .send({address: 'Shanghai'})
         .set('Authorization', 'Bearer ' + token)
-        .expect(200)
+        .expect(200);
       expect(response.status).to.equal(200);
       expect(response.body).to.not.be.empty();
-    })
+    });
 
     it('Success on invoking PATCH /users/{id}', async () => {
       userInfo = await createUser({
@@ -118,19 +110,16 @@ describe('UserController', () => {
         dob: '2020-08-08T12:11:31.076Z',
       });
 
-      let response = await client
-        .post('/auth/login')
-        .send({email: userInfo.email, password: password})
-        .expect(200);
+      let response = await client.post('/auth/login').send({email: userInfo.email, password: password}).expect(200);
       token = response.body.token;
 
       response = await client
         .patch(`/users/${userInfo.id}`)
-        .send({address: "Shanghai"})
+        .send({address: 'Shanghai'})
         .set('Authorization', 'Bearer ' + token)
-        .expect(204)
+        .expect(204);
       expect(response.status).to.equal(204);
-    })
+    });
 
     it('Success on DELETE /users/{id}', async () => {
       userInfo = await createUser({
@@ -138,27 +127,23 @@ describe('UserController', () => {
         name: 'Obed',
         dob: '2020-08-08T12:11:31.076Z',
       });
-      let response = await client
-        .post('/auth/login')
-        .send({email: userInfo.email, password: password})
-        .expect(200);
+      let response = await client.post('/auth/login').send({email: userInfo.email, password: password}).expect(200);
       token = response.body.token;
 
       response = await client
         .delete(`/users/${userInfo.id}`)
         .set('Authorization', 'Bearer ' + token)
         .expect(204);
-      expect(response.status).to.equal(204)
+      expect(response.status).to.equal(204);
     });
   });
-
 
   async function cleanDB() {
     await userRepo.deleteAll();
   }
 
   async function createUser(data: object) {
-    const encryptedPass = await bcryptHasher.hashPassword(password)
+    const encryptedPass = await bcryptHasher.hashPassword(password);
     const newUser = await userRepo.create(data);
     newUser.id = newUser.id.toString();
 

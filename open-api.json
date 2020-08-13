@@ -1,0 +1,613 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "test-backend",
+    "version": "1.0.0",
+    "description": "WiredCraft Backend Engineer Interview Test",
+    "contact": {
+      "name": "oseifrimpong"
+    }
+  },
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "x-controller-name": "AuthenticationController",
+        "x-operation-name": "login",
+        "tags": [
+          "AuthenticationController"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login user for JWT token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "AuthenticationController.login"
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "x-controller-name": "AuthenticationController",
+        "x-operation-name": "signUp",
+        "tags": [
+          "AuthenticationController"
+        ],
+        "responses": {
+          "200": {
+            "description": "JWT token for new user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewUser"
+              }
+            }
+          }
+        },
+        "operationId": "AuthenticationController.signUp"
+      }
+    },
+    "/users/{id}": {
+      "patch": {
+        "x-controller-name": "UserController",
+        "x-operation-name": "updateById",
+        "tags": [
+          "UserController"
+        ],
+        "responses": {
+          "204": {
+            "description": "User PATCH success"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserPartial"
+              }
+            }
+          },
+          "x-parameter-index": 1
+        },
+        "operationId": "UserController.updateById"
+      },
+      "get": {
+        "x-controller-name": "UserController",
+        "x-operation-name": "findById",
+        "tags": [
+          "UserController"
+        ],
+        "responses": {
+          "200": {
+            "description": "User model instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserWithRelations"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [{
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User.Filter"
+                }
+              }
+            }
+          }
+        ],
+        "operationId": "UserController.findById"
+      },
+      "delete": {
+        "x-controller-name": "UserController",
+        "x-operation-name": "deleteById",
+        "tags": [
+          "UserController"
+        ],
+        "responses": {
+          "204": {
+            "description": "User DELETE success"
+          }
+        },
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }],
+        "operationId": "UserController.deleteById"
+      }
+    },
+    "/users": {
+      "get": {
+        "x-controller-name": "UserController",
+        "x-operation-name": "find",
+        "tags": [
+          "UserController"
+        ],
+        "responses": {
+          "200": {
+            "description": "Collection of Registered Users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserWithRelations"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [{
+          "name": "filter",
+          "in": "query",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User.Filter1"
+              }
+            }
+          }
+        }],
+        "operationId": "UserController.find"
+      }
+    }
+  },
+  "servers": [{
+    "url": "http://localhost:3000/api/v1"
+  }],
+  "components": {
+    "schemas": {
+      "NewUser": {
+        "title": "NewUser",
+        "type": "object",
+        "description": "(tsType: Omit<NewUserRequest, 'id'>, schemaOptions: { title: 'NewUser', exclude: [ 'id' ] })",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "address": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 16,
+            "minLength": 8
+          }
+        },
+        "required": [
+          "name",
+          "dob",
+          "email",
+          "password"
+        ],
+        "additionalProperties": false,
+        "x-typescript-type": "Omit<NewUserRequest, 'id'>"
+      },
+      "NewUserRequest": {
+        "title": "NewUserRequest",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "address": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 16,
+            "minLength": 8
+          }
+        },
+        "required": [
+          "name",
+          "dob",
+          "email",
+          "password"
+        ],
+        "additionalProperties": false
+      },
+      "UserCredentialsWithRelations": {
+        "title": "UserCredentialsWithRelations",
+        "type": "object",
+        "description": "(tsType: UserCredentialsWithRelations, schemaOptions: { includeRelations: true })",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 16,
+            "minLength": 8
+          },
+          "userId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "password",
+          "userId"
+        ],
+        "additionalProperties": false,
+        "x-typescript-type": "UserCredentialsWithRelations"
+      },
+      "UserWithRelations": {
+        "title": "UserWithRelations",
+        "type": "object",
+        "description": "(tsType: UserWithRelations, schemaOptions: { includeRelations: true })",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "address": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userCredentials": {
+            "$ref": "#/components/schemas/UserCredentialsWithRelations"
+          }
+        },
+        "required": [
+          "name",
+          "dob",
+          "email"
+        ],
+        "additionalProperties": false,
+        "x-typescript-type": "UserWithRelations"
+      },
+      "UserPartial": {
+        "title": "UserPartial",
+        "type": "object",
+        "description": "(tsType: Partial<User>, schemaOptions: { partial: true })",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "address": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false,
+        "x-typescript-type": "Partial<User>"
+      },
+      "User": {
+        "title": "User",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "address": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "name",
+          "dob",
+          "email"
+        ],
+        "additionalProperties": false
+      },
+      "User.Fields": {
+        "title": "User.Fields",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "boolean"
+          },
+          "dob": {
+            "type": "boolean"
+          },
+          "address": {
+            "type": "boolean"
+          },
+          "email": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "User.ScopeFilter": {
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "example": 100
+          },
+          "skip": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "order": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "where": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "fields": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": true
+          },
+          "include": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": false,
+        "title": "User.ScopeFilter"
+      },
+      "User.IncludeFilter.Items": {
+        "title": "User.IncludeFilter.Items",
+        "type": "object",
+        "properties": {
+          "relation": {
+            "type": "string"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/User.ScopeFilter"
+          }
+        }
+      },
+      "User.Filter": {
+        "type": "object",
+        "title": "User.Filter",
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "example": 100
+          },
+          "skip": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "order": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "fields": {
+            "$ref": "#/components/schemas/User.Fields"
+          },
+          "include": {
+            "title": "User.IncludeFilter",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User.IncludeFilter.Items"
+            }
+          }
+        },
+        "additionalProperties": false,
+        "x-typescript-type": "@loopback/repository#Filter<User>"
+      },
+      "User.Filter1": {
+        "type": "object",
+        "title": "User.Filter",
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "example": 100
+          },
+          "skip": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "order": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "where": {
+            "title": "User.WhereFilter",
+            "type": "object",
+            "additionalProperties": true
+          },
+          "fields": {
+            "$ref": "#/components/schemas/User.Fields"
+          },
+          "include": {
+            "title": "User.IncludeFilter",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User.IncludeFilter.Items"
+            }
+          }
+        },
+        "additionalProperties": false,
+        "x-typescript-type": "@loopback/repository#Filter<User>"
+      }
+    },
+    "securitySchemes": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [{
+    "jwt": []
+  }]
+}

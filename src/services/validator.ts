@@ -7,8 +7,6 @@ export function validateCredentials(credentials: Credentials) {
     throw new HttpErrors.Unauthorized('invalid email');
   }
   if (credentials.password.length < 8) {
-    throw new HttpErrors.Unauthorized(
-      'password length should be greater than 8',
-    );
+    throw new HttpErrors.Unauthorized('password length should be greater than 8');
   }
 }

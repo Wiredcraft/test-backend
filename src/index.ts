@@ -15,7 +15,7 @@ export async function main(options: ApplicationConfig = {}) {
   app.configure(LoggingBindings.COMPONENT).to({
     enableFluent: false,
     enableHttpAccessLog: true,
-  })
+  });
   return app;
 }
 

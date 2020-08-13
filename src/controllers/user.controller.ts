@@ -2,15 +2,7 @@ import {authenticate, UserService} from '@loopback/authentication';
 import {inject} from '@loopback/core';
 // import {Logger, logInvocation} from '@loopback/extension-logging';
 import {Filter, FilterExcludingWhere, repository} from '@loopback/repository';
-import {
-  api, del,
-  get,
-  getModelSchemaRef,
-  HttpErrors,
-  param,
-  patch,
-  requestBody
-} from '@loopback/rest';
+import {api, del, get, getModelSchemaRef, HttpErrors, param, patch, requestBody} from '@loopback/rest';
 import * as winston from 'winston';
 import {LogConfig} from '../config/logConfig';
 import {UserServiceBindings} from '../keys';
@@ -27,7 +19,6 @@ export class UserController {
     public userService: UserService<User, Credentials>,
     public logger = winston.loggers.get(LogConfig.logName),
   ) {}
-
 
   @get('', {
     responses: {
@@ -48,7 +39,7 @@ export class UserController {
     try {
       return await this.userRepository.find(filter);
     } catch (error) {
-      this.logger.error("Error retrieving Users", error)
+      this.logger.error('Error retrieving Users', error);
       throw new HttpErrors.InternalServerError(`Failed to retrieve users`);
     }
   }
@@ -72,7 +63,7 @@ export class UserController {
     try {
       return await this.userRepository.findById(id, filter);
     } catch (error) {
-      this.logger.error("Error retrieving user", error)
+      this.logger.error('Error retrieving user', error);
       throw new HttpErrors.InternalServerError(`Failed to retrieve details of this user with id: ${id}`);
     }
   }
@@ -98,7 +89,7 @@ export class UserController {
     try {
       await this.userRepository.updateById(id, user);
     } catch (error) {
-      this.logger.error("Error updating user", error)
+      this.logger.error('Error updating user', error);
       throw new HttpErrors.InternalServerError(`Failed to update details of this user with this id: ${id}`);
     }
   }
@@ -114,7 +105,7 @@ export class UserController {
     try {
       await this.userRepository.deleteById(id);
     } catch (error) {
-      this.logger.error("Error deleting user", error)
+      this.logger.error('Error deleting user', error);
       throw new HttpErrors.InternalServerError(`Failed to delete user with this id: ${id}`);
     }
   }

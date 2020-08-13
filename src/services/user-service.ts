@@ -12,7 +12,6 @@ export class CustomUserService implements UserService<User, Credentials> {
     @repository(UserRepository) public userRepostory: UserRepository,
     @inject(PasswordHasherBindings.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
-
   ) {}
 
   async verifyCredentials(credentials: Credentials): Promise<User> {
@@ -29,17 +28,12 @@ export class CustomUserService implements UserService<User, Credentials> {
       throw new HttpErrors.Unauthorized(invalidCredentialsError);
     }
 
-    const credentialsFound = await this.userRepostory.findCredentials(
-      foundUser.id,
-    );
+    const credentialsFound = await this.userRepostory.findCredentials(foundUser.id);
     if (!credentialsFound) {
       throw new HttpErrors.Unauthorized(invalidCredentialsError);
     }
 
-    const matchedPassword = await this.passwordHasher.comparePassword(
-      password,
-      credentialsFound.password,
-    );
+    const matchedPassword = await this.passwordHasher.comparePassword(password, credentialsFound.password);
 
     if (!matchedPassword) {
       throw new HttpErrors.Unauthorized(invalidCredentialsError);

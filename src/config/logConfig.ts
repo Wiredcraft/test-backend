@@ -1,4 +1,3 @@
-
 export const LogConfig = {
   logName: 'transfers',
   logDirectory: './logs/',
@@ -7,5 +6,3 @@ export const LogConfig = {
   logFileInfo: 'infoLogs-%DATE%.log',
   logDatePattern: 'YYYY-MM-DD',
 };
-
-

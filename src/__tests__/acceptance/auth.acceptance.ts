@@ -12,7 +12,6 @@ import {validateCredentials} from '../../services/validator';
 import {TestBackendApplication} from './../../application';
 import {setupApplication} from './test-helper';
 
-
 describe('Authentication service', function (this: Mocha.Suite) {
   let application: TestBackendApplication;
   this.timeout(5000);
@@ -60,25 +59,17 @@ describe('Authentication service', function (this: Mocha.Suite) {
 
   it('user service verifyCredentials() fails with user not found', async () => {
     const credentials = {email: 'test@ymail.com', password: 'wcTesPa$$'};
-    const expectedError = new HttpErrors.Unauthorized(
-      'Invalid email or password.',
-    );
+    const expectedError = new HttpErrors.Unauthorized('Invalid email or password.');
 
-    await expect(userService.verifyCredentials(credentials)).to.be.rejectedWith(
-      expectedError,
-    );
+    await expect(userService.verifyCredentials(credentials)).to.be.rejectedWith(expectedError);
   });
 
   it('user service verifyCredentials() fails with incorrect credentials', async () => {
     const {email} = newUser;
     const credentials = {email, password: '98303802wcte'};
-    const expectedError = new HttpErrors.Unauthorized(
-      'Invalid email or password.',
-    );
+    const expectedError = new HttpErrors.Unauthorized('Invalid email or password.');
 
-    await expect(userService.verifyCredentials(credentials)).to.be.rejectedWith(
-      expectedError,
-    );
+    await expect(userService.verifyCredentials(credentials)).to.be.rejectedWith(expectedError);
   });
 
   it('user service convertToUserProfile() succeeds', () => {
@@ -105,13 +96,9 @@ describe('Authentication service', function (this: Mocha.Suite) {
   });
 
   it('token service verifyToken() fails', async () => {
-    const expectedError = new HttpErrors.Unauthorized(
-      `Error occurred while verifying token : invalid token`,
-    );
+    const expectedError = new HttpErrors.Unauthorized(`Error occurred while verifying token : invalid token`);
     const badToken = 'ererd4535fdsd.dhgjhg76ghj.jghjkggggn55';
-    await expect(jwtService.verifyToken(badToken)).to.be.rejectedWith(
-      expectedError,
-    );
+    await expect(jwtService.verifyToken(badToken)).to.be.rejectedWith(expectedError);
   });
 
   it('password encryption hashPassword() succeeds', async () => {
@@ -121,19 +108,13 @@ describe('Authentication service', function (this: Mocha.Suite) {
 
   it('password encryption compare() succeeds', async () => {
     const encryptedPassword = await bcryptHasher.hashPassword(userPassword);
-    const passwordsAreTheSame = await bcryptHasher.comparePassword(
-      userPassword,
-      encryptedPassword,
-    );
+    const passwordsAreTheSame = await bcryptHasher.comparePassword(userPassword, encryptedPassword);
     expect(passwordsAreTheSame).to.be.True();
   });
 
   it('password encryption compare() fails', async () => {
     const encryptedPassword = await bcryptHasher.hashPassword(userPassword);
-    const passwordsAreTheSame = await bcryptHasher.comparePassword(
-      'testpass',
-      encryptedPassword,
-    );
+    const passwordsAreTheSame = await bcryptHasher.comparePassword('testpass', encryptedPassword);
     expect(passwordsAreTheSame).to.be.False();
   });
 
@@ -149,9 +130,7 @@ describe('Authentication service', function (this: Mocha.Suite) {
   });
 
   it('Validator validateCredentials() fails with invalid password', () => {
-    const expectedError = new HttpErrors.Unauthorized(
-      'password length should be greater than 8',
-    );
+    const expectedError = new HttpErrors.Unauthorized('password length should be greater than 8');
     const credentials = {email: 'test@wc.com', password: 'test'};
     expect(() => validateCredentials(credentials)).to.throw(expectedError);
   });
@@ -175,9 +154,7 @@ describe('Authentication service', function (this: Mocha.Suite) {
   }
 
   async function createUser() {
-    bcryptHasher = await application.get(
-      PasswordHasherBindings.PASSWORD_HASHER,
-    );
+    bcryptHasher = await application.get(PasswordHasherBindings.PASSWORD_HASHER);
     const encryptedPassword = await bcryptHasher.hashPassword(userPassword);
     newUser = await userRepo.create(userDetails);
     newUser.id = newUser.id.toString();
