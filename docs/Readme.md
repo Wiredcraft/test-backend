@@ -62,13 +62,14 @@ Use the following steps to setup the application.
 
 - Setup Mongo DB server by running ```docker-compose up -d```.
 
+- Simply run ```yarn test``` to run the tests of the application.
+
 - Run ```yarn start```.
 
 - Health check the api by visiting ```localhost:3000/api/v1/health```
 
 - The api docs can be accessed through ```localhost:3000/api/v1/swagger```.
 
-- Simply run ```yarn test``` to run the tests of the application.
 
 ## Improvements
 
