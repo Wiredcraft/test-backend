@@ -75,8 +75,6 @@ Use the following steps to setup the application.
 
 There are quiet a few things that I think can be implemented to improve this solution:
 
-* User Sessions
+* Refresh user tokens with it expires.
 
-* Refreshing token
-
-* Adding Rate limiter to DoS attacks.
+* Add Rate limiter for DoS attacks.
