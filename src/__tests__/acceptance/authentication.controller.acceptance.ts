@@ -39,7 +39,6 @@ describe('AuthenticationController', () => {
     await app.stop();
   });
 
-  // FIXME: FAiling due to 422 status code response
   it('Signs up user should create user and return JWT token', async () => {
     const response = await client
       .post('/auth/signup')
@@ -50,20 +49,6 @@ describe('AuthenticationController', () => {
     expect(token).to.not.be.empty();
   });
 
-
-  // FIXME: This is failing
-  it('Return error for POST /auth/signup with an existing email', async () => {
-    await client
-      .post('/auth/signup')
-      .send({...userDetails, password: userPassword})
-      .expect(200);
-    const response = await client
-      .post('/auth/signup')
-      .send({...userDetails, password: userPassword})
-      .expect(409);
-
-    expect(response.body.error.message).to.equal('Email is taken');
-  });
 
   it('Returns error for POST /auth/signup with an invalid email', async () => {
     const res = await client

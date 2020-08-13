@@ -65,6 +65,7 @@
     "moment": "^2.27.0",
     "morgan": "^1.10.0",
     "superagent": "^6.0.0",
+    "testcontainers": "^3.3.1",
     "tsc-watch": "^4.2.9",
     "tslib": "^2.0.0",
     "winston": "^3.3.3",

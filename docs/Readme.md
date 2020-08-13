@@ -10,8 +10,7 @@
   * [Logging](#logging)
   * [Testing](#testing)
 * [Setup](#setup)
-* [Deployment](#deployment)
-* [Improvements](improvements)
+* [Improvements](#improvements)
 
 ## Architecture
 
@@ -32,7 +31,7 @@
 
 <p>Below is the UML sequence diagram for the user login flow. Assuming the user has already been created. </p>
 
-<img src="jwt-uml.png">
+![uml](jwt-uml.png)
 
 #### Authentication and Authorization Strategy
 
@@ -48,7 +47,7 @@
 
 ## Logging
 
-  Winston is used as a logger for the application. There is a dedicated `logs-data/logs/` folder to store the logs during runtime. Logging to the console has also been enabled. I want to be able to log all everything under the `debug`, `error` and `info` levels.
+  Winston is used as a logger for the application. There is a dedicated `/logs` folder to store the logs during runtime. Logging to the console has also been enabled. I want to be able to log all everything under the `debug`, `error` and `info` levels.
 
 ## Testing
 
@@ -63,12 +62,13 @@ Use the following steps to setup the application.
 
 - Setup Mongo DB server by running ```docker-compose up -d```.
 
-- Run ```make start```
+- Run ```yarn start```.
 
+- Health check the api by visiting ```localhost:3000/api/v1/health```
 
-## Deployment
+- The api docs can be accessed through ```localhost:3000/api/v1/swagger```.
 
-To deploy the application simply run ```make start```.
+- Simply run ```yarn test``` to run the tests of the application.
 
 ## Improvements
 
