@@ -4,6 +4,9 @@
   "description": "Wiredcraft backend test project",
   "main": "dist/index.js",
   "scripts": {
+    "start": "NODE_ENV=production ./node_modules/.bin/pm2 start dist/index.js --name \"wiredcraft_backend_test\" -i 4",
+    "dev": "./node_modules/.bin/nodemon dist/index.js",
+    "build": "./node_modules/.bin/tsc -p ./tsconfig.json -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,5 +24,28 @@
   "bugs": {
     "url": "https://github.com/agreatfool/test-backend/issues"
   },
-  "homepage": "https://github.com/agreatfool/test-backend#readme"
+  "homepage": "https://github.com/agreatfool/test-backend#readme",
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "dotenv": "^8.2.0",
+    "koa": "^2.13.0",
+    "koa-bodyparser": "^4.3.0",
+    "koa-router": "^9.4.0",
+    "moment": "^2.29.0",
+    "pm2": "^4.5.0",
+    "redis": "^3.0.2",
+    "swagger-jsdoc": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/hapi__joi": "^17.1.6",
+    "@types/koa": "^2.11.4",
+    "@types/koa-bodyparser": "^4.3.0",
+    "@types/koa-router": "^7.4.1",
+    "@types/node": "^14.11.2",
+    "@types/redis": "^2.8.27",
+    "@types/swagger-jsdoc": "^3.0.2",
+    "nodemon": "^2.0.4",
+    "typescript": "^4.0.3"
+  }
 }
