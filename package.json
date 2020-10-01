@@ -1,0 +1,25 @@
+{
+  "name": "test-backend",
+  "version": "0.0.1",
+  "description": "Wiredcraft backend test project",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agreatfool/test-backend.git"
+  },
+  "keywords": [
+    "Wiredcraft",
+    "Node.js",
+    "Backend",
+    "Test"
+  ],
+  "author": "Jonathan Dai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/agreatfool/test-backend/issues"
+  },
+  "homepage": "https://github.com/agreatfool/test-backend#readme"
+}
