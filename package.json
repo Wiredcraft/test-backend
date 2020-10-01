@@ -31,10 +31,13 @@
     "koa": "^2.13.0",
     "koa-bodyparser": "^4.3.0",
     "koa-router": "^9.4.0",
+    "koa2-swagger-ui": "^5.0.2",
     "moment": "^2.29.0",
     "pm2": "^4.5.0",
     "redis": "^3.0.2",
-    "swagger-jsdoc": "^4.2.0"
+    "swagger-jsdoc": "^4.2.0",
+    "uuid": "^8.3.0",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
@@ -45,6 +48,7 @@
     "@types/node": "^14.11.2",
     "@types/redis": "^2.8.27",
     "@types/swagger-jsdoc": "^3.0.2",
+    "@types/uuid": "^8.3.0",
     "nodemon": "^2.0.4",
     "typescript": "^4.0.3"
   }
