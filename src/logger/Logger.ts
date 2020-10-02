@@ -7,6 +7,15 @@ import {DailyRotateFileTransportOptions as TransportOptions} from "winston-daily
 
 import {Config} from "../config/Config";
 
+export interface LogInfo {
+  app: string; // server
+  module: string; // UserController
+  action: string; // getUser
+  data: any;
+
+  [key: string]: any;
+}
+
 const selfDefinedFormat = winston.format.printf(({level, message, label, timestamp}) => {
   const data = Object.assign({
     level,
