@@ -18,7 +18,8 @@
     "max-line-length": false,
     "no-string-literal": false,
     "no-shadowed-variable": false,
-    "member-ordering": false
+    "member-ordering": false,
+    "interface-name": false
   },
   "rulesDirectory": []
 }
