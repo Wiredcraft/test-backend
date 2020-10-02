@@ -7,6 +7,7 @@
     "start": "NODE_ENV=production ./node_modules/.bin/pm2 start dist/index.js --name \"wiredcraft_backend_test\" -i 4",
     "dev": "./node_modules/.bin/nodemon dist/index.js",
     "build": "./node_modules/.bin/tsc -p ./tsconfig.json -w",
+    "gen-client": "swagger-codegen generate --output=\"html/js/swagger\" --lang=\"javascript\" --input-spec=\"http://127.0.0.1:8081/swagger.json\" --template-engine=\"mustache\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
