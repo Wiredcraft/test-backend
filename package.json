@@ -7,7 +7,8 @@
     "start": "NODE_ENV=production ./node_modules/.bin/pm2 start dist/index.js --name \"wiredcraft_backend_test\" -i 4",
     "dev": "./node_modules/.bin/nodemon dist/index.js",
     "build": "./node_modules/.bin/tsc -p ./tsconfig.json -w",
-    "gen-client": "swagger-codegen generate --output=\"html/js/swagger\" --lang=\"javascript\" --input-spec=\"http://127.0.0.1:8081/swagger.json\" --template-engine=\"mustache\"",
+    "gen-client": "swagger-codegen generate --output=\"html/js/swagger\" --lang=\"javascript\" --input-spec=\"http://127.0.0.1:8081/swagger.json\" --template-engine=\"mustache\" && ./node_modules/.bin/browserify -t [ babelify --presets [ @babel/preset-env ] --plugins [ @babel/plugin-proposal-class-properties ] ] --standalone Wiredcraft -o ./html/js/bundle.js ./html/js/swagger/src/index.js",
+    "client": "./node_modules/.bin/http-server -a 127.0.0.1 -p 8088 -o index.html -e js ./html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,7 +29,9 @@
   "homepage": "https://github.com/agreatfool/test-backend#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@koa/cors": "^3.1.0",
     "dotenv": "^8.2.0",
+    "http-server": "^0.12.3",
     "koa": "^2.13.0",
     "koa-bodyparser": "^4.3.0",
     "koa-router": "^9.4.0",
@@ -42,6 +45,9 @@
     "winston-daily-rotate-file": "^4.5.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/preset-env": "^7.11.5",
     "@types/dotenv": "^8.2.0",
     "@types/hapi__joi": "^17.1.6",
     "@types/koa": "^2.11.4",
@@ -51,7 +57,11 @@
     "@types/redis": "^2.8.27",
     "@types/swagger-jsdoc": "^3.0.2",
     "@types/uuid": "^8.3.0",
+    "babelify": "^10.0.0",
+    "browserify": "^16.5.2",
     "nodemon": "^2.0.4",
+    "querystring": "^0.2.0",
+    "superagent": "^6.1.0",
     "typescript": "^4.0.3"
   }
 }
