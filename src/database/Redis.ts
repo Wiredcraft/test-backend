@@ -24,7 +24,6 @@ export class Redis {
 
   public async set(key: string, value: string, durationMs?: number): Promise<string> {
     return new Promise((resolve, reject) => {
-
       const partial = this.redis.multi().set(key, value);
 
       if (durationMs !== undefined) {
@@ -36,6 +35,18 @@ export class Redis {
           return reject(err);
         } else {
           return resolve(replies[0] as string);
+        }
+      });
+    });
+  }
+
+  public async del(keys: string[]): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.redis.del(keys, (err: Error, removedCount: number) => {
+        if (err) {
+          return reject(err);
+        } else {
+          return resolve(removedCount);
         }
       });
     });
