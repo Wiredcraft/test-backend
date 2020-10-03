@@ -48,7 +48,7 @@ import * as UserDao from "../dao/User";
 // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 // JOI SCHEMAS
 // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-const UserSchemaId = Joi.string().uuid({version: ["uuidv4"]}).required();
+export const UserSchemaId = Joi.string().uuid({version: ["uuidv4"]}).required();
 const UserSchema = Joi.object({
   name: Joi.string().min(1).max(36).required(),
   dob: Joi.number().integer().less(moment().unix()).sign("positive").required(),

@@ -4,16 +4,22 @@ import * as LibUtil from "util";
 
 import {Logger, LogInfo} from "../logger/Logger";
 import * as UserController from "../controller/User";
+import * as UserGeoController from "../controller/UserGeo";
 
 // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 // ROUTER
 // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 export const router = new Router();
 
+// user
 router.get("/user/:id", UserController.getUser);
 router.post("/user", UserController.createUser);
 router.put("/user", UserController.updateUser);
 router.delete("/user/:id", UserController.deleteUser);
+
+// user geo
+router.post("/usergeo", UserGeoController.saveUserGeo);
+router.get("/usergeo/nearby/:id", UserGeoController.getNearbyUserIds);
 
 // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 // UTILITIES

@@ -21,3 +21,8 @@ export const validateWithJoi = async (schema: Joi.AnySchema, data: any): Promise
     };
   }
 };
+
+export function arrDeleteIndex(targetArr: any[], index: number) {
+  targetArr.splice(index, 1);
+  return targetArr;
+}

@@ -153,4 +153,28 @@ export class Redis {
     return this.redis.multi() as Multi;
   }
 
+  public async geoadd(key: string, longitude: string, latitude: string, id: string): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.redis.geoadd(key, longitude, latitude, id, (err: Error | null, reply: number) => {
+        if (err) {
+          return reject(err);
+        } else {
+          return resolve(reply);
+        }
+      });
+    });
+  }
+
+  public async georadiusbymember(key: string, id: string, radius: number, unit: string): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+      this.redis.georadiusbymember(key, id, radius, unit, (err: Error, replies: string[]) => {
+        if (err) {
+          return reject(err);
+        } else {
+          return resolve(replies);
+        }
+      });
+    });
+  }
+
 }
