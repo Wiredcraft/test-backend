@@ -9,7 +9,7 @@
     "build": "./node_modules/.bin/tsc -p ./tsconfig.json -w",
     "gen-client": "swagger-codegen generate --output=\"html/js/swagger\" --lang=\"javascript\" --input-spec=\"http://127.0.0.1:8081/swagger.json\" --template-engine=\"mustache\" && ./node_modules/.bin/browserify -t [ babelify --presets [ @babel/preset-env ] --plugins [ @babel/plugin-proposal-class-properties ] ] --standalone Wiredcraft -o ./html/js/bundle.js ./html/js/swagger/src/index.js",
     "client": "./node_modules/.bin/http-server -a 127.0.0.1 -p 8088 -o index.html -e js ./html",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/mocha -r ts-node/register ./test/**/*.spec.ts"
   },
   "repository": {
     "type": "git",
@@ -48,20 +48,31 @@
     "@babel/core": "^7.11.6",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/preset-env": "^7.11.5",
+    "@types/chai": "^4.2.12",
+    "@types/chai-uuid": "^1.0.2",
     "@types/dotenv": "^8.2.0",
     "@types/hapi__joi": "^17.1.6",
     "@types/koa": "^2.11.4",
     "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-router": "^7.4.1",
+    "@types/mocha": "^8.0.3",
     "@types/node": "^14.11.2",
+    "@types/node-fetch": "^2.5.7",
     "@types/redis": "^2.8.27",
+    "@types/sinon": "^9.0.7",
     "@types/swagger-jsdoc": "^3.0.2",
     "@types/uuid": "^8.3.0",
     "babelify": "^10.0.0",
     "browserify": "^16.5.2",
+    "chai": "^4.2.0",
+    "chai-uuid": "^1.0.6",
+    "mocha": "^8.1.3",
+    "node-fetch": "^2.6.1",
     "nodemon": "^2.0.4",
     "querystring": "^0.2.0",
+    "sinon": "^9.1.0",
     "superagent": "^6.1.0",
+    "ts-node": "^9.0.0",
     "typescript": "^4.0.3"
   }
 }

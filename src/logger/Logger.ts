@@ -53,7 +53,9 @@ export class Logger {
         level: process.env.LOG_LEVEL,
       } as TransportOptions));
 
-      Logger.instance.add(new winston.transports.Console());
+      if (Config.get("LOG_CONSOLE", "true") === "true") {
+        Logger.instance.add(new winston.transports.Console());
+      }
     }
 
     return Logger.instance;
