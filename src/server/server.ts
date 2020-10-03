@@ -33,9 +33,9 @@ export const startServer = async () => {
     // @ts-ignore
     swaggerSpec = swaggerJSDoc({
       apis: [
-        LibPath.join(__dirname, "controller/**/*.js"),
-        LibPath.join(__dirname, "router/**/*.js"),
-        LibPath.join(__dirname, "model/**/*.js"),
+        LibPath.join(__dirname, "../controller/**/*.js"),
+        LibPath.join(__dirname, "../router/**/*.js"),
+        LibPath.join(__dirname, "../model/**/*.js"),
       ],
       explorer: true,
       swaggerDefinition: {
