@@ -650,7 +650,7 @@ _defineProperty(ApiClient, "CollectionFormatEnum", {
 ApiClient.instance = new ApiClient();
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":9,"fs":8,"querystring":20,"superagent":22}],2:[function(require,module,exports){
+},{"buffer":12,"fs":11,"querystring":23,"superagent":25}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -816,7 +816,115 @@ var UserApi = /*#__PURE__*/function () {
 
 exports["default"] = UserApi;
 
-},{"../ApiClient":1,"../model/OkResponse":4,"../model/User":5,"../model/UserResponse":6}],3:[function(require,module,exports){
+},{"../ApiClient":1,"../model/OkResponse":6,"../model/User":7,"../model/UserResponse":9}],3:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _ApiClient = _interopRequireDefault(require("../ApiClient"));
+
+var _NearbyResponse = _interopRequireDefault(require("../model/NearbyResponse"));
+
+var _OkResponse = _interopRequireDefault(require("../model/OkResponse"));
+
+var _UserGeo = _interopRequireDefault(require("../model/UserGeo"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+/**
+* UserGeo service.
+* @module api/UserGeoApi
+* @version v0.0.1
+*/
+var UserGeoApi = /*#__PURE__*/function () {
+  /**
+  * Constructs a new UserGeoApi. 
+  * @alias module:api/UserGeoApi
+  * @class
+  * @param {module:ApiClient} [apiClient] Optional API client implementation to use,
+  * default to {@link module:ApiClient#instance} if unspecified.
+  */
+  function UserGeoApi(apiClient) {
+    _classCallCheck(this, UserGeoApi);
+
+    this.apiClient = apiClient || _ApiClient["default"].instance;
+  }
+  /**
+   * Callback function to receive the result of the getUser operation.
+   * @callback module:api/UserGeoApi~getUserCallback
+   * @param {String} error Error message, if any.
+   * @param {module:model/NearbyResponse} data The data returned by the service call.
+   * @param {String} response The complete HTTP response.
+   */
+
+  /**
+   * get nearby user ids by target userId
+   * @param {module:api/UserGeoApi~getUserCallback} callback The callback function, accepting three arguments: error, data, response
+   * data is of type: {@link module:model/NearbyResponse}
+   */
+
+
+  _createClass(UserGeoApi, [{
+    key: "getUser",
+    value: function getUser(id, callback) {
+      var postBody = null;
+      var pathParams = {
+        'id': id
+      };
+      var queryParams = {};
+      var headerParams = {};
+      var formParams = {};
+      var authNames = [];
+      var contentTypes = [];
+      var accepts = ['application/json'];
+      var returnType = _NearbyResponse["default"];
+      return this.apiClient.callApi('/usergeo/nearby/{id}', 'GET', pathParams, queryParams, headerParams, formParams, postBody, authNames, contentTypes, accepts, returnType, callback);
+    }
+    /**
+     * Callback function to receive the result of the saveUserGeo operation.
+     * @callback module:api/UserGeoApi~saveUserGeoCallback
+     * @param {String} error Error message, if any.
+     * @param {module:model/OkResponse} data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * save user geo data, if data not exists it would be created, if exists then updated
+     * @param {module:api/UserGeoApi~saveUserGeoCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/OkResponse}
+     */
+
+  }, {
+    key: "saveUserGeo",
+    value: function saveUserGeo(body, callback) {
+      var postBody = body;
+      var pathParams = {};
+      var queryParams = {};
+      var headerParams = {};
+      var formParams = {};
+      var authNames = [];
+      var contentTypes = ['application/json'];
+      var accepts = ['application/json'];
+      var returnType = _OkResponse["default"];
+      return this.apiClient.callApi('/usergeo', 'POST', pathParams, queryParams, headerParams, formParams, postBody, authNames, contentTypes, accepts, returnType, callback);
+    }
+  }]);
+
+  return UserGeoApi;
+}();
+
+exports["default"] = UserGeoApi;
+
+},{"../ApiClient":1,"../model/NearbyResponse":5,"../model/OkResponse":6,"../model/UserGeo":8}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -826,6 +934,12 @@ Object.defineProperty(exports, "ApiClient", {
   enumerable: true,
   get: function get() {
     return _ApiClient["default"];
+  }
+});
+Object.defineProperty(exports, "NearbyResponse", {
+  enumerable: true,
+  get: function get() {
+    return _NearbyResponse["default"];
   }
 });
 Object.defineProperty(exports, "OkResponse", {
@@ -840,6 +954,12 @@ Object.defineProperty(exports, "User", {
     return _User["default"];
   }
 });
+Object.defineProperty(exports, "UserGeo", {
+  enumerable: true,
+  get: function get() {
+    return _UserGeo["default"];
+  }
+});
 Object.defineProperty(exports, "UserResponse", {
   enumerable: true,
   get: function get() {
@@ -852,20 +972,107 @@ Object.defineProperty(exports, "UserApi", {
     return _UserApi["default"];
   }
 });
+Object.defineProperty(exports, "UserGeoApi", {
+  enumerable: true,
+  get: function get() {
+    return _UserGeoApi["default"];
+  }
+});
 
 var _ApiClient = _interopRequireDefault(require("./ApiClient"));
+
+var _NearbyResponse = _interopRequireDefault(require("./model/NearbyResponse"));
 
 var _OkResponse = _interopRequireDefault(require("./model/OkResponse"));
 
 var _User = _interopRequireDefault(require("./model/User"));
 
+var _UserGeo = _interopRequireDefault(require("./model/UserGeo"));
+
 var _UserResponse = _interopRequireDefault(require("./model/UserResponse"));
 
 var _UserApi = _interopRequireDefault(require("./api/UserApi"));
 
+var _UserGeoApi = _interopRequireDefault(require("./api/UserGeoApi"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-},{"./ApiClient":1,"./api/UserApi":2,"./model/OkResponse":4,"./model/User":5,"./model/UserResponse":6}],4:[function(require,module,exports){
+},{"./ApiClient":1,"./api/UserApi":2,"./api/UserGeoApi":3,"./model/NearbyResponse":5,"./model/OkResponse":6,"./model/User":7,"./model/UserGeo":8,"./model/UserResponse":9}],5:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _ApiClient = _interopRequireDefault(require("../ApiClient"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+* The NearbyResponse model module.
+* @module model/NearbyResponse
+* @version v0.0.1
+*/
+var NearbyResponse = /*#__PURE__*/function () {
+  /**
+  * Constructs a new <code>NearbyResponse</code>.
+  * @alias module:model/NearbyResponse
+  * @class
+  */
+  function NearbyResponse() {
+    _classCallCheck(this, NearbyResponse);
+
+    _defineProperty(this, 'code', undefined);
+
+    _defineProperty(this, 'data', undefined);
+  }
+  /**
+  * Constructs a <code>NearbyResponse</code> from a plain JavaScript object, optionally creating a new instance.
+  * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
+  * @param {Object} data The plain JavaScript object bearing properties of interest.
+  * @param {module:model/NearbyResponse} obj Optional instance to populate.
+  * @return {module:model/NearbyResponse} The populated <code>NearbyResponse</code> instance.
+  */
+
+
+  _createClass(NearbyResponse, null, [{
+    key: "constructFromObject",
+    value: function constructFromObject(data, obj) {
+      if (data) {
+        obj = obj || new NearbyResponse();
+
+        if (data.hasOwnProperty('code')) {
+          obj['code'] = _ApiClient["default"].convertToType(data['code'], 'Number');
+        }
+
+        if (data.hasOwnProperty('data')) {
+          obj['data'] = _ApiClient["default"].convertToType(data['data'], ['String']);
+        }
+      }
+
+      return obj;
+    }
+    /**
+    * @member {Number} code
+    */
+
+  }]);
+
+  return NearbyResponse;
+}();
+
+exports["default"] = NearbyResponse;
+
+},{"../ApiClient":1}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -940,7 +1147,7 @@ var OkResponse = /*#__PURE__*/function () {
 
 exports["default"] = OkResponse;
 
-},{"../ApiClient":1}],5:[function(require,module,exports){
+},{"../ApiClient":1}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1040,7 +1247,89 @@ var User = /*#__PURE__*/function () {
 
 exports["default"] = User;
 
-},{"../ApiClient":1}],6:[function(require,module,exports){
+},{"../ApiClient":1}],8:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _ApiClient = _interopRequireDefault(require("../ApiClient"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+* The UserGeo model module.
+* @module model/UserGeo
+* @version v0.0.1
+*/
+var UserGeo = /*#__PURE__*/function () {
+  /**
+  * Constructs a new <code>UserGeo</code>.
+  * @alias module:model/UserGeo
+  * @class
+  */
+  function UserGeo() {
+    _classCallCheck(this, UserGeo);
+
+    _defineProperty(this, 'id', undefined);
+
+    _defineProperty(this, 'longitude', undefined);
+
+    _defineProperty(this, 'latitude', undefined);
+  }
+  /**
+  * Constructs a <code>UserGeo</code> from a plain JavaScript object, optionally creating a new instance.
+  * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
+  * @param {Object} data The plain JavaScript object bearing properties of interest.
+  * @param {module:model/UserGeo} obj Optional instance to populate.
+  * @return {module:model/UserGeo} The populated <code>UserGeo</code> instance.
+  */
+
+
+  _createClass(UserGeo, null, [{
+    key: "constructFromObject",
+    value: function constructFromObject(data, obj) {
+      if (data) {
+        obj = obj || new UserGeo();
+
+        if (data.hasOwnProperty('id')) {
+          obj['id'] = _ApiClient["default"].convertToType(data['id'], 'String');
+        }
+
+        if (data.hasOwnProperty('longitude')) {
+          obj['longitude'] = _ApiClient["default"].convertToType(data['longitude'], 'String');
+        }
+
+        if (data.hasOwnProperty('latitude')) {
+          obj['latitude'] = _ApiClient["default"].convertToType(data['latitude'], 'String');
+        }
+      }
+
+      return obj;
+    }
+    /**
+    * user id, shall be a string of uuid v4, length limit 36
+    * @member {String} id
+    */
+
+  }]);
+
+  return UserGeo;
+}();
+
+exports["default"] = UserGeo;
+
+},{"../ApiClient":1}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1117,7 +1406,7 @@ var UserResponse = /*#__PURE__*/function () {
 
 exports["default"] = UserResponse;
 
-},{"../ApiClient":1,"./User":5}],7:[function(require,module,exports){
+},{"../ApiClient":1,"./User":7}],10:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -1271,9 +1560,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],8:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 
-},{}],9:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (Buffer){
 /*!
  * The buffer module from node.js, for the browser.
@@ -3054,7 +3343,7 @@ function numberIsNaN (obj) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"base64-js":7,"buffer":9,"ieee754":12}],10:[function(require,module,exports){
+},{"base64-js":10,"buffer":12,"ieee754":15}],13:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -3231,7 +3520,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],11:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = stringify
 stringify.default = stringify
 stringify.stable = deterministicStringify
@@ -3394,7 +3683,7 @@ function replaceGetterValues (replacer) {
   }
 }
 
-},{}],12:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -3480,7 +3769,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],13:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 'use strict';
 
 var replace = String.prototype.replace;
@@ -3508,7 +3797,7 @@ module.exports = util.assign(
     Format
 );
 
-},{"./utils":17}],14:[function(require,module,exports){
+},{"./utils":20}],17:[function(require,module,exports){
 'use strict';
 
 var stringify = require('./stringify');
@@ -3521,7 +3810,7 @@ module.exports = {
     stringify: stringify
 };
 
-},{"./formats":13,"./parse":15,"./stringify":16}],15:[function(require,module,exports){
+},{"./formats":16,"./parse":18,"./stringify":19}],18:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -3780,7 +4069,7 @@ module.exports = function (str, opts) {
     return utils.compact(obj);
 };
 
-},{"./utils":17}],16:[function(require,module,exports){
+},{"./utils":20}],19:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -4053,7 +4342,7 @@ module.exports = function (object, opts) {
     return joined.length > 0 ? prefix + joined : '';
 };
 
-},{"./formats":13,"./utils":17}],17:[function(require,module,exports){
+},{"./formats":16,"./utils":20}],20:[function(require,module,exports){
 'use strict';
 
 var has = Object.prototype.hasOwnProperty;
@@ -4303,7 +4592,7 @@ module.exports = {
     merge: merge
 };
 
-},{}],18:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4389,7 +4678,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],19:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4476,13 +4765,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],20:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":18,"./encode":19}],21:[function(require,module,exports){
+},{"./decode":21,"./encode":22}],24:[function(require,module,exports){
 "use strict";
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -4525,7 +4814,7 @@ Agent.prototype._setDefaults = function (req) {
 
 module.exports = Agent;
 
-},{}],22:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -5548,7 +5837,7 @@ request.put = function (url, data, fn) {
   return req;
 };
 
-},{"./agent-base":21,"./is-object":23,"./request-base":24,"./response-base":25,"component-emitter":10,"fast-safe-stringify":11,"qs":14}],23:[function(require,module,exports){
+},{"./agent-base":24,"./is-object":26,"./request-base":27,"./response-base":28,"component-emitter":13,"fast-safe-stringify":14,"qs":17}],26:[function(require,module,exports){
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -5566,7 +5855,7 @@ function isObject(obj) {
 
 module.exports = isObject;
 
-},{}],24:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -6349,7 +6638,7 @@ RequestBase.prototype._setTimeouts = function () {
   }
 };
 
-},{"./is-object":23}],25:[function(require,module,exports){
+},{"./is-object":26}],28:[function(require,module,exports){
 "use strict";
 
 /**
@@ -6481,7 +6770,7 @@ ResponseBase.prototype._setStatusProperties = function (status) {
   this.unprocessableEntity = status === 422;
 };
 
-},{"./utils":26}],26:[function(require,module,exports){
+},{"./utils":29}],29:[function(require,module,exports){
 "use strict";
 
 function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
@@ -6587,5 +6876,5 @@ exports.cleanHeader = function (header, changesOrigin) {
   return header;
 };
 
-},{}]},{},[3])(3)
+},{}]},{},[4])(4)
 });

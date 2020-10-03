@@ -82,12 +82,16 @@ Class | Method | HTTP request | Description
 *WiredcraftBackendTest.UserApi* | [**deleteUser**](docs/UserApi.md#deleteUser) | **DELETE** /user/{id} | 
 *WiredcraftBackendTest.UserApi* | [**getUser**](docs/UserApi.md#getUser) | **GET** /user/{id} | 
 *WiredcraftBackendTest.UserApi* | [**updateUser**](docs/UserApi.md#updateUser) | **PUT** /user | 
+*WiredcraftBackendTest.UserGeoApi* | [**getUser**](docs/UserGeoApi.md#getUser) | **GET** /usergeo/nearby/{id} | 
+*WiredcraftBackendTest.UserGeoApi* | [**saveUserGeo**](docs/UserGeoApi.md#saveUserGeo) | **POST** /usergeo | 
 
 
 ## Documentation for Models
 
+ - [WiredcraftBackendTest.NearbyResponse](docs/NearbyResponse.md)
  - [WiredcraftBackendTest.OkResponse](docs/OkResponse.md)
  - [WiredcraftBackendTest.User](docs/User.md)
+ - [WiredcraftBackendTest.UserGeo](docs/UserGeo.md)
  - [WiredcraftBackendTest.UserResponse](docs/UserResponse.md)
 
 
