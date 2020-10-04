@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "NODE_ENV=production ./node_modules/.bin/pm2 start dist/index.js --name \"wiredcraft_backend_test\" -i 4",
+    "stop": "./node_modules/.bin/pm2 del \"wiredcraft_backend_test\"",
     "dev": "./node_modules/.bin/nodemon dist/index.js",
     "build": "./node_modules/.bin/tsc -p ./tsconfig.json -w",
     "gen-client": "swagger-codegen generate --output=\"html/js/swagger\" --lang=\"javascript\" --input-spec=\"http://127.0.0.1:8081/swagger.json\" --template-engine=\"mustache\" && ./node_modules/.bin/browserify -t [ babelify --presets [ @babel/preset-env ] --plugins [ @babel/plugin-proposal-class-properties ] ] --standalone Wiredcraft -o ./html/js/bundle.js ./html/js/swagger/src/index.js",
