@@ -4,6 +4,7 @@ import * as LibUtil from "util";
 
 import {Logger, LogInfo} from "../logger/Logger";
 import * as UserController from "../controller/User";
+import * as UserLinkController from "../controller/UserLink";
 import * as UserGeoController from "../controller/UserGeo";
 
 // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -16,6 +17,12 @@ router.get("/user/:id", UserController.getUser);
 router.post("/user", UserController.createUser);
 router.put("/user", UserController.updateUser);
 router.delete("/user/:id", UserController.deleteUser);
+
+// user link
+router.post("/userlink/follow", UserLinkController.followUser);
+router.post("/userlink/unfollow", UserLinkController.unfollowUser);
+router.get("/userlink/follower/:id", UserLinkController.getFollowers);
+router.get("/userlink/following/:id", UserLinkController.getFollowings);
 
 // user geo
 router.post("/usergeo", UserGeoController.saveUserGeo);

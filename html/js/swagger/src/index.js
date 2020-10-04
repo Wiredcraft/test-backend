@@ -15,11 +15,15 @@
 import ApiClient from './ApiClient';
 import NearbyResponse from './model/NearbyResponse';
 import OkResponse from './model/OkResponse';
+import RelationRequest from './model/RelationRequest';
+import RelationResponse from './model/RelationResponse';
 import User from './model/User';
 import UserGeo from './model/UserGeo';
+import UserLink from './model/UserLink';
 import UserResponse from './model/UserResponse';
 import UserApi from './api/UserApi';
 import UserGeoApi from './api/UserGeoApi';
+import UserLinkApi from './api/UserLinkApi';
 
 
 /**
@@ -73,6 +77,18 @@ export {
     OkResponse,
 
     /**
+     * The RelationRequest model constructor.
+     * @property {module:model/RelationRequest}
+     */
+    RelationRequest,
+
+    /**
+     * The RelationResponse model constructor.
+     * @property {module:model/RelationResponse}
+     */
+    RelationResponse,
+
+    /**
      * The User model constructor.
      * @property {module:model/User}
      */
@@ -83,6 +99,12 @@ export {
      * @property {module:model/UserGeo}
      */
     UserGeo,
+
+    /**
+     * The UserLink model constructor.
+     * @property {module:model/UserLink}
+     */
+    UserLink,
 
     /**
      * The UserResponse model constructor.
@@ -100,5 +122,11 @@ export {
     * The UserGeoApi service constructor.
     * @property {module:api/UserGeoApi}
     */
-    UserGeoApi
+    UserGeoApi,
+
+    /**
+    * The UserLinkApi service constructor.
+    * @property {module:api/UserLinkApi}
+    */
+    UserLinkApi
 };

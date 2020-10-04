@@ -84,14 +84,21 @@ Class | Method | HTTP request | Description
 *WiredcraftBackendTest.UserApi* | [**updateUser**](docs/UserApi.md#updateUser) | **PUT** /user | 
 *WiredcraftBackendTest.UserGeoApi* | [**getUser**](docs/UserGeoApi.md#getUser) | **GET** /usergeo/nearby/{id} | 
 *WiredcraftBackendTest.UserGeoApi* | [**saveUserGeo**](docs/UserGeoApi.md#saveUserGeo) | **POST** /usergeo | 
+*WiredcraftBackendTest.UserLinkApi* | [**followUser**](docs/UserLinkApi.md#followUser) | **POST** /userlink/follow | 
+*WiredcraftBackendTest.UserLinkApi* | [**getFollowers**](docs/UserLinkApi.md#getFollowers) | **GET** /userlink/follower/{id} | 
+*WiredcraftBackendTest.UserLinkApi* | [**getFollowings**](docs/UserLinkApi.md#getFollowings) | **GET** /userlink/following/{id} | 
+*WiredcraftBackendTest.UserLinkApi* | [**unfollowUser**](docs/UserLinkApi.md#unfollowUser) | **POST** /userlink/unfollow | 
 
 
 ## Documentation for Models
 
  - [WiredcraftBackendTest.NearbyResponse](docs/NearbyResponse.md)
  - [WiredcraftBackendTest.OkResponse](docs/OkResponse.md)
+ - [WiredcraftBackendTest.RelationRequest](docs/RelationRequest.md)
+ - [WiredcraftBackendTest.RelationResponse](docs/RelationResponse.md)
  - [WiredcraftBackendTest.User](docs/User.md)
  - [WiredcraftBackendTest.UserGeo](docs/UserGeo.md)
+ - [WiredcraftBackendTest.UserLink](docs/UserLink.md)
  - [WiredcraftBackendTest.UserResponse](docs/UserResponse.md)
 
 

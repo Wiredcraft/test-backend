@@ -650,7 +650,7 @@ _defineProperty(ApiClient, "CollectionFormatEnum", {
 ApiClient.instance = new ApiClient();
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":12,"fs":11,"querystring":23,"superagent":25}],2:[function(require,module,exports){
+},{"buffer":16,"fs":15,"querystring":27,"superagent":29}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -816,7 +816,7 @@ var UserApi = /*#__PURE__*/function () {
 
 exports["default"] = UserApi;
 
-},{"../ApiClient":1,"../model/OkResponse":6,"../model/User":7,"../model/UserResponse":9}],3:[function(require,module,exports){
+},{"../ApiClient":1,"../model/OkResponse":7,"../model/User":10,"../model/UserResponse":13}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -924,7 +924,173 @@ var UserGeoApi = /*#__PURE__*/function () {
 
 exports["default"] = UserGeoApi;
 
-},{"../ApiClient":1,"../model/NearbyResponse":5,"../model/OkResponse":6,"../model/UserGeo":8}],4:[function(require,module,exports){
+},{"../ApiClient":1,"../model/NearbyResponse":6,"../model/OkResponse":7,"../model/UserGeo":11}],4:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _ApiClient = _interopRequireDefault(require("../ApiClient"));
+
+var _OkResponse = _interopRequireDefault(require("../model/OkResponse"));
+
+var _RelationRequest = _interopRequireDefault(require("../model/RelationRequest"));
+
+var _RelationResponse = _interopRequireDefault(require("../model/RelationResponse"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+/**
+* UserLink service.
+* @module api/UserLinkApi
+* @version v0.0.1
+*/
+var UserLinkApi = /*#__PURE__*/function () {
+  /**
+  * Constructs a new UserLinkApi. 
+  * @alias module:api/UserLinkApi
+  * @class
+  * @param {module:ApiClient} [apiClient] Optional API client implementation to use,
+  * default to {@link module:ApiClient#instance} if unspecified.
+  */
+  function UserLinkApi(apiClient) {
+    _classCallCheck(this, UserLinkApi);
+
+    this.apiClient = apiClient || _ApiClient["default"].instance;
+  }
+  /**
+   * Callback function to receive the result of the followUser operation.
+   * @callback module:api/UserLinkApi~followUserCallback
+   * @param {String} error Error message, if any.
+   * @param {module:model/OkResponse} data The data returned by the service call.
+   * @param {String} response The complete HTTP response.
+   */
+
+  /**
+   * follow a user
+   * @param {module:api/UserLinkApi~followUserCallback} callback The callback function, accepting three arguments: error, data, response
+   * data is of type: {@link module:model/OkResponse}
+   */
+
+
+  _createClass(UserLinkApi, [{
+    key: "followUser",
+    value: function followUser(body, callback) {
+      var postBody = body;
+      var pathParams = {};
+      var queryParams = {};
+      var headerParams = {};
+      var formParams = {};
+      var authNames = [];
+      var contentTypes = ['application/json'];
+      var accepts = ['application/json'];
+      var returnType = _OkResponse["default"];
+      return this.apiClient.callApi('/userlink/follow', 'POST', pathParams, queryParams, headerParams, formParams, postBody, authNames, contentTypes, accepts, returnType, callback);
+    }
+    /**
+     * Callback function to receive the result of the getFollowers operation.
+     * @callback module:api/UserLinkApi~getFollowersCallback
+     * @param {String} error Error message, if any.
+     * @param {module:model/RelationResponse} data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * get the followers list of user
+     * @param {module:api/UserLinkApi~getFollowersCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/RelationResponse}
+     */
+
+  }, {
+    key: "getFollowers",
+    value: function getFollowers(id, callback) {
+      var postBody = null;
+      var pathParams = {
+        'id': id
+      };
+      var queryParams = {};
+      var headerParams = {};
+      var formParams = {};
+      var authNames = [];
+      var contentTypes = [];
+      var accepts = ['application/json'];
+      var returnType = _RelationResponse["default"];
+      return this.apiClient.callApi('/userlink/follower/{id}', 'GET', pathParams, queryParams, headerParams, formParams, postBody, authNames, contentTypes, accepts, returnType, callback);
+    }
+    /**
+     * Callback function to receive the result of the getFollowings operation.
+     * @callback module:api/UserLinkApi~getFollowingsCallback
+     * @param {String} error Error message, if any.
+     * @param {module:model/RelationResponse} data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * get the following list of user
+     * @param {module:api/UserLinkApi~getFollowingsCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/RelationResponse}
+     */
+
+  }, {
+    key: "getFollowings",
+    value: function getFollowings(id, callback) {
+      var postBody = null;
+      var pathParams = {
+        'id': id
+      };
+      var queryParams = {};
+      var headerParams = {};
+      var formParams = {};
+      var authNames = [];
+      var contentTypes = [];
+      var accepts = ['application/json'];
+      var returnType = _RelationResponse["default"];
+      return this.apiClient.callApi('/userlink/following/{id}', 'GET', pathParams, queryParams, headerParams, formParams, postBody, authNames, contentTypes, accepts, returnType, callback);
+    }
+    /**
+     * Callback function to receive the result of the unfollowUser operation.
+     * @callback module:api/UserLinkApi~unfollowUserCallback
+     * @param {String} error Error message, if any.
+     * @param {module:model/OkResponse} data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * unfollow a user
+     * @param {module:api/UserLinkApi~unfollowUserCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/OkResponse}
+     */
+
+  }, {
+    key: "unfollowUser",
+    value: function unfollowUser(body, callback) {
+      var postBody = body;
+      var pathParams = {};
+      var queryParams = {};
+      var headerParams = {};
+      var formParams = {};
+      var authNames = [];
+      var contentTypes = ['application/json'];
+      var accepts = ['application/json'];
+      var returnType = _OkResponse["default"];
+      return this.apiClient.callApi('/userlink/unfollow', 'POST', pathParams, queryParams, headerParams, formParams, postBody, authNames, contentTypes, accepts, returnType, callback);
+    }
+  }]);
+
+  return UserLinkApi;
+}();
+
+exports["default"] = UserLinkApi;
+
+},{"../ApiClient":1,"../model/OkResponse":7,"../model/RelationRequest":8,"../model/RelationResponse":9}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -948,6 +1114,18 @@ Object.defineProperty(exports, "OkResponse", {
     return _OkResponse["default"];
   }
 });
+Object.defineProperty(exports, "RelationRequest", {
+  enumerable: true,
+  get: function get() {
+    return _RelationRequest["default"];
+  }
+});
+Object.defineProperty(exports, "RelationResponse", {
+  enumerable: true,
+  get: function get() {
+    return _RelationResponse["default"];
+  }
+});
 Object.defineProperty(exports, "User", {
   enumerable: true,
   get: function get() {
@@ -958,6 +1136,12 @@ Object.defineProperty(exports, "UserGeo", {
   enumerable: true,
   get: function get() {
     return _UserGeo["default"];
+  }
+});
+Object.defineProperty(exports, "UserLink", {
+  enumerable: true,
+  get: function get() {
+    return _UserLink["default"];
   }
 });
 Object.defineProperty(exports, "UserResponse", {
@@ -978,6 +1162,12 @@ Object.defineProperty(exports, "UserGeoApi", {
     return _UserGeoApi["default"];
   }
 });
+Object.defineProperty(exports, "UserLinkApi", {
+  enumerable: true,
+  get: function get() {
+    return _UserLinkApi["default"];
+  }
+});
 
 var _ApiClient = _interopRequireDefault(require("./ApiClient"));
 
@@ -985,9 +1175,15 @@ var _NearbyResponse = _interopRequireDefault(require("./model/NearbyResponse"));
 
 var _OkResponse = _interopRequireDefault(require("./model/OkResponse"));
 
+var _RelationRequest = _interopRequireDefault(require("./model/RelationRequest"));
+
+var _RelationResponse = _interopRequireDefault(require("./model/RelationResponse"));
+
 var _User = _interopRequireDefault(require("./model/User"));
 
 var _UserGeo = _interopRequireDefault(require("./model/UserGeo"));
+
+var _UserLink = _interopRequireDefault(require("./model/UserLink"));
 
 var _UserResponse = _interopRequireDefault(require("./model/UserResponse"));
 
@@ -995,9 +1191,11 @@ var _UserApi = _interopRequireDefault(require("./api/UserApi"));
 
 var _UserGeoApi = _interopRequireDefault(require("./api/UserGeoApi"));
 
+var _UserLinkApi = _interopRequireDefault(require("./api/UserLinkApi"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-},{"./ApiClient":1,"./api/UserApi":2,"./api/UserGeoApi":3,"./model/NearbyResponse":5,"./model/OkResponse":6,"./model/User":7,"./model/UserGeo":8,"./model/UserResponse":9}],5:[function(require,module,exports){
+},{"./ApiClient":1,"./api/UserApi":2,"./api/UserGeoApi":3,"./api/UserLinkApi":4,"./model/NearbyResponse":6,"./model/OkResponse":7,"./model/RelationRequest":8,"./model/RelationResponse":9,"./model/User":10,"./model/UserGeo":11,"./model/UserLink":12,"./model/UserResponse":13}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1072,7 +1270,7 @@ var NearbyResponse = /*#__PURE__*/function () {
 
 exports["default"] = NearbyResponse;
 
-},{"../ApiClient":1}],6:[function(require,module,exports){
+},{"../ApiClient":1}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1147,7 +1345,158 @@ var OkResponse = /*#__PURE__*/function () {
 
 exports["default"] = OkResponse;
 
-},{"../ApiClient":1}],7:[function(require,module,exports){
+},{"../ApiClient":1}],8:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _ApiClient = _interopRequireDefault(require("../ApiClient"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+* The RelationRequest model module.
+* @module model/RelationRequest
+* @version v0.0.1
+*/
+var RelationRequest = /*#__PURE__*/function () {
+  /**
+  * Constructs a new <code>RelationRequest</code>.
+  * @alias module:model/RelationRequest
+  * @class
+  */
+  function RelationRequest() {
+    _classCallCheck(this, RelationRequest);
+
+    _defineProperty(this, 'userId', undefined);
+
+    _defineProperty(this, 'targetId', undefined);
+  }
+  /**
+  * Constructs a <code>RelationRequest</code> from a plain JavaScript object, optionally creating a new instance.
+  * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
+  * @param {Object} data The plain JavaScript object bearing properties of interest.
+  * @param {module:model/RelationRequest} obj Optional instance to populate.
+  * @return {module:model/RelationRequest} The populated <code>RelationRequest</code> instance.
+  */
+
+
+  _createClass(RelationRequest, null, [{
+    key: "constructFromObject",
+    value: function constructFromObject(data, obj) {
+      if (data) {
+        obj = obj || new RelationRequest();
+
+        if (data.hasOwnProperty('userId')) {
+          obj['userId'] = _ApiClient["default"].convertToType(data['userId'], 'String');
+        }
+
+        if (data.hasOwnProperty('targetId')) {
+          obj['targetId'] = _ApiClient["default"].convertToType(data['targetId'], 'String');
+        }
+      }
+
+      return obj;
+    }
+    /**
+    * user id, shall be a string of uuid v4, length limit 36
+    * @member {String} userId
+    */
+
+  }]);
+
+  return RelationRequest;
+}();
+
+exports["default"] = RelationRequest;
+
+},{"../ApiClient":1}],9:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _ApiClient = _interopRequireDefault(require("../ApiClient"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+* The RelationResponse model module.
+* @module model/RelationResponse
+* @version v0.0.1
+*/
+var RelationResponse = /*#__PURE__*/function () {
+  /**
+  * Constructs a new <code>RelationResponse</code>.
+  * @alias module:model/RelationResponse
+  * @class
+  */
+  function RelationResponse() {
+    _classCallCheck(this, RelationResponse);
+
+    _defineProperty(this, 'code', undefined);
+
+    _defineProperty(this, 'data', undefined);
+  }
+  /**
+  * Constructs a <code>RelationResponse</code> from a plain JavaScript object, optionally creating a new instance.
+  * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
+  * @param {Object} data The plain JavaScript object bearing properties of interest.
+  * @param {module:model/RelationResponse} obj Optional instance to populate.
+  * @return {module:model/RelationResponse} The populated <code>RelationResponse</code> instance.
+  */
+
+
+  _createClass(RelationResponse, null, [{
+    key: "constructFromObject",
+    value: function constructFromObject(data, obj) {
+      if (data) {
+        obj = obj || new RelationResponse();
+
+        if (data.hasOwnProperty('code')) {
+          obj['code'] = _ApiClient["default"].convertToType(data['code'], 'Number');
+        }
+
+        if (data.hasOwnProperty('data')) {
+          obj['data'] = _ApiClient["default"].convertToType(data['data'], ['String']);
+        }
+      }
+
+      return obj;
+    }
+    /**
+    * @member {Number} code
+    */
+
+  }]);
+
+  return RelationResponse;
+}();
+
+exports["default"] = RelationResponse;
+
+},{"../ApiClient":1}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1247,7 +1596,7 @@ var User = /*#__PURE__*/function () {
 
 exports["default"] = User;
 
-},{"../ApiClient":1}],8:[function(require,module,exports){
+},{"../ApiClient":1}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1329,7 +1678,83 @@ var UserGeo = /*#__PURE__*/function () {
 
 exports["default"] = UserGeo;
 
-},{"../ApiClient":1}],9:[function(require,module,exports){
+},{"../ApiClient":1}],12:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _ApiClient = _interopRequireDefault(require("../ApiClient"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+* The UserLink model module.
+* @module model/UserLink
+* @version v0.0.1
+*/
+var UserLink = /*#__PURE__*/function () {
+  /**
+  * Constructs a new <code>UserLink</code>.
+  * @alias module:model/UserLink
+  * @class
+  */
+  function UserLink() {
+    _classCallCheck(this, UserLink);
+
+    _defineProperty(this, 'id', undefined);
+
+    _defineProperty(this, 'link', undefined);
+  }
+  /**
+  * Constructs a <code>UserLink</code> from a plain JavaScript object, optionally creating a new instance.
+  * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
+  * @param {Object} data The plain JavaScript object bearing properties of interest.
+  * @param {module:model/UserLink} obj Optional instance to populate.
+  * @return {module:model/UserLink} The populated <code>UserLink</code> instance.
+  */
+
+
+  _createClass(UserLink, null, [{
+    key: "constructFromObject",
+    value: function constructFromObject(data, obj) {
+      if (data) {
+        obj = obj || new UserLink();
+
+        if (data.hasOwnProperty('id')) {
+          obj['id'] = _ApiClient["default"].convertToType(data['id'], 'String');
+        }
+
+        if (data.hasOwnProperty('link')) {
+          obj['link'] = _ApiClient["default"].convertToType(data['link'], ['String']);
+        }
+      }
+
+      return obj;
+    }
+    /**
+    * user id, shall be a string of uuid v4, length limit 36
+    * @member {String} id
+    */
+
+  }]);
+
+  return UserLink;
+}();
+
+exports["default"] = UserLink;
+
+},{"../ApiClient":1}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1406,7 +1831,7 @@ var UserResponse = /*#__PURE__*/function () {
 
 exports["default"] = UserResponse;
 
-},{"../ApiClient":1,"./User":7}],10:[function(require,module,exports){
+},{"../ApiClient":1,"./User":10}],14:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -1560,9 +1985,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],11:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 
-},{}],12:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 (function (Buffer){
 /*!
  * The buffer module from node.js, for the browser.
@@ -3343,7 +3768,7 @@ function numberIsNaN (obj) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"base64-js":10,"buffer":12,"ieee754":15}],13:[function(require,module,exports){
+},{"base64-js":14,"buffer":16,"ieee754":19}],17:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -3520,7 +3945,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],14:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 module.exports = stringify
 stringify.default = stringify
 stringify.stable = deterministicStringify
@@ -3683,7 +4108,7 @@ function replaceGetterValues (replacer) {
   }
 }
 
-},{}],15:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -3769,7 +4194,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],16:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 var replace = String.prototype.replace;
@@ -3797,7 +4222,7 @@ module.exports = util.assign(
     Format
 );
 
-},{"./utils":20}],17:[function(require,module,exports){
+},{"./utils":24}],21:[function(require,module,exports){
 'use strict';
 
 var stringify = require('./stringify');
@@ -3810,7 +4235,7 @@ module.exports = {
     stringify: stringify
 };
 
-},{"./formats":16,"./parse":18,"./stringify":19}],18:[function(require,module,exports){
+},{"./formats":20,"./parse":22,"./stringify":23}],22:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -4069,7 +4494,7 @@ module.exports = function (str, opts) {
     return utils.compact(obj);
 };
 
-},{"./utils":20}],19:[function(require,module,exports){
+},{"./utils":24}],23:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -4342,7 +4767,7 @@ module.exports = function (object, opts) {
     return joined.length > 0 ? prefix + joined : '';
 };
 
-},{"./formats":16,"./utils":20}],20:[function(require,module,exports){
+},{"./formats":20,"./utils":24}],24:[function(require,module,exports){
 'use strict';
 
 var has = Object.prototype.hasOwnProperty;
@@ -4592,7 +5017,7 @@ module.exports = {
     merge: merge
 };
 
-},{}],21:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4678,7 +5103,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],22:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4765,13 +5190,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],23:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":21,"./encode":22}],24:[function(require,module,exports){
+},{"./decode":25,"./encode":26}],28:[function(require,module,exports){
 "use strict";
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -4814,7 +5239,7 @@ Agent.prototype._setDefaults = function (req) {
 
 module.exports = Agent;
 
-},{}],25:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -5837,7 +6262,7 @@ request.put = function (url, data, fn) {
   return req;
 };
 
-},{"./agent-base":24,"./is-object":26,"./request-base":27,"./response-base":28,"component-emitter":13,"fast-safe-stringify":14,"qs":17}],26:[function(require,module,exports){
+},{"./agent-base":28,"./is-object":30,"./request-base":31,"./response-base":32,"component-emitter":17,"fast-safe-stringify":18,"qs":21}],30:[function(require,module,exports){
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -5855,7 +6280,7 @@ function isObject(obj) {
 
 module.exports = isObject;
 
-},{}],27:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -6638,7 +7063,7 @@ RequestBase.prototype._setTimeouts = function () {
   }
 };
 
-},{"./is-object":26}],28:[function(require,module,exports){
+},{"./is-object":30}],32:[function(require,module,exports){
 "use strict";
 
 /**
@@ -6770,7 +7195,7 @@ ResponseBase.prototype._setStatusProperties = function (status) {
   this.unprocessableEntity = status === 422;
 };
 
-},{"./utils":29}],29:[function(require,module,exports){
+},{"./utils":33}],33:[function(require,module,exports){
 "use strict";
 
 function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
@@ -6876,5 +7301,5 @@ exports.cleanHeader = function (header, changesOrigin) {
   return header;
 };
 
-},{}]},{},[4])(4)
+},{}]},{},[5])(5)
 });

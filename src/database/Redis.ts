@@ -177,4 +177,40 @@ export class Redis {
     });
   }
 
+  public async sadd(key: string, member: string): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.redis.sadd(key, member, (err: Error, reply: number) => {
+        if (err) {
+          return reject(err);
+        } else {
+          return resolve(reply);
+        }
+      });
+    });
+  }
+
+  public async srem(key: string, member: string): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.redis.srem(key, member, (err: Error, reply: number) => {
+        if (err) {
+          return reject(err);
+        } else {
+          return resolve(reply);
+        }
+      });
+    });
+  }
+
+  public async smembers(key: string): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+      this.redis.smembers(key, (err: Error, replies: string[]) => {
+        if (err) {
+          return reject(err);
+        } else {
+          return resolve(replies);
+        }
+      });
+    });
+  }
+
 }
