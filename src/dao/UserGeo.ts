@@ -11,7 +11,7 @@ export const saveUserGeo = async (userGeo: UserGeo): Promise<number> => {
 export const getNearbyUserIds = async (userId: string): Promise<string[]> => {
   return await Redis.get().georadiusbymember(
     KEY_GLOBAL_GEO_ID, userId,
-    parseInt(Config.get("SEARCH_RADIUS", "5")),
-    Config.get("SEARCH_UNIT", "km"),
+    parseInt(Config.get("SEARCH_RADIUS", "5")), // radius
+    Config.get("SEARCH_UNIT", "km"), // unit
   );
 };

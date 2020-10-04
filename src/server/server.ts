@@ -18,6 +18,7 @@ export const startServer = async () => {
   Redis.get();
   Logger.get();
 
+  // init app
   const app = new Koa();
   const host = Config.get("WEB_HOST", "127.0.0.1");
   const port = parseInt(Config.get("WEB_PORT", "8081"));
@@ -59,7 +60,7 @@ export const startServer = async () => {
     );
   }
 
-  // time consuming
+  // time consuming middleware
   app.use(async (ctx: Koa.Context, next: Koa.Next) => {
     await next();
     const rt = ctx.response.get("X-Response-Time");
@@ -76,7 +77,7 @@ export const startServer = async () => {
     ctx.set("X-Response-Time", `${ms}ms`);
   });
 
-  // swagger download endpoints
+  // swagger definition json file download endpoints
   app.use(async (ctx: Koa.Context, next: Koa.Next) => {
     if (process.env.NODE_ENV !== "production" && ctx.path === "/swagger.json") {
       // production env, enabled
@@ -92,13 +93,13 @@ export const startServer = async () => {
     return next();
   });
 
-  // allow cors
+  // middleware: allow cors
   app.use(cors());
 
-  // body parsing
+  // middleware: body parsing
   app.use(bodyParser());
 
-  // apis
+  // router: apis
   router.prefix(apiBaseUrl);
   app.use(router.routes());
 

@@ -101,10 +101,12 @@ export const followUser = async (ctx: Koa.Context) => {
   }
 
   try {
+    // validate user exists
     const user = await UserDao.getUser(body.userId);
     if (user === null) {
       return responseError("UserLinkController", "followUser", ctx, -1, new Error(`User ${body.userId} not found`));
     }
+    // validate target user exists
     const target = await UserDao.getUser(body.targetId);
     if (target === null) {
       return responseError("UserLinkController", "followUser", ctx, -1, new Error(`Target ${body.targetId} not found`));
@@ -151,10 +153,12 @@ export const unfollowUser = async (ctx: Koa.Context) => {
   }
 
   try {
+    // validate user exists
     const user = await UserDao.getUser(body.userId);
     if (user === null) {
       return responseError("UserLinkController", "followUser", ctx, -1, new Error(`User ${body.userId} not found`));
     }
+    // validate target user exists
     const target = await UserDao.getUser(body.targetId);
     if (target === null) {
       return responseError("UserLinkController", "followUser", ctx, -1, new Error(`Target ${body.targetId} not found`));

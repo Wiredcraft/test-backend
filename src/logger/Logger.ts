@@ -32,6 +32,7 @@ export class Logger {
     if (!Logger.instance) {
       const logPath = LibPath.join(__dirname, "../../logs/server.%DATE%.log");
 
+      // create logger instance
       Logger.instance = winston.createLogger({
         levels: winston.config.syslog.levels,
         level: Config.get("LOG_LEVEL", "debug"),
@@ -44,6 +45,7 @@ export class Logger {
         defaultMeta: {},
       });
 
+      // add rotating logger file transport
       Logger.instance.add(new DailyRotateFile({
         filename: logPath,
         datePattern: "YYYY-MM",
@@ -53,6 +55,7 @@ export class Logger {
         level: process.env.LOG_LEVEL,
       } as TransportOptions));
 
+      // add console transport
       if (Config.get("LOG_CONSOLE", "true") === "true") {
         Logger.instance.add(new winston.transports.Console());
       }

@@ -1,7 +1,7 @@
 import * as Koa from "koa";
 import * as Joi from "@hapi/joi";
 
-import {arrDeleteIndex, validateWithJoi} from "../utility/Utility";
+import {validateWithJoi} from "../utility/Utility";
 import {responseError, responseNormal} from "../router/Router";
 import {UserGeo as UserGeoModel} from "../model/UserGeo";
 import * as UserGeoDao from "../dao/UserGeo";
