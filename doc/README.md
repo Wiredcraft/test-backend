@@ -23,8 +23,14 @@
 ### Database
 
 * redis: [official](https://redis.io/)
+    * Using string type to save user data
+        * [set](https://redis.io/commands/set) command: save user data string after `JSON.stringify()`
     * Using data structure `sets` to save following/follower list: [Sets](https://redis.io/commands#set)
+        * [sadd](https://redis.io/commands/sadd) command: save following/follower userId into sets
+        * [smembers](https://redis.io/commands/smembers) command: get following/follower user ids
     * Using `Geo` api to handle LBS functionality: [Geo](https://redis.io/commands#geo)
+        * [geoadd](https://redis.io/commands/geoadd) command: save user position into a global key
+        * [georadiusbymember](https://redis.io/commands/georadiusbymember) command: fetch users nearby
 
 ### Test
 
