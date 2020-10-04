@@ -1,0 +1,53 @@
+<html>
+<body>
+    <div>
+        <div><h2>getUser</h2></div>
+        <div><input id="getUserInput" type="text" size="100" value="29256e52-9ca2-49d5-8b4e-f42578ccae68" /><button type="button" onclick="getUser()">getUser</button></div>
+        <div><textarea id="getUserDisplay" rows="5" cols="100"></textarea></div>
+    </div>
+    <div>
+        <div><h2>createUser</h2></div>
+        <div><input id="createUserInput" type="text" size="100" value='{"name": "Jonathan Dai", "dob": 472120968, "address": "Some cool address in city", "description": "Some cool description of the user", "createdAt": 1579120968}' /><button type="button" onclick="createUser()">createUser</button></div>
+        <div><textarea id="createUserDisplay" rows="5" cols="100"></textarea></div>
+    </div>
+    <div>
+        <div><h2>updateUser</h2></div>
+        <div><input id="updateUserInput" type="text" size="100" value='{"id": "29256e52-9ca2-49d5-8b4e-f42578ccae68", "name": "New Name", "dob": 472120968, "address": "Some cool address in city", "description": "Some cool description of the user", "createdAt": 1579120968}' /><button type="button" onclick="updateUser()">updateUser</button></div>
+        <div><textarea id="updateUserDisplay" rows="5" cols="100"></textarea></div>
+    </div>
+    <div>
+        <div><h2>deleteUser</h2></div>
+        <div><input id="deleteUserInput" type="text" size="100" value="29256e52-9ca2-49d5-8b4e-f42578ccae68" /><button type="button" onclick="deleteUser()">deleteUser</button></div>
+        <div><textarea id="deleteUserDisplay" rows="5" cols="100"></textarea></div>
+    </div>
+    <script src="js/bundle.js"></script>
+    <script type="text/javascript">
+        const api = new Wiredcraft.UserApi();
+
+        const getUser = () => {
+            api.getUser(document.getElementById("getUserInput").value, (err, data, response) => {
+                document.getElementById("getUserDisplay").innerText = JSON.stringify(response.body);
+            });
+        };
+
+        const createUser = () => {
+          api.createUser(document.getElementById("createUserInput").value, (err, data, response) => {
+            document.getElementById("createUserDisplay").innerText = JSON.stringify(response.body);
+          });
+        };
+
+        const updateUser = () => {
+          api.updateUser(document.getElementById("updateUserInput").value, (err, data, response) => {
+            document.getElementById("updateUserDisplay").innerText = JSON.stringify(response.body);
+          });
+        };
+
+        const deleteUser = () => {
+          api.deleteUser(document.getElementById("deleteUserInput").value, (err, data, response) => {
+            document.getElementById("deleteUserDisplay").innerText = JSON.stringify(response.body);
+          });
+        };
+
+    </script>
+</body>
+</html>
