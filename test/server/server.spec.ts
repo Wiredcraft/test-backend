@@ -14,6 +14,7 @@ import {startServer} from "../../src/server/server";
 import {Redis} from "../../src/database/Redis";
 import {Config} from "../../src/config/Config";
 import {Response} from "../../src/router/Router";
+import * as UserLinkDao from "../../src/dao/UserLink";
 
 chai.use(require("chai-uuid"));
 const expect = chai.expect;
@@ -54,6 +55,18 @@ before(() => {
     });
     sinon.stub(UserDao, "deleteUser").callsFake(async () => {
       return 1;
+    });
+    sinon.stub(UserLinkDao, "followUser").callsFake(async () => {
+      // non-return
+    });
+    sinon.stub(UserLinkDao, "unfollowUser").callsFake(async () => {
+      // non-return
+    });
+    sinon.stub(UserLinkDao, "getFollowers").callsFake(async () => {
+      return [uuid.v4(), uuid.v4()];
+    });
+    sinon.stub(UserLinkDao, "getFollowing").callsFake(async () => {
+      return [uuid.v4(), uuid.v4()];
     });
     sinon.stub(UserGeoDao, "saveUserGeo").callsFake(async () => {
       return 1;
@@ -203,6 +216,134 @@ describe("USER APIS", () => {
         .then((json: Response<string>) => {
           expect(json.code).to.be.equal(200);
           expect(json.data).to.be.equal("OK");
+        });
+    });
+  });
+});
+
+describe("USER LINK APIS", () => {
+  describe("POST /userlink/follow", () => {
+    it("POST /userlink/follow validation failure", () => {
+      return fetch(`${BASE_URL}/userlink/follow`, {
+        method: "POST",
+        body: JSON.stringify({userId: uuid.v4(), targetId: "1"}),
+        headers: {"Content-Type": "application/json"},
+      })
+        .then((res: FetchResponse) => {
+          expect(res.status).to.be.equal(200);
+          return res.json();
+        })
+        .then((json: Response<string>) => {
+          expect(json.code).to.be.equal(-1);
+          expect(json.data).to.include("\"targetId\" must be a valid GUID");
+        });
+    });
+
+    it("POST /userlink/follow mock", () => {
+      return fetch(`${BASE_URL}/userlink/follow`, {
+        method: "POST",
+        body: JSON.stringify({userId: uuid.v4(), targetId: uuid.v4()}),
+        headers: {"Content-Type": "application/json"},
+      })
+        .then((res: FetchResponse) => {
+          expect(res.status).to.be.equal(200);
+          return res.json();
+        })
+        .then((json: Response<string>) => {
+          expect(json.code).to.be.equal(200);
+          expect(json.data).to.include("OK");
+        });
+    });
+  });
+
+  describe("POST /userlink/unfollow", () => {
+    it("POST /userlink/unfollow validation failure", () => {
+      return fetch(`${BASE_URL}/userlink/unfollow`, {
+        method: "POST",
+        body: JSON.stringify({userId: uuid.v4(), targetId: "1"}),
+        headers: {"Content-Type": "application/json"},
+      })
+        .then((res: FetchResponse) => {
+          expect(res.status).to.be.equal(200);
+          return res.json();
+        })
+        .then((json: Response<string>) => {
+          expect(json.code).to.be.equal(-1);
+          expect(json.data).to.include("\"targetId\" must be a valid GUID");
+        });
+    });
+
+    it("POST /userlink/unfollow mock", () => {
+      return fetch(`${BASE_URL}/userlink/unfollow`, {
+        method: "POST",
+        body: JSON.stringify({userId: uuid.v4(), targetId: uuid.v4()}),
+        headers: {"Content-Type": "application/json"},
+      })
+        .then((res: FetchResponse) => {
+          expect(res.status).to.be.equal(200);
+          return res.json();
+        })
+        .then((json: Response<string>) => {
+          expect(json.code).to.be.equal(200);
+          expect(json.data).to.include("OK");
+        });
+    });
+  });
+
+  describe("GET /userlink/follower", () => {
+    it("GET /userlink/follower validation failure", () => {
+      return fetch(`${BASE_URL}/userlink/follower/1`)
+        .then((res: FetchResponse) => {
+          expect(res.status).to.be.equal(200);
+          return res.json();
+        })
+        .then((json: Response<string>) => {
+          expect(json.code).to.be.equal(-1);
+          expect(json.data).to.include("\"value\" must be a valid GUID");
+        });
+    });
+
+    it("GET /userlink/follower mock", () => {
+      return fetch(`${BASE_URL}/userlink/follower/a610aea1-020e-4506-aeb4-f60018545ec6`)
+        .then((res: FetchResponse) => {
+          expect(res.status).to.be.equal(200);
+          return res.json();
+        })
+        .then((json: Response<string[]>) => {
+          expect(json.code).to.be.equal(200);
+          for (const [, id] of json.data.entries()) {
+            // @ts-ignore
+            expect(id).to.be.a.uuid("v4");
+          }
+        });
+    });
+  });
+
+  describe("GET /userlink/following", () => {
+    it("GET /userlink/following validation failure", () => {
+      return fetch(`${BASE_URL}/userlink/following/1`)
+        .then((res: FetchResponse) => {
+          expect(res.status).to.be.equal(200);
+          return res.json();
+        })
+        .then((json: Response<string>) => {
+          expect(json.code).to.be.equal(-1);
+          expect(json.data).to.include("\"value\" must be a valid GUID");
+        });
+    });
+
+    it("GET /userlink/following mock", () => {
+      return fetch(`${BASE_URL}/userlink/following/a610aea1-020e-4506-aeb4-f60018545ec6`)
+        .then((res: FetchResponse) => {
+          expect(res.status).to.be.equal(200);
+          return res.json();
+        })
+        .then((json: Response<string[]>) => {
+          expect(json.code).to.be.equal(200);
+          for (const [, id] of json.data.entries()) {
+            // @ts-ignore
+            expect(id).to.be.a.uuid("v4");
+          }
         });
     });
   });
