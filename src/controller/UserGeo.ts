@@ -6,6 +6,7 @@ import {responseError, responseNormal} from "../router/Router";
 import {UserGeo as UserGeoModel} from "../model/UserGeo";
 import * as UserGeoDao from "../dao/UserGeo";
 import {UserSchemaId} from "./User";
+import * as UserLinkDao from "../dao/UserLink";
 
 // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 // TAG
@@ -123,15 +124,18 @@ export const getNearbyUserIds = async (ctx: Koa.Context) => {
   }
 
   try {
-    let ids = await UserGeoDao.getNearbyUserIds(ctx.params.id);
-    for (const [index, id] of ids.entries()) {
-      if (id !== ctx.params.id) {
-        continue;
+    const result = [] as string[];
+    const followers = await UserLinkDao.getFollowers(ctx.params.id);
+    const nearbyIds = await UserGeoDao.getNearbyUserIds(ctx.params.id);
+
+    for (const [, id] of nearbyIds.entries()) {
+      if (id !== ctx.params.id // userId self would be returned by redis, so shall be filtered here
+        && followers.indexOf(id) !== -1) { // only user's "friends" (follower, since it's passive action) shall be displayed
+        result.push(id);
       }
-      ids = arrDeleteIndex(ids, index);
     }
 
-    return responseNormal("UserGeoController", "getNearbyUserIds", ctx, ids);
+    return responseNormal("UserGeoController", "getNearbyUserIds", ctx, result);
   } catch (err) {
     return responseError("UserGeoController", "getNearbyUserIds", ctx, -1, err);
   }
