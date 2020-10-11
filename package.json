@@ -10,7 +10,7 @@
     "build": "./node_modules/.bin/tsc -p ./tsconfig.json -w",
     "gen-client": "swagger-codegen generate --output=\"html/js/swagger\" --lang=\"javascript\" --input-spec=\"http://127.0.0.1:8081/swagger.json\" --template-engine=\"mustache\" && ./node_modules/.bin/browserify -t [ babelify --presets [ @babel/preset-env ] --plugins [ @babel/plugin-proposal-class-properties ] ] --standalone Wiredcraft -o ./html/js/bundle.js ./html/js/swagger/src/index.js",
     "client": "./node_modules/.bin/http-server -a 127.0.0.1 -p 8088 -o index.html -e js ./html",
-    "test": "./node_modules/.bin/mocha -r ts-node/register ./test/**/*.spec.ts"
+    "test": "./node_modules/.bin/mocha -r ts-node/register --sort --file ./test/global/setup.ts ./test/**/*.spec.ts"
   },
   "repository": {
     "type": "git",

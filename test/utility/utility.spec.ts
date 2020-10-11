@@ -1,6 +1,8 @@
 import * as chai from "chai";
 import * as Joi from "@hapi/joi";
 
+console.log(__filename);
+
 import {arrDeleteIndex, genDbKey, validateWithJoi} from "../../src/utility/Utility";
 
 const expect = chai.expect;
