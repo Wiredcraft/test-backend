@@ -19,7 +19,7 @@
   },
   "author": "Emmanuel Nsubuga Kyeyune",
   "license": "MIT",
-  "homepage": "https://github.com/emmanuelnk/wc-restful-api#readme",
+  "homepage": "https://github.com/emmanuelnk/test-backend#readme",
   "keywords": [
     "typescript",
     "koa",
@@ -36,7 +36,7 @@
     "cors",
     "github actions"
   ],
-  "repository": "github:emmanuelnk/wc-restful-api",
+  "repository": "github:emmanuelnk/test-backend",
   "devDependencies": {
     "@types/chai": "^4.2.14",
     "@types/chai-json-schema": "^1.4.6",
