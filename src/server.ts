@@ -52,12 +52,3 @@ if(config.nodeEnv !== 'test')
     setupConnection(config.databaseUrl)
         .then(async () => server())
         .catch((error: string) => console.log('TypeORM connection error: ', error))
-
-// Challenge 2
-// Friends following
-// https://stackoverflow.com/questions/43463205/mongoose-following-followers
-// https://stackoverflow.com/questions/28421505/followers-mongodb-database-design
-
-// Challenge 3
-// Find nearby friends
-// geojson
