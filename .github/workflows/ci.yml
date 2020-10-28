@@ -19,7 +19,7 @@ jobs:
     - name: Building the project
       run: npm run build 
     - name: Run docker compose
-      run: docker-compose -f mongo.docker-compose.yml up
+      run: docker-compose -f mongo.docker-compose.yml up -d
     - name: Run `npm test`
       run: npm test
       env:
