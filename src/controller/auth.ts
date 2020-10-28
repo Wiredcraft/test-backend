@@ -2,21 +2,22 @@ import _ from 'lodash'
 import { BaseContext } from 'koa'
 import jwt from 'jsonwebtoken'
 import { getManager, Repository } from 'typeorm'
-import { request, summary, responsesAll, tagsAll, body } from 'koa-swagger-decorator'
+import { request, summary, description, responses, tagsAll, body } from 'koa-swagger-decorator'
 import { User, userSchema } from '../entity/user'
 import { config } from '../utils/config'
 import { requiredProperties, isExpired } from '../utils/validate'
 
-@responsesAll({
-    200: { description: 'success' },
-    400: { description: 'bad request' },
-    401: { description: 'unauthorized, missing/wrong jwt token' }
-})
 @tagsAll(['Auth'])
 export default class AuthController {
     @request('post', '/login')
     @summary('Log a user in')
     @body(_.pick(userSchema.properties, ['email', 'password']))
+    @responses({
+        200: { description: 'successfully logged in' },
+        400: { description: 'missing fields' },
+        401: { description: 'unauthorized, missing/invalid jwt token, wrong password' },
+        404: { description: 'user not found' }
+    })
     public static async loginUser(ctx: BaseContext): Promise<void> {
         // validate properties required to create a new user
         const missingProperties = requiredProperties(ctx.request.body, ['email', 'password'])
@@ -34,7 +35,7 @@ export default class AuthController {
         try {
             user = await userRepository.findOneOrFail({ where: { email: ctx.request.body.email } })
         } catch (error) {
-            ctx.status = 401
+            ctx.status = 404
             ctx.body = 'user_not_found'
             return
         }
@@ -65,6 +66,13 @@ export default class AuthController {
 
     @request('get', '/refresh')
     @summary('Get the refresh token')
+    @description('The user must already be authorized to used this route to get the refresh token')
+    @responses({
+        200: { description: 'still valid access token, successfully refreshed token' },
+        400: { description: 'missing fields' },
+        403: { description: 'unauthorized, missing/invalid jwt token' },
+        404: { description: 'user not found' }
+    })
     public static async refreshToken(ctx: BaseContext): Promise<void> {
         // Get user from database
         const userRepository: Repository<User> = getManager().getRepository(User)
@@ -76,21 +84,21 @@ export default class AuthController {
         try {
             decoded = jwt.verify(token, config.jwt.accessTokenSecret, { ignoreExpiration: true })
         } catch (err) {
-            ctx.status = 401
+            ctx.status = 403
             ctx.body = 'invalid_access_token'
             return
         }
 
         if (!_.isObject(decoded)) {
-            ctx.status = 401
-            ctx.body = 'invalid_token'
+            ctx.status = 403
+            ctx.body = 'invalid_access_token'
             return
         }
 
         // check the token for the user email
         if (!decoded.hasOwnProperty('email')) {
-            ctx.status = 401
-            ctx.body = 'invalid_token'
+            ctx.status = 403
+            ctx.body = 'invalid_access_token'
             return
         }
 
@@ -107,7 +115,7 @@ export default class AuthController {
         try {
             user = await userRepository.findOneOrFail({ where: { email: decoded.email } })
         } catch (error) {
-            ctx.status = 401
+            ctx.status = 404
             ctx.body = 'user_not_found'
             return
         }
@@ -116,7 +124,7 @@ export default class AuthController {
         try {
             jwt.verify(user.refreshToken, config.jwt.refreshTokenSecret)
         } catch (err) {
-            ctx.status = 401
+            ctx.status = 403
             ctx.body = 'invalid_refresh_token'
             return
         }
@@ -133,6 +141,12 @@ export default class AuthController {
 
     @request('get', '/logout')
     @summary('Log a user out')
+    @responses({
+        200: { description: 'user successfully logged out' },
+        400: { description: 'missing fields' },
+        401: { description: 'invalid access token, user not logged in' },
+        404: { description: 'user not found' }
+    })
     public static async logoutUser(ctx: BaseContext): Promise<void> {
         // possible solutions
         // 1. delete token on client side, delete refresh token on db, wait for access token to expire

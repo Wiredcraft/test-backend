@@ -1,9 +1,5 @@
-import { expect, use } from 'chai'
-import chaijsonSchema from 'chai-json-schema'
 import request from 'supertest'
 import { testServer } from '../utils/connect'
-
-use(chaijsonSchema)
 
 export const waiting = async function (seconds: number): Promise<number> {
     return new Promise(function (resolve) {
@@ -16,10 +12,6 @@ describe('Testing public routes', () => {
         request(testServer)
             .get('/')
             .expect(200)
-            .end((err, res) => {
-                if (err) return done(err)
-                expect(res.text).equal('Hello Curious Person!')
-                done()
-            })
+            .end(done)
     })
 })

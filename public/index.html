@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" src="assets/github-markdown.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.3.1/styles/ocean.min.css"
+            integrity="sha512-h/NHRaEVWoZqcVSsHytn36bln1uTHHSNqV+LPX4nLJf0p0H5gQ17fIivY+Ld8laKFJP5O5rko117FID3OW9hGQ=="
+            crossorigin="anonymous"
+        />
+        <style>
+            .markdown-body {
+                box-sizing: border-box;
+                min-width: 200px;
+                max-width: 980px;
+                margin: 0 auto;
+                padding: 45px;
+            }
+
+            @media (max-width: 767px) {
+                .markdown-body {
+                    padding: 15px;
+                }
+            }
+        </style>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+            integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.3.1/highlight.min.js"
+            integrity="sha512-U12+KlhI3X2EY7U4NJZ+O0wujKcaMQZHABtaiZtE8UrPiK1O3Y4cjBe0mMFyyBptdaf+eh45hqNdsayeLQcneg=="
+            crossorigin="anonymous"
+        ></script>
+    </head>
+
+    <body stye="background: lightgrey;">
+        <article id="includedContent" class="markdown-body"></article>
+
+        <script>
+            $(document).ready(function () {
+                $(function () {
+                    $('#includedContent').load('readme.html', () => {
+                        // hljs.initHighlightingOnLoad()
+                        document.querySelectorAll('pre code').forEach((block) => {
+                            hljs.highlightBlock(block)
+                        })
+                    })
+                })
+            })
+        </script>
+    </body>
+</html>

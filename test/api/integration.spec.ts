@@ -222,7 +222,7 @@ describe('Testing all non-index routes', () => {
                 name: 'Emmanuel NewName',
                 email: 'emmanuel@test.com',
             })
-            .expect(201)
+            .expect(200)
             .end((err, res) => {
                 if (err) return done(err)
                 expect(res.body).to.be.jsonSchema(userSchema)
@@ -320,7 +320,7 @@ describe('Testing all non-index routes', () => {
         request(testServer)
             .get('/refresh')
             .set('Authorization', 'bearer ' + token)
-            .expect(401)
+            .expect(403)
             .end(done)
     })
 

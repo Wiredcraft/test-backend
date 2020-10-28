@@ -1,5 +1,6 @@
 import { SwaggerRouter } from 'koa-swagger-decorator'
 import { user, auth } from '../controller'
+import { description } from '../utils/html_content'
 
 const protectedRouter = new SwaggerRouter()
 
@@ -13,10 +14,11 @@ protectedRouter.put('/users/:id', user.updateUser)
 protectedRouter.delete('/users/:id', user.deleteUser)
 protectedRouter.delete('/testusers', user.deleteTestUsers)
 
+
 // Swagger endpoint
 protectedRouter.swagger({
     title: 'wiredcraft-restful-api',
-    description: 'RESTful API using NodeJS, KOA, Typescript and TypeORM. Middleware uses JWT, CORS, Winston Logger.',
+    description: description,
     version: '1.0.0',
 })
 
