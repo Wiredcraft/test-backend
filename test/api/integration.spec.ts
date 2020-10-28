@@ -366,7 +366,7 @@ describe('Testing all non-index routes', () => {
             .expect(200)
             .end(async (err, res) => {
                 if (err) return done(err)
-                expect(res.text).to.be.equal('Succcessfully logged out')
+                expect(res.text).to.be.equal('logout_success')
                 done()
             })
     })

@@ -8,7 +8,12 @@ on:
 jobs:
   build:
     name: Build the project
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
     steps:
     - uses: actions/checkout@master
     - uses: actions/setup-node@v1
@@ -18,8 +23,11 @@ jobs:
       run: npm ci
     - name: Building the project
       run: npm run build
-    - name: Unit tests
-      run: npm run test
+    - name: Run `npm test`
+      run: npm test
+      env:
+        CI: true
+        MONGODB_URI: mongodb://localhost:27017
   
   deploy_to_heroku:
     name: Deploy to Heroku
