@@ -22,13 +22,14 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - name: Building the project
-      run: npm run build
+      run: npm run build 
     - name: Run `npm test`
       run: npm test
       env:
         CI: true
-        MONGODB_URI: mongodb://localhost:27017
-  
+        MONGO_INITDB_ROOT_USERNAME: user
+        MONGO_INITDB_ROOT_PASSWORD: pass
+        MONGO_INITDB_DATABASE: apidb
   deploy_to_heroku:
     name: Deploy to Heroku
     runs-on: ubuntu-16.04
