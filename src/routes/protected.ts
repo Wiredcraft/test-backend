@@ -1,14 +1,17 @@
 import { SwaggerRouter } from 'koa-swagger-decorator'
-import { user } from '../controller'
+import { user, auth } from '../controller'
 
 const protectedRouter = new SwaggerRouter()
+
+// AUTH ROUTES
+protectedRouter.get('/logout', auth.logoutUser)
 
 // USER ROUTES
 protectedRouter.get('/users', user.getUsers)
 protectedRouter.get('/users/:id', user.getUser)
-protectedRouter.post('/users', user.createUser)
 protectedRouter.put('/users/:id', user.updateUser)
 protectedRouter.delete('/users/:id', user.deleteUser)
+protectedRouter.delete('/testusers', user.deleteTestUsers)
 
 // Swagger endpoint
 protectedRouter.swagger({

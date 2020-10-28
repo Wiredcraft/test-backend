@@ -1,9 +1,15 @@
 import Router from '@koa/router'
-import { general } from '../controller'
+import { general, auth, user } from '../controller'
 
 const unprotectedRouter = new Router()
 
-// Hello World route
+// Auth
+unprotectedRouter.post('/login', auth.loginUser)
+unprotectedRouter.get('/refresh', auth.refreshToken)
+// User
+unprotectedRouter.post('/users', user.createUser)
+
+// General
 unprotectedRouter.get('/', general.helloWorld)
 
 export { unprotectedRouter }
