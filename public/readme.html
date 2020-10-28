@@ -1,0 +1,173 @@
+<h1 id="wc-restful-api">WC RESTful API</h1>
+<p>👷🏿 by <a href="https://www.github.com/emmanuelnk">Emmanuel N K</a> </p>
+<h2 id="introduction">Introduction</h2>
+<p>This project is a simple RESTful API built using NodeJS, KOA, Typescript and TypeORM as an ORM for MongoDB. Middleware uses JWT, CORS, Winston Logger. Swagger API docs are used to produce an api front-end.  </p>
+<p>See all the action in an online API GUI here (courtesy of Swagger UI): <a href="https://wc-backend-test.herokuapp.com/swagger-html">swagger-html</a><br>Or check out the project page here: <a href="https://github.com/emmanuelnk/test-backend">test-backend</a> </p>
+<h3 id="tools">Tools</h3>
+<ul>
+<li>Node.js (v12.x.x)</li>
+<li>NPM (v6.x.x) </li>
+<li>Typescript</li>
+<li>KOA Framework v2</li>
+<li>MongoDB 4 with TypeORM</li>
+<li>Winston (logging)</li>
+<li>Swagger-UI (documenting the API)</li>
+<li>Mocha, Chai, Supertest (unit and integration tests)</li>
+<li>NYC (code coverage)</li>
+<li>ESlint, Prettier (code formatting)</li>
+<li>AJV for Schema validation</li>
+</ul>
+<h3 id="why-use-koa-to-build-api-servers">Why use KOA to build API Servers?</h3>
+<p>Koa was built by the same team behind Express, and is a smaller, more expressive, and more robust foundation for web applications and APIs. It has the following advantages:</p>
+<ul>
+<li>Koa improves interoperability, robustness, and makes writing middleware much more enjoyable.</li>
+<li>Has a large number of helpful methods but maintains a small footprint, as no middleware are bundled.</li>
+<li>Koa is very lightweight, with just 550 lines of code.</li>
+<li>Better error handling through try/catch.</li>
+<li>Generated-based control flow.</li>
+<li>No more callbacks, facilitating an upstream and downstream flow of control.</li>
+<li>Cleaner, more readable async code.</li>
+</ul>
+<h2 id="setup">Setup</h2>
+<h3 id="requirements">Requirements</h3>
+<ul>
+<li>Node.js version &gt;= 12</li>
+<li>npm version &gt;= 6</li>
+<li>docker and docker-compose (to run the mongodb db in localhost)</li>
+</ul>
+<h3 id="setup-1">Setup</h3>
+<ul>
+<li><p>install dependencies:</p>
+<pre><code class="language-bash">npm install</code></pre>
+</li>
+<li><p>setup the <code>.env</code> file. Edit the environment variables inside accordingly:</p>
+<pre><code class="language-bash">cp .env.example .env</code></pre>
+</li>
+<li><p>start the mongodb container in docker:</p>
+<pre><code class="language-bash">sudo docker-compose -f mongo.docker-compose up -d</code></pre>
+<h3 id="start">Start</h3>
+</li>
+<li><p>for development:</p>
+<pre><code class="language-bash">npm run watch-server</code></pre>
+</li>
+<li><p>for deployment on local host:</p>
+<pre><code class="language-bash">npm run build
+npm start</code></pre>
+<h3 id="test">Test</h3>
+</li>
+<li><p>to run integration tests:</p>
+<pre><code class="language-bash">npm test</code></pre>
+<h3 id="coverage">Coverage</h3>
+</li>
+<li><p>to run code coverage:</p>
+<pre><code class="language-bash">npm run coverage</code></pre>
+</li>
+</ul>
+<h2 id="project-structure">Project Structure</h2>
+<ul>
+<li>The project is written in Typescript. After Typescript compiles, all subsequently built javascript files are in <code>/dist</code></li>
+<li>The entry point for the server is <code>src/server.ts</code></li>
+<li>Program flow: <code>server</code> --&gt; <code>routes</code> --&gt; <code>controllers</code> --&gt; <code>entities</code></li>
+<li><code>Entities</code> are defined with and validated by TypeORM</li>
+<li>Tests are in the <code>test</code> folder and contain both integration tests and unit tests</li>
+</ul>
+<h2 id="deployment">Deployment</h2>
+<ul>
+<li>Project is deployed via Github Actions to Heroku using a ci.yml file in the project</li>
+<li>The mongodb database used is hosted on free tier Mongo Atlas</li>
+</ul>
+<h2 id="design-choices">Design Choices</h2>
+<h3 id="authenticationauthorization">Authentication/Authorization</h3>
+<ul>
+<li>Authentication is implemented using a jwt access and refresh token system. When a user logs in they are given a short term access token with which to perform authenticated requests. When this toek expires they can access the <code>/refresh</code> endpoint to get another one. The refresh token is stored in the database. </li>
+<li>The refresh token expires after a very long time and thus allows the user to maintain a seemingly constant session.</li>
+<li>This method allows for multiple device login for an api</li>
+<li>A drawback of this method is with explicit log out. When a user logs outs, the client deletes the old token but the token is still valid on the server side</li>
+<li>A solution to this would be to implement a token blacklist in a redis datastore that checks invalidated tokens on user access to authenticated routes. This is however resource intensive.</li>
+</ul>
+<h3 id="rate-limiting">Rate Limiting</h3>
+<ul>
+<li>Rate limiting is implemented using koa middleware that keeps track of access in either an in-memory cache or redis datastore. </li>
+<li>Redis would be the preferred albeit expensive option for this scenario.</li>
+</ul>
+<h3 id="testing">Testing</h3>
+<ul>
+<li>This project concentrates on API integration tests and those are acheived using Mocha as a test runner, Chai for assertions and Supertest for accessing the server and making requests.</li>
+<li>Tests are run against test databases on local and a test database docker container when in CI (Github Actions)</li>
+</ul>
+<h2 id="answers-to-challenge-questions">Answers to Challenge Questions</h2>
+<p>Here are my answers to the questions posed that I did not fully implement.</p>
+<h3 id="full-logging-solution">Full logging Solution</h3>
+<ul>
+<li>This one is relatively straightforward. I would highly recommend using a cloud service provider like AWS where you can do the following.</li>
+<li>Every container running the API logs to AWS Cloudwatch (or equivalent service). With Cloudwatch you can set up monitoring and metrics.</li>
+<li>You are able to parse through gigabytes of logged data and form graphs based on what you query (e.g. 5xx, 4xx error counts, maliciopus ip count)</li>
+<li>Logs can be saved to a service such as S3 where they can be further analysed by services like Athena or Redshift to gain more insight into API usage.</li>
+<li>Another approach to monitor container performance and logs is setting up an ELK stack (Elasticsearch, Logstash, Kibana). This is where Logstash process parses through logs saved to Cloudwatch and moves them to an Elasticsearch service which indexes the data for super fast querying. Kibana, a visualization interface tool can access this elastic search service and plot more powerful graphs and visualiztions than Cloudwatch.</li>
+<li>The last approach is to use a third party logging service. This is the most expensive approach but also the least developer time intensive.</li>
+</ul>
+<h3 id="followers-following-friends-solution">Followers/ Following/ Friends Solution</h3>
+<ul>
+<li>This one is much tougher. First issue would be using a NoSQL database. While it is certainly possible, they are just not designed to handle relational data. Okay, you can design the model in a NoSQL many-to-many architecture which I believe would be okay for a smaller user base. However it may become a scaling problem once the user base goes beyond the tens of millions (depending on the size and structure of the user documents).</li>
+<li>By their very nature, social network modelling is a relational problem that would be better suited to an SQL database like MySQL or Postgre</li>
+<li>To implement this kind of social followers, following, friends, I would create a separate API called Social API that runs on an SQL database where I can easily model tables with foreign key relation to other tables to build a social graph. By using an SQL db for this, querys such as number of friends, likes, comments, followers, following are blazing fast. Ofcourse by implementing a separate API for this, you run the risk of slowing down user queries. I would try to keep this API internal on a high and closely connected network and use to reduce latency for this kind of internal API call (resources deployed in the same Availability Zone).</li>
+</ul>
+<p>However if I have to use NoSQL such as mongoDB such as the one I&#39;ve used for this project, this is how I would design it. I would add the field following that is an array of ids (of users) a user follows (Instagram model of followers/ following):</p>
+<pre><code class="language-typescript">// User model
+export class User {
+    // id
+    @ObjectIdColumn()
+    id!: ObjectID
+
+    // following
+    @Column()
+    following!: Array&lt;string&gt;
+
+    //  ... other columns ...
+    //  ... ... ... ... .....
+}</code></pre>
+<ul>
+<li>This is how I would query these social relations</li>
+</ul>
+<pre><code class="language-typescript">// to find all followers of user id &#39;xxx-1&#39;
+const followers = db.users.find({ following: &#39;xxx-1&#39; })
+
+// to find all following
+const user = db.users.find({ id: &#39;xxx-1&#39; }, { following: 1 })
+
+// query for the profiles of followers using the followers array
+// if a user has many followers, then this operation 
+// should be batched when retrieving the profiles (make use of lazy loading)
+const usersFollowed = db.users.find({ id: { $in: user.following }})
+
+// to get the follwed count
+const user = db.users.find({ id: &#39;xxx-1&#39; }, { following: 1 })
+const followedCount = user.following.length
+
+// to get the follower count
+const followerCount = db.users.count({ following: &#39;xxx-1&#39; })</code></pre>
+<ul>
+<li>Popular users profiles, counts, followers would be indexed on a more performant layer such as redis/elasticSearch e.g. celebrities, power users</li>
+<li>This would prevent hot documents from slowing down the rest of the NoSQL database </li>
+</ul>
+<h3 id="geographic-location-of-nearby-friend">Geographic Location of nearby friend</h3>
+<ul>
+<li>This is a job for another internal API. I would use Elasticsearch to power this API. </li>
+<li>Whenever users location updates in the main database, the data is indexed to Elasticsearch by a continuous process (like Monstache)</li>
+<li>When a friend queries for nearby friends, a geo query is issued to the ElasticSearch service and since friends geo location is already indexed with their id, this query would be extremely fast (First search all ids and then filter with the geo data).</li>
+<li>While you can issue a geo query to the main NoSQL database directly, the Elasticsearch approach would be faster and would also avoid straining the main (NoSQL) database resources.</li>
+<li>example of a geo query search to an elasticsearch cluster. (The passed in coordinates are the current user&#39;s coordinates). The service will return all ids within the vicinity (300m) that are the users friends.<pre><code>GET user_location/_search
+{
+&quot;query&quot;: {
+  &quot;bool&quot; : {
+    &quot;filter&quot; : {
+      &quot;geo_distance&quot; : {
+        &quot;distance&quot; : &quot;300m&quot;,
+        &quot;location&quot; : &quot;-25.442987, -49.239504&quot;
+      }
+    }
+  }
+}
+}</code></pre>
+</li>
+</ul>
