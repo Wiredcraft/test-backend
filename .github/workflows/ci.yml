@@ -9,11 +9,6 @@ jobs:
   build:
     name: Build the project
     runs-on: ubuntu-latest
-    services:
-      mongodb:
-        image: mongo:latest
-        ports:
-          - 27017:27017
     steps:
     - uses: actions/checkout@master
     - uses: actions/setup-node@v1
@@ -23,6 +18,8 @@ jobs:
       run: npm ci
     - name: Building the project
       run: npm run build 
+    - name: Run docker compose
+      run: docker-compose -f mongo.docker-compose.yml up
     - name: Run `npm test`
       run: npm test
       env:
