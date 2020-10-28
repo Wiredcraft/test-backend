@@ -6,8 +6,9 @@
   "scripts": {
     "watch-server": "nodemon --watch src -e ts,tsx --exec ts-node src/server.ts",
     "build-ts": "tsc",
+    "copy-static-assets": "ts-node copyStaticAssets.ts",
     "serve": "node dist/server.js",
-    "build": "npm run lint && npm run index && npm run build-ts",
+    "build": "npm run lint && npm run index && npm run build-ts && npm run copy-static-assets",
     "start": "npm run serve",
     "test": "cross-env NODE_ENV=test TS_NODE_FILES=true mocha --timeout 5000 --exit --require ts-node/register --colors test/**/*.spec.ts",
     "lint": "tsc --noEmit && eslint \"**/*.ts\" --quiet --fix",
@@ -79,6 +80,7 @@
     "@types/koa-ratelimit": "^4.2.2",
     "@types/koa-send": "^4.1.2",
     "@types/lodash": "^4.14.162",
+    "@types/shelljs": "^0.8.8",
     "ajv": "^7.0.0-beta.2",
     "ajv-formats": "^0.4.0",
     "bcryptjs": "^2.4.3",
@@ -96,6 +98,7 @@
     "marked": "^1.2.2",
     "mongodb": "^3.6.2",
     "reflect-metadata": "^0.1.13",
+    "shelljs": "^0.8.4",
     "tedis": "^0.1.12",
     "typeorm": "^0.2.24",
     "winston": "^3.2.1"
