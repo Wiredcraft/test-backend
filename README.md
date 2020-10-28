@@ -1,73 +1,87 @@
-# Wiredcraft Back-end Developer Test
+# WC RESTful API
 
-Make sure you read the whole document carefully and follow the guidelines in it.
+## Introduction
 
-## Context
+This project is a simple RESTful API built using NodeJS, KOA, Typescript and TypeORM as an ORM for MongoDB. Middleware uses JWT, CORS, Winston Logger. Swagger API docs are used to produce an api front-end.
 
-Build a RESTful API that can `get/create/update/delete` user data from a persistence database
+### Tools
+- Node.js (v12.x.x)
+- NPM (v6.x.x) 
+- Typescript
+- KOA Framework v2
+- MongoDB 4 with TypeORM
+- Winston (logging)
+- Swagger-UI (documenting the API)
+- Mocha, Chai, Supertest (unit and integration tests)
+- NYC (code coverage)
+- ESlint, Prettier (code formatting)
 
-### User Model
+### Why use KOA to build API Servers?
 
-```
-{
-  "id": "xxx",                  // user ID 
-  "name": "test",               // user name
-  "dob": "",                    // date of birth
-  "address": "",                // user address
-  "description": "",            // user description
-  "createdAt": ""               // user created date
-}
-```
+Koa was built by the same team behind Express, and is a smaller, more expressive, and more robust foundation for web applications and APIs. It has the following advantages:
+- Koa improves interoperability, robustness, and makes writing middleware much more enjoyable.
+- Has a large number of helpful methods but maintains a small footprint, as no middleware are bundled.
+- Koa is very lightweight, with just 550 lines of code.
+- Better error handling through try/catch.
+- Generated-based control flow.
+- No more callbacks, facilitating an upstream and downstream flow of control.
+- Cleaner, more readable async code.
 
-## Requirements
+## Setup
 
-### Functionality
+### Requirements
+- Node.js version >= 12
+- npm version >= 6
+- docker and docker-compose (to run the mongodb db in localhost)
 
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper unit test.
-- Provide proper API document.
+### Setup
+- install dependencies:
+  ```bash
+  npm install
+  ```
+- setup the `.env` file. Edit the environment variables inside accordingly:
+  ```bash
+  cp .env.example .env
+  ```
+- start the mongodb container in docker:
+  ```bash
+  sudo docker-compose up
+  ```
+### Start
 
-### Tech stack
+- for development:
+  ```bash
+  npm run watch-server
+  ```
+- for deployment on local host:
+  ```bash
+  npm run build
+  npm start
+  ```
+### Test
+- to run integration tests:
+  ```bash
+  npm test
+  ```
+### Coverage
+- to run code coverage:
+  ```bash
+  npm run coverage
+  ```
 
-- Use Node.js and any framework.
-- Use any DB. NoSQL DB is preferred.
+## Project Structure
+- The project is written in Typescript. After Typescript compiles, all subsequently built javascript files are in `/dist`
+- The entry point for the server is `src/server.ts`
+- Program flow: `server` --> `routes` --> `controllers` --> `entities`
+- `Entities` are defined with and validated by TypeORM
+- Tests are in the `test` folder and only contain integration tests
 
-### Bonus
-
-- Write clear documentation on how it's designed and how to run the code.
-- Write good in-code comments.
-- Write good commit messages.
-- An online demo is always welcome.
-
-### Advanced requirements
-
-*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
-
-- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
-- Provide a complete logging (when/how/etc.) strategy.
-- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
-- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
-  - given a user name
-  - return the nearby friends
+### RESTful Endpoints
+Documentation for these endpoint can be found at /swagger-html
+- POST......... /users
+- GET.......... /users
+- GET.......... /users/:id
+- PUT.......... /users/:id
+- DELETE....... /users/:id
 
 
-## What We Care About
-
-Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
-
-Here's what you should aim for:
-
-- Good use of current Node.js & API design best practices.
-- Good testing approach.
-- Extensible code.
-
-## FAQ
-
-> Where should I send back the result when I'm done?
-
-Fork this repo and send us a pull request when you think it's ready for review. You don't have to finish everything prior and you can continue to work on it. We don't have a deadline for the task.
-
-> What if I have a question?
-
-Create a new issue in the repo and we will get back to you shortly.

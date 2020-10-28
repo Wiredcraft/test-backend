@@ -1,5 +1,6 @@
 # API keys and secrets
 .env
+.secrets
 
 # Dependency directory
 node_modules
@@ -24,3 +25,4 @@ dist/**/*
 .nyc_output
 .vscode
 coverage
+node_modules
