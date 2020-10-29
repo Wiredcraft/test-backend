@@ -1,0 +1,26 @@
+[
+    {
+      "_id": "5f9a201fe4ca402778e57f4b",
+      "name": "Emmanuel",
+      "email": "emmanuel@test.com",
+      "password": "$2a$08$XGlKnXS1ofeeaJL3hj53jesOI1fkw11KOsCK5e4BRmlndKjmG5erS",
+      "dob": "1996-05-29T00:00:00.000Z",
+      "address": "44-65 Laparella Cinco, Donella, Mexico City, Mexico",
+      "description": "A versatile back-end node.js developer",
+      "refreshToken": "",
+      "createdAt": "2020-10-29T01:51:27.757Z",
+      "updatedAt": "2020-10-29T01:51:27.757Z"
+    },
+    {
+      "_id": "5f9a201fe4ca402778e57f4c",
+      "name": "Mina",
+      "email": "mina@test.com",
+      "password": "$2a$08$27vmuzkKBYwue2kxDaHtGOOY41o/Ju8qVomNRbNQjUYoGV.BeKJ2e",
+      "dob": "1996-05-29T00:00:00.000Z",
+      "address": "",
+      "description": "",
+      "refreshToken": "",
+      "createdAt": "2020-10-29T01:51:27.838Z",
+      "updatedAt": "2020-10-29T01:51:27.838Z"
+    }
+  ]
