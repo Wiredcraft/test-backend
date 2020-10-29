@@ -5,6 +5,8 @@ import { server } from '../../src/server'
 const dbName = `testDb_${Math.floor(Math.random() * (Math.floor(999999) + 1))}`
 const uri = 'mongodb://user:pass@localhost:27017/' + dbName + '?authSource=admin'
 
+export let mongoClient: MongoClient
+
 export const mongo = {
     uri,
     async connect() {
@@ -16,6 +18,7 @@ export const mongo = {
 
         if (!client) return
 
+        mongoClient = client
         return client.db(dbName)
     },
 }
