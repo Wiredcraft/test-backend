@@ -4,36 +4,10 @@ import { Db, ObjectID } from 'mongodb'
 import jwt from 'jsonwebtoken'
 import { config } from '../../src/utils/config'
 
-export async function clearTestDbUsers(db: Db | undefined): Promise<void> {
-    if (!db) throw new Error('Error removing users from db')
-
-    await db.collection('user').deleteMany({})
-}
-
-export async function printTestDbUsers(db: Db | undefined): Promise<void> {
-    if (!db) throw new Error('Error printing users from db')
-
-    console.log('USERS: ', db.databaseName, await db.collection('user').find({}).toArray())
-}
-
 export async function getTestDbUser(db: Db | undefined, id: string): Promise<Record<string, any> | null> {
     if (!db) throw new Error('Error printing users from db')
     
     return db.collection('user').findOne({ _id: new ObjectID(id) })
-}
-
-export async function deleteTestDbUser(db: Db | undefined, email: string): Promise<Record<string, any> | null> {
-    if (!db) throw new Error('Error printing users from db')
-
-    return db.collection('user').deleteOne({ email: email })
-}
-
-export async function deleteTestDbUsers(db: Db | undefined, userIds: Array<string>): Promise<Record<string, any> | null> {
-    if (!db) throw new Error('Error printing users from db')
-
-    const res = await db.collection('user').deleteMany({ _id: { $in: userIds.map(id => new ObjectID(id)) }})
-
-    return res
 }
 
 export async function insertTestDbUsers(db: Db | undefined, userArr: Array<Record<string, any>>): Promise<void> {
