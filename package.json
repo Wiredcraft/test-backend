@@ -97,6 +97,7 @@
     "lodash": "^4.17.20",
     "marked": "^1.2.2",
     "mongodb": "^3.6.2",
+    "phonetic": "^0.1.1",
     "reflect-metadata": "^0.1.13",
     "shelljs": "^0.8.4",
     "tedis": "^0.1.12",

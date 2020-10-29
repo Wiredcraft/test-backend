@@ -5,9 +5,10 @@
 ## Introduction
 
 This project is a simple RESTful API built using NodeJS, KOA, Typescript and TypeORM as an ORM for MongoDB. Middleware uses JWT, CORS, Winston Logger. Swagger API docs are used to produce an api front-end.  
-  
-See all the action in an online API GUI here (courtesy of Swagger UI): [swagger-html](https://wc-backend-test.herokuapp.com/swagger-html)  
-Or check out the project page here: [test-backend](https://github.com/emmanuelnk/test-backend) 
+
+Check out the project homepage here: [wc-backend-test](https://wc-backend-test.herokuapp.com)   
+Or get straight to the action in an online API GUI here (courtesy of Swagger UI): [wc-backend-test/swagger-html](https://wc-backend-test.herokuapp.com/swagger-html)    
+Or view the project github here: [test-backend](https://github.com/emmanuelnk/test-backend)   
 
 ### Tools
 - Node.js (v12.x.x)
