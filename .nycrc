@@ -15,7 +15,11 @@
     "**/*.d.ts",
     "test/**/*.ts",
     "**/*.test.ts",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "public/*",
+    "dist/*",
+    "**/*.js",
+    "copyStaticAssets.ts"
   ],
   "sourceMap": true,
   "reporter": [

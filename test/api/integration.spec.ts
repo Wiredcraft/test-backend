@@ -27,101 +27,95 @@ describe('Testing all non-index routes', () => {
         if (db) await db.dropDatabase()
     })
 
-    // POST /user
+    // AUTH /login
 
-    it('should fail to create a new user with missing name', async () => {
-        const res = await request(testServer)
-            .post('/users')
-            .send({
-                email: 'emmanuel@test.com',
-                dob: '1996-05-29',
-                password: 'AAaa@@88$$99',
-                address: '44-65 Laparella Cinco, Donella, Mexico City, Mexico',
-                description: 'A versatile back-end node.js developer',
-            })
-
+    it('should fail to login user with missing email', async () => {
+        const res = await request(testServer).post('/login').send({
+            password: 'AAaa@@88$$99',
+        })
         expect(res.status).to.be.equal(400)
     })
 
-    it('should fail to create a new user with missing email', async() => {
-        const res = await request(testServer)
-            .post('/users')
-            .send({
-                name: 'Emmanuel',
-                dob: '1996-05-29',
-                password: 'AAaa@@88$$99',
-                address: '44-65 Laparella Cinco, Donella, Mexico City, Mexico',
-                description: 'A versatile back-end node.js developer',
-            })
-
-        expect(res.status).to.be.equal(400)
-    })
-
-    it('should fail to create a new user with missing dob', async () => {
-        const res = await request(testServer)
-            .post('/users')
-            .send({
-                name: 'Emmanuel',
-                email: 'emmanuel@test.com',
-                password: 'AAaa@@88$$99',
-                address: '44-65 Laparella Cinco, Donella, Mexico City, Mexico',
-                description: 'A versatile back-end node.js developer',
-            })
-        expect(res.status).to.be.equal(400)
-    })
-
-    it('should fail to create a new user with missing password', async () => {
-        const res = await request(testServer)
-            .post('/users')
-            .send({
-                name: 'Emmanuel',
-                email: 'emmanuel@test.com',
-                dob: '1996-05-29',
-                address: '44-65 Laparella Cinco, Donella, Mexico City, Mexico',
-                description: 'A versatile back-end node.js developer',
-            })
-        
-        expect(res.status).to.be.equal(400)
-    })
-
-    it('should fail to create a new user with password that does not meet standards', async () => {
-        const res = await request(testServer)
-            .post('/users')
-            .send({
-                name: 'Emmanuel',
-                email: 'emmanuel@test.com',
-                dob: '1996-05-29',
-                password: 'AAaaretrtret',
-                address: '44-65 Laparella Cinco, Donella, Mexico City, Mexico',
-                description: 'A versatile back-end node.js developer',
-            })
-        expect(res.status).to.be.equal(400)
-    })
-
-    it('should create a new user', async () => {
-        const res = await request(testServer).post('/users').send({
-            name: 'Emmanuel',
+    it('should fail to login user with missing password', async () => {
+        const res = await request(testServer).post('/login').send({
             email: 'emmanuel@test.com',
-            dob: '1996-05-29',
-            password: 'AAaa@@88$$99',
-            address: '44-65 Laparella Cinco, Donella, Mexico City, Mexico',
-            description: 'A versatile back-end node.js developer',
         })
-
-        expect(res.status).to.be.equal(201)
-        expect(res.body).to.be.jsonSchema(userSchema)
+        expect(res.status).to.be.equal(400)
     })
 
-    it('should create a new user without address or description', async () => {
-        const res = await request(testServer).post('/users').send({
-            name: 'Mina',
-            email: 'mina@test.com',
-            dob: '1996-05-29',
+    it('should login user successfully', async () => {
+        const users = await generateDatabaseUsers(db, 1)
+        const testUser = { id: users[0]._id, email: users[0].email }
+
+        const res = await request(testServer).post('/login').send({
+            email: testUser.email,
             password: 'AAaa@@88$$99',
         })
 
-        expect(res.status).to.be.equal(201)
-        expect(res.body).to.be.jsonSchema(userSchema)
+        expect(res.status).to.be.equal(200)
+        expect(res.body.token).to.match(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/)
+    })
+
+    // AUTH /refresh
+
+    it('should fail to get a new token with invalid access token', async () => {
+        const token = jwt.sign({}, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
+
+        const res = await request(testServer)
+            .get('/refresh')
+            .set('Authorization', 'bearer ' + token)
+
+        expect(res.status).to.be.equal(403)
+    })
+
+    it('should get back same token with a valid access token', async () => {
+        const users = await generateDatabaseUsers(db, 1)
+        const testUser = { id: users[0]._id, email: users[0].email }
+        const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
+
+        const res = await request(testServer)
+            .get('/refresh')
+            .set('Authorization', 'bearer ' + token)
+
+        expect(res.status).to.be.equal(200)
+        expect(res.body.token).to.be.equal(token)
+    })
+
+    it('should get back new token with a valid access token', async () => {
+        const users = await generateDatabaseUsers(db, 1)
+        const testUser = { id: users[0]._id, email: users[0].email }
+        const now = Math.floor(Date.now() / 1000)
+        const token = jwt.sign({ ...testUser, iat: now - 3600, exp: now - 1800 }, config.jwt.accessTokenSecret)
+
+        const res = await request(testServer)
+            .get('/refresh')
+            .set('Authorization', 'bearer ' + token)
+
+        expect(res.status).to.be.equal(200)
+        expect(res.body.token).to.not.be.equal(token)
+        expect(res.body.token).to.match(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/)
+    })
+
+    // AUTH /logout
+
+    it('should successfully log out the user', async () => {
+        const users = await generateDatabaseUsers(db, 1)
+        const testUser = { id: users[0]._id, email: users[0].email }
+        const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
+
+        const res = await request(testServer)
+            .get('/logout')
+            .set('Authorization', 'bearer ' + token)
+
+        expect(res.status).to.be.equal(200)
+        expect(res.text).to.be.equal('logout_success')
+
+        const loggedOutUser = await getTestDbUser(db, users[0]._id)
+
+        if (!loggedOutUser) throw new Error('user_not_found')
+
+        expect(loggedOutUser.refreshToken).to.not.be.equal(users[0].refreshToken)
+        expect(loggedOutUser.refreshToken).to.be.equal('removed')
     })
 
     // GET /users
@@ -165,7 +159,7 @@ describe('Testing all non-index routes', () => {
         const res = await request(testServer)
             .get('/users/' + testUser.id)
             .set('Authorization', 'bearer ' + token)
-        
+
         expect(res.status).to.be.equal(401)
     })
 
@@ -178,7 +172,7 @@ describe('Testing all non-index routes', () => {
             .get('/users/' + 'some_bad_id')
             .set('Authorization', 'bearer ' + token)
 
-        expect(res.status).to.be.equal(400)       
+        expect(res.status).to.be.equal(400)
     })
 
     it('should get a user by id', async () => {
@@ -186,12 +180,98 @@ describe('Testing all non-index routes', () => {
         const testUser = { id: users[0]._id, email: users[0].email }
         const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
 
-
         const res = await request(testServer)
             .get('/users/' + testUser.id)
             .set('Authorization', 'bearer ' + token)
-       
-        expect(res.status).to.be.equal(200)     
+
+        expect(res.status).to.be.equal(200)
+        expect(res.body).to.be.jsonSchema(userSchema)
+    })
+
+    // POST /user
+
+    it('should fail to create a new user with missing name', async () => {
+        const res = await request(testServer).post('/users').send({
+            email: 'emmanuel@test.com',
+            dob: '1996-05-29',
+            password: 'AAaa@@88$$99',
+            address: '44-65 Laparella Cinco, Donella, Mexico City, Mexico',
+            description: 'A versatile back-end node.js developer',
+        })
+
+        expect(res.status).to.be.equal(400)
+    })
+
+    it('should fail to create a new user with missing email', async () => {
+        const res = await request(testServer).post('/users').send({
+            name: 'Emmanuel',
+            dob: '1996-05-29',
+            password: 'AAaa@@88$$99',
+            address: '44-65 Laparella Cinco, Donella, Mexico City, Mexico',
+            description: 'A versatile back-end node.js developer',
+        })
+
+        expect(res.status).to.be.equal(400)
+    })
+
+    it('should fail to create a new user with missing dob', async () => {
+        const res = await request(testServer).post('/users').send({
+            name: 'Emmanuel',
+            email: 'emmanuel@test.com',
+            password: 'AAaa@@88$$99',
+            address: '44-65 Laparella Cinco, Donella, Mexico City, Mexico',
+            description: 'A versatile back-end node.js developer',
+        })
+        expect(res.status).to.be.equal(400)
+    })
+
+    it('should fail to create a new user with missing password', async () => {
+        const res = await request(testServer).post('/users').send({
+            name: 'Emmanuel',
+            email: 'emmanuel@test.com',
+            dob: '1996-05-29',
+            address: '44-65 Laparella Cinco, Donella, Mexico City, Mexico',
+            description: 'A versatile back-end node.js developer',
+        })
+
+        expect(res.status).to.be.equal(400)
+    })
+
+    it('should fail to create a new user with password that does not meet standards', async () => {
+        const res = await request(testServer).post('/users').send({
+            name: 'Emmanuel',
+            email: 'emmanuel@test.com',
+            dob: '1996-05-29',
+            password: 'AAaaretrtret',
+            address: '44-65 Laparella Cinco, Donella, Mexico City, Mexico',
+            description: 'A versatile back-end node.js developer',
+        })
+        expect(res.status).to.be.equal(400)
+    })
+
+    it('should create a new user', async () => {
+        const res = await request(testServer).post('/users').send({
+            name: 'Emmanuel',
+            email: 'emmanuel@test.com',
+            dob: '1996-05-29',
+            password: 'AAaa@@88$$99',
+            address: '44-65 Laparella Cinco, Donella, Mexico City, Mexico',
+            description: 'A versatile back-end node.js developer',
+        })
+
+        expect(res.status).to.be.equal(201)
+        expect(res.body).to.be.jsonSchema(userSchema)
+    })
+
+    it('should create a new user without address or description', async () => {
+        const res = await request(testServer).post('/users').send({
+            name: 'Mina',
+            email: 'mina@test.com',
+            dob: '1996-05-29',
+            password: 'AAaa@@88$$99',
+        })
+
+        expect(res.status).to.be.equal(201)
         expect(res.body).to.be.jsonSchema(userSchema)
     })
 
@@ -209,10 +289,10 @@ describe('Testing all non-index routes', () => {
                 name: 'Emmanuel NewName',
                 email: testUser.email,
             })
-        
-            expect(res.status).to.be.equal(200)     
-            expect(res.body).to.be.jsonSchema(userSchema)
-            expect(res.body.name).to.be.equal('Emmanuel NewName')
+
+        expect(res.status).to.be.equal(200)
+        expect(res.body).to.be.jsonSchema(userSchema)
+        expect(res.body.name).to.be.equal('Emmanuel NewName')
     })
 
     it('should NOT update the name of a user if request token is not the user themself(403 Forbidden)', async () => {
@@ -229,7 +309,7 @@ describe('Testing all non-index routes', () => {
                 email: 'emmanuel@test.com',
             })
 
-        expect(res.status).to.be.equal(403) 
+        expect(res.status).to.be.equal(403)
     })
 
     it('should NOT update the name of a user if user id is wrong', async () => {
@@ -245,7 +325,7 @@ describe('Testing all non-index routes', () => {
                 email: 'emmanuel@test.com',
             })
 
-        expect(res.status).to.be.equal(400) 
+        expect(res.status).to.be.equal(400)
     })
 
     it('should NOT update the name of a user if user id is misiing (405 Method Not Allowed)', async () => {
@@ -260,105 +340,8 @@ describe('Testing all non-index routes', () => {
                 name: 'Emmanuel NewName',
                 email: 'emmanuel@test.com',
             })
-        
+
         expect(res.status).to.be.equal(405)
-    })
-
-    // AUTH /login
-
-    it('should fail to login user with missing email', async () => {
-        const res = await request(testServer)
-            .post('/login')
-            .send({
-                password: 'AAaa@@88$$99',
-            })
-        expect(res.status).to.be.equal(400)
-    })
-
-    it('should fail to login user with missing password', async () => {
-        const res = await request(testServer)
-            .post('/login')
-            .send({
-                email: 'emmanuel@test.com',
-            })
-        expect(res.status).to.be.equal(400)
-    })
-
-    it('should login user successfully', async () => {
-        const users = await generateDatabaseUsers(db, 1)
-        const testUser = { id: users[0]._id, email: users[0].email }
-
-        const res = await request(testServer)
-            .post('/login')
-            .send({
-                email: testUser.email,
-                password: 'AAaa@@88$$99',
-            })
-        
-        expect(res.status).to.be.equal(200)
-        expect(res.body.token).to.match(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/)
-    })
-
-    // AUTH /refresh
-
-    it('should fail to get a new token with invalid access token', async () => {
-        const token = jwt.sign({}, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
-
-        const res = await request(testServer)
-            .get('/refresh')
-            .set('Authorization', 'bearer ' + token)
-
-        expect(res.status).to.be.equal(403)
-    })
-
-    it('should get back same token with a valid access token', async () => {
-        const users = await generateDatabaseUsers(db, 1)
-        const testUser = { id: users[0]._id, email: users[0].email }
-        const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
-
-        const res = await request(testServer)
-            .get('/refresh')
-            .set('Authorization', 'bearer ' + token)
-        
-        expect(res.status).to.be.equal(200)
-        expect(res.body.token).to.be.equal(token)
-    })
-
-    it('should get back new token with a valid access token', async () => {
-        const users = await generateDatabaseUsers(db, 1)
-        const testUser = { id: users[0]._id, email: users[0].email }
-        const now = Math.floor(Date.now() / 1000)
-        const token = jwt.sign({ ...testUser, iat: now - 3600, exp: now - 1800 }, config.jwt.accessTokenSecret)
-
-        const res = await request(testServer)
-            .get('/refresh')
-            .set('Authorization', 'bearer ' + token)
-        
-        expect(res.status).to.be.equal(200)
-        expect(res.body.token).to.not.be.equal(token)
-        expect(res.body.token).to.match(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/)
-    })
-
-    // AUTH /logout
-
-    it('should successfully log out the user', async () => {
-        const users = await generateDatabaseUsers(db, 1)
-        const testUser = { id: users[0]._id, email: users[0].email }
-        const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
-
-        const res = await request(testServer)
-            .get('/logout')
-            .set('Authorization', 'bearer ' + token)
-
-        expect(res.status).to.be.equal(200)
-        expect(res.text).to.be.equal('logout_success')
-
-        const loggedOutUser = await getTestDbUser(db, users[0]._id)
-
-        if (!loggedOutUser) throw new Error('user_not_found')
-
-        expect(loggedOutUser.refreshToken).to.not.be.equal(users[0].refreshToken)
-        expect(loggedOutUser.refreshToken).to.be.equal('removed')
     })
 
     // DELETE /users/:id
@@ -407,7 +390,9 @@ describe('Testing all non-index routes', () => {
         const res = await request(testServer)
             .delete('/users/' + testUser.id)
             .set('Authorization', 'bearer ' + token)
-        
+
         expect(res.status).to.be.equal(204)
+
+        expect(await getTestDbUser(db, testUser.id)).to.be.null
     })
 })
