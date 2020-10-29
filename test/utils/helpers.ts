@@ -4,12 +4,22 @@ import { Db, ObjectID } from 'mongodb'
 import jwt from 'jsonwebtoken'
 import { config } from '../../src/utils/config'
 
+/**
+ * Gets a test user from the database
+ * @param  {Db|undefined} db the connected database instance
+ * @param  {string} id the id of the user to fetch from the db
+ * @returns Promise returns the found user document else null if not found
+ */
 export async function getTestDbUser(db: Db | undefined, id: string): Promise<Record<string, any> | null> {
     if (!db) throw new Error('Error printing users from db')
     
     return db.collection('user').findOne({ _id: new ObjectID(id) })
 }
-
+/**
+ * @param  {Db|undefined} db the connected database instance
+ * @param  {Array<Record<string, any>>} userArr array containing user objects to be inserted into db
+ * @returns Promise returns nothing
+ */
 export async function insertTestDbUsers(db: Db | undefined, userArr: Array<Record<string, any>>): Promise<void> {
     if (!db) throw new Error('Error inserting users from db')
 
@@ -23,7 +33,12 @@ export async function insertTestDbUsers(db: Db | undefined, userArr: Array<Recor
             updatedAt: new Date(doc.updatedAt), 
         })))
 }
-
+/**
+ *  Generates a given number tests users, inserts them into the db and returns an array containing them
+ * @param  {Db|undefined} db the connected database instance
+ * @param  {number} num the number of users to generate
+ * @returns Promise with array containing the users who were inserted in the db
+ */
 export async function generateDatabaseUsers(db: Db | undefined, num: number): Promise<Array<any>>  {
     // this.password = await bcryptHashAsync(this.password, 8)  
     const newUsers = new Array(num).fill({}).map(() => {
