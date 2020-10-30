@@ -19,7 +19,7 @@ export default class AuthController {
         404: { description: 'user not found' }
     })
     public static async loginUser(ctx: BaseContext): Promise<void> {
-        // validate properties required to create a new user
+
         const missingProperties = requiredProperties(ctx.request.body, ['email', 'password'])
 
         if (missingProperties.length) {
@@ -28,7 +28,6 @@ export default class AuthController {
             return
         }
 
-        // Get user from database
         const userRepository: Repository<User> = getManager().getRepository(User)
         let user: User = new User()
 
@@ -40,21 +39,18 @@ export default class AuthController {
             return
         }
 
-        // Check if encrypted password match
         if (!(await user.checkIfUnencryptedPasswordIsValid(ctx.request.body.password))) {
             ctx.status = 401
             ctx.body = 'wrong_password'
             return
         }
 
-        // save refresh token
         const refreshToken = jwt.sign({ email: user.email }, config.jwt.refreshTokenSecret, {
             expiresIn: config.jwt.refreshTokenLife,
         })
 
         await userRepository.save(_.omit({ ...user, refreshToken }, ['createdAt']))
 
-        // Send the jwt token in the response
         ctx.status = 200
         ctx.body = {
             token: jwt.sign({ id: user.id, email: user.email }, config.jwt.accessTokenSecret, {
@@ -74,7 +70,7 @@ export default class AuthController {
         404: { description: 'user not found' }
     })
     public static async refreshToken(ctx: BaseContext): Promise<void> {
-        // Get user from database
+
         const userRepository: Repository<User> = getManager().getRepository(User)
         let user: User = new User()
 
@@ -95,7 +91,6 @@ export default class AuthController {
             return
         }
 
-        // check the token for the user email
         if (!decoded.hasOwnProperty('email')) {
             ctx.status = 403
             ctx.body = 'invalid_access_token'
@@ -129,7 +124,6 @@ export default class AuthController {
             return
         }
 
-        // Send the jwt token in the response
         ctx.status = 200
         ctx.body = {
             token: jwt.sign({ id: user.id, email: user.email }, config.jwt.accessTokenSecret, {
@@ -153,8 +147,6 @@ export default class AuthController {
         // 2. keep track of invalidated tokens on redis instance and cross-check on each auth request
 
         // solution 1
-
-        // Get user from database
         const userRepository: Repository<User> = getManager().getRepository(User)
         let user: User = new User()
 

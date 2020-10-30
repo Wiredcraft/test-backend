@@ -14,8 +14,6 @@ protectedRouter.put('/users/:id', user.updateUser)
 protectedRouter.delete('/users/:id', user.deleteUser)
 protectedRouter.delete('/testusers', user.deleteTestUsers)
 
-
-// Swagger endpoint
 protectedRouter.swagger({
     title: 'wiredcraft-restful-api',
     description: description,

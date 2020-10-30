@@ -23,8 +23,8 @@ export const server = function (): Server {
     // Enable cors with default options
     app.use(cors())
 
-    // Logger middleware -> use winston as logger (logging.ts with config)
-    app.use(logger(winston))
+    // Logger middleware -> use winston as logger
+    if(config.nodeEnv !== 'test') app.use(logger(winston))
 
     // Enable bodyParser with default options
     app.use(bodyParser())
@@ -32,14 +32,13 @@ export const server = function (): Server {
     // Enable an in-memory (or redis) rate limiter
     app.use(rateLimiter)
 
-    // these routes are NOT protected by the JWT middleware, also include middleware to respond with "Method Not Allowed - 405".
+    // these routes are NOT protected by the JWT middleware
     app.use(unprotectedRouter.routes()).use(unprotectedRouter.allowedMethods())
 
-    // JWT middleware -> below this line routes are only reached if JWT token is valid, secret as env variable
-    // do not protect swagger-json and swagger-html endpoints
+    // JWT middleware -> below this line routes are only reached if JWT token is valid
     app.use(jwt({ secret: config.jwt.accessTokenSecret, key: 'user' }).unless({ path: [/^\/assets|swagger-/] }))
 
-    // These routes are protected by the JWT middleware, also include middleware to respond with "Method Not Allowed - 405".
+    // These routes are protected by the JWT middleware
     app.use(protectedRouter.routes()).use(protectedRouter.allowedMethods())
 
     console.log(`Server running on port ${config.port}`)

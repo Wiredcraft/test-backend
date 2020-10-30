@@ -34,7 +34,7 @@ const config: Config = {
     nodeEnv: process.env.NODE_ENV || 'development',
     port: +(process.env.PORT || 3000),
     debugLogging: isDevMode,
-    dbsslconn: databaseUrl.includes('+srv'), // check if server url or localhost url
+    dbsslconn: databaseUrl.includes('+srv'), // check if server url (+srv) or localhost url
     jwt: {
         accessTokenSecret: process.env.JWT_ACCESS_TOKEN_SECRET || 'your-secret-whatever',
         accessTokenLife: process.env.JWT_ACCESS_TOKEN_LIFE || '15m',
