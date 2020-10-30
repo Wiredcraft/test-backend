@@ -14,10 +14,11 @@ export const bcryptCompareAsync = (param1: string, param2: string) => {
         })
     });
 }
+
 /**
  * Asynchronously hashes a string with set level of salt
  * @param  {string} password
  * @param  {number|string} salt
  * @returns the hashed string
  */
-export const bcryptHashAsync = (str: string, salt: number | string) => bcrypt.hash(str, salt) 
+export const bcryptHashAsync = (str: string, salt: number | string) => bcrypt.hash(str, salt)

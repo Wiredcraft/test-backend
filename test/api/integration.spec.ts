@@ -11,16 +11,15 @@ import { getTestDbUser, generateDatabaseUsers } from '../utils/helpers'
 
 use(chaijsonSchema)
 
-// reuse the same connection
+// global db connection
 let db: Db | undefined
+(async() => {
+    db = await mongo.connect()
+})()
 
 describe('Testing all non-index routes', () => {
-    before(async function () {
-        db = await mongo.connect()
-        if (db) {
-            console.log(db.databaseName)
-            await setupConnection(mongo.uri)
-        }
+    before(async function () {      
+        if (db) await setupConnection(mongo.uri)   
     })
 
     after(async function () {

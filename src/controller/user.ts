@@ -70,8 +70,6 @@ export default class UserController {
     })
     public static async createUser(ctx: BaseContext): Promise<void> {
         const userRepository: Repository<User> = getManager().getRepository(User)
-
-        // validate properties required to create a new user
         const missingProperties = requiredProperties(ctx.request.body, ['name', 'email', 'password', 'dob'])
 
         if (missingProperties.length) {
@@ -212,7 +210,7 @@ export default class UserController {
 
         await userRepository.remove(userToRemove)
 
-        ctx.status = 204 // NO CONTENT status code
+        ctx.status = 204
     }
 
     @request('delete', '/testusers')
@@ -222,16 +220,12 @@ export default class UserController {
         401: { description: 'token authorization error' },
     })
     public static async deleteTestUsers(ctx: BaseContext): Promise<void> {
-        // get a user repository to perform operations with user
-        const userRepository = getManager().getRepository(User)
 
-        // find test users
+        const userRepository = getManager().getRepository(User)
         const usersToRemove: User[] = await userRepository.find({})
 
-        // the user is there so can be removed
         await userRepository.remove(usersToRemove)
 
-        // return a NO CONTENT status code
         ctx.status = 204
     }
 }

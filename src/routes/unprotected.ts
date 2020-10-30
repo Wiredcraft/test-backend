@@ -13,8 +13,7 @@ unprotectedRouter.get('/refresh', auth.refreshToken)
 // User
 unprotectedRouter.post('/users', user.createUser)
 
-// static assets
-
+// Static assets
 const staticAge = {
     oneHourMs: 1000 * 60 * 60,
     oneDayMs: 1000 * 60 * 60 * 24,
