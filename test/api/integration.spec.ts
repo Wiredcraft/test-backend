@@ -6,20 +6,20 @@ import { userSchema } from '../../src/entity/user'
 import { setupConnection } from '../../src/utils/conn'
 import { config } from '../../src/utils/config'
 import jwt from 'jsonwebtoken'
-import { Db } from 'mongodb'
+import { Db, ObjectID } from 'mongodb'
 import { getTestDbUser, generateDatabaseUsers } from '../utils/helpers'
 
 use(chaijsonSchema)
 
 // global db connection
 let db: Db | undefined
-(async() => {
+;(async () => {
     db = await mongo.connect()
 })()
 
 describe('Testing all non-index routes', () => {
-    before(async function () {      
-        if (db) await setupConnection(mongo.uri)   
+    before(async function () {
+        if (db) await setupConnection(mongo.uri)
     })
 
     after(async function () {
@@ -262,6 +262,17 @@ describe('Testing all non-index routes', () => {
         expect(res.body).to.be.jsonSchema(userSchema)
     })
 
+    it('should fail to create a user who already exists', async () => {
+        const users = await generateDatabaseUsers(db, 1)
+        const res = await request(testServer).post('/users').send({
+            name: users[0].name,
+            email: users[0].email,
+            dob: '1996-05-29',
+            password: 'AAaa@@88$$99',
+        })
+        expect(res.status).to.be.equal(409)
+    })
+
     it('should create a new user without address or description', async () => {
         const res = await request(testServer).post('/users').send({
             name: 'Mina',
@@ -274,7 +285,7 @@ describe('Testing all non-index routes', () => {
         expect(res.body).to.be.jsonSchema(userSchema)
     })
 
-    // PUT /users/:id
+    // PATCH /users/:id
 
     it('should update the name of a user if request token is user themselves', async () => {
         const users = await generateDatabaseUsers(db, 1)
@@ -282,7 +293,7 @@ describe('Testing all non-index routes', () => {
         const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
 
         const res = await request(testServer)
-            .put('/users/' + testUser.id)
+            .patch('/users/' + testUser.id)
             .set('Authorization', 'bearer ' + token)
             .send({
                 name: 'Emmanuel NewName',
@@ -301,7 +312,7 @@ describe('Testing all non-index routes', () => {
         const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
 
         const res = await request(testServer)
-            .put('/users/' + testUser2.id)
+            .patch('/users/' + testUser2.id)
             .set('Authorization', 'bearer ' + token)
             .send({
                 name: 'Emmanuel NewName',
@@ -317,7 +328,7 @@ describe('Testing all non-index routes', () => {
         const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
 
         const res = await request(testServer)
-            .put('/users/' + 'some_bad_id')
+            .patch('/users/' + 'some_bad_id')
             .set('Authorization', 'bearer ' + token)
             .send({
                 name: 'Emmanuel NewName',
@@ -333,7 +344,7 @@ describe('Testing all non-index routes', () => {
         const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
 
         const res = await request(testServer)
-            .put('/users')
+            .patch('/users')
             .set('Authorization', 'bearer ' + token)
             .send({
                 name: 'Emmanuel NewName',
@@ -341,6 +352,173 @@ describe('Testing all non-index routes', () => {
             })
 
         expect(res.status).to.be.equal(405)
+    })
+
+    // PATCH /users/follow/:id
+
+    it('should fail to follow user if user is oneself', async () => {
+        const users = await generateDatabaseUsers(db, 1)
+        const testUser = { id: users[0]._id, email: users[0].email }
+        const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
+
+        const res = await request(testServer)
+            .patch('/users/follow/' + testUser.id)
+            .set('Authorization', 'bearer ' + token)
+
+        expect(res.status).to.be.equal(400)
+        expect(res.text).to.be.equal('cant_follow_oneself')
+    })
+
+    it('should successfully follow another user', async () => {
+        const users = await generateDatabaseUsers(db, 2)
+        const testUser = { id: users[0]._id, email: users[0].email }
+        const secondTestUser = { id: users[1]._id, email: users[1].email }
+        const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
+
+        const res = await request(testServer)
+            .patch('/users/follow/' + secondTestUser.id)
+            .set('Authorization', 'bearer ' + token)
+
+        expect(res.status).to.be.equal(200)
+        expect(res.body).to.be.jsonSchema(userSchema)
+        expect(res.body.following).to.include(secondTestUser.id)
+    })
+
+    // PATCH /users/unfollow/:id
+
+    it('should fail to unfollow user if user is oneself', async () => {
+        const users = await generateDatabaseUsers(db, 1)
+        const testUser = { id: users[0]._id, email: users[0].email }
+        const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
+
+        const res = await request(testServer)
+            .patch('/users/unfollow/' + testUser.id)
+            .set('Authorization', 'bearer ' + token)
+
+        expect(res.status).to.be.equal(400)
+        expect(res.text).to.be.equal('cant_unfollow_oneself')
+    })
+
+    it('should successfully unfollow another user', async () => {
+        const users = await generateDatabaseUsers(db, 2)
+        const testUser = { id: users[0]._id, email: users[0].email }
+        const secondTestUser = { id: users[1]._id, email: users[1].email }
+        const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
+
+        if (db)
+            await db
+                .collection('user')
+                .updateOne({ _id: new ObjectID(testUser.id) }, { $set: { following: [secondTestUser.id] } })
+
+        const res = await request(testServer)
+            .patch('/users/unfollow/' + secondTestUser.id)
+            .set('Authorization', 'bearer ' + token)
+
+        expect(res.status).to.be.equal(200)
+        expect(res.body).to.be.jsonSchema(userSchema)
+        expect(res.body.following).to.not.include(secondTestUser.id)
+    })
+
+    // GET /users/:id/followers
+
+    it('should fail to get a user with wrong token', async () => {
+        const users = await generateDatabaseUsers(db, 1)
+        const testUser = { id: users[0]._id, email: users[0].email }
+        const token = jwt.sign(testUser, 'aaaaaaaaa')
+
+        const res = await request(testServer)
+            .get(`/users/${testUser.id}/followers`)
+            .set('Authorization', 'bearer ' + token)
+
+        expect(res.status).to.be.equal(401)
+    })
+
+    it('should fail to get a users followers with wrong id', async () => {
+        const users = await generateDatabaseUsers(db, 1)
+        const testUser = { id: users[0]._id, email: users[0].email }
+        const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
+
+        const res = await request(testServer)
+            .get('/users/some_bad_id/followers')
+            .set('Authorization', 'bearer ' + token)
+
+        expect(res.status).to.be.equal(400)
+    })
+
+    it('should get a users followers by id', async () => {
+        const users = await generateDatabaseUsers(db, 5)
+        const testUser = { id: users[0]._id, email: users[0].email }
+        const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
+
+        // insert followers for the testUser
+        if (db)
+            await db
+                .collection('user')
+                .updateMany(
+                    { _id: { $in: users.slice(1).map((user) => new ObjectID(user._id)) } },
+                    { $set: { following: [testUser.id] } },
+                )
+
+        const res = await request(testServer)
+            .get(`/users/${testUser.id}/followers`)
+            .set('Authorization', 'bearer ' + token)
+
+        expect(res.status).to.be.equal(200)
+        expect(res.body.length).to.be.equal(4)
+        for (const item of res.body) {
+            expect(item).to.be.jsonSchema(userSchema)
+        }
+    })
+
+    // GET /users/:id/following
+
+    it('should fail to get a user with wrong token', async () => {
+        const users = await generateDatabaseUsers(db, 1)
+        const testUser = { id: users[0]._id, email: users[0].email }
+        const token = jwt.sign(testUser, 'aaaaaaaaa')
+
+        const res = await request(testServer)
+            .get(`/users/${testUser.id}/following`)
+            .set('Authorization', 'bearer ' + token)
+
+        expect(res.status).to.be.equal(401)
+    })
+
+    it('should fail to get a users following with wrong id', async () => {
+        const users = await generateDatabaseUsers(db, 1)
+        const testUser = { id: users[0]._id, email: users[0].email }
+        const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
+
+        const res = await request(testServer)
+            .get('/users/some_bad_id/following')
+            .set('Authorization', 'bearer ' + token)
+
+        expect(res.status).to.be.equal(400)
+    })
+
+    it('should get a users following by id', async () => {
+        const users = await generateDatabaseUsers(db, 5)
+        const testUser = { id: users[0]._id, email: users[0].email }
+        const token = jwt.sign(testUser, config.jwt.accessTokenSecret, { expiresIn: config.jwt.accessTokenLife })
+
+        // insert following for the testUser
+        if (db)
+            await db
+                .collection('user')
+                .updateOne(
+                    { _id: new ObjectID(testUser.id) },
+                    { $set: { following: users.slice(1).map((user) => user._id) } },
+                )
+
+        const res = await request(testServer)
+            .get(`/users/${testUser.id}/following`)
+            .set('Authorization', 'bearer ' + token)
+
+        expect(res.status).to.be.equal(200)
+        expect(res.body.length).to.be.equal(4)
+        for (const item of res.body) {
+            expect(item).to.be.jsonSchema(userSchema)
+        }
     })
 
     // DELETE /users/:id

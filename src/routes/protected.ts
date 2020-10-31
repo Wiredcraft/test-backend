@@ -10,7 +10,11 @@ protectedRouter.get('/logout', auth.logoutUser)
 // USER ROUTES
 protectedRouter.get('/users', user.getUsers)
 protectedRouter.get('/users/:id', user.getUser)
-protectedRouter.put('/users/:id', user.updateUser)
+protectedRouter.patch('/users/:id', user.updateUser)
+protectedRouter.patch('/users/follow/:id', user.followUser)
+protectedRouter.patch('/users/unfollow/:id', user.unfollowUser)
+protectedRouter.get('/users/:id/followers', user.getFollowers)
+protectedRouter.get('/users/:id/following', user.getFollowing)
 protectedRouter.delete('/users/:id', user.deleteUser)
 protectedRouter.delete('/testusers', user.deleteTestUsers)
 

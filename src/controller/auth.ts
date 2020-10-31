@@ -6,6 +6,7 @@ import { request, summary, description, responses, tagsAll, body } from 'koa-swa
 import { User, userSchema } from '../entity/user'
 import { config } from '../utils/config'
 import { requiredProperties, isExpired } from '../utils/validate'
+import { safeCall } from '../utils/helpers'
 
 @tagsAll(['Auth'])
 export default class AuthController {
@@ -49,7 +50,13 @@ export default class AuthController {
             expiresIn: config.jwt.refreshTokenLife,
         })
 
-        await userRepository.save(_.omit({ ...user, refreshToken }, ['createdAt']))
+        const { err } = await safeCall(userRepository.save(_.omit({ ...user, refreshToken }, ['createdAt'])))
+
+        if(err) {
+            ctx.status = 400
+            ctx.body = err
+            return
+        }
 
         ctx.status = 200
         ctx.body = {
