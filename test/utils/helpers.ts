@@ -53,6 +53,7 @@ export async function generateDatabaseUsers(db: Db | undefined, num: number): Pr
             email: `${name}@test.com`,
             password: '$2a$08$27vmuzkKBYwue2kxDaHtGOOY41o/Ju8qVomNRbNQjUYoGV.BeKJ2e',
             dob: '1996-05-29T00:00:00.000Z',
+            following: [],
             address: 'some random address',
             description: 'some random description',
             refreshToken: jwt.sign({ email: `${name}@test.com` }, config.jwt.refreshTokenSecret, {

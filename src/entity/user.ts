@@ -4,43 +4,36 @@ import { bcryptCompareAsync, bcryptHashAsync } from '../utils/helpers'
 
 @Entity()
 export class User {
-    // id
     @ObjectIdColumn()
     id!: ObjectID
 
-    // name
     @Column({ length: 80 })
     name!: string
 
-    // email
     @Column({ length: 100 })
     email!: string
 
-    // password
     @Column('text')
     password!: string
 
-    // dob
     @Column()
     dob!: Date
 
-    // address
+    @Column()
+    following!: Array<string>
+
     @Column()
     address!: string
 
-    // description
     @Column()
     description!: string
 
-    // refreshToken
     @Column()
     refreshToken!: string
     
-    // createdAt
     @CreateDateColumn({ type: 'timestamp' })
     createdAt?: Date
 
-    // updatedAt
     @UpdateDateColumn({ type: 'timestamp', nullable: true })
     updatedAt?: Date
 
@@ -60,11 +53,12 @@ export class User {
 export const userSchema = {
     type: 'object',
     properties: {
-        id: { type: 'string', pattern: '^[0-9a-fA-F]{24}$', example: '5f9261a4c4c2ef2d64acc988' },
+        id: { type: 'string', pattern: '^[0-9a-fA-F]{24}$' },
         name: { type: 'string', minLength: 2, maxLength: 80, example: 'Emmanuel' },
         email: { type: 'string', format: 'email', example: 'emmanuel@test.com' },
         dob: { type: 'string', format: 'date', example: '1996-05-30' },
         password: { type: 'string', example: 'AAaa@@88$$99' },
+        following: { type: 'array' },
         address: {
             type: 'string',
             minLength: 0,

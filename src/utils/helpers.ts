@@ -22,3 +22,16 @@ export const bcryptCompareAsync = (param1: string, param2: string) => {
  * @returns the hashed string
  */
 export const bcryptHashAsync = (str: string, salt: number | string) => bcrypt.hash(str, salt)
+
+/**
+ * safely executes async function that can throw
+ * @param  {Promise<any>} fn
+ * @returns returns the function result or err if any
+ */
+export const safeCall = async (fn: Promise<any>) => {
+    try {
+        return { res: await fn }
+    } catch(err) {
+        return { err }
+    }
+}

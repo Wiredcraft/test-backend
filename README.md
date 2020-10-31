@@ -96,6 +96,32 @@ Koa was built by the same team behind Express, and is a smaller, more expressive
 - A drawback of this method is with explicit log out. When a user logs outs, the client deletes the old token but the token is still valid on the server side
 - A solution to this would be to implement a token blacklist in a redis datastore that checks invalidated tokens on user access to authenticated routes. This is however resource intensive.
 
+### Followers/ Following
+- Implemented using only the addition of `following` property on the User Model
+- This property keeps an array of ids of users that the user follows
+- To get all the profiles that a user follows, just query using this array
+- To get all of a user's followers, you query all `following` that contain the user's id
+- Example:
+  ```typescript
+  // to find all followers of user id 'xxx-1'
+  const followers = db.user.find({ following: 'xxx-1' })
+
+  // to find all following
+  const user = db.user.find({ id: 'xxx-1' }, { following: 1 })
+
+  // query for the profiles of followers using the followers array
+  // if a user has many followers, then this operation 
+  // should be batched when retrieving the profiles (make use of lazy loading)
+  const usersFollowed = db.users.find({ id: { $in: user.following }})
+
+  // to get the follwed count
+  const user = db.users.find({ id: 'xxx-1' }, { following: 1 })
+  const followedCount = user.following.length
+
+  // to get the follower count
+  const followerCount = db.users.count({ following: 'xxx-1' })
+  ```
+  
 ### Rate Limiting
 - Rate limiting is implemented using koa middleware that keeps track of access in either an in-memory cache or redis datastore. 
 - Redis would be the preferred albeit expensive option for this scenario.
@@ -116,56 +142,10 @@ Here are my answers to the questions posed that I did not fully implement.
 - Another approach to monitor container performance and logs is setting up an ELK stack (Elasticsearch, Logstash, Kibana). This is where Logstash process parses through logs saved to Cloudwatch and moves them to an Elasticsearch service which indexes the data for super fast querying. Kibana, a visualization interface tool can access this elastic search service and plot more powerful graphs and visualiztions than Cloudwatch.
 - The last approach is to use a third party logging service. This is the most expensive approach but also the least developer time intensive.
 
-### Followers/ Following/ Friends Solution
-- This one is much tougher. First issue would be using a NoSQL database. While it is certainly possible, they are just not designed to handle relational data. Okay, you can design the model in a NoSQL many-to-many architecture which I believe would be okay for a smaller user base. However it may become a scaling problem once the user base goes beyond the tens of millions (depending on the size and structure of the user documents).
-- By their very nature, social network modelling is a relational problem that would be better suited to an SQL database like MySQL or Postgre
-- To implement this kind of social followers, following, friends, I would create a separate API called Social API that runs on an SQL database where I can easily model tables with foreign key relation to other tables to build a social graph. By using an SQL db for this, querys such as number of friends, likes, comments, followers, following are blazing fast. Ofcourse by implementing a separate API for this, you run the risk of slowing down user queries. I would try to keep this API internal on a high and closely connected network and use to reduce latency for this kind of internal API call (resources deployed in the same Availability Zone).
-
-However if I have to use NoSQL such as mongoDB such as the one I've used for this project, this is how I would design it. I would add the field following that is an array of ids (of users) a user follows (Instagram model of followers/ following):
-```typescript
-// User model
-export class User {
-    // id
-    @ObjectIdColumn()
-    id!: ObjectID
-
-    // following
-    @Column()
-    following!: Array<string>
-
-    //  ... other columns ...
-    //  ... ... ... ... .....
-}
-```
-- This is how I would query these social relations
-
-```typescript
-// to find all followers of user id 'xxx-1'
-const followers = db.users.find({ following: 'xxx-1' })
-
-// to find all following
-const user = db.users.find({ id: 'xxx-1' }, { following: 1 })
-
-// query for the profiles of followers using the followers array
-// if a user has many followers, then this operation 
-// should be batched when retrieving the profiles (make use of lazy loading)
-const usersFollowed = db.users.find({ id: { $in: user.following }})
-
-// to get the follwed count
-const user = db.users.find({ id: 'xxx-1' }, { following: 1 })
-const followedCount = user.following.length
-
-// to get the follower count
-const followerCount = db.users.count({ following: 'xxx-1' })
-```
-- Popular users profiles, counts, followers would be indexed on a more performant layer such as redis/elasticSearch e.g. celebrities, power users
-- This would prevent hot documents from slowing down the rest of the NoSQL database 
-
 ### Geographic Location of nearby friend
-- This is a job for another internal API. I would use Elasticsearch to power this API. 
+- My recommendation for this would be to use Elasticsearch due to its powerful search query capabilites. While you can issue a geo query to the main NoSQL database directly, the Elasticsearch approach would be faster and would also avoid straining the main (NoSQL) database resources.
 - Whenever users location updates in the main database, the data is indexed to Elasticsearch by a continuous process (like Monstache)
 - When a friend queries for nearby friends, a geo query is issued to the ElasticSearch service and since friends geo location is already indexed with their id, this query would be extremely fast (First search all ids and then filter with the geo data).
-- While you can issue a geo query to the main NoSQL database directly, the Elasticsearch approach would be faster and would also avoid straining the main (NoSQL) database resources.
 - example of a geo query search to an elasticsearch cluster. (The passed in coordinates are the current user's coordinates). The service will return all ids within the vicinity (300m) that are the users friends.
 ```
 GET user_location/_search
