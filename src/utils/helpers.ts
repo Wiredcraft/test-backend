@@ -1,5 +1,7 @@
 import * as bcrypt from 'bcryptjs'
 
+import { BaseContext } from 'koa'
+
 /**
  * Compares hashed string with unencrypted string
  * @param  {string} param1
@@ -34,4 +36,16 @@ export const safeCall = async (fn: Promise<any>) => {
     } catch(err) {
         return { err }
     }
+}
+
+/**
+ * Applies the status code and message on ctx body and returns
+ * @param  {BaseContext} ctx
+ * @param  {number} status
+ * @param  {any} body?
+ * @returns nothing
+ */
+export const response = (ctx: BaseContext, status: number, body?: any) => {
+    ctx.status = status
+    ctx.body = body
 }
