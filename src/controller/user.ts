@@ -5,7 +5,7 @@ import { request, summary, path, body, responses, tagsAll, description } from 'k
 import { User, userSchema } from '../entity/user'
 import { ObjectID } from 'mongodb'
 import { validate, validatePassword, requiredProperties } from '../utils/validate'
-import { safeCall } from '../utils/helpers'
+import { safeCall, response } from '../utils/helpers'
 
 @tagsAll(['User'])
 export default class UserController {
@@ -20,14 +20,13 @@ export default class UserController {
         const userRepository: Repository<User> = getManager().getRepository(User)
         const call = await safeCall(userRepository.find())
 
-        if(call.err) {
-            ctx.status = 400
-            ctx.body = call.err
-            return
-        }
+        if (call.err) return response(ctx, 500, call.err)
 
-        ctx.status = 200
-        ctx.body = call.res.map((user: User) => user.toJSON())
+        response(
+            ctx,
+            200,
+            call.res.map((user: User) => user.toJSON()),
+        )
     }
 
     @request('get', '/users/{id}')
@@ -44,28 +43,14 @@ export default class UserController {
         const userRepository: Repository<User> = getManager().getRepository(User)
         const validationErrors = await validate({ id: ctx.params.id }, userSchema, ['id'])
 
-        if (validationErrors) {
-            ctx.status = 400
-            ctx.body = validationErrors
-            return
-        }
+        if (validationErrors) return response(ctx, 400, validationErrors)
 
         const call = await safeCall(userRepository.findOne(ctx.params.id))
 
-        if(call.err) {
-            ctx.status = 400
-            ctx.body = call.err
-            return
-        }
+        if (call.err) return response(ctx, 500, call.err)
+        if (!call.res) return response(ctx, 400, 'user_not_found')
 
-        if (!call.res) {
-            ctx.status = 400
-            ctx.body = 'user_not_found'
-            return
-        }
-
-        ctx.status = 200
-        ctx.body = call.res.toJSON()
+        response(ctx, 200, call.res.toJSON())
     }
 
     @request('post', '/users')
@@ -85,19 +70,11 @@ export default class UserController {
         const userRepository: Repository<User> = getManager().getRepository(User)
         const missingProperties = requiredProperties(ctx.request.body, ['name', 'email', 'password', 'dob'])
 
-        if (missingProperties.length) {
-            ctx.status = 400
-            ctx.body = `missing_paramters: ${missingProperties.join(', ')}`
-            return
-        }
+        if (missingProperties.length) return response(ctx, 400, `missing_paramters: ${missingProperties.join(', ')}`)
 
         const passwordValidationResult = validatePassword(ctx.request.body.password)
 
-        if (passwordValidationResult !== 'good') {
-            ctx.status = 400
-            ctx.body = `bad_password: ${passwordValidationResult}`
-            return
-        }
+        if (passwordValidationResult !== 'good') return response(ctx, 400, `bad_password: ${passwordValidationResult}`)
 
         const userToBeSaved: User = new User()
         userToBeSaved.name = ctx.request.body.name
@@ -110,25 +87,12 @@ export default class UserController {
 
         const validationErrors = await validate(userToBeSaved, userSchema, ['name', 'email', 'dob', 'password'])
 
-        if (validationErrors) {
-            ctx.status = 400
-            ctx.body = validationErrors
-            return
-        }
+        if (validationErrors) return response(ctx, 400, validationErrors)
 
         const call = await safeCall(userRepository.findOne({ email: userToBeSaved.email }))
 
-        if(call.err) {
-            ctx.status = 400
-            ctx.body = call.err
-            return
-        }
-
-        if (call.res) {
-            ctx.status = 409
-            ctx.body = 'user_already_exists'
-            return
-        }
+        if (call.err) return response(ctx, 500, call.err)
+        if (call.res) return response(ctx, 409, 'user_already_exists')
 
         // convert users dob to date object
         if (userToBeSaved.dob) userToBeSaved.dob = new Date(userToBeSaved.dob)
@@ -136,14 +100,11 @@ export default class UserController {
         try {
             await userToBeSaved.hashPassword()
             await userRepository.save(userToBeSaved)
-        } catch(err) {
-            ctx.status = 400
-            ctx.body = 'error_creating_user'
-            return
+        } catch (err) {
+            return response(ctx, 400, 'error_creating_user')
         }
 
-        ctx.status = 201
-        ctx.body = 'user_created'
+        response(ctx, 201, 'user_created')
     }
 
     @request('patch', '/users/{id}')
@@ -170,58 +131,28 @@ export default class UserController {
 
         const validationErrors = await validate(userToBeUpdated, userSchema, ['id'])
 
-        if (validationErrors) {
-            ctx.status = 400
-            ctx.body = validationErrors
-            return
-        }
+        if (validationErrors) return response(ctx, 400, validationErrors)
 
-        const call = await safeCall(userRepository.findOne(userToBeUpdated.id))
+        let call = await safeCall(userRepository.findOne(userToBeUpdated.id))
 
-        if(call.err) {
-            ctx.status = 400
-            ctx.body = call.err
-            return
-        }
+        if (call.err) return response(ctx, 500, call.err)
+        if (!call.res) return response(ctx, 400, 'user_not_found')
 
-        if (!call.res) {
-            ctx.status = 400
-            ctx.body = 'user_not_found'
-            return
-        }
+        call = await safeCall(
+            userRepository.findOne({ id: Not(Equal(userToBeUpdated.id)), email: userToBeUpdated.email }),
+        )
 
-        const secondCall = await safeCall(userRepository.findOne({ id: Not(Equal(userToBeUpdated.id)), email: userToBeUpdated.email }))
-
-        if(secondCall.err) {
-            ctx.status = 400
-            ctx.body = secondCall.err
-            return
-        }
-
-        if (secondCall.res) {
-            ctx.status = 400
-            ctx.body = 'user_already_exists'
-            return
-        }
-
-        if (ctx.state.user.email !== userToBeUpdated.email) {
-            ctx.status = 403
-            ctx.body = 'not_authorized'
-            return
-        }
+        if (call.err) return response(ctx, 500, call.err)
+        if (call.res) return response(ctx, 400, 'user_already_exists')
+        if (ctx.state.user.email !== userToBeUpdated.email) return response(ctx, 403, 'not_authorized')
 
         if (userToBeUpdated.dob) userToBeUpdated.dob = new Date(userToBeUpdated.dob)
 
-        const thirdCall = await safeCall(userRepository.save(userToBeUpdated))
+        call = await safeCall(userRepository.save(userToBeUpdated))
 
-        if(thirdCall.err) {
-            ctx.status = 400
-            ctx.body = thirdCall.err
-            return
-        }
+        if (call.err) return response(ctx, 500, call.err)
 
-        ctx.status = 200
-        ctx.body = thirdCall.res.toJSON()
+        response(ctx, 200, call.res.toJSON())
     }
 
     @request('patch', '/users/follow/{id}')
@@ -236,48 +167,24 @@ export default class UserController {
     public static async followUser(ctx: BaseContext): Promise<void> {
         const userRepository: Repository<User> = getManager().getRepository(User)
         const userToFollowId = ctx.params.id
- 
-        const call = await safeCall(userRepository.findOne(ctx.state.user.id))
+        let call = await safeCall(userRepository.findOne(ctx.state.user.id))
 
-        if (call.err) {
-            ctx.status = 400
-            ctx.body = 'user_not_found'
-            return
-        }
+        if (call.err) return response(ctx, 500, call.err)
 
         const userToBeUpdated: User | undefined = call.res
-        
-        if (!userToBeUpdated) {
-            ctx.status = 400
-            ctx.body = 'user_not_found'
-            return
-        }
 
-        if (ctx.state.user.id === userToFollowId) {
-            ctx.status = 400
-            ctx.body = 'cant_follow_oneself'
-            return
-        }
+        if (!userToBeUpdated) return response(ctx, 400, 'user_not_found')
+        if (ctx.state.user.id === userToFollowId) return response(ctx, 400, 'cant_follow_oneself')
+        if (userToBeUpdated.following.includes(userToFollowId)) return response(ctx, 200, userToBeUpdated.toJSON())
 
-        if (userToBeUpdated.following.includes(userToFollowId)) {
-            ctx.status = 200
-            ctx.body = userToBeUpdated.toJSON()
-            return
-        }
-
-        if(!userToBeUpdated.following) userToBeUpdated.following = []
+        if (!userToBeUpdated.following) userToBeUpdated.following = []
         userToBeUpdated.following.push(userToFollowId)
 
-        const secondCall = await safeCall(userRepository.save(userToBeUpdated))
+        call = await safeCall(userRepository.save(userToBeUpdated))
 
-        if(secondCall.err) {
-            ctx.status = 400
-            ctx.body = 'error_following_user'
-            return
-        }
+        if (call.err) return response(ctx, 500, call.err)
 
-        ctx.status = 200
-        ctx.body = secondCall.res.toJSON()
+        response(ctx, 200, call.res.toJSON())
     }
 
     @request('patch', '/users/unfollow/{id}')
@@ -292,48 +199,24 @@ export default class UserController {
     public static async unfollowUser(ctx: BaseContext): Promise<void> {
         const userRepository: Repository<User> = getManager().getRepository(User)
         const userToFollowId = ctx.params.id
- 
-        const call = await safeCall(userRepository.findOne(ctx.state.user.id))
+        let call = await safeCall(userRepository.findOne(ctx.state.user.id))
 
-        if (call.err) {
-            ctx.status = 400
-            ctx.body = 'user_not_found'
-            return
-        }
+        if (call.err) return response(ctx, 500, call.err)
 
         const userToBeUpdated: User | undefined = call.res
-        
-        if (!userToBeUpdated) {
-            ctx.status = 400
-            ctx.body = 'user_not_found'
-            return
-        }
 
-        if (ctx.state.user.id === userToFollowId) {
-            ctx.status = 400
-            ctx.body = 'cant_unfollow_oneself'
-            return
-        }
+        if (!userToBeUpdated) return response(ctx, 400, 'user_not_found')
+        if (ctx.state.user.id === userToFollowId) return response(ctx, 400, 'cant_unfollow_oneself')
+        if (!userToBeUpdated.following.includes(userToFollowId)) return response(ctx, 200, userToBeUpdated.toJSON())
 
-        if (!userToBeUpdated.following.includes(userToFollowId)) {
-            ctx.status = 200
-            ctx.body = userToBeUpdated.toJSON()
-            return
-        }
+        if (!userToBeUpdated.following) userToBeUpdated.following = []
+        userToBeUpdated.following = userToBeUpdated.following.filter((id) => id !== userToFollowId)
 
-        if(!userToBeUpdated.following) userToBeUpdated.following = []
-        userToBeUpdated.following = userToBeUpdated.following.filter(id => id !== userToFollowId)
+        call = await safeCall(userRepository.save(userToBeUpdated))
 
-        const secondCall = await safeCall(userRepository.save(userToBeUpdated))
+        if (call.err) return response(ctx, 500, call.err)
 
-        if(secondCall.err) {
-            ctx.status = 400
-            ctx.body = 'error_unfollowing_user'
-            return
-        }
-
-        ctx.status = 200
-        ctx.body = secondCall.res.toJSON()
+        response(ctx, 200, call.res.toJSON())
     }
 
     @request('get', '/users/{id}/followers')
@@ -348,28 +231,18 @@ export default class UserController {
         const userRepository: Repository<User> = getManager().getRepository(User)
         const validationErrors = await validate({ id: ctx.params.id }, userSchema, ['id'])
 
-        if (validationErrors) {
-            ctx.status = 400
-            ctx.body = validationErrors
-            return
-        }
+        if (validationErrors) return response(ctx, 400, validationErrors)
 
         const call = await safeCall(userRepository.find({ following: ctx.params.id }))
 
-        if(call.err) {
-            ctx.status = 400
-            ctx.body = call.err
-            return
-        }
+        if (call.err) return response(ctx, 500, call.err)
+        if (!call.res) return response(ctx, 400, 'followers_not_found')
 
-        if (!call.res) {
-            ctx.status = 400
-            ctx.body = 'followers_not_found'
-            return
-        }
-
-        ctx.status = 200
-        ctx.body = call.res.map((user: User) => user.toJSON())
+        response(
+            ctx,
+            200,
+            call.res.map((user: User) => user.toJSON()),
+        )
     }
 
     @request('get', '/users/{id}/following')
@@ -384,36 +257,25 @@ export default class UserController {
         const userRepository: Repository<User> = getManager().getRepository(User)
         const validationErrors = await validate({ id: ctx.params.id }, userSchema, ['id'])
 
-        if (validationErrors) {
-            ctx.status = 400
-            ctx.body = validationErrors
-            return
-        }
+        if (validationErrors) return response(ctx, 400, validationErrors)
 
-        const call = await safeCall(userRepository.findOne(ctx.params.id))
+        let call = await safeCall(userRepository.findOne(ctx.params.id))
 
-        if(call.err) {
-            ctx.status = 400
-            ctx.body = call.err
-            return
-        }
+        if (call.err) return response(ctx, 500, call.err)
 
-        if (!call.res) {
-            ctx.status = 400
-            ctx.body = 'following_not_found'
-            return
-        }
+        if (!call.res) return response(ctx, 400, 'following_not_found')
 
-        const secondCall = await safeCall(userRepository.find({ where: { _id: { $in: call.res.following.map((id: string) => new ObjectID(id)) }} }))
+        call = await safeCall(
+            userRepository.find({ where: { _id: { $in: call.res.following.map((id: string) => new ObjectID(id)) } } }),
+        )
 
-        if(secondCall.err) {
-            ctx.status = 400
-            ctx.body = secondCall.err
-            return
-        }
+        if (call.err) return response(ctx, 500, call.err)
 
-        ctx.status = 200
-        ctx.body = secondCall.res.map((user: User) => user.toJSON())
+        response(
+            ctx,
+            200,
+            call.res.map((user: User) => user.toJSON()),
+        )
     }
 
     @request('delete', '/users/{id}')
@@ -428,36 +290,19 @@ export default class UserController {
     public static async deleteUser(ctx: BaseContext): Promise<void> {
         const validationErrors = await validate({ id: ctx.params.id }, userSchema, ['id'])
 
-        if (validationErrors) {
-            ctx.status = 400
-            ctx.body = validationErrors
-            return
-        }
+        if (validationErrors) return response(ctx, 400, validationErrors)
 
         const userRepository = getManager().getRepository(User)
         const userToRemove: User | undefined = await userRepository.findOne(ctx.params.id)
 
-        if (!userToRemove) {
-            ctx.status = 400
-            ctx.body = 'user_not_found'
-            return
-        }
-
-        if (ctx.state.user.email !== userToRemove.email) {
-            ctx.status = 403
-            ctx.body = 'not_authorized'
-            return
-        }
+        if (!userToRemove) return response(ctx, 400, 'user_not_found')
+        if (ctx.state.user.email !== userToRemove.email) return response(ctx, 403, 'not_authorized')
 
         const call = await safeCall(userRepository.remove(userToRemove))
 
-        if(call.err) {
-            ctx.status = 400
-            ctx.body = call.err
-            return
-        }
+        if (call.err) return response(ctx, 500, call.err)
 
-        ctx.status = 204
+        response(ctx, 204)
     }
 
     @request('delete', '/testusers')
@@ -467,25 +312,16 @@ export default class UserController {
         401: { description: 'token authorization error' },
     })
     public static async deleteTestUsers(ctx: BaseContext): Promise<void> {
-
         const userRepository = getManager().getRepository(User)
-        const call = await safeCall(userRepository.find({}))
+        let call = await safeCall(userRepository.find({}))
 
-        if(call.err) {
-            ctx.status = 400
-            ctx.body = call.err
-            return
-        }
+        if (call.err) return response(ctx, 500, call.err)
 
         const usersToRemove: User[] = call.res
-        const secondCall = await safeCall(userRepository.remove(usersToRemove))
+        call = await safeCall(userRepository.remove(usersToRemove))
 
-        if(secondCall.err) {
-            ctx.status = 400
-            ctx.body = secondCall.err
-            return
-        }
+        if (call.err) return response(ctx, 500, call.err)
 
-        ctx.status = 204
+        response(ctx, 204)
     }
 }
