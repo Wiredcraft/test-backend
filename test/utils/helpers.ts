@@ -10,10 +10,10 @@ import { config } from '../../src/utils/config'
  * @param  {string} id the id of the user to fetch from the db
  * @returns Promise returns the found user document else null if not found
  */
-export async function getTestDbUser(db: Db | undefined, id: string): Promise<Record<string, any> | null> {
-    if (!db) throw new Error('getTestDbUser: no_db_conn')
+export async function getTestDbUser(database: Db | undefined, id: string): Promise<Record<string, any> | null> {
+    if (!database) throw new Error('getTestDbUser: no_db_conn')
 
-    return db.collection('user').findOne({ _id: new ObjectID(id) })
+    return database.collection('user').findOne({ _id: new ObjectID(id) })
 }
 
 /**
@@ -21,16 +21,16 @@ export async function getTestDbUser(db: Db | undefined, id: string): Promise<Rec
  * @param  {Array<Record<string, any>>} userArr array containing user objects to be inserted into db
  * @returns Promise returns nothing
  */
-export async function insertTestDbUsers(db: Db | undefined, userArr: Array<Record<string, any>>): Promise<void> {
-    if (!db) throw new Error('insertTestDbUsers: getTestDbUser: no_db_conn')
+export async function insertTestDbUsers(database: Db | undefined, userArray: Array<Record<string, any>>): Promise<void> {
+    if (!database) throw new Error('insertTestDbUsers: getTestDbUser: no_db_conn')
 
-    await db.collection('user').insertMany(
-        userArr.map((doc) => ({
-            ...doc,
-            _id: new ObjectID(doc._id),
-            dob: new Date(doc.dob),
-            createdAt: new Date(doc.createdAt),
-            updatedAt: new Date(doc.updatedAt),
+    await database.collection('user').insertMany(
+        userArray.map((document) => ({
+            ...document,
+            _id: new ObjectID(document._id),
+            dob: new Date(document.dob),
+            createdAt: new Date(document.createdAt),
+            updatedAt: new Date(document.updatedAt),
         })),
     )
 }
@@ -41,10 +41,10 @@ export async function insertTestDbUsers(db: Db | undefined, userArr: Array<Recor
  * @param  {number} num the number of users to generate
  * @returns Promise with array containing the users who were inserted in the db
  */
-export async function generateDatabaseUsers(db: Db | undefined, num: number): Promise<Array<any>> {
-    if (!db) throw new Error('insertTestDbUsers: getTestDbUser: no_db_conn')
+export async function generateDatabaseUsers(database: Db | undefined, number: number): Promise<Array<any>> {
+    if (!database) throw new Error('insertTestDbUsers: getTestDbUser: no_db_conn')
 
-    const newUsers = new Array(num).fill({}).map(() => {
+    const newUsers = new Array(number).fill({}).map(() => {
         const name = phonetic.generate({ syllables: 2 }).toLowerCase()
 
         return {
@@ -64,7 +64,7 @@ export async function generateDatabaseUsers(db: Db | undefined, num: number): Pr
         }
     })
 
-    await insertTestDbUsers(db, newUsers)
+    await insertTestDbUsers(database, newUsers)
 
     return newUsers
 }

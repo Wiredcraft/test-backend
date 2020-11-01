@@ -8,10 +8,10 @@ import { BaseContext } from 'koa'
  * @param  {string} param2
  * @returns a promise of the compare result
  */
-export const bcryptCompareAsync = (param1: string, param2: string) => {
+export const bcryptCompareAsync = (parameter1: string, parameter2: string) => {
     return new Promise((resolve, reject) => {
-        bcrypt.compare(param1, param2, (err, res) => {
-            if (err) reject(err)           
+        bcrypt.compare(parameter1, parameter2, (error, res) => {
+            if (error) reject(error)           
             resolve(res)    
         })
     });
@@ -23,18 +23,18 @@ export const bcryptCompareAsync = (param1: string, param2: string) => {
  * @param  {number|string} salt
  * @returns the hashed string
  */
-export const bcryptHashAsync = (str: string, salt: number | string) => bcrypt.hash(str, salt)
+export const bcryptHashAsync = (string: string, salt: number | string) => bcrypt.hash(string, salt)
 
 /**
  * safely executes async function that can throw
  * @param  {Promise<any>} fn
  * @returns returns the function result or err if any
  */
-export const safeCall = async (fn: Promise<any>) => {
+export const safeCall = async (function_: Promise<any>) => {
     try {
-        return { res: await fn }
-    } catch(err) {
-        return { err }
+        return { res: await function_ }
+    } catch(error) {
+        return { err: error }
     }
 }
 
@@ -45,7 +45,7 @@ export const safeCall = async (fn: Promise<any>) => {
  * @param  {any} body?
  * @returns nothing
  */
-export const response = (ctx: BaseContext, status: number, body?: any) => {
-    ctx.status = status
-    ctx.body = body
+export const response = (context: BaseContext, status: number, body?: any) => {
+    context.status = status
+    context.body = body
 }

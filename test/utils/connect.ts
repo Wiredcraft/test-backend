@@ -1,25 +1,31 @@
-import { MongoClient } from 'mongodb'
+import { Db, MongoClient } from 'mongodb'
 import { server } from '../../src/server'
 
 // Connection URI
-const dbName = `testDb_${Math.floor(Math.random() * (Math.floor(999999) + 1))}`
-const uri = 'mongodb://user:pass@localhost:27017/' + dbName + '?authSource=admin'
+const databaseName = `testDb_${Math.floor(Math.random() * (Math.floor(999999) + 1))}`
+const uri = 'mongodb://user:pass@localhost:27017/' + databaseName + '?authSource=admin'
 
 export let mongoClient: MongoClient
 
+// global db connection
+let database: Db | undefined
+
 export const mongo = {
+    db: database,
     uri,
     async connect() {
         const client = await MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }).catch(
-            (err) => {
-                console.log(err)
+            (error) => {
+                console.log(error)
             },
         )
 
         if (!client) return
 
         mongoClient = client
-        return client.db(dbName)
+        this.db = client.db(databaseName)
+
+        return this.db 
     },
 }
 

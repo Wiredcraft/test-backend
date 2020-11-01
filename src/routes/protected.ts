@@ -1,5 +1,5 @@
 import { SwaggerRouter } from 'koa-swagger-decorator'
-import { user, auth } from '../controller'
+import { user, auth, follow } from '../controller'
 import { description } from '../utils/html_content'
 
 const protectedRouter = new SwaggerRouter()
@@ -11,12 +11,14 @@ protectedRouter.get('/logout', auth.logoutUser)
 protectedRouter.get('/users', user.getUsers)
 protectedRouter.get('/users/:id', user.getUser)
 protectedRouter.patch('/users/:id', user.updateUser)
-protectedRouter.patch('/users/follow/:id', user.followUser)
-protectedRouter.patch('/users/unfollow/:id', user.unfollowUser)
-protectedRouter.get('/users/:id/followers', user.getFollowers)
-protectedRouter.get('/users/:id/following', user.getFollowing)
 protectedRouter.delete('/users/:id', user.deleteUser)
 protectedRouter.delete('/testusers', user.deleteTestUsers)
+
+// FOLLOW routes
+protectedRouter.patch('/users/follow/:id', follow.followUser)
+protectedRouter.patch('/users/unfollow/:id', follow.unfollowUser)
+protectedRouter.get('/users/:id/followers', follow.getFollowers)
+protectedRouter.get('/users/:id/following', follow.getFollowing)
 
 protectedRouter.swagger({
     title: 'wiredcraft-restful-api',

@@ -22,26 +22,26 @@ const staticAge = {
 
 const serveBase = process.env.NODE_ENV === 'production' ? '/dist/public/' : '/public/'
 
-unprotectedRouter.get('/', async ctx => send(ctx, ctx.path, { 
+unprotectedRouter.get('/', async context => send(context, context.path, { 
     root: `${findRoot(__dirname)}${serveBase}`, 
     index: 'index.html',
     immutable: true,
 	maxAge: staticAge.oneYearMs,
 }))
 
-unprotectedRouter.get('/readme.html', async ctx => send(ctx, ctx.path, { 
+unprotectedRouter.get('/readme.html', async context => send(context, context.path, { 
     root: `${findRoot(__dirname)}${serveBase}`, 
     immutable: true,
 	maxAge: staticAge.oneDayMs,
 }))
 
-unprotectedRouter.get('/favicon.ico', async ctx => send(ctx, ctx.path, { 
+unprotectedRouter.get('/favicon.ico', async context => send(context, context.path, { 
     root: `${findRoot(__dirname)}${serveBase}`, 
     immutable: true,
 	maxAge: staticAge.oneDayMs,
 }))
 
-unprotectedRouter.get('/assets/', async ctx => send(ctx, ctx.path, { 
+unprotectedRouter.get('/assets/', async context => send(context, context.path, { 
     root: `${findRoot(__dirname)}${serveBase}`, 
     immutable: true,
 	maxAge: staticAge.oneDayMs,

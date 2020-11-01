@@ -18,30 +18,30 @@ const logger = (winstonInstance: any): any => {
         ],
     })
 
-    return async (ctx: Context, next: () => Promise<any>): Promise<void> => {
+    return async (context: Context, next: () => Promise<any>): Promise<void> => {
         const start = new Date().getTime()
 
         try {
             await next()
-        } catch (err) {
-            ctx.status = err.status || 500
-            ctx.body = err.message
+        } catch (error) {
+            context.status = error.status || 500
+            context.body = error.message
         }
 
         const ms = new Date().getTime() - start
 
         let logLevel: string
-        if (ctx.status >= 500) {
+        if (context.status >= 500) {
             logLevel = 'error'
-        } else if (ctx.status >= 400) {
+        } else if (context.status >= 400) {
             logLevel = 'warn'
         } else {
             logLevel = 'info'
         }
 
-        const msg = `${ctx.method} ${ctx.originalUrl} ${ctx.status} ${ms}ms`
+        const message = `${context.method} ${context.originalUrl} ${context.status} ${ms}ms`
 
-        winstonInstance.log(logLevel, msg)
+        winstonInstance.log(logLevel, message)
     }
 }
 

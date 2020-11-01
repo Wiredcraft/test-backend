@@ -50,4 +50,4 @@ export const server = function (): Server {
 if(config.nodeEnv !== 'test')
     setupConnection(config.databaseUrl)
         .then(async () => server())
-        .catch((error: string) => console.log('TypeORM connection error: ', error))
+        .catch((error: string) => console.log('TypeORM connection error:', error))
