@@ -16,14 +16,14 @@ export default class UserController {
         400: { description: 'error' },
         401: { description: 'token authorization error' },
     })
-    public static async getUsers(ctx: BaseContext): Promise<void> {
+    public static async getUsers(context: BaseContext): Promise<void> {
         const userRepository: Repository<User> = getManager().getRepository(User)
         const call = await safeCall(userRepository.find())
 
-        if (call.err) return response(ctx, 500, call.err)
+        if (call.err) return response(context, 500, call.err)
 
         response(
-            ctx,
+            context,
             200,
             call.res.map((user: User) => user.toJSON()),
         )
@@ -39,18 +39,18 @@ export default class UserController {
         400: { description: 'validation error, user not found' },
         401: { description: 'token authorization error' },
     })
-    public static async getUser(ctx: BaseContext): Promise<void> {
+    public static async getUser(context: BaseContext): Promise<void> {
         const userRepository: Repository<User> = getManager().getRepository(User)
-        const validationErrors = await validate({ id: ctx.params.id }, userSchema, ['id'])
+        const validationErrors = await validate({ id: context.params.id }, userSchema, ['id'])
 
-        if (validationErrors) return response(ctx, 400, validationErrors)
+        if (validationErrors) return response(context, 400, validationErrors)
 
-        const call = await safeCall(userRepository.findOne(ctx.params.id))
+        const call = await safeCall(userRepository.findOne(context.params.id))
 
-        if (call.err) return response(ctx, 500, call.err)
-        if (!call.res) return response(ctx, 400, 'user_not_found')
+        if (call.err) return response(context, 500, call.err)
+        if (!call.res) return response(context, 400, 'user_not_found')
 
-        response(ctx, 200, call.res.toJSON())
+        response(context, 200, call.res.toJSON())
     }
 
     @request('post', '/users')
@@ -66,33 +66,33 @@ export default class UserController {
         401: { description: 'token authorization error' },
         409: { description: 'user already exists' },
     })
-    public static async createUser(ctx: BaseContext): Promise<void> {
+    public static async createUser(context: BaseContext): Promise<void> {
         const userRepository: Repository<User> = getManager().getRepository(User)
-        const missingProperties = requiredProperties(ctx.request.body, ['name', 'email', 'password', 'dob'])
+        const missingProperties = requiredProperties(context.request.body, ['name', 'email', 'password', 'dob'])
 
-        if (missingProperties.length) return response(ctx, 400, `missing_paramters: ${missingProperties.join(', ')}`)
+        if (missingProperties.length) return response(context, 400, `missing_paramters: ${missingProperties.join(', ')}`)
 
-        const passwordValidationResult = validatePassword(ctx.request.body.password)
+        const passwordValidationResult = validatePassword(context.request.body.password)
 
-        if (passwordValidationResult !== 'good') return response(ctx, 400, `bad_password: ${passwordValidationResult}`)
+        if (passwordValidationResult !== 'good') return response(context, 400, `bad_password: ${passwordValidationResult}`)
 
         const userToBeSaved: User = new User()
-        userToBeSaved.name = ctx.request.body.name
-        userToBeSaved.email = ctx.request.body.email
-        userToBeSaved.password = ctx.request.body.password
-        userToBeSaved.dob = ctx.request.body.dob
+        userToBeSaved.name = context.request.body.name
+        userToBeSaved.email = context.request.body.email
+        userToBeSaved.password = context.request.body.password
+        userToBeSaved.dob = context.request.body.dob
         userToBeSaved.following = []
-        userToBeSaved.address = ctx.request.body.address || ''
-        userToBeSaved.description = ctx.request.body.description || ''
+        userToBeSaved.address = context.request.body.address || ''
+        userToBeSaved.description = context.request.body.description || ''
 
         const validationErrors = await validate(userToBeSaved, userSchema, ['name', 'email', 'dob', 'password'])
 
-        if (validationErrors) return response(ctx, 400, validationErrors)
+        if (validationErrors) return response(context, 400, validationErrors)
 
         const call = await safeCall(userRepository.findOne({ email: userToBeSaved.email }))
 
-        if (call.err) return response(ctx, 500, call.err)
-        if (call.res) return response(ctx, 409, 'user_already_exists')
+        if (call.err) return response(context, 500, call.err)
+        if (call.res) return response(context, 409, 'user_already_exists')
 
         // convert users dob to date object
         if (userToBeSaved.dob) userToBeSaved.dob = new Date(userToBeSaved.dob)
@@ -100,11 +100,11 @@ export default class UserController {
         try {
             await userToBeSaved.hashPassword()
             await userRepository.save(userToBeSaved)
-        } catch (err) {
-            return response(ctx, 400, 'error_creating_user')
+        } catch  {
+            return response(context, 400, 'error_creating_user')
         }
 
-        response(ctx, 201, 'user_created')
+        response(context, 201, 'user_created')
     }
 
     @request('patch', '/users/{id}')
@@ -117,165 +117,42 @@ export default class UserController {
         401: { description: 'token authorization error' },
         403: { description: 'not authorized to perform this action' },
     })
-    public static async updateUser(ctx: BaseContext): Promise<void> {
+    public static async updateUser(context: BaseContext): Promise<void> {
         const userRepository: Repository<User> = getManager().getRepository(User)
 
         const userToBeUpdated: User = new User()
-        userToBeUpdated.id = ctx.params.id
-        userToBeUpdated.name = ctx.request.body.name
-        userToBeUpdated.email = ctx.request.body.email
-        userToBeUpdated.dob = ctx.request.body.dob
-        userToBeUpdated.address = ctx.request.body.address
-        userToBeUpdated.description = ctx.request.body.description
+        userToBeUpdated.id = context.params.id
+        userToBeUpdated.name = context.request.body.name
+        userToBeUpdated.email = context.request.body.email
+        userToBeUpdated.dob = context.request.body.dob
+        userToBeUpdated.address = context.request.body.address
+        userToBeUpdated.description = context.request.body.description
         delete userToBeUpdated.createdAt
 
         const validationErrors = await validate(userToBeUpdated, userSchema, ['id'])
 
-        if (validationErrors) return response(ctx, 400, validationErrors)
+        if (validationErrors) return response(context, 400, validationErrors)
 
         let call = await safeCall(userRepository.findOne(userToBeUpdated.id))
 
-        if (call.err) return response(ctx, 500, call.err)
-        if (!call.res) return response(ctx, 400, 'user_not_found')
+        if (call.err) return response(context, 500, call.err)
+        if (!call.res) return response(context, 400, 'user_not_found')
 
         call = await safeCall(
             userRepository.findOne({ id: Not(Equal(userToBeUpdated.id)), email: userToBeUpdated.email }),
         )
 
-        if (call.err) return response(ctx, 500, call.err)
-        if (call.res) return response(ctx, 400, 'user_already_exists')
-        if (ctx.state.user.email !== userToBeUpdated.email) return response(ctx, 403, 'not_authorized')
+        if (call.err) return response(context, 500, call.err)
+        if (call.res) return response(context, 400, 'user_already_exists')
+        if (context.state.user.email !== userToBeUpdated.email) return response(context, 403, 'not_authorized')
 
         if (userToBeUpdated.dob) userToBeUpdated.dob = new Date(userToBeUpdated.dob)
 
         call = await safeCall(userRepository.save(userToBeUpdated))
 
-        if (call.err) return response(ctx, 500, call.err)
+        if (call.err) return response(context, 500, call.err)
 
-        response(ctx, 200, call.res.toJSON())
-    }
-
-    @request('patch', '/users/follow/{id}')
-    @summary('Follow a user')
-    @path({ id: { type: ObjectID, required: true, description: 'id of the user to follow' } })
-    @responses({
-        200: { description: 'user followed successfully' },
-        400: { description: 'user not found, error following user' },
-        401: { description: 'token authorization error' },
-        403: { description: 'cant follow oneself' },
-    })
-    public static async followUser(ctx: BaseContext): Promise<void> {
-        const userRepository: Repository<User> = getManager().getRepository(User)
-        const userToFollowId = ctx.params.id
-        let call = await safeCall(userRepository.findOne(ctx.state.user.id))
-
-        if (call.err) return response(ctx, 500, call.err)
-
-        const userToBeUpdated: User | undefined = call.res
-
-        if (!userToBeUpdated) return response(ctx, 400, 'user_not_found')
-        if (ctx.state.user.id === userToFollowId) return response(ctx, 400, 'cant_follow_oneself')
-        if (userToBeUpdated.following.includes(userToFollowId)) return response(ctx, 200, userToBeUpdated.toJSON())
-
-        if (!userToBeUpdated.following) userToBeUpdated.following = []
-        userToBeUpdated.following.push(userToFollowId)
-
-        call = await safeCall(userRepository.save(userToBeUpdated))
-
-        if (call.err) return response(ctx, 500, call.err)
-
-        response(ctx, 200, call.res.toJSON())
-    }
-
-    @request('patch', '/users/unfollow/{id}')
-    @summary('Unfollow a user')
-    @path({ id: { type: ObjectID, required: true, description: 'id of the user to follow' } })
-    @responses({
-        200: { description: 'user unfollowed successfully' },
-        400: { description: 'user not found, error following user' },
-        401: { description: 'token authorization error' },
-        403: { description: 'cant unfollow oneself' },
-    })
-    public static async unfollowUser(ctx: BaseContext): Promise<void> {
-        const userRepository: Repository<User> = getManager().getRepository(User)
-        const userToFollowId = ctx.params.id
-        let call = await safeCall(userRepository.findOne(ctx.state.user.id))
-
-        if (call.err) return response(ctx, 500, call.err)
-
-        const userToBeUpdated: User | undefined = call.res
-
-        if (!userToBeUpdated) return response(ctx, 400, 'user_not_found')
-        if (ctx.state.user.id === userToFollowId) return response(ctx, 400, 'cant_unfollow_oneself')
-        if (!userToBeUpdated.following.includes(userToFollowId)) return response(ctx, 200, userToBeUpdated.toJSON())
-
-        if (!userToBeUpdated.following) userToBeUpdated.following = []
-        userToBeUpdated.following = userToBeUpdated.following.filter((id) => id !== userToFollowId)
-
-        call = await safeCall(userRepository.save(userToBeUpdated))
-
-        if (call.err) return response(ctx, 500, call.err)
-
-        response(ctx, 200, call.res.toJSON())
-    }
-
-    @request('get', '/users/{id}/followers')
-    @summary('Get all follwers of a user')
-    @path({ id: { type: ObjectID, required: true, description: 'id of the user' } })
-    @responses({
-        200: { description: 'success' },
-        400: { description: 'validation error, followers not found' },
-        401: { description: 'token authorization error' },
-    })
-    public static async getFollowers(ctx: BaseContext): Promise<void> {
-        const userRepository: Repository<User> = getManager().getRepository(User)
-        const validationErrors = await validate({ id: ctx.params.id }, userSchema, ['id'])
-
-        if (validationErrors) return response(ctx, 400, validationErrors)
-
-        const call = await safeCall(userRepository.find({ following: ctx.params.id }))
-
-        if (call.err) return response(ctx, 500, call.err)
-        if (!call.res) return response(ctx, 400, 'followers_not_found')
-
-        response(
-            ctx,
-            200,
-            call.res.map((user: User) => user.toJSON()),
-        )
-    }
-
-    @request('get', '/users/{id}/following')
-    @summary('Get all people a user follows')
-    @path({ id: { type: ObjectID, required: true, description: 'id of the user' } })
-    @responses({
-        200: { description: 'success' },
-        400: { description: 'validation error, followed not found' },
-        401: { description: 'token authorization error' },
-    })
-    public static async getFollowing(ctx: BaseContext): Promise<void> {
-        const userRepository: Repository<User> = getManager().getRepository(User)
-        const validationErrors = await validate({ id: ctx.params.id }, userSchema, ['id'])
-
-        if (validationErrors) return response(ctx, 400, validationErrors)
-
-        let call = await safeCall(userRepository.findOne(ctx.params.id))
-
-        if (call.err) return response(ctx, 500, call.err)
-
-        if (!call.res) return response(ctx, 400, 'following_not_found')
-
-        call = await safeCall(
-            userRepository.find({ where: { _id: { $in: call.res.following.map((id: string) => new ObjectID(id)) } } }),
-        )
-
-        if (call.err) return response(ctx, 500, call.err)
-
-        response(
-            ctx,
-            200,
-            call.res.map((user: User) => user.toJSON()),
-        )
+        response(context, 200, call.res.toJSON())
     }
 
     @request('delete', '/users/{id}')
@@ -287,22 +164,22 @@ export default class UserController {
         401: { description: 'token authorization error' },
         403: { description: 'not authorized to perform this action' },
     })
-    public static async deleteUser(ctx: BaseContext): Promise<void> {
-        const validationErrors = await validate({ id: ctx.params.id }, userSchema, ['id'])
+    public static async deleteUser(context: BaseContext): Promise<void> {
+        const validationErrors = await validate({ id: context.params.id }, userSchema, ['id'])
 
-        if (validationErrors) return response(ctx, 400, validationErrors)
+        if (validationErrors) return response(context, 400, validationErrors)
 
         const userRepository = getManager().getRepository(User)
-        const userToRemove: User | undefined = await userRepository.findOne(ctx.params.id)
+        const userToRemove: User | undefined = await userRepository.findOne(context.params.id)
 
-        if (!userToRemove) return response(ctx, 400, 'user_not_found')
-        if (ctx.state.user.email !== userToRemove.email) return response(ctx, 403, 'not_authorized')
+        if (!userToRemove) return response(context, 400, 'user_not_found')
+        if (context.state.user.email !== userToRemove.email) return response(context, 403, 'not_authorized')
 
         const call = await safeCall(userRepository.remove(userToRemove))
 
-        if (call.err) return response(ctx, 500, call.err)
+        if (call.err) return response(context, 500, call.err)
 
-        response(ctx, 204)
+        response(context, 204)
     }
 
     @request('delete', '/testusers')
@@ -311,17 +188,17 @@ export default class UserController {
         204: { description: 'all users deleted successfully' },
         401: { description: 'token authorization error' },
     })
-    public static async deleteTestUsers(ctx: BaseContext): Promise<void> {
+    public static async deleteTestUsers(context: BaseContext): Promise<void> {
         const userRepository = getManager().getRepository(User)
         let call = await safeCall(userRepository.find({}))
 
-        if (call.err) return response(ctx, 500, call.err)
+        if (call.err) return response(context, 500, call.err)
 
         const usersToRemove: User[] = call.res
         call = await safeCall(userRepository.remove(usersToRemove))
 
-        if (call.err) return response(ctx, 500, call.err)
+        if (call.err) return response(context, 500, call.err)
 
-        response(ctx, 204)
+        response(context, 204)
     }
 }

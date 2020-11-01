@@ -1,14 +1,14 @@
 import ratelimit from 'koa-ratelimit'
 
 // in memory db
-const db = new Map()
+const database = new Map()
 
 export const rateLimiter = ratelimit({
     driver: 'memory',
-    db: db,
+    db: database,
     duration: 60000,
     errorMessage: 'Sometimes You Just Have to Slow Down.',
-    id: (ctx) => ctx.ip,
+    id: (context) => context.ip,
     headers: {
         remaining: 'Rate-Limit-Remaining',
         reset: 'Rate-Limit-Reset',

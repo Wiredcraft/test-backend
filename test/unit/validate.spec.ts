@@ -4,7 +4,7 @@ import { userSchema } from '../../src/entity/user'
 
 describe('fn: validate', () => {
     it('should validate an object based on a schema', async () => {
-        const objToValidate = {
+        const objectToValidate = {
             name: 'Emmanuel',
             email: 'emmanuel@test.com',
             dob: '1996-05-30',
@@ -13,13 +13,13 @@ describe('fn: validate', () => {
             description: 'A versatile back-end node.js developer',
         }
 
-        const result = await validate(objToValidate, userSchema, [])
+        const result = await validate(objectToValidate, userSchema, [])
 
         expect(result).to.be.undefined
     })
 
     it('should fail to validate an object when a required prop is missing', async () => {
-        const objToValidate = {
+        const objectToValidate = {
             name: 'Emmanuel',
             email: 'emmanuel@test.com',
             dob: '1996-05-30',
@@ -27,7 +27,7 @@ describe('fn: validate', () => {
             description: 'A versatile back-end node.js developer',
         }
 
-        const result = await validate(objToValidate, userSchema, ['password'])
+        const result = await validate(objectToValidate, userSchema, ['password'])
         expect(result).to.be.an('array')
         expect(result && result[0]?.params?.missingProperty).to.be.equal('password')
     })
@@ -60,17 +60,17 @@ describe('fn: validatePassword', () => {
 
 describe('fn: requiredProperties', () => {
     it('should return missing props on an object', () => {
-        const obj = {
+        const object = {
             name: 'James',
             age: 26,
             eye: 'blue'
         }
-        let missingProperties = requiredProperties(obj, ['address'])
+        let missingProperties = requiredProperties(object, ['address'])
 
         expect(missingProperties.length).to.be.equal(1)
         expect(missingProperties[0]).to.be.equal('address')
 
-        missingProperties = requiredProperties(obj, ['name', 'age', 'eye'])
+        missingProperties = requiredProperties(object, ['name', 'age', 'eye'])
         expect(missingProperties.length).to.be.equal(0)
     })
 })
