@@ -70,11 +70,13 @@ export default class UserController {
         const userRepository: Repository<User> = getManager().getRepository(User)
         const missingProperties = requiredProperties(context.request.body, ['name', 'email', 'password', 'dob'])
 
-        if (missingProperties.length > 0) return response(context, 400, `missing_paramters: ${missingProperties.join(', ')}`)
+        if (missingProperties.length > 0)
+            return response(context, 400, `missing_paramters: ${missingProperties.join(', ')}`)
 
         const passwordValidationResult = validatePassword(context.request.body.password)
 
-        if (passwordValidationResult !== 'good') return response(context, 400, `bad_password: ${passwordValidationResult}`)
+        if (passwordValidationResult !== 'good')
+            return response(context, 400, `bad_password: ${passwordValidationResult}`)
 
         const userToBeSaved: User = new User()
 
@@ -102,7 +104,7 @@ export default class UserController {
         try {
             await userToBeSaved.hashPassword()
             await userRepository.save(userToBeSaved)
-        } catch  {
+        } catch {
             return response(context, 400, 'error_creating_user')
         }
 
@@ -111,8 +113,8 @@ export default class UserController {
 
     @request('patch', '/users/{id}')
     @summary('Update a user')
-    @path({ id: { type: 'string', required: true, description: 'id of the user to update' } })
-    @body(_.omit(userSchema.properties, ['id', 'createdAt', 'updatedAt']))
+    @path({ id: { type: 'string', required: true, description: 'id of the user to update' }, data: { items: {} } })
+    @body(_.omit(userSchema.properties, ['id', 'createdAt', 'updatedAt', 'following']))
     @responses({
         200: { description: 'user updated successfully' },
         400: { description: 'user not found, user already exists, validation errors, user already exists' },

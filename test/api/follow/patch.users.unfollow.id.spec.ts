@@ -43,7 +43,8 @@ describe(`${endpoint.method}: ${endpoint.route}`, () => {
             await database
                 .collection('user')
                 .updateOne({ _id: new ObjectID(testUser.id) }, { $set: { following: [secondTestUser.id] } })
-
+        else throw new Error('test_database_error')
+        
         const res = await request(testServer)
             .patch(endpoint.route.replace(':id', secondTestUser.id))
             .set('Authorization', 'bearer ' + token)
