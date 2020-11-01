@@ -11,7 +11,7 @@ import { safeCall, response } from '../utils/helpers'
 export default class FollowController {
     @request('patch', '/users/follow/{id}')
     @summary('Follow a user')
-    @path({ id: { type: ObjectID, required: true, description: 'id of the user to follow' } })
+    @path({ id: { type: 'string', required: true, description: 'id of the user to follow' } })
     @responses({
         200: { description: 'user followed successfully' },
         400: { description: 'user not found, error following user' },
@@ -46,7 +46,7 @@ export default class FollowController {
 
     @request('patch', '/users/unfollow/{id}')
     @summary('Unfollow a user')
-    @path({ id: { type: ObjectID, required: true, description: 'id of the user to follow' } })
+    @path({ id: { type: 'string', required: true, description: 'id of the user to follow' } })
     @responses({
         200: { description: 'user unfollowed successfully' },
         400: { description: 'user not found, error following user' },
@@ -81,7 +81,7 @@ export default class FollowController {
 
     @request('get', '/users/{id}/followers')
     @summary('Get all follwers of a user')
-    @path({ id: { type: ObjectID, required: true, description: 'id of the user' } })
+    @path({ id: { type: 'string', required: true, description: 'id of the user' } })
     @responses({
         200: { description: 'success' },
         400: { description: 'validation error, followers not found' },
@@ -108,7 +108,7 @@ export default class FollowController {
 
     @request('get', '/users/{id}/following')
     @summary('Get all people a user follows')
-    @path({ id: { type: ObjectID, required: true, description: 'id of the user' } })
+    @path({ id: { type: 'string', required: true, description: 'id of the user' } })
     @responses({
         200: { description: 'success' },
         400: { description: 'validation error, followed not found' },

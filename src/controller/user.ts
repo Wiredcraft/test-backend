@@ -3,7 +3,6 @@ import { BaseContext } from 'koa'
 import { getManager, Repository, Not, Equal } from 'typeorm'
 import { request, summary, path, body, responses, tagsAll, description } from 'koa-swagger-decorator'
 import { User, userSchema } from '../entity/user'
-import { ObjectID } from 'mongodb'
 import { validate, validatePassword, requiredProperties } from '../utils/validate'
 import { safeCall, response } from '../utils/helpers'
 
@@ -32,7 +31,7 @@ export default class UserController {
     @request('get', '/users/{id}')
     @summary('Find user by id')
     @path({
-        id: { type: ObjectID, required: true, description: 'id of user' },
+        id: { type: 'string', required: true, description: 'id of user' },
     })
     @responses({
         200: { description: 'success' },
@@ -112,7 +111,7 @@ export default class UserController {
 
     @request('patch', '/users/{id}')
     @summary('Update a user')
-    @path({ id: { type: ObjectID, required: true, description: 'id of the user to update' } })
+    @path({ id: { type: 'string', required: true, description: 'id of the user to update' } })
     @body(_.omit(userSchema.properties, ['id', 'createdAt', 'updatedAt']))
     @responses({
         200: { description: 'user updated successfully' },
@@ -164,7 +163,7 @@ export default class UserController {
 
     @request('delete', '/users/{id}')
     @summary('Delete user by id')
-    @path({ id: { type: ObjectID, required: true, description: 'id of user' } })
+    @path({ id: { type: 'string', required: true, description: 'id of user' } })
     @responses({
         204: { description: 'user deleted successfully' },
         400: { description: 'user not found, validation errors' },
