@@ -28,10 +28,13 @@ export default class FollowController {
         const userToBeUpdated: User | undefined = call.res
 
         if (!userToBeUpdated) return response(context, 400, 'user_not_found')
+
         if (context.state.user.id === userToFollowId) return response(context, 400, 'cant_follow_oneself')
+
         if (userToBeUpdated.following.includes(userToFollowId)) return response(context, 200, userToBeUpdated.toJSON())
 
         if (!userToBeUpdated.following) userToBeUpdated.following = []
+
         userToBeUpdated.following.push(userToFollowId)
 
         call = await safeCall(userRepository.save(userToBeUpdated))
@@ -60,10 +63,13 @@ export default class FollowController {
         const userToBeUpdated: User | undefined = call.res
 
         if (!userToBeUpdated) return response(context, 400, 'user_not_found')
+
         if (context.state.user.id === userToFollowId) return response(context, 400, 'cant_unfollow_oneself')
+
         if (!userToBeUpdated.following.includes(userToFollowId)) return response(context, 200, userToBeUpdated.toJSON())
 
         if (!userToBeUpdated.following) userToBeUpdated.following = []
+
         userToBeUpdated.following = userToBeUpdated.following.filter((id) => id !== userToFollowId)
 
         call = await safeCall(userRepository.save(userToBeUpdated))
@@ -90,6 +96,7 @@ export default class FollowController {
         const call = await safeCall(userRepository.find({ following: context.params.id }))
 
         if (call.err) return response(context, 500, call.err)
+
         if (!call.res) return response(context, 400, 'followers_not_found')
 
         response(

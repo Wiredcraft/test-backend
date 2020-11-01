@@ -9,7 +9,7 @@ import { Server } from 'http'
 
 import { logger } from './utils/logger'
 import { config } from './utils/config'
-import { rateLimiter } from './utils/rateLimiter'
+import { rateLimiter } from './utils/rate-limiter'
 import { setupConnection } from './utils/conn'
 import { unprotectedRouter } from './routes/unprotected'
 import { protectedRouter } from './routes/protected'

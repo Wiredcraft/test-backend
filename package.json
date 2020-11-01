@@ -6,7 +6,7 @@
   "scripts": {
     "watch-server": "nodemon --watch src -e ts,tsx --exec ts-node src/server.ts",
     "build-ts": "tsc",
-    "copy-static-assets": "ts-node copyStaticAssets.ts",
+    "copy-static-assets": "ts-node copy-static-assets.ts",
     "serve": "node dist/server.js",
     "build": "npm run lint && npm run build-ts && npm run copy-static-assets",
     "start": "npm run serve",

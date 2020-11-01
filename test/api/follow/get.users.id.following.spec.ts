@@ -12,6 +12,7 @@ use(chaijsonSchema)
 
 // global db connection
 let database: Db | undefined
+
 ;(async () => {
     if (!mongo.db) database = await mongo.connect()
 })()
@@ -63,6 +64,7 @@ describe(`${endpoint.method}: ${endpoint.route}`, () => {
 
         expect(res.status).to.be.equal(200)
         expect(res.body.length).to.be.equal(4)
+
         for (const item of res.body) {
             expect(item).to.be.jsonSchema(userSchema)
         }

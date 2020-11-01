@@ -10,6 +10,7 @@ use(chaijsonSchema)
 
 // global db connection
 let database: Db | undefined
+
 ;(async () => {
     if (!mongo.db) database = await mongo.connect()
 })()
@@ -49,6 +50,7 @@ describe(`${endpoint.method}: ${endpoint.route}`, () => {
             address: '44-65 Laparella Cinco, Donella, Mexico City, Mexico',
             description: 'A versatile back-end node.js developer',
         })
+
         expect(res.status).to.be.equal(400)
     })
 
@@ -73,6 +75,7 @@ describe(`${endpoint.method}: ${endpoint.route}`, () => {
             address: '44-65 Laparella Cinco, Donella, Mexico City, Mexico',
             description: 'A versatile back-end node.js developer',
         })
+
         expect(res.status).to.be.equal(400)
     })
 
@@ -98,6 +101,7 @@ describe(`${endpoint.method}: ${endpoint.route}`, () => {
             dob: '1996-05-29',
             password: 'AAaa@@88$$99',
         })
+
         expect(res.status).to.be.equal(409)
     })
 

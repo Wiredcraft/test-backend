@@ -6,7 +6,8 @@ import { Db } from 'mongodb'
 let database: Db | undefined
 
 before(async function () {
-    if(!mongo.db) database = await mongo.connect()  
+    if(!mongo.db) database = await mongo.connect()
+  
     if (database) await setupConnection(mongo.uri)
 })
 

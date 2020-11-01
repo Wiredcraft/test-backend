@@ -28,6 +28,7 @@ describe('fn: validate', () => {
         }
 
         const result = await validate(objectToValidate, userSchema, ['password'])
+
         expect(result).to.be.an('array')
         expect(result && result[0]?.params?.missingProperty).to.be.equal('password')
     })
@@ -36,6 +37,7 @@ describe('fn: validate', () => {
 describe('fn: validatePassword', () => {
     it('should validate a password based on common recommendations', () => {
         let validationResult = validatePassword('AA')
+
         expect(validationResult).to.be.equal('too_short')
 
         validationResult = validatePassword('AAasdasdasfsdfsdfsfsdvsvsdwefwefw324r3r2dewd23d2d23d2dadaxdcd32e2r24r2')

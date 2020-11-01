@@ -11,7 +11,8 @@ import { BaseContext } from 'koa'
 export const bcryptCompareAsync = (parameter1: string, parameter2: string) => {
     return new Promise((resolve, reject) => {
         bcrypt.compare(parameter1, parameter2, (error, res) => {
-            if (error) reject(error)           
+            if (error) reject(error)
+           
             resolve(res)    
         })
     });

@@ -48,6 +48,7 @@ export default class UserController {
         const call = await safeCall(userRepository.findOne(context.params.id))
 
         if (call.err) return response(context, 500, call.err)
+
         if (!call.res) return response(context, 400, 'user_not_found')
 
         response(context, 200, call.res.toJSON())
@@ -70,13 +71,14 @@ export default class UserController {
         const userRepository: Repository<User> = getManager().getRepository(User)
         const missingProperties = requiredProperties(context.request.body, ['name', 'email', 'password', 'dob'])
 
-        if (missingProperties.length) return response(context, 400, `missing_paramters: ${missingProperties.join(', ')}`)
+        if (missingProperties.length > 0) return response(context, 400, `missing_paramters: ${missingProperties.join(', ')}`)
 
         const passwordValidationResult = validatePassword(context.request.body.password)
 
         if (passwordValidationResult !== 'good') return response(context, 400, `bad_password: ${passwordValidationResult}`)
 
         const userToBeSaved: User = new User()
+
         userToBeSaved.name = context.request.body.name
         userToBeSaved.email = context.request.body.email
         userToBeSaved.password = context.request.body.password
@@ -92,6 +94,7 @@ export default class UserController {
         const call = await safeCall(userRepository.findOne({ email: userToBeSaved.email }))
 
         if (call.err) return response(context, 500, call.err)
+
         if (call.res) return response(context, 409, 'user_already_exists')
 
         // convert users dob to date object
@@ -121,6 +124,7 @@ export default class UserController {
         const userRepository: Repository<User> = getManager().getRepository(User)
 
         const userToBeUpdated: User = new User()
+
         userToBeUpdated.id = context.params.id
         userToBeUpdated.name = context.request.body.name
         userToBeUpdated.email = context.request.body.email
@@ -136,6 +140,7 @@ export default class UserController {
         let call = await safeCall(userRepository.findOne(userToBeUpdated.id))
 
         if (call.err) return response(context, 500, call.err)
+
         if (!call.res) return response(context, 400, 'user_not_found')
 
         call = await safeCall(
@@ -143,7 +148,9 @@ export default class UserController {
         )
 
         if (call.err) return response(context, 500, call.err)
+
         if (call.res) return response(context, 400, 'user_already_exists')
+
         if (context.state.user.email !== userToBeUpdated.email) return response(context, 403, 'not_authorized')
 
         if (userToBeUpdated.dob) userToBeUpdated.dob = new Date(userToBeUpdated.dob)
@@ -173,6 +180,7 @@ export default class UserController {
         const userToRemove: User | undefined = await userRepository.findOne(context.params.id)
 
         if (!userToRemove) return response(context, 400, 'user_not_found')
+
         if (context.state.user.email !== userToRemove.email) return response(context, 403, 'not_authorized')
 
         const call = await safeCall(userRepository.remove(userToRemove))
@@ -195,6 +203,7 @@ export default class UserController {
         if (call.err) return response(context, 500, call.err)
 
         const usersToRemove: User[] = call.res
+
         call = await safeCall(userRepository.remove(usersToRemove))
 
         if (call.err) return response(context, 500, call.err)

@@ -1,6 +1,6 @@
 import { SwaggerRouter } from 'koa-swagger-decorator'
 import { user, auth, follow } from '../controller'
-import { description } from '../utils/html_content'
+import { description } from '../utils/html-content'
 
 const protectedRouter = new SwaggerRouter()
 
