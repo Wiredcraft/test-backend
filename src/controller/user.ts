@@ -113,7 +113,7 @@ export default class UserController {
 
     @request('patch', '/users/{id}')
     @summary('Update a user')
-    @path({ id: { type: 'string', required: true, description: 'id of the user to update' }, data: { items: {} } })
+    @path({ id: { type: 'string', required: true, description: 'id of the user to update' }, data: { type: 'object', items: {} } })
     @body(_.omit(userSchema.properties, ['id', 'createdAt', 'updatedAt', 'following']))
     @responses({
         200: { description: 'user updated successfully' },
