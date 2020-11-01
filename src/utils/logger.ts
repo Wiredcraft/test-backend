@@ -1,7 +1,7 @@
 import { Context } from 'koa'
 import { config } from './config'
 import { transports, format } from 'winston'
-import * as path from 'path'
+import path from 'path'
 
 const logger = (winstonInstance: any): any => {
     winstonInstance.configure({
@@ -31,6 +31,7 @@ const logger = (winstonInstance: any): any => {
         const ms = new Date().getTime() - start
 
         let logLevel: string
+
         if (context.status >= 500) {
             logLevel = 'error'
         } else if (context.status >= 400) {

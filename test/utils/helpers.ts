@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const phonetic = require('phonetic')
+
 import { Db, ObjectID } from 'mongodb'
 import jwt from 'jsonwebtoken'
 import { config } from '../../src/utils/config'

@@ -9,6 +9,7 @@ use(chaijsonSchema)
 
 // global db connection
 let database: Db | undefined
+
 ;(async () => {
     if (!mongo.db) database = await mongo.connect()
 })()
@@ -20,6 +21,7 @@ describe(`${endpoint.method}: ${endpoint.route}`, () => {
         const res = await request(testServer).post(endpoint.route).send({
             password: 'AAaa@@88$$99',
         })
+
         expect(res.status).to.be.equal(400)
     })
 
@@ -27,6 +29,7 @@ describe(`${endpoint.method}: ${endpoint.route}`, () => {
         const res = await request(testServer).post(endpoint.route).send({
             email: 'emmanuel@test.com',
         })
+
         expect(res.status).to.be.equal(400)
     })
 

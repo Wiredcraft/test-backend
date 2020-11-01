@@ -22,13 +22,14 @@ export default class AuthController {
     public static async loginUser(context: BaseContext): Promise<void> {
         const missingProperties = requiredProperties(context.request.body, ['email', 'password'])
 
-        if (missingProperties.length) return response(context, 400, `missing_fields: ${missingProperties.join(', ')}`)
+        if (missingProperties.length > 0) return response(context, 400, `missing_fields: ${missingProperties.join(', ')}`)
 
         const userRepository: Repository<User> = getManager().getRepository(User)
         let user: User = new User()
         let call = await safeCall(userRepository.findOne({ where: { email: context.request.body.email } }))
 
         if(call.err) return response(context, 500, call.err)
+
         if(!call.res) return response(context, 400, 'user_not_found')
 
         user = call.res
@@ -76,6 +77,7 @@ export default class AuthController {
         }
 
         if (!_.isObject(decoded)) return response(context, 403, 'invalid_access_token')
+
         if (!decoded.hasOwnProperty('email')) return response(context, 403, 'invalid_access_token')
 
         // Send back the old jwt token in the response if still active
@@ -86,7 +88,9 @@ export default class AuthController {
             })
         
         const call = await safeCall(userRepository.findOne({ where: { email: decoded.email } }))
+
         if(call.err) return response(context, 500, call.err)
+
         if(!call.res) return response(context, 404, 'user_not_found')
 
         user = call.res
@@ -124,12 +128,15 @@ export default class AuthController {
         let user: User = new User()
 
         let call = await safeCall(userRepository.findOneOrFail({ where: { email: context.state.user.email } }))
+
         if(call.err) return response(context, 500, call.err)
+
         if(!call.res) return response(context, 401, 'user_not_logged_in')
         
         user = call.res
 
         call = await safeCall(userRepository.save(_.omit({ ...user, refreshToken: 'removed' }, ['createdAt'])))
+
         if(call.err) return response(context, 500, call.err)
 
         response(context, 200, 'logout_success')

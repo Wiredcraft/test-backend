@@ -12,6 +12,7 @@ use(chaijsonSchema)
 
 // global db connection
 let database: Db | undefined
+
 ;(async () => {
     if (!mongo.db) database = await mongo.connect()
 })()

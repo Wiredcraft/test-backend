@@ -2,7 +2,7 @@ import { Connection, createConnection } from 'typeorm'
 import { Tedis } from 'tedis'
 import { config, Config } from './config'
 
-let conn: Connection | null = null
+let conn: Connection | undefined
 /**
  * Connects to a TypeORM connected database
  * @param  {string} url

@@ -16,7 +16,7 @@ export const validate = async (object: Record<string, any>, schema: Record<strin
     const validate = ajv.compile({ ...schema, required })
     const valid = await validate(object)
 
-    if (!valid && validate.errors && validate.errors.length) return validate.errors
+    if (!valid && validate.errors && validate.errors.length > 0) return validate.errors
 
     return
 }
@@ -59,6 +59,7 @@ export const requiredProperties = (object: Record<string, any>, required: Array<
     for(const property of required)
         if(!object.hasOwnProperty(property) || object[property] == undefined)
             missing.push(property)
+
     return missing
 }
 /**

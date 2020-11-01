@@ -11,6 +11,7 @@ use(chaijsonSchema)
 
 // global db connection
 let database: Db | undefined
+
 ;(async () => {
     if (!mongo.db) database = await mongo.connect()
 })()
@@ -51,6 +52,7 @@ describe(`${endpoint.method}: ${endpoint.route}`, () => {
         const res = await request(testServer)
             .delete(endpoint.route.replace(':id', ''))
             .set('Authorization', 'bearer ' + token)
+
         expect(res.status).to.be.equal(405)
     })
 
