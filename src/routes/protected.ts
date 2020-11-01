@@ -14,7 +14,7 @@ protectedRouter.patch('/users/:id', user.updateUser)
 protectedRouter.delete('/users/:id', user.deleteUser)
 protectedRouter.delete('/testusers', user.deleteTestUsers)
 
-// FOLLOW routes
+// FOLLOW ROUTES
 protectedRouter.patch('/users/follow/:id', follow.followUser)
 protectedRouter.patch('/users/unfollow/:id', follow.unfollowUser)
 protectedRouter.get('/users/:id/followers', follow.getFollowers)
@@ -23,7 +23,7 @@ protectedRouter.get('/users/:id/following', follow.getFollowing)
 protectedRouter.swagger({
     title: 'wiredcraft-restful-api',
     description: description,
-    version: '1.0.0',
+    version: '1.0.0'
 })
 
 // mapDir will scan the input dir, and automatically call router.map to all Router Class

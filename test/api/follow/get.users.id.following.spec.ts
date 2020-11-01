@@ -12,7 +12,6 @@ use(chaijsonSchema)
 
 // global db connection
 let database: Db | undefined
-
 ;(async () => {
     if (!mongo.db) database = await mongo.connect()
 })()
@@ -57,6 +56,7 @@ describe(`${endpoint.method}: ${endpoint.route}`, () => {
                     { _id: new ObjectID(testUser.id) },
                     { $set: { following: users.slice(1).map((user) => user._id) } },
                 )
+        else throw new Error('test_database_error')
 
         const res = await request(testServer)
             .get(endpoint.route.replace(':id', testUser.id))
@@ -69,5 +69,4 @@ describe(`${endpoint.method}: ${endpoint.route}`, () => {
             expect(item).to.be.jsonSchema(userSchema)
         }
     })
-
 })
