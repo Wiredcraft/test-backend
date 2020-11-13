@@ -9,6 +9,7 @@ const userApi = require('../apis/userApi');
 let validate = require('../helpers/validateMiddleware');
 const wrapper = require("../helpers/routerWrapper");
 
+
 router.post('/create', validate(['name', 'dob', 'description']), wrapper(async (req, res) => {
     await userApi.create(req.body);
 }));
@@ -19,6 +20,10 @@ router.post('/update/:id', validate(), wrapper(async (req, res) => {
 
 router.delete('/delete/:id', wrapper(async (req, res) => {
     await userApi.del(req.params.id);
+}));
+
+router.get('/:id', wrapper(async (req) => {
+    return await userApi.get(req.params.id);
 }));
 
 module.exports = router;

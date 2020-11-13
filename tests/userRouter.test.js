@@ -61,10 +61,29 @@ describe('UserRouter modifier', () => {
 
     it('should delete user', async () => {
         let r = await request(app)
-            .del(`/user/delete/${user._id.toString()}`)
+            .del(`/user/delete/${user._id.toString()}`);
         expect(r).toBeValidResult();
         expect(await User.findOne({_id: user._id})).toBeFalsy();
     });
 });
 
 
+describe('UserRouter presenter', () => {
+
+    let user;
+
+    beforeEach(async () => {
+        await deleteCollectionsBeforeTest();
+        user = new User();
+        user.name = '123';
+        user.description = 'de';
+        await user.save();
+    });
+
+    it('should get user info', async () => {
+        let r = await request(app)
+            .get(`/user/${user._id.toString()}`);
+        expect(r).toBeValidResult();
+        expect(r.body).toHaveProperty('name', '123');
+    });
+});

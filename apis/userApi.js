@@ -55,5 +55,9 @@ let del = async (id) => {
     await User.deleteOne({_id: ObjectId(id)});
 };
 
+let get = async (id) => {
+    return await User.findById(id, {name: 1, dob: 1, description: 1});
+};
 
-module.exports = {create, update, del};
+
+module.exports = {create, update, del, get};
