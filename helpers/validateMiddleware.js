@@ -4,7 +4,7 @@
  */
 "use strict";
 
-let validate = (requiredParams) => {
+let validate = (requiredParams = []) => {
     return (req, res, next) => {
         let error = '';
         if (!req.body) {
