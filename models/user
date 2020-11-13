@@ -5,6 +5,7 @@ const userSchema = new Schema({
     name: String,
     dob: Date,
     description: String,
+    address: String,
 }, {timestamps: true});
 
 module.exports = mongoose.model('user', userSchema);

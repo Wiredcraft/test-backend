@@ -20,7 +20,7 @@ describe('UserRouter creation', () => {
     it('should create user', async () => {
         let r = await request(app)
             .post('/user/create')
-            .send({name: 'bb', dob: new Date(), description: 'aa'});
+            .send({name: 'bb', dob: new Date(), description: 'aa', address: 'addr'});
         expect(r).toBeValidResult();
         expect(await User.findOne({name: 'bb'})).toBeTruthy();
     });

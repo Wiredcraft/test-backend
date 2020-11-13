@@ -10,7 +10,7 @@ let validate = require('../helpers/validateMiddleware');
 const wrapper = require("../helpers/routerWrapper");
 
 
-router.post('/create', validate(['name', 'dob', 'description']), wrapper(async (req, res) => {
+router.post('/create', validate(['name', 'dob', 'description', 'address']), wrapper(async (req, res) => {
     await userApi.create(req.body);
 }));
 
