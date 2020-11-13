@@ -101,7 +101,7 @@ describe('UserRouter social network', () => {
 
         user2 = new User();
         user2.name = 'u2';
-        user2.loc = {type: 'Point', coordinates: [10, 20]};
+        user2.loc = {type: 'Point', coordinates: [10, 10.001]};
         await user2.save();
     });
 
@@ -114,6 +114,14 @@ describe('UserRouter social network', () => {
         let u1 = await User.findById(user1._id);
         expect(u1.following[0]).toHaveProperty('user', user2._id);
         expect(u1.following[0]).toHaveProperty('loc', expect.anything());
+
+
+        r = await request(app)
+            .get(`/user/nearby/friends`)
+            .set('Fake-Token', user1._id.toString());
+        expect(r).toBeValidResult();
+        expect(r.body).toHaveLength(1);
+        expect(r.body[0]).toEqual(user2._id.toString());
     });
 });
 

@@ -10,7 +10,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
  * @param userObj - Includes infos like user name, user description, birth of date.
  * @return {Promise<void>}
  */
-let create = async (userObj) => {
+const create = async (userObj) => {
     let {name, dob, description} = userObj;
     let user = new User();
     user.name = name;
@@ -25,7 +25,7 @@ let create = async (userObj) => {
  * @param obj - User entity
  * @return {Promise<void>}
  */
-let update = async (id, obj) => {
+const update = async (id, obj) => {
     let user = await User.findById(id);
     if (!user) {
         throw new Error(`User ${id} not found`);
@@ -51,7 +51,7 @@ let update = async (id, obj) => {
  * @param id
  * @return {Promise<void>}
  */
-let del = async (id) => {
+const del = async (id) => {
     await User.deleteOne({_id: ObjectId(id)});
 };
 
@@ -60,7 +60,7 @@ let del = async (id) => {
  * @param id
  * @return {Promise<*>}
  */
-let get = async (id) => {
+const get = async (id) => {
     return await User.findById(id, {name: 1, dob: 1, description: 1});
 };
 
@@ -70,7 +70,7 @@ let get = async (id) => {
  * @param anotherUser
  * @return {Promise<void>}
  */
-let follow = async (me, anotherUser) => {
+const follow = async (me, anotherUser) => {
 
     const toFollowUser = await User.findById(anotherUser);
 
@@ -87,5 +87,18 @@ let follow = async (me, anotherUser) => {
     await user.save();
 };
 
+/**
+ * Find friends within 10 km.
+ * @param meId
+ * @return {Promise<*>}
+ */
+const nearByFriends = async (meId) => {
+    let me = await User.findById(meId);
+    return (await User.find({
+        _id: {$in: me.following.map(f => f.user)},
+        loc: {$near: {$geometry: me.loc, $maxDistance: 10000}}
+    }, {_id: 1})).map(t => t._id);
+};
 
-module.exports = {create, update, del, get, follow};
+
+module.exports = {create, update, del, get, follow, nearByFriends};

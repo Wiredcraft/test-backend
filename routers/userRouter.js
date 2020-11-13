@@ -32,4 +32,9 @@ router.post('/follow/:id', wrapper(async (req, res) => {
     await userApi.follow(userId, req.params.id);
 }));
 
+router.get('/nearby/friends', wrapper(async (req) => {
+    let userId = req.header('Fake-Token');
+    return await userApi.nearByFriends(userId);
+}));
+
 module.exports = router;

@@ -8,5 +8,7 @@ let DB_NAME = 'lunar';
 if (process.env.TEST === 'true') {
     DB_NAME += '_test';
 }
+
+// mongoose.set('debug', true)
 mongoose.connect(`mongodb://localhost:27019/${DB_NAME}`, {useNewUrlParser: true, useUnifiedTopology: true});
 

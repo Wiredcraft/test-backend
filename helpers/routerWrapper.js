@@ -10,6 +10,7 @@ const wrapper = (fn) => {
             res.send(r);
             return;
         } catch (e) {
+            console.error(e)
             res.statusCode = 500;
             res.send(e.toString());
             return;
