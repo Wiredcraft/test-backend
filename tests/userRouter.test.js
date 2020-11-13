@@ -58,4 +58,13 @@ describe('UserRouter modifier', () => {
             .send({name: 'bb'});
         expect(r.res.statusCode).not.toEqual(200);
     });
+
+    it('should delete user', async () => {
+        let r = await request(app)
+            .del(`/user/delete/${user._id.toString()}`)
+        expect(r).toBeValidResult();
+        expect(await User.findOne({_id: user._id})).toBeFalsy();
+    });
 });
+
+

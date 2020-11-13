@@ -17,4 +17,8 @@ router.post('/update/:id', validate(), wrapper(async (req, res) => {
     await userApi.update(req.params.id, req.body);
 }));
 
+router.delete('/delete/:id', wrapper(async (req, res) => {
+    await userApi.del(req.params.id);
+}));
+
 module.exports = router;
