@@ -1,11 +1,16 @@
 const mongoose = require("mongoose");
 const {Schema} = require("mongoose");
 
+const FollowingSchema = new Schema({
+    user: {ref: 'user', type: mongoose.ObjectId},
+});
+
 const userSchema = new Schema({
     name: String,
     dob: Date,
     description: String,
     address: String,
+    following: [FollowingSchema]
 }, {timestamps: true});
 
 module.exports = mongoose.model('user', userSchema);

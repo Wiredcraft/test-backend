@@ -26,4 +26,10 @@ router.get('/:id', wrapper(async (req) => {
     return await userApi.get(req.params.id);
 }));
 
+router.post('/follow/:id', wrapper(async (req, res) => {
+    // TODO Use the real token.
+    let userId = req.header('Fake-Token');
+    await userApi.follow(userId, req.params.id);
+}));
+
 module.exports = router;

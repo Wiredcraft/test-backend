@@ -55,9 +55,34 @@ let del = async (id) => {
     await User.deleteOne({_id: ObjectId(id)});
 };
 
+/**
+ * Get user info.
+ * @param id
+ * @return {Promise<*>}
+ */
 let get = async (id) => {
     return await User.findById(id, {name: 1, dob: 1, description: 1});
 };
 
+/**
+ * Follow to another user and make a copy of his location.
+ * @param me
+ * @param anotherUser
+ * @return {Promise<void>}
+ */
+let follow = async (me, anotherUser) => {
+    const user = await User.findById(me);
+    if (!user) {
+        throw new Error('User not found');
+    }
 
-module.exports = {create, update, del, get};
+    if (!user.following) {
+        user.following = [];
+    }
+
+    user.following.push({user: anotherUser});
+    await user.save();
+};
+
+
+module.exports = {create, update, del, get, follow};

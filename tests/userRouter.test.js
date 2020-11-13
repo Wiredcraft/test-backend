@@ -87,3 +87,30 @@ describe('UserRouter presenter', () => {
         expect(r.body).toHaveProperty('name', '123');
     });
 });
+
+describe('UserRouter social network', () => {
+
+    let user1, user2;
+
+    beforeEach(async () => {
+        await deleteCollectionsBeforeTest();
+        user1 = new User();
+        user1.name = 'u1';
+        await user1.save();
+
+        user2 = new User();
+        user2.name = 'u2';
+        await user2.save();
+    });
+
+    it('should follow to another user', async () => {
+        // TODO Use the real token.
+        let r = await request(app)
+            .post(`/user/follow/${user2._id.toString()}`)
+            .set('Fake-Token', user1._id.toString());
+        expect(r).toBeValidResult();
+        let u1 = await User.findById(user1._id);
+        expect(u1.following[0]).toHaveProperty('user', user2._id);
+    });
+});
+
