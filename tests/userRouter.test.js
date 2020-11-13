@@ -96,10 +96,12 @@ describe('UserRouter social network', () => {
         await deleteCollectionsBeforeTest();
         user1 = new User();
         user1.name = 'u1';
+        user1.loc = {type: 'Point', coordinates: [10, 10]};
         await user1.save();
 
         user2 = new User();
         user2.name = 'u2';
+        user2.loc = {type: 'Point', coordinates: [10, 20]};
         await user2.save();
     });
 
@@ -111,6 +113,7 @@ describe('UserRouter social network', () => {
         expect(r).toBeValidResult();
         let u1 = await User.findById(user1._id);
         expect(u1.following[0]).toHaveProperty('user', user2._id);
+        expect(u1.following[0]).toHaveProperty('loc', expect.anything());
     });
 });
 

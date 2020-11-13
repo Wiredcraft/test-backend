@@ -71,8 +71,11 @@ let get = async (id) => {
  * @return {Promise<void>}
  */
 let follow = async (me, anotherUser) => {
+
+    const toFollowUser = await User.findById(anotherUser);
+
     const user = await User.findById(me);
-    if (!user) {
+    if (!user || !toFollowUser) {
         throw new Error('User not found');
     }
 
@@ -80,7 +83,7 @@ let follow = async (me, anotherUser) => {
         user.following = [];
     }
 
-    user.following.push({user: anotherUser});
+    user.following.push({user: anotherUser, loc: toFollowUser.loc});
     await user.save();
 };
 

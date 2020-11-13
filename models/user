@@ -1,15 +1,30 @@
 const mongoose = require("mongoose");
 const {Schema} = require("mongoose");
 
+const locationSchema = new mongoose.Schema({
+    type: {
+        type: String,
+        enum: ['Point'],
+        required: true
+    },
+    coordinates: {
+        type: [Number],
+        required: true
+    }
+});
+
 const FollowingSchema = new Schema({
     user: {ref: 'user', type: mongoose.ObjectId},
+    loc: locationSchema,
 });
+
 
 const userSchema = new Schema({
     name: String,
     dob: Date,
     description: String,
     address: String,
+    loc: locationSchema,
     following: [FollowingSchema]
 }, {timestamps: true});
 
