@@ -1,0 +1,7 @@
+## ide config ignore
+.vscode/
+
+## chore output ignore
+coverage/
+.nyc_output/
+/node_modules/*

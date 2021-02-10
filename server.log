@@ -1,0 +1,106 @@
+[2021-02-10T23:06:31.753] [INFO] log - init server
+[2021-02-10T23:07:00.141] [INFO] log - init server
+[2021-02-10T23:07:13.636] [INFO] log - init server
+[2021-02-10T23:08:58.075] [INFO] log - init server
+[2021-02-10T23:09:06.919] [INFO] log - request
+[2021-02-10T23:09:12.885] [INFO] log - response
+[2021-02-10T23:19:44.368] [INFO] log - init server
+[2021-02-11T00:05:01.594] [INFO] log - init server
+[2021-02-11T00:09:13.329] [INFO] log - init server
+[2021-02-11T00:51:59.813] [INFO] log - init server
+[2021-02-11T00:52:04.142] [INFO] log - request
+[2021-02-11T00:52:04.144] [ERROR] log - TypeError: Cannot read property 'body' of undefined
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:19:22)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T00:52:04.144] [ERROR] log - TypeError: Right-hand side of 'instanceof' is not an object
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:24:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T00:52:17.721] [INFO] log - request
+[2021-02-11T00:52:17.722] [ERROR] log - TypeError: Cannot read property 'body' of undefined
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:19:22)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T00:52:33.313] [ERROR] log - TypeError: Right-hand side of 'instanceof' is not an object
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:24:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T00:52:36.038] [INFO] log - request
+[2021-02-11T00:52:36.039] [ERROR] log - TypeError: Cannot read property 'body' of undefined
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:19:22)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T00:54:07.179] [ERROR] log - TypeError: Right-hand side of 'instanceof' is not an object
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:24:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T00:54:10.375] [INFO] log - request
+[2021-02-11T00:54:10.375] [ERROR] log - TypeError: Cannot read property 'body' of undefined
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:19:22)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T00:55:50.894] [ERROR] log - TypeError: Right-hand side of 'instanceof' is not an object
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:24:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T00:55:55.087] [INFO] log - init server
+[2021-02-11T00:55:56.609] [INFO] log - request
+[2021-02-11T00:55:56.612] [ERROR] log - TypeError: Cannot read property 'body' of undefined
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:19:22)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T00:57:26.226] [ERROR] log - TypeError: Right-hand side of 'instanceof' is not an object
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:24:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T01:04:32.535] [INFO] log - init server
+[2021-02-11T01:04:34.250] [INFO] log - request
+[2021-02-11T01:04:34.254] [ERROR] log - TypeError: Cannot read property 'body' of undefined
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:19:22)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T01:04:34.254] [ERROR] log - TypeError: Cannot set property 'body' of undefined
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:35:21)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T01:04:37.602] [INFO] log - request
+[2021-02-11T01:04:37.603] [ERROR] log - TypeError: Cannot read property 'body' of undefined
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:19:22)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T01:04:37.603] [ERROR] log - TypeError: Cannot set property 'body' of undefined
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:35:21)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T01:04:45.405] [INFO] log - request
+[2021-02-11T01:04:45.406] [ERROR] log - TypeError: Cannot read property 'body' of undefined
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:19:22)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T01:04:57.447] [ERROR] log - TypeError: Cannot set property 'body' of undefined
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:35:21)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T01:05:47.029] [INFO] log - request
+[2021-02-11T01:05:47.030] [ERROR] log - TypeError: Cannot read property 'body' of undefined
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:19:22)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T01:06:29.564] [ERROR] log - TypeError: Cannot set property 'body' of undefined
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:35:21)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T01:06:39.089] [INFO] log - init server
+[2021-02-11T01:06:41.012] [INFO] log - request
+[2021-02-11T01:06:41.015] [ERROR] log - TypeError: Cannot read property 'body' of undefined
+    at formatHandler (/Users/kris/Projects/chips/test-backend/middleware/initHandler/formatHandler.js:19:22)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+[2021-02-11T01:06:49.544] [INFO] log - response
+[2021-02-11T01:09:33.225] [INFO] log - init server
+[2021-02-11T01:09:34.604] [INFO] log - request
+[2021-02-11T01:11:50.277] [INFO] log - response
+[2021-02-11T01:12:10.204] [INFO] log - request
+[2021-02-11T01:12:10.205] [INFO] log - response
+[2021-02-11T01:12:15.291] [INFO] log - init server
+[2021-02-11T01:12:16.867] [INFO] log - request
+[2021-02-11T01:12:21.509] [INFO] log - response
+[2021-02-11T01:13:05.219] [INFO] log - init server
+[2021-02-11T01:13:06.743] [INFO] log - request
+[2021-02-11T01:13:06.747] [INFO] log - response
+[2021-02-11T01:13:09.935] [INFO] log - request
+[2021-02-11T01:13:09.936] [INFO] log - response
+[2021-02-11T01:13:17.261] [INFO] log - request
+[2021-02-11T01:13:17.262] [INFO] log - response
+[2021-02-11T01:13:41.528] [INFO] log - request
+[2021-02-11T01:13:41.529] [INFO] log - response
+[2021-02-11T01:13:53.861] [INFO] log - request
+[2021-02-11T01:13:53.862] [INFO] log - response
+[2021-02-11T01:14:32.298] [INFO] log - init server
+[2021-02-11T01:14:34.468] [INFO] log - request
+[2021-02-11T01:14:34.472] [INFO] log - response
+[2021-02-11T01:16:07.873] [INFO] log - init server
+[2021-02-11T01:16:10.024] [INFO] log - request
+[2021-02-11T01:16:13.845] [INFO] log - response

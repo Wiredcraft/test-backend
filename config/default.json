@@ -1,0 +1,15 @@
+{
+  "routerPrefix": "/api",
+  "log4js": {
+    "appenders": { 
+      "log": { "type": "file", "filename": "server.log" }
+    },
+    "categories": { 
+      "default": { "appenders": ["log"], "level": "debug" }
+     }
+  },
+  "mongo": {
+    "url": "mongodb://localhost/test"
+  },
+  "listen_port": 3000
+}
