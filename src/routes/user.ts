@@ -4,24 +4,33 @@ const router = new Router();
 
 router.prefix('/user');
 
-router.post('/create', async(ctx) => {
+router.post('/login', async (ctx) => {
+
+});
+
+router.post('logout', async (ctx) => {
+
+});
+
+
+router.post('/', async(ctx) => {
 
 })
 
-router.patch('/update', async (ctx) => {
+router.patch('/info', async (ctx) => {
 
 })
 
-router.patch('/changepwd', async (ctx) => {
+router.patch('/password', async (ctx) => {
 
 })
 
-router.delete('/delete', async (ctx) => {
+router.post('/delete', async (ctx) => {
 
 })
 
 router.get('/:id')
 
-router.get('/', async (ctx) => {
+router.get('/all', async (ctx) => {
 
 })
