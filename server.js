@@ -10,17 +10,17 @@ const router = require('./router');
 
 const app = new Koa();
 
-const shutdown = async () => {
+const shutdown = () => {
   mongo.shutdown();
 }
 
 const init = async () => {
-  logger.info('init server');
+  logger.info('init test-backend server');
 
   // init service
   await mongo.init();
 
-  // register service
+  // register router
   app.use(contextHandler);
   app.use(errorHandler);
   app.use(logHandler);
