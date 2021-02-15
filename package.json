@@ -4,6 +4,7 @@
   "description": "Make sure you read the whole document carefully and follow the guidelines in it.",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,18 +20,15 @@
   "devDependencies": {
     "eslint": "^7.19.0",
     "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsdoc": "^31.6.1",
     "eslint-plugin-mocha": "^8.0.0",
     "husky": "^4.3.8",
     "validate-commit-msg": "^2.14.0"
   },
-  "husky": {
-    "hooks": {
-      "commit-msg": "validate-commit-msg"
-    }
-  },
   "dependencies": {
     "@koa/router": "^10.0.0",
+    "chai": "^4.3.0",
     "config": "^3.3.3",
     "joi": "^17.4.0",
     "koa": "^2.13.1",
@@ -40,5 +38,10 @@
     "mongoose": "^5.11.15",
     "restify-errors": "^8.0.2",
     "uuid": "^8.3.2"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "validate-commit-msg"
+    }
   }
 }
