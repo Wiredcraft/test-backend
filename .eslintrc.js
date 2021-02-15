@@ -21,8 +21,6 @@ module.exports = {
     }
   },
   rules: {
-    'no-underscore-dangle': 'off',
-    'class-methods-use-this': 'off',
     'no-multiple-empty-lines': ['error', { max: 1, maxBOF: 1 }],
     'no-await-in-loop': 0,
     'no-unused-vars': 2,

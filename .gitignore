@@ -1,7 +1,12 @@
 ## ide config ignore
 .vscode/
 
+## local config ignore
+config/local.json
+
 ## chore output ignore
-coverage/
-.nyc_output/
 /node_modules/*
+
+## log ignore
+server.log
+
