@@ -8,8 +8,8 @@ const { Error } = require('../../common');
 /**
  * format api response
  *
- * @param {Context} ctx
- * @param {Middleware} next
+ * @param {Context} ctx - ctx
+ * @param {Middleware} next - next
  */
 const formatHandler = async (ctx, next) => {
   try {
