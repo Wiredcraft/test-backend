@@ -9,7 +9,7 @@
      }
   },
   "mongo": {
-    "url": "mongodb://localhost/test"
+    "url": "mongodb://localhost/Wiredcraft"
   },
   "listen_port": 3000
 }
