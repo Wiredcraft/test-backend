@@ -2,10 +2,11 @@
   "name": "test-backend",
   "version": "1.0.0",
   "description": "Make sure you read the whole document carefully and follow the guidelines in it.",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "test": "mocha --timeout 10000 --file ./test/setup.js ./test/",
+    "debug": "mocha --timeout 10000 --file ./test/setup.js"
   },
   "repository": {
     "type": "git",
@@ -16,7 +17,7 @@
   "bugs": {
     "url": "https://github.com/beita1/test-backend/issues"
   },
-  "homepage": "https://github.com/beita1/test-backend#readme",
+  "homepage": "https://github.com/beita1/test-backend#docs/readme",
   "devDependencies": {
     "eslint": "^7.19.0",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -36,6 +37,8 @@
     "lodash": "^4.17.20",
     "log4js": "^6.3.0",
     "mongoose": "^5.11.15",
+    "node-fetch": "^2.6.1",
+    "querystring": "^0.2.1",
     "restify-errors": "^8.0.2",
     "uuid": "^8.3.2"
   },

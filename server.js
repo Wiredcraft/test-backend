@@ -12,9 +12,10 @@ const app = new Koa();
 
 const shutdown = () => {
   mongo.shutdown();
+  process.exitCode = 1;
 }
 
-const init = async () => {
+module.exports.init = async () => {
   logger.info('init test-backend server');
 
   // init service
@@ -35,4 +36,6 @@ const init = async () => {
   process.on('uncaughtException', shutdown);
 };
 
-init();
+module.exports.shutdown = async () => {
+  process.exitCode = 1;
+};
