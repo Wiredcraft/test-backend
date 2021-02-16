@@ -1,0 +1,261 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "test-backend-api",
+    "description": "The test backend for Wiredcraft",
+    "termsOfService": "http://localhost:4000/api",
+    "version": "1.0.0"
+  },
+  "servers": [],
+  "paths": {
+    "/users": {
+      "post": {
+        "summary": "/users",
+        "description": "create a user",
+        "tags": [
+          "users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "user name"
+                  },
+                  "dob": {
+                    "type": "string",
+                    "description": "user birth date"
+                  },
+                  "address": {
+                    "type": "string",
+                    "description": "user address"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "user description"
+                  }
+                },
+                "required": [
+                  "name",
+                  "dob",
+                  "address",
+                  "description"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errorCode": {
+                      "type": "number",
+                      "description": "error code, 0 means success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "response message"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "error message",
+                      "properties": {
+                        "userId": {
+                          "type": "string",
+                          "description": "user id"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/:userId": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "description": "user id, its format follows MongoDB ObjectId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "/users/:userId",
+        "description": "get a user info",
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errorCode": {
+                      "type": "number",
+                      "description": "error code, 0 means success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "response message"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "error message",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "user name"
+                        },
+                        "dob": {
+                          "type": "string",
+                          "description": "user birth date"
+                        },
+                        "address": {
+                          "type": "string",
+                          "description": "user address"
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "user description"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "/users/:userId",
+        "description": "update a user info",
+        "tags": [
+          "users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "user name"
+                  },
+                  "dob": {
+                    "type": "string",
+                    "description": "user birth date"
+                  },
+                  "address": {
+                    "type": "string",
+                    "description": "user address"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "user description"
+                  }
+                },
+                "required": [
+                  "name",
+                  "dob",
+                  "address",
+                  "description"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errorCode": {
+                      "type": "number",
+                      "description": "error code, 0 means success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "response message"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "error message",
+                      "properties": {
+                        "affectRowsCount": {
+                          "type": "integer",
+                          "description": "affcted rows's count"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "/users/:userId",
+        "description": "delete a user info",
+        "tags": [
+          "users"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errorCode": {
+                      "type": "number",
+                      "description": "error code, 0 means success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "response message"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "error message",
+                      "properties": {
+                        "affectRowsCount": {
+                          "type": "integer",
+                          "description": "affcted rows's count"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
