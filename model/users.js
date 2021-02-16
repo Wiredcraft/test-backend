@@ -29,27 +29,46 @@ exports.insertUser = async (options) => {
   const user = new UserModel(options);
   const { _id } = await core.save(user, options);
   return {
-    userId: _id,
+    userId: _id.toString(),
   }
 }
 
-exports.getUserByUserId = async (userId) => {
-  const result = await UserModel.find({
-    _id: userId
+/**
+ *
+ *
+ * @param {string} userId - userId
+ * @returns {object|null} - result
+ */
+exports.findUserByUserId = async (userId) => {
+  const result = await UserModel.findOne({
+    _id: mongoose.Types.ObjectId(userId)
   });
   return result;
 }
 
+/**
+ *
+ *
+ * @param {string} userId - userId
+ * @returns {number} - deleted rows count
+ */
 exports.deleteUserByUserId = async (userId) => {
   const result = await UserModel.deleteOne({
-    _id: userId
+    _id: mongoose.Types.ObjectId(userId)
   });
-  return result;
+  return result.deletedCount;
 }
 
+/**
+ *
+ *
+ * @param {string} userId - userId
+ * @param {{name: string, dob: string, address: string, description: string}} options - options
+ * @returns {number} - modified rows count
+ */
 exports.updateUserByUserId = async (userId, options) => {
-  // const result = await UserModel.find({
-  //   _id: userId
-  // });
-  return result;
+  const result = await UserModel.updateOne({
+    _id: mongoose.Types.ObjectId(userId)
+  }, options);
+  return result.nModified;
 }

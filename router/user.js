@@ -28,14 +28,14 @@ module.exports = (api) => {
   api.get(
     {
       path: '/users/:userId',
-      validate: userValidate.getUser,
+      validate: userValidate.getUser, // TODO, More combinations of parameters
       skipAuth: true,
     },
     [
       async (ctx, next) => {
         const userId = _.get(ctx, 'validation.params.userId');
 
-        ctx.data = await model.users.getUserByUserId(userId);
+        ctx.data = await model.users.findUserByUserId(userId) || {};
         await next();
       }
     ]
@@ -51,7 +51,10 @@ module.exports = (api) => {
       async (ctx, next) => {
         const userId = _.get(ctx, 'validation.params.userId');
 
-        ctx.data = await model.users.deleteUserByUserId(userId);
+        const affectRowsCount = await model.users.deleteUserByUserId(userId);
+        ctx.data = {
+          affectRowsCount
+        };
         await next();
       }
     ]
@@ -60,14 +63,23 @@ module.exports = (api) => {
   api.put(
     {
       path: '/users/:userId',
-      validate: userValidate.putUser,
+      validate: userValidate.putUser, // TODO, More combinations of parameters
       skipAuth: true,
     },
     [
       async (ctx, next) => {
         const userId = _.get(ctx, 'validation.params.userId');
+        const options = {
+          name: _.get(ctx, 'validation.body.name'),
+          dob: _.get(ctx, 'validation.body.dob'),
+          address: _.get(ctx, 'validation.body.address'),
+          description: _.get(ctx, 'validation.body.description'),
+        };
 
-        ctx.data = await model.users.updateUserByUserId(userId);
+        const affectRowsCount = await model.users.updateUserByUserId(userId, options);
+        ctx.data = {
+          affectRowsCount
+        };
         await next();
       }
     ]
