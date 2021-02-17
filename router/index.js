@@ -4,7 +4,7 @@ const config = require('config');
 const Joi = require('joi');
 
 const apis = [
-  require('./user'),
+  require('./users'),
 ]
 
 const koaRouter = new Router({
