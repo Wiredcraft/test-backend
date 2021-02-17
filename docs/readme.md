@@ -66,3 +66,22 @@
 | description | string | user description
 | createdAt |  datetime | date-time of the document's last update
 | updatedAt | datetime | date-time of the document was inserted
+
+## Some Designs About Advanced Requirements
+
+### friends
+
+- description: friends collection
+
+|  key   | type  | comments |
+|  ----  | ----  | ---- |
+| _id  | object id | Mongo's object ID
+| masterId  | string | master id
+| followerId  | string | follower id
+| searchId |hash| Sort masterId&&followerId in dictionary order, then return hash
+| createdAt |  datetime | date-time of the document's last update
+| updatedAt | datetime | date-time of the document was inserted
+
+### search the nearby friends
+
+- redis: GeoHash
