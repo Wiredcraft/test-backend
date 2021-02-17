@@ -1,12 +1,12 @@
-const _ = require('lodash');
 const model = require('../model');
+const Utils = require('./utils');
 
 exports.createUser = async (ctx, next) => {
   const options = {
-    name: _.get(ctx, 'validation.body.name'),
-    dob: _.get(ctx, 'validation.body.dob'),
-    address: _.get(ctx, 'validation.body.address'),
-    description: _.get(ctx, 'validation.body.description'),
+    name: Utils.getValueFromBody(ctx, 'name'),
+    dob: Utils.getValueFromBody(ctx, 'dob'),
+    address: Utils.getValueFromBody(ctx, 'address'),
+    description: Utils.getValueFromBody(ctx, 'description'),
   };
 
   ctx.data = await model.users.insertUser(options);
@@ -14,14 +14,14 @@ exports.createUser = async (ctx, next) => {
 };
 
 exports.getUser = async (ctx, next) => {
-  const userId = _.get(ctx, 'validation.params.userId');
+  const userId = Utils.getValueFromParams(ctx, 'userId');
 
   ctx.data = await model.users.findUserByUserId(userId) || {};
   await next();
 };
 
 exports.deleteUser = async (ctx, next) => {
-  const userId = _.get(ctx, 'validation.params.userId');
+  const userId = Utils.getValueFromParams(ctx, 'userId');
 
   const affectRowsCount = await model.users.deleteUserByUserId(userId);
   ctx.data = {
@@ -31,12 +31,12 @@ exports.deleteUser = async (ctx, next) => {
 };
 
 exports.updateUser = async (ctx, next) => {
-  const userId = _.get(ctx, 'validation.params.userId');
+  const userId = Utils.getValueFromParams(ctx, 'userId');
   const options = {
-    name: _.get(ctx, 'validation.body.name'),
-    dob: _.get(ctx, 'validation.body.dob'),
-    address: _.get(ctx, 'validation.body.address'),
-    description: _.get(ctx, 'validation.body.description'),
+    name: Utils.getValueFromBody(ctx, 'name'),
+    dob: Utils.getValueFromBody(ctx, 'dob'),
+    address: Utils.getValueFromBody(ctx, 'address'),
+    description: Utils.getValueFromBody(ctx, 'description'),
   };
 
   const affectRowsCount = await model.users.updateUserByUserId(userId, options);
