@@ -2,10 +2,15 @@ version: '3.1'
 
 services:
   db:
+    platform: linux/x86_64
     image: mysql
-    command: --default-authentication-plugin=mysql_native_password
+    command:
+      --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./src/init:/docker-entrypoint-initdb.d
     restart: always
     ports: 
-      - 3306: 3306
-    environment: 
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: test
       MYSQL_ROOT_PASSWORD: 123456

@@ -35,6 +35,7 @@ export default class implements Secure {
     }
     return crypto;
   }
+
   deCrAES256(str: string): string {
     try {
       let text;
