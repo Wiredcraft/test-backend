@@ -1,73 +1,156 @@
-# Wiredcraft Back-end Developer Test
+# Test Backend from WiredCraft
 
-Make sure you read the whole document carefully and follow the guidelines in it.
+## Overview
 
-## Context
+This is the test-backend project from Wiredcraft for a general `user` "microservice". 
 
-Build a RESTful API that can `get/create/update/delete` user data from a persistence database
+---
 
-### User Model
-
-```
+## Quick Notes regard to the reqs
+Supported APIs are:
+ - GET /users
+ - GET /users/:username 
+ - GET /users/:username/follower
+ - POST /users
+ ```json
+ // Create a user
+ {
+    // sample body
+    "name": "username",
+    "password": "password",
+    "address": "1234 Main St",
+    "description": "test description"
+ }
+ {
+    // sample response
+    "errCode": -1,
+    "data": 1 // created userId, actual return value may vary from business needs
+ }
+ ```
+ - POST /users/delete 
+ ```json
+ // Delete a user by username,
+ {
+   // sample body
+   "username": "username"
+ }
+ {
+   // sampe res
+   "errCode": -1
+ }
+ ```
+ - POST /users/follow
+ ```json
+   // follow a user
+ {
+   // sample body
+   "username": "username",
+   "follower": "follower"
+ }
+ {
+    // sample err res
+    "errCode": 10008,
+    "msg": "can not follow or get followed by void"
+}
+ ```
+ - POST /users/unfollow
+ ```json
+ // unfollow a user
+ {
+   // sample body
+   "username": "435",
+   "follower": "follo123wer"
+ }
 {
-  "id": "xxx",                  // user ID 
-  "name": "test",               // user name
-  "dob": "",                    // date of birth
-  "address": "",                // user address
-  "description": "",            // user description
-  "createdAt": ""               // user created date
+   // sample err res 
+    "errCode": 10010,
+    "msg": "given following relation does not exist"
+}
+ ```
+ - PATCH /users/info
+ ```json
+{
+   // sample body
+    "name": "follower",
+    "address": "new address"
+}
+ {
+    // sample res
+    "errCode": -1,
+    "data": {
+        "id": 47,
+        "name": "follower",
+        "dateOfBirth": null,
+        "address": "new address",
+        "description": "test description"
+    }
+}
+ ```
+ - PATCH /users/password
+```json
+{
+   // sample body
+    "name": "follower",
+    "oldPassword": "password",
+    "newPassword": "newpwd"
+}
+{
+   // sample res
+   "errCode": -1
 }
 ```
+Responses example,
+```json
+{
+   "errCode": -1, // Shared property for all res, -1 on success, positive pre-defined code for error
+   "data": {}, // Optional field for success response, if data needed
+   "message": "string" // err message if any, for Error Response
+}
+```
+You might have noticed that the `api routes` are lacking auth middleware that protects those who needs a guard, it's simply because auth/login is not implemented, does not mean that those APIs do not need auth protection.
 
-## Requirements
+---
 
-### Functionality
+## Dependencies
 
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper unit test.
-- Provide proper API document.
+As I have not tested for version compatibilities, assume the latest version of following would work. 
+ - typescript/ts-node
+ - docker(for mysql)
+ - jest/ts-jest
+ - pm2
+---
+## How
 
-### Tech stack
+   - docker-compose for local mysql
+   - `yarn dev` for start in dev(watch) mode
+   - `yarn prd` for prd using pm2, logging saves to ./logs
+---
+## Database
 
-- Use Node.js and any framework.
-- Use any DB. NoSQL DB is preferred.
+### User Schema
+|  column   | type  |
+|  ----  | ----  |
+| id  | int pkey |
+| name  | varchar |
+| password  | varchar |
+| address  | varchar |
+| description  | varchar |
+| date_of_birth  | date |
+| deactivated_at  | timestamp |
+| created_at  | timestamp |
+| updated_at  | timestamp |
 
-### Bonus
+- Added a new column deactivated_at in case of `freeze`,  or `soft delete` purposes.
 
-- Write clear documentation on how it's designed and how to run the code.
-- Write good in-code comments.
-- Write good commit messages.
-- An online demo is always welcome.
+### User Mapping
+|  column   | type  |
+|  ----  | ----  |
+| id  | int pkey |
+| user_id  | int |
+| follower_id  | int |
+| created_at  | timestamp |
 
-### Advanced requirements
+- It has a unique index constraint on (user_id, follower_id) to make sure duplicated user mapping relations are avoided.
+- no fkeys are added as foreign relation is preferred to be handled in business logics
+---
 
-*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
-
-- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
-- Provide a complete logging (when/how/etc.) strategy.
-- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
-- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
-  - given a user name
-  - return the nearby friends
-
-
-## What We Care About
-
-Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
-
-Here's what you should aim for:
-
-- Good use of current Node.js & API design best practices.
-- Good testing approach.
-- Extensible code.
-
-## FAQ
-
-> Where should I send back the result when I'm done?
-
-Fork this repo and send us a pull request when you think it's ready for review. You don't have to finish everything prior and you can continue to work on it. We don't have a deadline for the task.
-
-> What if I have a question?
-
-Create a new issue in the repo and we will get back to you shortly.

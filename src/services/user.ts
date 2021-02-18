@@ -19,8 +19,11 @@ import {
   getFollowerFail
 } from '../lib/errorMap';
 export default class UserService {
-
-  static async createUser(payload: any): Promise<SuccessRes | ErrorRes> {
+/**
+ * Create a new user if not exist
+ * @param payload 
+ */
+  static async createUser(payload: User): Promise<SuccessRes | ErrorRes> {
     const { password } = payload;
     payload.password = Secure.encrypt(password);
     payload.dateOfBirth = new Date(payload.dateOfBirth);
@@ -31,11 +34,14 @@ export default class UserService {
         data: user
       }
     } catch (err) {
-      console.error(err.code);
+      console.error(`Error on creating a new user: ${err}`);
       return err.code.includes('DUP') ? userDuplicateEntry() : userCreationFail();
     }
   }
-
+/**
+ * Get user data by username
+ * @param username 
+ */
   static async findByUsername(username: string): Promise<SuccessRes | ErrorRes> {
     const userQuery = knex<User>(USER);
     // the actual column selection depends
@@ -46,11 +52,13 @@ export default class UserService {
         .andWhere('deactivatedAt', null);
       return { errCode: -1, data: user };
     } catch (err) {
-      console.error(err.code);
+      console.error(`Error on find a user by username: ${err}`);
       return userNotFound();
     }
   }
-
+/**
+ * Find All Active Users
+ */
   static async findAllActive(): Promise<SuccessRes | ErrorRes> {
     const userQuery = knex<User>(USER);
     try {
@@ -62,13 +70,18 @@ export default class UserService {
         data: user,
       }
     } catch (err) {
-      console.error(err.code);
+      console.error(`Error get all users: ${err}`);
       return userFetchFail();
     }
   }
 
-  // A login-ed user tries to delete his/her own acct, no existence check required
+  /**
+   * Delete a user
+   * @param username 
+   * @param soft 
+   */
   static async deleteByUsername(username: string, soft: boolean) {
+    // Assume a login-ed user tries to delete his/her own acct, no existence check required
     try {
       return knex.transaction(async (trx) => {
         const userQuery = knex<User>(USER);
@@ -89,11 +102,15 @@ export default class UserService {
       });
 
     } catch (err) {
-      console.error(err.code);
+      console.error(`Error on deleting a user: ${err}`);
       return userDeletionFail();
     }
   }
-
+/**
+ * Update user's data by username
+ * @param username 
+ * @param payload 
+ */
   static async updateByUsername(username: string, payload: Partial<User>) {
     const userQuery = knex<User>(USER);
     try {
@@ -105,14 +122,19 @@ export default class UserService {
           data
         }
       } else {
-        throw new Error('update failed');
+        throw new Error('');
       }
     } catch (err) {
-      console.error(err.code);
+      console.error(`Error on updating user info: ${err}`);
       return userUpdateFail();
     }
   }
-
+/**
+ * Update user's password
+ * @param username 
+ * @param oldPassword 
+ * @param newPassword 
+ */
   static async updatePasswordByUsername(username: string, oldPassword: string, newPassword: string): Promise<SuccessRes | ErrorRes> {
 
     try {
@@ -125,11 +147,15 @@ export default class UserService {
         errCode: -1,
       }
     } catch (err) {
-      console.error(err.code);
+      console.error(`Error updating password by username: ${err}`);
       return userChangePasswordFail();
     }
 
   }
+  /**
+   * Get followers of a user
+   * @param username 
+   */
   static async getFollowerByUsername(username: string): Promise<SuccessRes | ErrorRes> {
     try {
       const followers = await knex(USER).select(['id', 'name', 'dateOfBirth', 'address', 'description'])
@@ -139,10 +165,15 @@ export default class UserService {
         data: followers,
       }
     } catch(err) {
-      console.error(err.code);
+      console.error(`Error on fetching followers: ${err}`);
       return getFollowerFail();
     }
   } 
+  /**
+   * Follow a user
+   * @param username 
+   * @param follower 
+   */
   static async follow(username: string, follower: string): Promise<SuccessRes | ErrorRes> {
     try {
       const userData = await knex<User>(USER).select('id').whereIn('name', [username, follower]).andWhere('deactivatedAt', null);
@@ -152,23 +183,27 @@ export default class UserService {
         errCode: -1,
       }
     } catch (err) {
-      console.error(err);
+      console.error(`Error on trying to follow a user: ${err}`);
       return err.code.includes('DUP_ENTRY') ? duplicateFollowing() : userFollowFail();
     }
   }
-
+/**
+ * Unfollow a user
+ * @param username 
+ * @param follower 
+ */
   static async unfollow(username: string, follower: string): Promise<SuccessRes | ErrorRes> {
     try {
       const userData = await knex<User>(USER).select('id').whereIn('name', [username, follower]).andWhere('deactivatedAt', null);
       if (userData.length !== 2) return voidFollowing();
-      const [isFollowed] = await knex<UserMapping>(USER).select().where('userId', userData[0].id).andWhere('followerId', userData[1].id)
+      const [isFollowed] = await knex<UserMapping>(USERMAPPING).select().where('userId', userData[0].id).andWhere('followerId', userData[1].id)
       if (!isFollowed) return notFollowed();
       await knex<UserMapping>(USERMAPPING).delete().where('userId', userData[0].id).andWhere('followerId', userData[1].id);
       return {
         errCode: -1,
       }
     } catch (err) {
-      console.error(err.code);
+      console.error(`Error on trying to unfollow: ${err}`);
       return userUnfollowFail();
     }
   }
