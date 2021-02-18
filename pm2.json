@@ -1,14 +1,13 @@
 {
   "apps": {
       "name": "Wired",
-      "interpreter": "./node_modules/.bin/ts-node",
-      "interpreter_args": "-r tsconfig-paths/register",
-      "script": "./src/server.ts",
+
+      "script": "./build/server.js",
       "watch": true, 
       "ignore_watch": [
           "node_modules",
           "logs"
-      ],
+        ],
       "exec_mode": "cluster",
       "instances": 1,
       "error_file": "./logs/err.log",

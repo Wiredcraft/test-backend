@@ -12,7 +12,7 @@ const dbConfig: knex.Config = {
     password: MYSQL.password,
     user: MYSQL.user
   },
-  debug: true,
+  // debug: true,
   wrapIdentifier: (value, origImpl, _queryContext) => origImpl(convertToSnake(value)),
   postProcessResponse: (result, _queryContext) => camelcaseKeys(result),
 } 

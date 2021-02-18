@@ -1,3 +1,5 @@
 node_modules
 .*
 logs
+build
+yarn-error.log

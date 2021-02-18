@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node ./src/server.ts",
     "dev": "nodemon --exec ts-node ./src/server.ts",
-    "prd": "pm2 start pm2.json ",
+    "prd": "tsc && pm2 start pm2.json ",
     "test": "jest --runInBand --forceExit --colors"
   },
   "devDependencies": {
