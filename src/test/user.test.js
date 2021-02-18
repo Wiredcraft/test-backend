@@ -35,15 +35,15 @@ test('look up user name', async () => {
 })
 
 // json schema check
-// test('login json validates', async () => {
-//     const res = await server
-//         .post('/user')
-//         .send({
-//             userName: '123', // username contains unexpected combinations
-//             password: 'a', // min length violation
-//         })
-//     expect(res.body.errCode).not.toBe(-1)
-// })
+test('login json validates', async () => {
+    const res = await server
+        .post('/user')
+        .send({
+            userName: '123', // username contains unexpected combinations
+            password: 'a', // min length violation
+        })
+    expect(res.body.errCode).not.toBe(-1)
+})
 
 // login
 // test('user login', async () => {
