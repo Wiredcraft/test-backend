@@ -11,7 +11,7 @@ export default {
   SECURITY: {
     name: 'Wiredcraft',
     keys: {
-      sha256key: 'cbsadcbdjchdcvjdhcvsdc',
+      salt: 'cbsadcbdjchdcvjdhcvsdcdbcdwacvse',
       jwtSecretKey: '@cbcbjsdbcsd!z%C*F-JaNdRgUkXp'
     }
   }

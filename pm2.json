@@ -1,0 +1,18 @@
+{
+  "apps": {
+      "name": "Wired",
+      "interpreter": "./node_modules/.bin/ts-node",
+      "interpreter_args": "-r tsconfig-paths/register",
+      "script": "./src/server.ts",
+      "watch": true, 
+      "ignore_watch": [
+          "node_modules",
+          "logs"
+      ],
+      "exec_mode": "cluster",
+      "instances": 1,
+      "error_file": "./logs/err.log",
+      "out_file": "./logs/out.log",
+      "log_date_format": "YYYY-MM-DD HH:mm:ss"
+  }
+}

@@ -1,5 +1,6 @@
 {
  "compilerOptions": {
+   "baseUrl": ".",
    "module": "commonjs",
    "esModuleInterop": true,
    "target": "es5",
@@ -7,5 +8,10 @@
    "moduleResolution": "node",
    "allowSyntheticDefaultImports": true,
    "forceConsistentCasingInFileNames": true
- } 
+ },
+ "module": "commonjs",
+"lib": ["ES6"],
+"isolatedModules": true,
+"strict": true,
+"noEmit": true,
 }
