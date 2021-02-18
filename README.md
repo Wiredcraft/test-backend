@@ -96,7 +96,7 @@ Supported APIs are:
    "errCode": -1
 }
 ```
-Responses example,
+#### Responses example,
 ```json
 // errCode: Shared property for all res, -1 on success, positive pre-defined code for error
 // data: Optional field for success response, if data needed
@@ -107,7 +107,7 @@ Responses example,
    "message": "string" 
 }
 ```
-You might have noticed that the `api routes` are lacking auth middleware that protects those who needs a guard, it's simply because auth/login is not implemented, does not mean that those APIs do not need auth protection.
+~~You might have noticed that the `api routes` are lacking auth middleware that protects those who needs a guard, it's simply because auth/login is not implemented, does not mean that those APIs do not need auth protection.~~
 
 ---
 
@@ -115,12 +115,12 @@ You might have noticed that the `api routes` are lacking auth middleware that pr
 
 As I have not tested for version compatibilities, assume the latest version of following would work. 
  - typescript/ts-node
- - docker(for mysql)
+ - docker(for mysql and redis)
  - jest/ts-jest
  - pm2
 ---
 ## How
-
+   - docker run -d -p 6379:6379 --name redis1 redis
    - docker-compose for local mysql
    - `yarn dev` for start in dev(watch) mode
    - `yarn prd` for prd using pm2, logging saves to ./logs

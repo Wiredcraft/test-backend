@@ -45,19 +45,19 @@ test('login json validates', async () => {
     expect(res.body.errCode).not.toBe(-1)
 })
 
-// login
-// test('user login', async () => {
-//     const res = await server
-//         .post('/users/login')
-//         .send({
-//             userName,
-//             password
-//         })
-//     expect(res.body.errCode).toBe(-1)
+//login
+test('user login', async () => {
+    const res = await server
+        .post('/users/login')
+        .send({
+            username: userName,
+            password
+        })
+    expect(res.body.errCode).toBe(-1)
 
-//     // get cookie
-//     COOKIE = res.headers['set-cookie'].join(';')
-// })
+    // get cookie
+    COOKIE = res.headers['set-cookie'].join(';')
+})
 
 // update info
 test('update info', async () => {
@@ -67,6 +67,7 @@ test('update info', async () => {
           name: userName,
           description: "updated description"
         })
+        .set('cookie', COOKIE)
     expect(res.body.errCode).toBe(-1)
 })
 
@@ -79,7 +80,7 @@ test('update password', async () => {
             password,
             newPassword: `p_${Date.now()}`
         })
-        // .set('cookie', COOKIE)
+        .set('cookie', COOKIE)
     expect(res.body.errCode).toBe(-1)
 })
 
@@ -91,17 +92,17 @@ test('delete user', async () => {
           username: userName,
           isSoft: true
         })
-        // .set('cookie', COOKIE)
+        .set('cookie', COOKIE)
     expect(res.body.errCode).toBe(-1)
 })
 
-// // loggout
-// test('user logout', async () => {
-//     const res = await server
-//         .post('/users/logout')
-//         .set('cookie', COOKIE)
-//     expect(res.body.errCode).toBe(-1)
-// })
+// loggout
+test('user logout', async () => {
+    const res = await server
+        .post('/users/logout')
+        .set('cookie', COOKIE)
+    expect(res.body.errCode).toBe(-1)
+})
 
 // lookup after deletion
 test('look up user after deleted', async () => {
@@ -109,8 +110,3 @@ test('look up user after deleted', async () => {
         .post(`/users/${userName}`)
     expect(res.body.errCode).not.toBe(-1)
 })
-
-afterAll(async done => {
-
-  done();
-});

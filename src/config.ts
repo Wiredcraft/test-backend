@@ -8,11 +8,14 @@ export default {
     user: process.env.MYSQL_USER || 'root',
     password: process.env.MYSQL_PASSWORD || '123456'
   },
+  REDIS:  {
+    host: process.env.REDIS_HOST || '127.0.0.1',
+    port: process.env.REDIS_PORT || 6379
+  },
   SECURITY: {
     name: 'Wiredcraft',
     keys: {
       salt: 'cbsadcbdjchdcvjdhcvsdcdbcdwacvse',
-      jwtSecretKey: '@cbcbjsdbcsd!z%C*F-JaNdRgUkXp'
     }
   }
 }

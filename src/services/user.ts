@@ -16,9 +16,30 @@ import {
   notFollowed,
   userUnfollowFail,
   duplicateFollowing,
-  getFollowerFail
+  getFollowerFail,
+  userLoginNotFound,
+  userLoginFail
 } from '../lib/errorMap';
 export default class UserService {
+  static async login(ctx: any, username: string, password: string): Promise<SuccessRes | ErrorRes> {
+    try {
+      const encrypted = Secure.encrypt(password);
+      const [ user ] = await knex(USER).select().where('name', username).andWhere('password', encrypted);
+      if (!user) {
+        return userLoginNotFound();
+      }
+      if (!ctx.session.user) {
+        ctx.session.user = user;
+      }
+      return {
+        errCode: -1,
+        data: user,
+      }
+    } catch(err) {
+      console.error(err);
+      return userLoginFail();
+    }
+  }
 /**
  * Create a new user if not exist
  * @param payload 

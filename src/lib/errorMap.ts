@@ -68,6 +68,21 @@ const getFollowerFail = ( code = null, message = null ) => ({
   msg: message || 'failed fetching followers'
 })
 
+const userLoginNotFound = (code = null, message = null) => ({
+  errCode: code || 10014,
+  msg: message || 'user not found, try again with different username and pwd'
+})
+
+const userLoginFail = (code = null, message = null) => ({
+  errCode: code || 10015,
+  msg: message || 'user login failed'
+})
+
+const authGuardFail = (code = null, message = null) => ({
+  errCode: code || 10016,
+  msg: message || 'you must be logged in'
+})
+
 export {
   validationFail,
   userDuplicateEntry,
@@ -82,5 +97,8 @@ export {
   notFollowed,
   userUnfollowFail,
   duplicateFollowing,
-  getFollowerFail
+  getFollowerFail,
+  userLoginNotFound,
+  userLoginFail,
+  authGuardFail
 }
