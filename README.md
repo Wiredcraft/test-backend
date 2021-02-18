@@ -14,41 +14,39 @@ Supported APIs are:
  - POST /users
  ```json
  // Create a user
+  // sample body and res
  {
-    // sample body
     "name": "username",
     "password": "password",
     "address": "1234 Main St",
     "description": "test description"
  }
  {
-    // sample response
     "errCode": -1,
-    "data": 1 // created userId, actual return value may vary from business needs
+    "data": 1
  }
+  // data: the created userId, actual return value may vary from business needs
  ```
  - POST /users/delete 
  ```json
  // Delete a user by username,
+  // sample body and res
  {
-   // sample body
    "username": "username"
  }
  {
-   // sampe res
    "errCode": -1
  }
  ```
  - POST /users/follow
  ```json
    // follow a user
+   // sample body and res
  {
-   // sample body
    "username": "username",
    "follower": "follower"
  }
  {
-    // sample err res
     "errCode": 10008,
     "msg": "can not follow or get followed by void"
 }
@@ -56,26 +54,25 @@ Supported APIs are:
  - POST /users/unfollow
  ```json
  // unfollow a user
+ // sample body and res
  {
-   // sample body
    "username": "435",
    "follower": "follo123wer"
  }
 {
-   // sample err res 
     "errCode": 10010,
     "msg": "given following relation does not exist"
 }
  ```
  - PATCH /users/info
  ```json
+ // update user info by username
+ // sample body and res
 {
-   // sample body
     "name": "follower",
     "address": "new address"
 }
  {
-    // sample res
     "errCode": -1,
     "data": {
         "id": 47,
@@ -88,23 +85,26 @@ Supported APIs are:
  ```
  - PATCH /users/password
 ```json
+// update user pwd by username
+// sample body and res
 {
-   // sample body
     "name": "follower",
     "oldPassword": "password",
     "newPassword": "newpwd"
 }
 {
-   // sample res
    "errCode": -1
 }
 ```
 Responses example,
 ```json
+// errCode: Shared property for all res, -1 on success, positive pre-defined code for error
+// data: Optional field for success response, if data needed
+// message: Err message if any, for Error Response
 {
-   "errCode": -1, // Shared property for all res, -1 on success, positive pre-defined code for error
-   "data": {}, // Optional field for success response, if data needed
-   "message": "string" // err message if any, for Error Response
+   "errCode": "number", 
+   "data": {}, 
+   "message": "string" 
 }
 ```
 You might have noticed that the `api routes` are lacking auth middleware that protects those who needs a guard, it's simply because auth/login is not implemented, does not mean that those APIs do not need auth protection.
