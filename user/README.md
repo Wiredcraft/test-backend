@@ -32,4 +32,5 @@ curl --location --request POST 'http://127.0.0.1:8000/appusers/' \
 
 ## 4. Visit Docs
 http://127.0.0.1:8000/appusers/
+
 http://127.0.0.1:8000/appusers/aaron/ (**after create the user**)
