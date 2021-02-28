@@ -1,0 +1,12 @@
+# Byte-compiled
+__pycache__
+
+# IDE
+.idea/
+
+# Django stuff:
+# Ignore the default SQLite database.
+*.sqlite3
+
+# Environments
+user-api/
