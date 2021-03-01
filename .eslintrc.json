@@ -5,7 +5,14 @@
     "node": true
   },
   "extends": "eslint:recommended",
-  "globals": {},
+  "globals": {
+    "describe": true,
+    "it": true,
+    "before": true,
+    "after": true,
+    "beforeEach": true,
+    "afterEach": true
+  },
   "parserOptions": {
     "ecmaVersion": 2018
   },
