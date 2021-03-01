@@ -1,0 +1,33 @@
+{
+  "name": "test-backend",
+  "version": "1.0.0",
+  "description": "Make sure you read the whole document carefully and follow the guidelines in it.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "NODE_ENV=development node index.js",
+    "lint": "eslint .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lqqyt2423/test-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lqqyt2423/test-backend/issues"
+  },
+  "homepage": "https://github.com/lqqyt2423/test-backend#readme",
+  "devDependencies": {
+    "eslint": "^7.21.0"
+  },
+  "dependencies": {
+    "joi": "^17.4.0",
+    "koa": "^2.13.1",
+    "koa-bodyparser": "^4.3.0",
+    "koa-router": "^10.0.0",
+    "mongoose": "^5.11.18"
+  }
+}
