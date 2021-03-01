@@ -8,7 +8,7 @@
 python3 -m venv user-api
 source user-api/bin/activate  # On Windows use `env\Scripts\activate`
 
-pip install djangorestframework
+pip install --requirement requirements.txt
 cd user
 ./manage.py migrate
 ./manage.py runserver
