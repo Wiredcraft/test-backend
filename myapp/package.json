@@ -1,0 +1,26 @@
+{
+  "name": "myapp",
+  "description": "Restful API for User database",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jiang Meng Yu",
+    "email": "mengyu.jiang@gmail.com"
+  },
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "jest"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "pug": "2.0.0-beta11",
+    "redis": "^3.0.2",
+    "config": "^3.3.3",
+    "log4js": "^6.3.0",
+    "jest": "^26.6.3",
+    "node-mocks-http": "^1.10.1"
+  }
+}
