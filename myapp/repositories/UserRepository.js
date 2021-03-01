@@ -1,9 +1,179 @@
 const User = require('../models/User');
 const redisClient = require('../databases/redisClient');
 
-const { USER_HASH_PREFIX, USER_ID_SORTED_SET } = require('config').get('User');
+const {
+  USER_HASH_PREFIX,
+  USER_ID_SORTED_SET,
+  FOLLOWING_HASH_PREFIX,
+  FOLLOWER_HASH_PREFIX,
+  FRIENDS_HASH_PREFIX
+} = require('config').get('User');
 
 class UserRepository {
+
+  /**
+   * Create a new following for me.
+   * @param {String} myUserId 
+   * @param {String} otherUserId 
+   */
+
+  static async createFollowing(myUserId, otherUserId) {
+    const myUserKey = `${USER_HASH_PREFIX}:${myUserId}`;
+    const myFollowings = `${myUserKey}:${FOLLOWING_HASH_PREFIX}`;
+    const myFriends = `${myUserKey}:${FRIENDS_HASH_PREFIX}`;
+
+    const otherUserKey = `${USER_HASH_PREFIX}:${otherUserId}`;
+    const otherFollowers = `${otherUserKey}:${FOLLOWER_HASH_PREFIX}`;
+    const otherFollowings = `${otherUserKey}:${FOLLOWING_HASH_PREFIX}`;
+    const otherFriends = `${otherUserKey}:${FRIENDS_HASH_PREFIX}`;
+
+    const commands = [
+      ['ZADD', myFollowings, otherUserId, otherUserKey],
+      ['ZADD', otherFollowers, myUserId, myUserKey],
+      ['ZSCORE', otherFollowings, myUserKey]
+    ];
+
+    await redisClient.watch(
+      myFollowings, otherFollowers, otherFollowings);
+    const results = await redisClient.multi(commands);
+
+    // If the other user is also following me, he will be my friend now.
+    if (results[2]) {
+      const commands = [
+        ['ZADD', myFriends, otherUserId, otherUserKey],
+        ['ZADD', otherFriends, myUserId, myUserKey]
+      ];
+      await redisClient.watch(myFriends, otherFriends);
+      await redisClient.multi(commands);
+    }
+  }
+
+  /**
+   * Delete a following for me.
+   * @param {String} myUserId 
+   * @param {String} otherUserId 
+   */
+
+  static async deleteFollowing(myUserId, otherUserId) {
+    const myUserKey = `${USER_HASH_PREFIX}:${myUserId}`;
+    const myFollowings = `${myUserKey}:${FOLLOWING_HASH_PREFIX}`;
+    const myFriends = `${myUserKey}:${FRIENDS_HASH_PREFIX}`;
+
+    const otherUserKey = `${USER_HASH_PREFIX}:${otherUserId}`;
+    const otherFollowers = `${otherUserKey}:${FOLLOWER_HASH_PREFIX}`;
+    const otherFriends = `${otherUserKey}:${FRIENDS_HASH_PREFIX}`;
+
+    const commands = [
+      ['ZREM', myFollowings, otherUserKey],
+      ['ZREM', otherFollowers, myUserKey],
+      ['ZREM', myFriends, otherUserKey],
+      ['ZREM', otherFriends, myUserKey]
+    ];
+
+    await redisClient.watch(
+      myFollowings, otherFollowers, myFriends, otherFriends);
+    await redisClient.multi(commands);
+  }
+
+  /**
+   * List all my followings.
+   * @param {String} myUserId
+   * @param {String} page
+   * @param {String} pageSize
+   * @returns {Array} 
+   */
+
+  static async listAllFollowings(myUserId, page = 1, pageSize = 10) {
+    const myUserKey = `${USER_HASH_PREFIX}:${myUserId}`;
+    const myFollowings = `${myUserKey}:${FOLLOWING_HASH_PREFIX}`;
+    const from = (page - 1) * pageSize;
+    const to = page * pageSize - 1;
+    const followings = await redisClient.zrange(myFollowings, from, to);
+
+    const commands = [];
+
+    for (const userKey of followings) {
+      commands.push(['HGETALL', userKey])
+    }
+
+    return await redisClient.batch(commands);
+  }
+
+  /**
+   * Check if the other user is in my followings.
+   * @param {String} myUserId 
+   * @param {String} otherUserId 
+   */
+
+  static async FindFollowingById(myUserId, otherUserId) {
+    const myUserKey = `${USER_HASH_PREFIX}:${myUserId}`;
+    const myFollowings = `${myUserKey}:${FOLLOWING_HASH_PREFIX}`;
+    const otherUserKey = `${USER_HASH_PREFIX}:${otherUserId}`;
+
+    return await redisClient.zscore(myFollowings, otherUserKey);
+  }
+
+  /**
+   * Check if the other user is in my followers.
+   * @param {String} myUserId 
+   * @param {String} page
+   * @param {String} pageSize
+   * @returns {Array}
+   */
+  static async listAllFollowers(myUserId, page = 1, pageSize = 10) {
+    const myUserKey = `${USER_HASH_PREFIX}:${myUserId}`;
+    const myFollowers = `${myUserKey}:${FOLLOWER_HASH_PREFIX}`;
+
+    const from = (page - 1) * pageSize;
+    const to = page * pageSize - 1;
+    const followers = await redisClient.zrange(myFollowers, from, to);
+
+    const commands = [];
+
+    for (const userKey of followers) {
+      commands.push(['HGETALL', userKey])
+    }
+
+    return await redisClient.batch(commands);
+  }
+
+  /**
+   * List all my friends.
+   * @param {*} myUserId 
+   * @param {String} page
+   * @param {String} pageSize
+   * @returns {Array}
+   */
+
+  static async listAllFriends(myUserId, page = 1, pageSize = 10) {
+    const myUserKey = `${USER_HASH_PREFIX}:${myUserId}`;
+    const myFriends = `${myUserKey}:${FRIENDS_HASH_PREFIX}`;
+    const from = (page - 1) * pageSize;
+    const to = page * pageSize - 1;
+    const friends = await redisClient.zrange(myFriends, from, to);
+
+    const commands = [];
+
+    for (const userKey of friends) {
+      commands.push(['HGETALL', userKey])
+    }
+
+    return await redisClient.batch(commands);
+  }
+
+  /**
+   * Check if the other user is my friend.
+   * @param {*} myUserId 
+   * @param {*} otherUserId 
+   */
+
+  static async FindFriendById(myUserId, otherUserId) {
+    const myUserKey = `${USER_HASH_PREFIX}:${myUserId}`;
+    const myFriends = `${myUserKey}:${FRIENDS_HASH_PREFIX}`;
+    const otherUserKey = `${USER_HASH_PREFIX}:${otherUserId}`;
+
+    return await redisClient.zscore(myFriends, otherUserKey);
+  }
 
   /**
    * Return all user records based on the input paging criteria.

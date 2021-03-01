@@ -13,6 +13,7 @@ exports.hgetall = promisify(client.hgetall).bind(client);
 exports.del = promisify(client.del).bind(client);
 exports.exists = promisify(client.exists).bind(client);
 exports.zrange = promisify(client.zrange).bind(client);
+exports.zscore = promisify(client.zscore).bind(client);
 exports.multi = function (commands) {
   const multi = client.multi(commands);
   return promisify(multi.exec).call(multi);

@@ -10,6 +10,298 @@ const UserHandler = require('../handlers/UserHandler');
 class UserController {
 
   /**
+   * Make the user with userId following the user with otherUserId.
+   * @param {Object} req 
+   * @param {Object} res 
+   */
+
+  static createFollowing(req, res) {
+    let errMsg = '';
+    let msg = '';
+
+    const { userId, otherUserId } = req.params;
+
+    logger.info(
+      `User [${userId}] is going to follow User [${otherUserId}]...`);
+
+    UserRepository.createFollowing(userId, otherUserId)
+      .then(results => {
+        msg = `User [${userId}] is following User [${otherUserId}] now.`
+        UserHandler.handlleUserSuccess(states.CREATED, msg, res);
+      })
+      .catch(err => {
+        UserHandler.handleServerError(err, res);
+      });
+  }
+
+  /**
+   * Make the user with userId not following the user with otherUserId.
+   * @param {Object} req 
+   * @param {Object} res 
+   */
+
+  static deleteFollowing(req, res) {
+    let errMsg = '';
+    let msg = '';
+
+    const { userId, otherUserId } = req.params;
+
+    logger.info(
+      `User [${userId}] is going to unfollow User [${otherUserId}]...`);
+
+    UserRepository.deleteFollowing(userId, otherUserId)
+      .then(results => {
+        msg = `User [${userId}] is not following User [${otherUserId}] now.`;
+        UserHandler.handlleUserSuccess(states.DELETED, msg, res);
+      })
+      .catch(err => {
+        UserHandler.handleServerError(err, res);
+      });
+  }
+
+  /**
+   * List all the followings the user with userId has.
+   * @param {Object} req 
+   * @param {Object} res 
+   */
+
+  static listAllFollowings(req, res) {
+    let errMsg = '';
+    let msg = '';
+
+    const userId = req.params.userId;
+    const { page, pageSize } = req.query;
+
+    if ((page && !UserValidation.isPositiveInteger(page)) ||
+      (pageSize && !UserValidation.isPositiveInteger(pageSize))) {
+      errMsg = `The input page [${page}] or pageSize [${pageSize}] `;
+      errMsg += `must be a positive integer.`;
+      UserHandler.handleUserError(states.BAD_REQUEST, errMsg, res);
+      return;
+    }
+
+    logger.info(`Fetching followings records for user id [${userId}]` +
+      ` with page [${page}] and pageSize [${pageSize}]...`);
+
+    UserRepository.listAllFollowings(userId, page, pageSize)
+      .then(data => {
+        msg = `Successfully fetched ${data.length} user records.`;
+        UserHandler.handlleUserSuccess(states.FETCHED, msg, res, data);
+      })
+      .catch(err => {
+        UserHandler.handleServerError(err, res);
+      });
+  }
+
+  /**
+   * Check if the user with userId is following the user with otherUserId.
+   * @param {Object} req 
+   * @param {Object} res 
+   */
+
+  static FindFollowingById(req, res) {
+    let errMsg = '';
+    let msg = '';
+
+    const { userId, otherUserId } = req.params;
+
+    logger.info(
+      `Checking if User [${userId}] is following User [${otherUserId}]...`);
+
+    UserRepository.FindFollowingById(userId, otherUserId)
+      .then(exists => {
+        if (exists) {
+          msg = `User [${userId}] is following User [${otherUserId}].`;
+          UserHandler.handlleUserSuccess(states.FETCHED, msg, res);
+        } else {
+          errMsg = `User [${userId}] is not following User [${otherUserId}].`;
+          UserHandler.handleUserError(states.NOT_FOUND, errMsg, res);
+        }
+      })
+      .catch(err => {
+        UserHandler.handleServerError(err, res);
+      });
+  }
+
+  /**
+   * Make the user with otherUserId following the user with userId.
+   * @param {Object} req 
+   * @param {Object} res 
+   */
+
+  static createFollower(req, res) {
+    let errMsg = '';
+    let msg = '';
+
+    const { userId, otherUserId } = req.params;
+
+    logger.info(
+      `User [${otherUserId}] is going to follow User [${userId}]...`);
+
+    UserRepository.createFollowing(otherUserId, userId)
+      .then(results => {
+        msg = `User [${otherUserId}] is following User [${userId}] now.`
+        UserHandler.handlleUserSuccess(states.CREATED, msg, res);
+      })
+      .catch(err => {
+        UserHandler.handleServerError(err, res);
+      });
+  }
+
+  /**
+   * Make the user with otherUserId not following the user with userId.
+   * @param {Object} req 
+   * @param {Object} res 
+   */
+
+  static deleteFollower(req, res) {
+    let errMsg = '';
+    let msg = '';
+
+    const { userId, otherUserId } = req.params;
+
+    logger.info(
+      `User [${otherUserId}] is going to unfollow User [${userId}]...`);
+
+    UserRepository.deleteFollowing(otherUserId, userId)
+      .then(results => {
+        msg = `User [${otherUserId}] is not following User [${userId}] now.`;
+        UserHandler.handlleUserSuccess(states.DELETED, msg, res);
+      })
+      .catch(err => {
+        UserHandler.handleServerError(err, res);
+      });
+  }
+
+  /**
+   * List all the followers the user with userId has.
+   * @param {Object} req 
+   * @param {Object} res 
+   */
+
+  static listAllFollowers(req, res) {
+    let errMsg = '';
+    let msg = '';
+
+    const userId = req.params.userId;
+    const { page, pageSize } = req.query;
+
+    if ((page && !UserValidation.isPositiveInteger(page)) ||
+      (pageSize && !UserValidation.isPositiveInteger(pageSize))) {
+      errMsg = `The input page [${page}] or pageSize [${pageSize}] `;
+      errMsg += `must be a positive integer.`;
+      UserHandler.handleUserError(states.BAD_REQUEST, errMsg, res);
+      return;
+    }
+
+    logger.info(`Fetching followers records for user id [${userId}]` +
+      ` with page [${page}] and pageSize [${pageSize}]...`);
+
+    UserRepository.listAllFollowers(userId, page, pageSize)
+      .then(data => {
+        msg = `Successfully fetched ${data.length} user records.`;
+        UserHandler.handlleUserSuccess(states.FETCHED, msg, res, data);
+      })
+      .catch(err => {
+        UserHandler.handleServerError(err, res);
+      });
+  }
+
+  /**
+   * Check if the user with otherUserId is following the user with userId.
+   * @param {Object} req 
+   * @param {Object} res 
+   */
+
+  static findFollowerById(req, res) {
+    let errMsg = '';
+    let msg = '';
+
+    const { userId, otherUserId } = req.params;
+
+    logger.info(
+      `Checking if User [${otherUserId}] is following User [${userId}]...`);
+
+    UserRepository.FindFollowingById(otherUserId, userId)
+      .then(exists => {
+        if (exists) {
+          msg = `User [${otherUserId}] is following User [${userId}].`;
+          UserHandler.handlleUserSuccess(states.FETCHED, msg, res);
+        } else {
+          errMsg = `User [${otherUserId}] is not following User [${userId}].`;
+          UserHandler.handleUserError(states.NOT_FOUND, errMsg, res);
+        }
+      })
+      .catch(err => {
+        UserHandler.handleServerError(err, res);
+      });
+  }
+
+  /**
+   * List all the friends the user with userId has.
+   * @param {Object} req 
+   * @param {Object} res 
+   */
+
+  static listAllFriends(req, res) {
+    let errMsg = '';
+    let msg = '';
+
+    const userId = req.params.userId;
+    const { page, pageSize } = req.query;
+
+    if ((page && !UserValidation.isPositiveInteger(page)) ||
+      (pageSize && !UserValidation.isPositiveInteger(pageSize))) {
+      errMsg = `The input page [${page}] or pageSize [${pageSize}] `;
+      errMsg += `must be a positive integer.`;
+      UserHandler.handleUserError(states.BAD_REQUEST, errMsg, res);
+      return;
+    }
+
+    logger.info(`Fetching friends records for user id [${userId}]` +
+      ` with page [${page}] and pageSize [${pageSize}]...`);
+
+    UserRepository.listAllFriends(userId, page, pageSize)
+      .then(data => {
+        msg = `Successfully fetched ${data.length} user records.`;
+        UserHandler.handlleUserSuccess(states.FETCHED, msg, res, data);
+      })
+      .catch(err => {
+        UserHandler.handleServerError(err, res);
+      });
+  }
+
+  /**
+   * Check if the user with userId is a friend of the user with otherUserId.
+   * @param {Object} req 
+   * @param {Object} res 
+   */
+
+  static FindFriendById(req, res) {
+    let errMsg = '';
+    let msg = '';
+
+    const { userId, otherUserId } = req.params;
+
+    logger.info(
+      `Checking if User [${userId}] is a friend of User [${otherUserId}]...`);
+
+    UserRepository.FindFriendById(userId, otherUserId)
+      .then(exists => {
+        if (exists) {
+          msg = `User [${userId}] is a friend of User [${otherUserId}].`;
+          UserHandler.handlleUserSuccess(states.FETCHED, msg, res);
+        } else {
+          errMsg = `User [${userId}] is not a friend of User [${otherUserId}].`;
+          UserHandler.handleUserError(states.NOT_FOUND, errMsg, res);
+        }
+      })
+      .catch(err => {
+        UserHandler.handleServerError(err, res);
+      });
+  }
+
+  /**
    * Controller for fetching all users.
    * @param {Object} req 
    * @param {Object} res 
