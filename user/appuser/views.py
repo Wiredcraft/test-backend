@@ -1,9 +1,6 @@
-from django.http import HttpResponse, JsonResponse
 # Create your views here.
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
 from .models import Appuser
@@ -11,12 +8,12 @@ from .serializers import AppuserSerializer
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def appuser_detail(request, id):
+def appuser_detail(request, user_id):
     """
-    Retrieve, update or delete a app user.
+    Retrieve, update or delete an app user.
     """
     try:
-        appuser = Appuser.objects.get(id=id)
+        appuser = Appuser.objects.get(id=user_id)
     except Appuser.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -36,7 +33,7 @@ def appuser_detail(request, id):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
-def appuser_list(request, format=None):
+def appuser_list(request):
     """
     List all app users, or create a new app user.
     """
