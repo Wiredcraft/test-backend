@@ -7,8 +7,15 @@ const User = require('../models/User')
 const app = require('..')
 
 describe('test user controller', () => {
-  beforeEach(() => {
-    sinon.replace(console, 'log', sinon.fake())
+  let authorization
+
+  before(() => {
+    return request(app)
+      .post('/login')
+      .send({ user: 'admin', password: '123456' })
+      .then(res => {
+        authorization = `Bearer ${res.body.access_token}`
+      })
   })
 
   afterEach(() => {
@@ -19,6 +26,7 @@ describe('test user controller', () => {
     sinon.stub(User, 'find').resolves([])
     return request(app)
       .get('/users')
+      .set('Authorization', authorization)
       .expect(200)
       .then(res => {
         expect(res.body).to.be.an('array')
@@ -28,6 +36,7 @@ describe('test user controller', () => {
   it('should GET /users/:id 400', () => {
     return request(app)
       .get('/users/abc')
+      .set('Authorization', authorization)
       .expect(400)
   })
 
@@ -35,6 +44,7 @@ describe('test user controller', () => {
     sinon.stub(User, 'findById').resolves(undefined)
     return request(app)
       .get('/users/000000000000000000000000')
+      .set('Authorization', authorization)
       .expect(404)
   })
 
@@ -42,12 +52,14 @@ describe('test user controller', () => {
     sinon.stub(User, 'findById').resolves({})
     return request(app)
       .get('/users/000000000000000000000000')
+      .set('Authorization', authorization)
       .expect(200)
   })
 
   it('should POST /users 400', () => {
     return request(app)
       .post('/users')
+      .set('Authorization', authorization)
       .expect(400)
   })
 
@@ -55,6 +67,7 @@ describe('test user controller', () => {
     sinon.stub(User, 'create').resolves({ id: '000000000000000000000000' })
     return request(app)
       .post('/users')
+      .set('Authorization', authorization)
       .send({ name: 'a' })
       .expect(201)
       .then(res => {
@@ -65,6 +78,7 @@ describe('test user controller', () => {
   it('should PUT /users 400', () => {
     return request(app)
       .put('/users/000000000000000000000000')
+      .set('Authorization', authorization)
       .expect(400)
   })
 
@@ -72,6 +86,7 @@ describe('test user controller', () => {
     sinon.stub(User, 'findById').resolves(undefined)
     return request(app)
       .put('/users/000000000000000000000000')
+      .set('Authorization', authorization)
       .send({ name: 'a' })
       .expect(404)
   })
@@ -80,6 +95,7 @@ describe('test user controller', () => {
     sinon.stub(User, 'findById').resolves({ save: () => {} })
     return request(app)
       .put('/users/000000000000000000000000')
+      .set('Authorization', authorization)
       .send({ name: 'a' })
       .expect(204)
   })
@@ -87,6 +103,7 @@ describe('test user controller', () => {
   it('should DELETE /users 400', () => {
     return request(app)
       .delete('/users/abc')
+      .set('Authorization', authorization)
       .expect(400)
   })
 
@@ -94,6 +111,7 @@ describe('test user controller', () => {
     sinon.stub(User, 'findById').resolves(undefined)
     return request(app)
       .delete('/users/000000000000000000000000')
+      .set('Authorization', authorization)
       .expect(404)
   })
 
@@ -101,6 +119,7 @@ describe('test user controller', () => {
     sinon.stub(User, 'findById').resolves({ delete: () => {} })
     return request(app)
       .delete('/users/000000000000000000000000')
+      .set('Authorization', authorization)
       .expect(204)
   })
 })
