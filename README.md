@@ -1,7 +1,5 @@
 # Wiredcraft Back-end Developer Test
 
-Make sure you read the whole document carefully and follow the guidelines in it.
-
 ## Context
 
 Build a RESTful API that can `get/create/update/delete` user data from a persistence database
@@ -19,55 +17,75 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 }
 ```
 
-## Requirements
+## Installation
 
-### Functionality
+First install Node.js and MongoDB. Then:
 
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper unit test.
-- Provide proper API document.
+```bash
+npm install
+```
 
-### Tech stack
+## Getting Started
 
-- Use Node.js and any framework.
-- Use any DB. NoSQL DB is preferred.
+```bash
+npm start
+```
 
-### Bonus
+## API
 
-- Write clear documentation on how it's designed and how to run the code.
-- Write good in-code comments.
-- Write good commit messages.
-- An online demo is always welcome.
+### Some HTTP Status
 
-### Advanced requirements
+```
+200 ok
+201 ok, created
+204 ok, no content
+400 bad request, like validate error
+401 unauthorized
+404 not found
+500 server error
+```
 
-*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
+### Details
 
-- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
-- Provide a complete logging (when/how/etc.) strategy.
-- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
-- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
-  - given a user name
-  - return the nearby friends
+#### Login
 
+```
+POST /login HTTP/1.1
+Content-Type: application/json
+{
+    "user": "admin",
+    "password": "123456"
+}
 
-## What We Care About
+Response Body Like:
+{
+    "access_token": "xxx...",
+    "token_type": "bearer",
+    "expires_in": 7200
+}
+```
 
-Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
+The `access_token` should use in Authorization header. Like:
 
-Here's what you should aim for:
+```
+GET /users HTTP/1.1
+Host: localhost:3000
+Authorization: Bearer xxx...
+```
 
-- Good use of current Node.js & API design best practices.
-- Good testing approach.
-- Extensible code.
+#### RESTful User API
 
-## FAQ
+```
+GET      /users       get user list
+GET      /users/:id   get user info
+POST     /users       create user
+PUT      /users/:id   update user
+DELETE   /users/:id   delete user
+```
 
-> Where should I send back the result when I'm done?
+## Test
 
-Fork this repo and send us a pull request when you think it's ready for review. You don't have to finish everything prior and you can continue to work on it. We don't have a deadline for the task.
+```bash
+npm test
+```
 
-> What if I have a question?
-
-Create a new issue in the repo and we will get back to you shortly.
