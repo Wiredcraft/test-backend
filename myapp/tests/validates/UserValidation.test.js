@@ -57,40 +57,51 @@ describe('Testing isPositiveInteger method:', () => {
 });
 
 describe('Testing areAllInputFieldsAllowed method:', () => {
-  test(`Fields in {name: 'test1'} are all allowed.`, () => {
+  test(`name is an allowed user field.`, () => {
     const fields = {
       name: 'test1'
     };
     expect(UserValidation.areAllInputFieldsAllowed(fields)).toBe(true);
   });
 
-  test(`Fields in {name: 'test1', dob: '2020-02-27', address: '123', description: 'student'} are all allowed.`, () => {
+  test(`All fields are allowed.`, () => {
     const fields = {
       name: 'test1',
       dob: '2021-02-27',
-      address: '123',
+      address: {
+        longtitude: 123.45,
+        latitude: 23.45,
+        description: 'Address 1'
+      },
       description: 'student'
     };
     expect(UserValidation.areAllInputFieldsAllowed(fields)).toBe(true);
   });
 
-  test(`Fields in {id: 1} are not allowed.`, () => {
+  test(`id is not an allowed user field.`, () => {
     const fields = {
       id: 1
+    };
+    expect(UserValidation.areAllInputFieldsAllowed(fields)).toBe(false);
+  });
+
+  test(`id is not an allowed address field.`, () => {
+    const fields = {
+      address: {
+        id: 1
+      }
     };
     expect(UserValidation.areAllInputFieldsAllowed(fields)).toBe(false);
   });
 });
 
 describe('Testing isAnyRequiredFieldEmpty method:', () => {
-  test(`Fields in {name: 'test1'} has empty required fields.`, () => {
-    const fields = {
-      name: 'test1'
-    };
+  test(`Fields is an empty object.`, () => {
+    const fields = {};
     expect(UserValidation.isAnyRequiredFieldEmpty(fields)).toBe(true);
   });
 
-  test(`Fields in {name: 'test1', dob: '2021-02-28} has empty required fields.`, () => {
+  test(`When some user fields are empty.`, () => {
     const fields = {
       name: 'test1',
       dob: '2021-02-28'
@@ -98,11 +109,37 @@ describe('Testing isAnyRequiredFieldEmpty method:', () => {
     expect(UserValidation.isAnyRequiredFieldEmpty(fields)).toBe(true);
   });
 
-  test(`Fields in {name: 'test1', dob: '2020-02-27', address: '123', description: 'student'} has no empty field.`, () => {
+  test(`When address field is an empty object.`, () => {
+    const fields = {
+      name: 'test1',
+      dob: '2021-02-28',
+      address: {},
+      description: 'student'
+    };
+    expect(UserValidation.isAnyRequiredFieldEmpty(fields)).toBe(true);
+  });
+
+  test(`When some address fields are empty..`, () => {
+    const fields = {
+      name: 'test1',
+      dob: '2021-02-28',
+      address: {
+        description: 'Address 1'
+      },
+      description: 'student'
+    };
+    expect(UserValidation.isAnyRequiredFieldEmpty(fields)).toBe(true);
+  });
+
+  test(`When all fields are not empty.`, () => {
     const fields = {
       name: 'test1',
       dob: '2021-02-27',
-      address: '123',
+      address: {
+        longtitude: '123.45',
+        latitude: '34.56',
+        description: 'Address 1'
+      },
       description: 'student'
     };
     expect(UserValidation.isAnyRequiredFieldEmpty(fields)).toBe(false);
@@ -110,14 +147,12 @@ describe('Testing isAnyRequiredFieldEmpty method:', () => {
 });
 
 describe('Testing areAllRequiredFieldsEmpty method:', () => {
-  test(`{name: 'test1'} has some non-empty required field.`, () => {
-    const fields = {
-      name: 'test1'
-    };
-    expect(UserValidation.areAllRequiredFieldsEmpty(fields)).toBe(false);
+  test(`Fields is an empty object.`, () => {
+    const fields = {};
+    expect(UserValidation.areAllRequiredFieldsEmpty(fields)).toBe(true);
   });
 
-  test(`{name: 'test1', dob: '2021-02-28} has some non-empty required fields.`, () => {
+  test(`When some user fields are not empty.`, () => {
     const fields = {
       name: 'test1',
       dob: '2021-02-28'
@@ -125,24 +160,141 @@ describe('Testing areAllRequiredFieldsEmpty method:', () => {
     expect(UserValidation.areAllRequiredFieldsEmpty(fields)).toBe(false);
   });
 
-  test(`{name: 'test1', dob: '2020-02-27', address: '123', description: 'student'} has no empty required fields`, () => {
+  test(`When address field is an empty object.`, () => {
     const fields = {
-      name: 'test1',
-      dob: '2021-02-27',
-      address: '123',
-      description: 'student'
+      address: {}
+    };
+    expect(UserValidation.areAllRequiredFieldsEmpty(fields)).toBe(true);
+  });
+
+  test(`When some address fields are empty..`, () => {
+    const fields = {
+      address: {
+        description: 'Address 1'
+      }
     };
     expect(UserValidation.areAllRequiredFieldsEmpty(fields)).toBe(false);
   });
 
-  test(`{} has all required fields empty.`, () => {
-    expect(UserValidation.areAllRequiredFieldsEmpty({})).toBe(true);
-  });
-
-  test(`{id: 1} has all required fields empty.`, () => {
+  test(`When all fields are not empty.`, () => {
     const fields = {
-      id: 1
+      name: 'test1',
+      dob: '2021-02-27',
+      address: {
+        longtitude: '123.45',
+        latitude: '34.56',
+        description: 'Address 1'
+      },
+      description: 'student'
     };
-    expect(UserValidation.areAllRequiredFieldsEmpty(fields)).toBe(true);
+    expect(UserValidation.areAllRequiredFieldsEmpty(fields)).toBe(false);
+  });
+});
+
+describe('Testing isValidLongtitude method:', () => {
+  test('abc is an invalid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('abc')).toBe(false);
+  });
+  test('.12 is an invalid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('.12')).toBe(false);
+  });
+  test('12c is an invalid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('12c')).toBe(false);
+  });
+  test('12.3c is an invalid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('12.3c')).toBe(false);
+  });
+  test('180.1 is an invalid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('180.1')).toBe(false);
+  });
+  test('-180.1 is an invalid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('-180.1')).toBe(false);
+  });
+  test('-0.12345 is an invalid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('-0.12345')).toBe(false);
+  });
+  test('0.12345 is an invalid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('0.12345')).toBe(false);
+  });
+  test('+123 is an invalid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('+123')).toBe(false);
+  });
+  test('180.00000 is an invalid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('180.00000')).toBe(false);
+  });
+  test('180.0000 is a valid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('180.0000')).toBe(true);
+  });
+  test('180 is a valid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('180')).toBe(true);
+  });
+  test('-180 is a valid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('-180')).toBe(true);
+  });
+  test('-34.12 is a valid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('-34.12')).toBe(true);
+  });
+  test('34.123 is a valid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('34.123')).toBe(true);
+  });
+  test('123.4567 is a valid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('123.4567')).toBe(true);
+  });
+  test('-123.4567 is a valid longtitude.', () => {
+    expect(UserValidation.isValidLongtitude('-123.4567')).toBe(true);
+  });
+});
+
+describe('Testing isValidLatitude method:', () => {
+  test('abc is an invalid latitude.', () => {
+    expect(UserValidation.isValidLatitude('abc')).toBe(false);
+  });
+  test('.12 is an invalid latitude.', () => {
+    expect(UserValidation.isValidLatitude('.12')).toBe(false);
+  });
+  test('12c is an invalid latitude.', () => {
+    expect(UserValidation.isValidLatitude('12c')).toBe(false);
+  });
+  test('12.3c is an invalid latitude.', () => {
+    expect(UserValidation.isValidLatitude('12.3c')).toBe(false);
+  });
+  test('85.1 is an invalid latitude.', () => {
+    expect(UserValidation.isValidLatitude('85.1')).toBe(false);
+  });
+  test('-85.1 is an invalid latitude.', () => {
+    expect(UserValidation.isValidLatitude('-85.1')).toBe(false);
+  });
+  test('-0.12345 is an invalid latitude.', () => {
+    expect(UserValidation.isValidLatitude('-0.12345')).toBe(false);
+  });
+  test('0.12345 is an invalid latitude.', () => {
+    expect(UserValidation.isValidLatitude('0.12345')).toBe(false);
+  });
+  test('+123 is an invalid latitude.', () => {
+    expect(UserValidation.isValidLatitude('+123')).toBe(false);
+  });
+  test('85.00000 is an invalid latitude.', () => {
+    expect(UserValidation.isValidLatitude('85.00000')).toBe(false);
+  });
+  test('85.0000 is a valid latitude.', () => {
+    expect(UserValidation.isValidLatitude('85.0000')).toBe(true);
+  });
+  test('85 is a valid latitude.', () => {
+    expect(UserValidation.isValidLatitude('85')).toBe(true);
+  });
+  test('-85 is a valid latitude.', () => {
+    expect(UserValidation.isValidLatitude('-85')).toBe(true);
+  });
+  test('-34.12 is a valid latitude.', () => {
+    expect(UserValidation.isValidLatitude('-34.12')).toBe(true);
+  });
+  test('34.123 is a valid latitude.', () => {
+    expect(UserValidation.isValidLatitude('34.123')).toBe(true);
+  });
+  test('84.4567 is a valid latitude.', () => {
+    expect(UserValidation.isValidLatitude('84.4567')).toBe(true);
+  });
+  test('-84.4567 is a valid latitude.', () => {
+    expect(UserValidation.isValidLatitude('-84.4567')).toBe(true);
   });
 });

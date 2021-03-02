@@ -10,7 +10,7 @@
 * ```git clone https://github.com/eronekogin/test-backend.git```
 * ```cd myapp```
 * ```npm install```
-* Providing a running configuration json file under ./config folder, an example is as follows:
+* Customizing the default.json file under ./config folder, an example is as follows:
 ```json
 {
     "User": {
@@ -23,6 +23,15 @@
         // Set up table names, you could customize it to any string you like.
         "USER_HASH_PREFIX": "userId",
         "USER_ID_SORTED_SET": "userIds",
+        "USER_HASH_PREFIX": "userId",
+        "FOLLOWING_HASH_PREFIX": "followings",
+        "FOLLOWER_HASH_PREFIX": "followers",
+        "FRIENDS_HASH_PREFIX": "friends",
+        "NEAR_FRIENDS_HASH_PREFIX": "nearFriends",
+        "NEAR_USERS_HASH_PREFIX": "nearUsers",
+        "ADDRESS_HASH_PREFIX": "address",
+        "USER_ID_SORTED_SET": "userIds",
+        "GEO_SORTED_SET": "geos",
 
         // Currently modifying allowed input fields are not supported.
         "USER_ALLOWED_INPUT_FIELDS": [
@@ -34,9 +43,9 @@
     }
 }
 ```
-* Make sure you could connect to above the configured redis server.
+* Make sure you could connect to the above configured redis server.
 * ```npm start```
-* Then you will some similar messages as following:
+* Then you will see some similar messages as follows:
 ```test
 > myapp@1.0.0 start D:\nodejs\workspace\test-backend\myapp
 > node ./bin/www
@@ -47,6 +56,37 @@ D:\nodejs\workspace\test-backend\myapp\bin
 Wiredcraft User Table.
 
 ## Usages:
+
+---
+
+### Allowed user fields during user create/update:
+
+---
+
+| Field name | Field format | Field description | Example |
+| :-- | :-- | :-- | :-- |
+| name | Any string | user name | Ian Jiang |
+| dob | YYYY-MM-DD | user birth day | 2021-03-02 | 
+| address | JSON string | user address | ```{ longtitude: 23.0, latitude: 45.1234, description: District A Street B }``` |
+| description | Any string | user description | A car racer |
+
+---
+
+### Allowed address fields during user create/update:
+
+---
+
+| Field name | Field format | Field description | Example |
+| :-- | :-- | :-- | :-- |
+| longtitude | Float number between -180 to 180, four valid digits after decimal point | address's longtitude | -12.34, -12.3456, 85.0 |
+| latitude | Float number between -85 to 85, four valid digits after decimal point | address's latitude | -179.88, 150.1234, 95.3 |
+| description | Any string | address description | District A, Streets B|
+
+---
+
+### API descriptions:
+
+---
 
 | Function | Get all user records |
 | :-- | :-- |
@@ -76,7 +116,7 @@ Wiredcraft User Table.
 
 ---
 
-| Function | Update a single user |
+| Function | Delete a single user |
 | :-- | :-- |
 | Link | ```http://localhost:3000/users/{userId}``` |
 | Method | DELETE |
@@ -85,7 +125,7 @@ Wiredcraft User Table.
 
 ---
 
-| Function | Update a single user |
+| Function | Create a single user |
 | :-- | :-- |
 | Link | ```http://localhost:3000/users/{userId}``` |
 | Method | POST |
@@ -167,11 +207,11 @@ Wiredcraft User Table.
 
 ---
 
-| Function | Get all friends for a user |
+| Function | Get all friends for a user within the range specified by the radius meters|
 | :-- | :-- |
-| Link | ```http://localhost:3000/users/{userId}/followers?page={page}&pageSize={pageSize}``` |
+| Link | ```http://localhost:3000/users/{userId}/friends?radius={radius}&page={page}&pageSize={pageSize}``` |
 | Method | GET |
-| Parameters | The input page and pageSize parameters should be a positive integer |
+| Parameters | The input radius, page and pageSize parameters should be a positive integer. If radius is not provided, all the user's friends will be returned. |
 | Return | The fetched user records will be returned as a json array |
 
 ---
@@ -197,7 +237,6 @@ Wiredcraft User Table.
 
 ## Enhancements in the future:
 
-* Add support for fetching the nearby friends.
-* Categorize all logger messages into classes.
+* Categorize all logger messages into Classes.
 * Add version support. Currently all users are accessing the same version of api.
 * Add User authentication and authorization with OAUTH 2.0.

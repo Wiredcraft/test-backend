@@ -6,6 +6,7 @@ const USER_ALLOWED_INPUT_FIELDS = require('config').get(
 const UserValidation = require('../validates/UserValidation');
 const states = require('../constants/states');
 const UserHandler = require('../handlers/UserHandler');
+const Address = require('../models/Address');
 
 class UserController {
 
@@ -25,9 +26,21 @@ class UserController {
       `User [${userId}] is going to follow User [${otherUserId}]...`);
 
     UserRepository.createFollowing(userId, otherUserId)
-      .then(results => {
-        msg = `User [${userId}] is following User [${otherUserId}] now.`
-        UserHandler.handlleUserSuccess(states.CREATED, msg, res);
+      .then(([myUserExists, otherUserExists]) => {
+        if (!myUserExists && !otherUserExists) {
+          errMsg = `Both follower [${userId}] and `;
+          errMsg += `following users [${otherUserId}] are not found.`;
+          UserHandler.handlleUserSuccess(states.BAD_REQUEST, errMsg, res);
+        } else if (!myUserExists) {
+          errMsg = `Follower user [${userId}] is not found.`;
+          UserHandler.handlleUserSuccess(states.BAD_REQUEST, errMsg, res);
+        } else if (!otherUserExists) {
+          errMsg = `Following user [${otherUserId}] is not found.`;
+          UserHandler.handlleUserSuccess(states.BAD_REQUEST, errMsg, res);
+        } else {
+          msg = `User [${userId}] is following User [${otherUserId}] now.`;
+          UserHandler.handlleUserSuccess(states.CREATED, msg, res);
+        }
       })
       .catch(err => {
         UserHandler.handleServerError(err, res);
@@ -50,9 +63,21 @@ class UserController {
       `User [${userId}] is going to unfollow User [${otherUserId}]...`);
 
     UserRepository.deleteFollowing(userId, otherUserId)
-      .then(results => {
-        msg = `User [${userId}] is not following User [${otherUserId}] now.`;
-        UserHandler.handlleUserSuccess(states.DELETED, msg, res);
+      .then(([myUserExists, otherUserExists]) => {
+        if (!myUserExists && !otherUserExists) {
+          errMsg = `Both follower [${userId}] and `;
+          errMsg += `following users [${otherUserId}] are not found.`;
+          UserHandler.handlleUserSuccess(states.BAD_REQUEST, errMsg, res);
+        } else if (!myUserExists) {
+          errMsg = `Follower user [${userId}] is not found.`;
+          UserHandler.handlleUserSuccess(states.BAD_REQUEST, errMsg, res);
+        } else if (!otherUserExists) {
+          errMsg = `Following user [${otherUserId}] is not found.`;
+          UserHandler.handlleUserSuccess(states.BAD_REQUEST, errMsg, res);
+        } else {
+          msg = `User [${userId}] is not following User [${otherUserId}] now.`;
+          UserHandler.handlleUserSuccess(states.DELETED, msg, res);
+        }
       })
       .catch(err => {
         UserHandler.handleServerError(err, res);
@@ -84,9 +109,9 @@ class UserController {
       ` with page [${page}] and pageSize [${pageSize}]...`);
 
     UserRepository.listAllFollowings(userId, page, pageSize)
-      .then(data => {
-        msg = `Successfully fetched ${data.length} user records.`;
-        UserHandler.handlleUserSuccess(states.FETCHED, msg, res, data);
+      .then(users => {
+        msg = `Successfully fetched ${users.length} user records.`;
+        UserHandler.handlleUserSuccess(states.FETCHED, msg, res, users);
       })
       .catch(err => {
         UserHandler.handleServerError(err, res);
@@ -139,9 +164,21 @@ class UserController {
       `User [${otherUserId}] is going to follow User [${userId}]...`);
 
     UserRepository.createFollowing(otherUserId, userId)
-      .then(results => {
-        msg = `User [${otherUserId}] is following User [${userId}] now.`
-        UserHandler.handlleUserSuccess(states.CREATED, msg, res);
+      .then(([myUserExists, otherUserExists]) => {
+        if (!myUserExists && !otherUserExists) {
+          errMsg = `Both follower [${otherUserId}] and `;
+          errMsg += `following users [${userId}] are not found.`;
+          UserHandler.handlleUserSuccess(states.BAD_REQUEST, errMsg, res);
+        } else if (!myUserExists) {
+          errMsg = `Following user [${userId}] is not found.`;
+          UserHandler.handlleUserSuccess(states.BAD_REQUEST, errMsg, res);
+        } else if (!otherUserExists) {
+          errMsg = `Follower user [${otherUserId}] is not found.`;
+          UserHandler.handlleUserSuccess(states.BAD_REQUEST, errMsg, res);
+        } else {
+          msg = `User [${otherUserId}] is following User [${userId}] now.`;
+          UserHandler.handlleUserSuccess(states.CREATED, msg, res);
+        }
       })
       .catch(err => {
         UserHandler.handleServerError(err, res);
@@ -164,9 +201,21 @@ class UserController {
       `User [${otherUserId}] is going to unfollow User [${userId}]...`);
 
     UserRepository.deleteFollowing(otherUserId, userId)
-      .then(results => {
-        msg = `User [${otherUserId}] is not following User [${userId}] now.`;
-        UserHandler.handlleUserSuccess(states.DELETED, msg, res);
+      .then(([myUserExists, otherUserExists]) => {
+        if (!myUserExists && !otherUserExists) {
+          errMsg = `Both follower [${otherUserId}] and `;
+          errMsg += `following users [${userId}] are not found.`;
+          UserHandler.handlleUserSuccess(states.BAD_REQUEST, errMsg, res);
+        } else if (!myUserExists) {
+          errMsg = `Following user [${userId}] is not found.`;
+          UserHandler.handlleUserSuccess(states.BAD_REQUEST, errMsg, res);
+        } else if (!otherUserExists) {
+          errMsg = `Follower user [${otherUserId}] is not found.`;
+          UserHandler.handlleUserSuccess(states.BAD_REQUEST, errMsg, res);
+        } else {
+          msg = `User [${otherUserId}] is not following User [${userId}] now.`;
+          UserHandler.handlleUserSuccess(states.DELETED, msg, res);
+        }
       })
       .catch(err => {
         UserHandler.handleServerError(err, res);
@@ -198,9 +247,9 @@ class UserController {
       ` with page [${page}] and pageSize [${pageSize}]...`);
 
     UserRepository.listAllFollowers(userId, page, pageSize)
-      .then(data => {
-        msg = `Successfully fetched ${data.length} user records.`;
-        UserHandler.handlleUserSuccess(states.FETCHED, msg, res, data);
+      .then(users => {
+        msg = `Successfully fetched ${users.length} user records.`;
+        UserHandler.handlleUserSuccess(states.FETCHED, msg, res, users);
       })
       .catch(err => {
         UserHandler.handleServerError(err, res);
@@ -248,23 +297,27 @@ class UserController {
     let msg = '';
 
     const userId = req.params.userId;
-    const { page, pageSize } = req.query;
+    const { radius, page, pageSize } = req.query;
 
-    if ((page && !UserValidation.isPositiveInteger(page)) ||
-      (pageSize && !UserValidation.isPositiveInteger(pageSize))) {
-      errMsg = `The input page [${page}] or pageSize [${pageSize}] `;
+    if (
+      (radius && !UserValidation.isPositiveInteger(radius)) ||
+      (page && !UserValidation.isPositiveInteger(page)) ||
+      (pageSize && !UserValidation.isPositiveInteger(pageSize))
+    ) {
+      errMsg = `The input radius [${radius}], `
+      errMsg += `page [${page}] or pageSize [${pageSize}] `;
       errMsg += `must be a positive integer.`;
       UserHandler.handleUserError(states.BAD_REQUEST, errMsg, res);
       return;
     }
 
-    logger.info(`Fetching friends records for user id [${userId}]` +
-      ` with page [${page}] and pageSize [${pageSize}]...`);
+    logger.info(`Fetching friends records for user id [${userId}] ` +
+      `with radius[${radius}], page [${page}] and pageSize [${pageSize}]...`);
 
-    UserRepository.listAllFriends(userId, page, pageSize)
-      .then(data => {
-        msg = `Successfully fetched ${data.length} user records.`;
-        UserHandler.handlleUserSuccess(states.FETCHED, msg, res, data);
+    UserRepository.listAllFriends(userId, radius, page, pageSize)
+      .then(users => {
+        msg = `Successfully fetched ${users.length} user records.`;
+        UserHandler.handlleUserSuccess(states.FETCHED, msg, res, users);
       })
       .catch(err => {
         UserHandler.handleServerError(err, res);
@@ -325,9 +378,9 @@ class UserController {
       `Fetching user records with page [${page}] and pageSize [${pageSize}]...`);
 
     UserRepository.listAllUsers(page, pageSize)
-      .then(data => {
-        msg = `Successfully fetched ${data.length} user records.`;
-        UserHandler.handlleUserSuccess(states.FETCHED, msg, res, data);
+      .then(users => {
+        msg = `Successfully fetched ${users.length} user records.`;
+        UserHandler.handlleUserSuccess(states.FETCHED, msg, res, users);
       })
       .catch(err => {
         UserHandler.handleServerError(err, res);
@@ -369,10 +422,28 @@ class UserController {
       return;
     }
 
-    // Create the new user record.
+    const { longtitude, latitude } = fields.address;
+    if (!UserValidation.isValidLongtitude(longtitude)) {
+      errMsg = `The input address's longtitude [${longtitude}] should `;
+      errMsg += `between -180.0 to 180.0.`;
+      UserHandler.handleUserError(states.BAD_REQUEST, errMsg, res);
+      return;
+    }
+
+    if (!UserValidation.isValidLatitude(latitude)) {
+      errMsg = `The input address's latitude [${latitude}] should `;
+      errMsg += `between -85.0 to 85.0.`;
+      UserHandler.handleUserError(states.BAD_REQUEST, errMsg, res);
+      return;
+    }
+
+    // Create a new user record.
     const user = new User(fields);
+    const address = new Address(fields.address);
+
     logger.info(`Creating a new user record...`);
-    UserRepository.createUser(user)
+
+    UserRepository.createUser(user, address)
       .then(userId => {
         msg = `Successfully created a new user with id [${userId}].`;
         UserHandler.handlleUserSuccess(states.CREATED, msg, res);
@@ -397,11 +468,10 @@ class UserController {
     logger.info(`Searching for user record with id [${userId}]...`);
 
     UserRepository.findUserById(userId)
-      .then(data => {
-        if (data) {
-          const user = new User(data);
+      .then(user => {
+        if (user) {
           msg = `Found the target user ${user}.`;
-          UserHandler.handlleUserSuccess(states.FETCHED, msg, res, user)
+          UserHandler.handlleUserSuccess(states.FETCHED, msg, res, user);
         } else {
           const errMsg = `The user record with id [${userId}] is not found.`;
           UserHandler.handleUserError(states.NOT_FOUND, errMsg, res);
@@ -444,9 +514,26 @@ class UserController {
     // Check the format of dob if it is provided.
     if (fields.dob && !UserValidation.isValidDate(fields.dob)) {
       errMsg = `The user input birth date [${fields.dob}] should `;
-      errMsg += `has format YYYY-MM-DD.`
+      errMsg += `has format YYYY-MM-DD.`;
       UserHandler.handleUserError(states.BAD_REQUEST, errMsg, res);
       return;
+    }
+
+    if (fields.address) {
+      const { longtitude, latitude } = fields.address;
+      if (longtitude && !UserValidation.isValidLongtitude(longtitude)) {
+        errMsg = `The input address's longtitude [${longtitude}] should `;
+        errMsg += `between -180.0 to 180.0.`;
+        UserHandler.handleUserError(states.BAD_REQUEST, errMsg, res);
+        return;
+      }
+
+      if (latitude && !UserValidation.isValidLatitude(latitude)) {
+        errMsg = `The input address's latitude [${latitude}] should `;
+        errMsg += `between -85.0 to 85.0.`;
+        UserHandler.handleUserError(states.BAD_REQUEST, errMsg, res);
+        return;
+      }
     }
 
     logger.info(`Updating user record with id [${userId}]...`);

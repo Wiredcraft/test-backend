@@ -1,0 +1,28 @@
+{
+    "User": {
+        "dbConfig": {
+            "host": "192.168.0.107",
+            "port": "6379"
+        },
+        "USER_HASH_PREFIX": "userId",
+        "FOLLOWING_HASH_PREFIX": "followings",
+        "FOLLOWER_HASH_PREFIX": "followers",
+        "FRIENDS_HASH_PREFIX": "friends",
+        "NEAR_FRIENDS_HASH_PREFIX": "nearFriends",
+        "NEAR_USERS_HASH_PREFIX": "nearUsers",
+        "ADDRESS_HASH_PREFIX": "address",
+        "USER_ID_SORTED_SET": "userIds",
+        "GEO_SORTED_SET": "geos",
+        "USER_ALLOWED_INPUT_FIELDS": [
+            "name",
+            "dob",
+            "address",
+            "description"
+        ],
+        "ADDRESS_ALLOWED_INPUT_FIELDS": [
+            "longtitude",
+            "latitude",
+            "description"
+        ]
+    }
+}

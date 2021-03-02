@@ -19,7 +19,7 @@ module.exports = {
 	make_other_user_unfollow_user_url: 'http://localhost:3000/users/{userId}/followers/{otherUserId}',
 
 	// Friends apis.
-	get_all_friends_url: 'http://localhost:3000/users/{userId}/friends?page={page}&pageSize={pageSize}',
+	get_all_friends_url: 'http://localhost:3000/users/{userId}/friends?radius={radius}&page={page}&pageSize={pageSize}',
 	check_if_user_is_a_friend_of_other_user_url: 'http://localhost:3000/users/{userId}/friends/{otherUserId}'
 
 }
