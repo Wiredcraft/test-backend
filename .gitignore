@@ -7,6 +7,7 @@ __pycache__
 # Django stuff:
 # Ignore the default SQLite database.
 *.sqlite3
+.coverage
 
 # Environments
 user-api/
