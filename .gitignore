@@ -8,6 +8,7 @@ __pycache__
 # Ignore the default SQLite database.
 *.sqlite3
 .coverage
+.env
 
 # Environments
 user-api/

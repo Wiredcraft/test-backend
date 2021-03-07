@@ -10,6 +10,7 @@ source user-api/bin/activate  # On Windows use `env\Scripts\activate`
 
 pip install --requirement requirements.txt
 cd user
+cp user/.env.example user/.env
 ./manage.py migrate
 ./manage.py runserver
 ```
@@ -25,7 +26,7 @@ python manage.py test
 ```
 
 ## 4. APIs demonstration
-[OAuth's strategy setup](docs/oauth_manual.md) elaborate on a separate document. 
+[OAuth's strategy setup](../docs/oauth_manual.md) elaborate on a separate document. 
 ### Create An App User
 ```shell
 curl --location --request POST 'http://127.0.0.1:8000/appusers/' \
