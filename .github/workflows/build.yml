@@ -1,0 +1,23 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: actions/setup-node@v2.1.5
+      - run: |
+          npm ci
+          npm run test:cov
+          npm run test:e2e
+          npm run lint
+      - uses: actions/upload-artifact@v2.2.2
+        with:
+          name: coverage
+          path: coverage
