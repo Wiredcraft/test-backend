@@ -63,7 +63,7 @@ export interface ITResponse<T> {
 
 example:
 
-```json
+```javascript
 
 {
     requestId: "ff36a3cc-ec34-11e6-b1a0-64510650abcf",
@@ -93,7 +93,7 @@ export interface ITError<T> {
 
 example:
 
-```json
+```javascript
 {
 	// BusinessError CODE
         code: 13,
