@@ -1,34 +1,33 @@
 // error code
 export enum ErrorCode {
-  // 没问题
+  // OK
   OK = 0,
 
-  // 未知错误
+  // UNKNOWN
   UNKNOWN = 1,
 
-  // 头缺少数据
+  // HeaderLack
   HeaderLack = 2,
 
-  // 无权限
+  // NoPermission
   NoPermission = 3,
 
-  // 参数错误
+  // ParamError
   ParamError = 4,
 
-  // 资源不存在
+  // ResourceNotExist
   ResourceNotExist = 5,
 
-  // 资源已存在
+  // ResourceExist
   ResourceExist = 5,
 
 }
 
-// 业务错误的实际值
 export const ErrorMessage = {
-  [ErrorCode.UNKNOWN]: '未知错误',
-  [ErrorCode.HeaderLack]: 'Header 缺少数据',
-  [ErrorCode.NoPermission]: '无权限, 请联系管理员',
-  [ErrorCode.ParamError]: '参数错误',
+  [ErrorCode.UNKNOWN]: 'Unknown Error',
+  [ErrorCode.HeaderLack]: 'Header lack',
+  [ErrorCode.NoPermission]: 'no permission',
+  [ErrorCode.ParamError]: 'bad params',
   [ErrorCode.ResourceNotExist]: '{0} Resource {1} not exist',
   [ErrorCode.ResourceExist]: '{0} Resource {1} exist',
 };

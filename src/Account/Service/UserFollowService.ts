@@ -162,17 +162,10 @@ export default class UserFollowService {
     });
 
     // delete cache
-
-    // follow 有 maxFollow 限制, 删一个加一个理论上不存在一致性问题
     await this.redisService
       .getClient()
       .zrem(RedisKeys.UserFollow(userId), targetId);
 
-    // 删除之后会导致空缺, 先检查数量, 不够就补一个
-    // 如果恶性事件, 一堆人取关
-    // 强业务相关, // todo
-
-    // 先看看在不在缓存里面
     const remRes = await this.redisService
       .getClient()
       .zrem(RedisKeys.UserFans(targetId), userId);
