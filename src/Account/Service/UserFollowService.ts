@@ -67,6 +67,13 @@ export default class UserFollowService {
       }
     }
 
+    const followCache = await this.redisService
+      .getClient()
+      .zscore(RedisKeys.UserFollow(userId), targetId);
+    if (followCache && followCache !== '') {
+      return;
+    }
+
     // TODO 优化为先写缓存再同步DB
 
     const createdAt = new Date();

@@ -73,6 +73,12 @@ describe('UserService', () => {
       expect(await followModal.count({ targetId: userBId })).toBe(1);
     });
 
+    it('repeat follow', async () => {
+      await userFollowService.follow(userAId, userBId);
+      expect(await followModal.count({ userId: userAId })).toBe(1);
+      expect(await followModal.count({ targetId: userBId })).toBe(1);
+    });
+
     it('getFollowCount', async () => {
       expect(await userFollowService.getFollowCount(userAId)).toBe(1);
     });
