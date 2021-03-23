@@ -128,13 +128,14 @@ export default class UserController {
   })
   @ApiBadRequestResponse(SwaggerBadRequestResponse())
   @Get('/:id/nearby')
-  async get(@Param('id', new ObjectIdValidationPipe()) userId: string) {
+  async getNearby(@Param('id', new ObjectIdValidationPipe()) userId: string) {
     const users = await this.userGeoService.getNearByUser(userId, 20, 20);
     const list = [];
     for (const user of users) {
-      const u = await this.useService.getUserWithId(userId);
+      const u = await this.useService.getUserWithId(user.id);
       // 精度不够先用 cache 的
       list.push({
+        id: user.id,
         name: u.name,
         description: u.description,
         longitude: u.longitude,

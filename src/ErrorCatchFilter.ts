@@ -18,8 +18,6 @@ export class ErrorCatchFilter implements ExceptionFilter {
 
     let error: BusinessError<any>;
 
-    console.log('12312312312', exception)
-
     if (exception instanceof BusinessError) {
       error = exception;
     } else if (exception instanceof BadRequestException) {

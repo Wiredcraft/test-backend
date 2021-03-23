@@ -1,14 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsDate, IsDateString,
   IsNumber,
   IsString,
   Max,
   MaxLength,
   Min,
   MinLength,
-  Validate,
 } from 'class-validator';
-import DobValiation from '../../../Common/Validation/DobValiation';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -22,12 +21,12 @@ export class CreateUserDto {
   name: string;
 
   @ApiProperty({
-    description: 'date of birth, like 12-25-1999, MM-DD-YYYY',
+    description: 'date of birth',
     required: true,
-    example: '12-25-1999',
+    example: '2021-03-23T11:31:49.967Z',
   })
-  @Validate(DobValiation)
-  dob: string;
+  @IsDateString()
+  dob: Date;
 
   @ApiProperty({
     description: 'user address',
@@ -57,11 +56,11 @@ export class UpdateUserDto {
   name: string;
 
   @ApiProperty({
-    description: 'date of birth, like 12-25-1999, MM-DD-YYYY',
-    example: '12-25-1999',
+    description: 'date of birth',
+    example: '2021-03-23T11:31:49.967Z',
   })
-  @Validate(DobValiation)
-  dob: string;
+  @IsDateString()
+  dob: Date;
 
   @ApiProperty({
     description: 'user address',

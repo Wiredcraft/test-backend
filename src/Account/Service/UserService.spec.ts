@@ -21,7 +21,7 @@ describe('UserService', () => {
   const genMockUser = () => {
     return {
       name: 'testYser:' + randomBytes(5).toString('hex'),
-      dob: '12-12-2018',
+      dob: new Date(),
       description: randomBytes(10).toString('hex'),
       address: randomBytes(10).toString('hex'),
     };
@@ -75,16 +75,15 @@ describe('UserService', () => {
       expect(user.name).toBe(testUser.name);
       expect(user.description).toBe(testUser.description);
       expect(user.address).toBe(testUser.address);
-      expect(user.dob.getTime()).toBe(
-        moment(testUser.dob, 'MM-DD-YYYY').toDate().getTime(),
-      );
     });
 
     it('update user', async () => {
-      const newName = 'test2333';
-      await userService.updateUser(createId, {
-        name: genMockUser().name,
-      });
+      const newInfo = genMockUser();
+      await userService.updateUser(createId, newInfo);
+      const user = await userService.getUserWithId(createId);
+      expect(user.name).toBe(newInfo.name);
+      expect(user.description).toBe(newInfo.description);
+      expect(user.address).toBe(newInfo.address);
     });
 
     it('delete user & check unknown user', async () => {

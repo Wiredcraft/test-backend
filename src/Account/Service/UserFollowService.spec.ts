@@ -25,7 +25,7 @@ describe('UserService', () => {
   const genMokeUser = () => {
     return {
       name: 'testYser:' + randomBytes(5).toString('hex'),
-      dob: '12-12-2018',
+      dob: new Date(),
       description: randomBytes(10).toString('hex'),
       address: randomBytes(10).toString('hex'),
     };

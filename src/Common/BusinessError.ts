@@ -91,7 +91,6 @@ export default class BusinessError<T> implements ITError<T> {
    * get error object
    */
   public toError() {
-    console.log(process.env.NODE_ENV, this.details)
     return {
       code: this.code,
       details: process.env.NODE_ENV === 'prod' ? {} : this.details,

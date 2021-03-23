@@ -1,17 +1,20 @@
-import {HttpStatus, Inject, Injectable} from '@nestjs/common';
-import {RedisService} from 'nestjs-redis';
-import {InjectModel} from '@nestjs/mongoose';
-import {User} from '../Schema/UserSchema';
-import {Model, Types} from 'mongoose';
-import {ErrorCode} from '../../ErrorCode';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { RedisService } from 'nestjs-redis';
+import { InjectModel } from '@nestjs/mongoose';
+import { User } from '../Schema/UserSchema';
+import { Model, Types } from 'mongoose';
+import { ErrorCode } from '../../ErrorCode';
 import BusinessError from '../../Common/BusinessError';
 import UserGeoService from './UserGeoService';
 import * as moment from 'moment';
-import {InjectPinoLogger, PinoLogger} from 'nestjs-pino';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import RedisKeys from '../../Common/RedisKeys';
-import {ConfigService} from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import UserFollowService from './UserFollowService';
-import {CreateUserDto, UpdateUserDto,} from '../Controller/Dto/UserControllerDto';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+} from '../Controller/Dto/UserControllerDto';
 
 export interface IUserCache {
   id: string;
@@ -86,7 +89,6 @@ export default class UserService {
    * @param createUserDto
    */
   public async createUser(createUserDto: CreateUserDto) {
-    const dob = moment(createUserDto.dob, 'MM-DD-YYYY');
     const user = ((await this.userModel.updateOne(
       {
         name: createUserDto.name,
@@ -94,7 +96,7 @@ export default class UserService {
       {
         $setOnInsert: {
           name: createUserDto.name,
-          dob: dob.toDate(),
+          dob: createUserDto.dob,
           description: createUserDto.description,
           address: createUserDto.address,
           createdAt: new Date(),
@@ -187,7 +189,7 @@ export default class UserService {
 
     if (!user) {
       throw new BusinessError(
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.NOT_FOUND,
         ErrorCode.ResourceNotExist,
         ['User', userId],
       );
@@ -201,6 +203,7 @@ export default class UserService {
     userId: string,
     updateUserDto: Partial<User> | Partial<UpdateUserDto>,
   ) {
+
     if (!(await this.userModel.exists({ _id: userId }))) {
       throw new BusinessError(
         HttpStatus.BAD_REQUEST,
@@ -214,13 +217,6 @@ export default class UserService {
         'User name',
         updateUserDto.name,
       ]);
-    }
-
-    if (updateUserDto.dob) {
-      ((updateUserDto as unknown) as User).dob = moment(
-        updateUserDto.dob,
-        'MM-DD-YYYY',
-      ).toDate();
     }
 
     await this.userModel.findByIdAndUpdate(userId, {
