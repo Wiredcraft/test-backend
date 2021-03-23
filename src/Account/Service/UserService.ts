@@ -1,20 +1,17 @@
-import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { RedisService } from 'nestjs-redis';
-import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../Schema/UserSchema';
-import { Model } from 'mongoose';
-import { ErrorCode } from '../../ErrorCode';
+import {HttpStatus, Inject, Injectable} from '@nestjs/common';
+import {RedisService} from 'nestjs-redis';
+import {InjectModel} from '@nestjs/mongoose';
+import {User} from '../Schema/UserSchema';
+import {Model, Types} from 'mongoose';
+import {ErrorCode} from '../../ErrorCode';
 import BusinessError from '../../Common/BusinessError';
 import UserGeoService from './UserGeoService';
 import * as moment from 'moment';
-import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
+import {InjectPinoLogger, PinoLogger} from 'nestjs-pino';
 import RedisKeys from '../../Common/RedisKeys';
-import { ConfigService } from '@nestjs/config';
+import {ConfigService} from '@nestjs/config';
 import UserFollowService from './UserFollowService';
-import {
-  CreateUserDto,
-  UpdateUserDto,
-} from '../Controller/Dto/UserControllerDto';
+import {CreateUserDto, UpdateUserDto,} from '../Controller/Dto/UserControllerDto';
 
 export interface IUserCache {
   id: string;
@@ -90,31 +87,45 @@ export default class UserService {
    */
   public async createUser(createUserDto: CreateUserDto) {
     const dob = moment(createUserDto.dob, 'MM-DD-YYYY');
-    // if user exist, throw ResourceExist
-    if (await this.userModel.exists({ name: createUserDto.name })) {
+    const user = ((await this.userModel.updateOne(
+      {
+        name: createUserDto.name,
+      },
+      {
+        $setOnInsert: {
+          name: createUserDto.name,
+          dob: dob.toDate(),
+          description: createUserDto.description,
+          address: createUserDto.address,
+          createdAt: new Date(),
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+      },
+    )) as unknown) as {
+      upserted: { index: number; _id: Types.ObjectId }[];
+      n: number;
+    };
+
+    if (user.n === 1 && user.upserted?.length === 1) {
+      const userId = user.upserted[0]._id.toString();
+      await this.cacheUser(userId);
+      return {
+        id: user.upserted[0]._id.toString(),
+      };
+    }
+
+    if (user.n === 1 && !user.upserted) {
       throw new BusinessError(HttpStatus.BAD_REQUEST, ErrorCode.ResourceExist, [
         'User',
         createUserDto.name,
       ]);
     }
 
-    // create user data
-    const user = new this.userModel({
-      name: createUserDto.name,
-      dob: dob.toDate(),
-      description: createUserDto.description,
-      address: createUserDto.address,
-      createdAt: new Date(),
-    });
-
-    // save data
-    await user.save();
-
-    // cache user
-    await this.cacheUser(user);
-    return {
-      id: user._id.toString(),
-    };
+    this.logger.error(`User ${createUserDto.name} create fail`, user);
+    throw new BusinessError(HttpStatus.BAD_REQUEST, ErrorCode.UNKNOWN);
   }
 
   public async cacheUser(id: string);
