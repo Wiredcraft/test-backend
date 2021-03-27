@@ -3,7 +3,8 @@ import { UserNotFoundException } from '../../domain/user.exception';
 import { UserRepository } from '../../domain/user.repository';
 
 export class OnMemoryUserRepository extends UserRepository {
-  constructor(private readonly map: Map<UserId, User>) {
+  private readonly map: Map<UserId, User>;
+  constructor() {
     super();
     this.map = new Map<UserId, User>();
   }

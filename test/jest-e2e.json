@@ -1,9 +1,16 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
+  "rootDir": "..",
   "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
+  "testRegex": "test/.*.e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
-  }
+  },
+  "coverageDirectory": "coverage-e2e",
+  "collectCoverageFrom": ["src/**"],
+  "coveragePathIgnorePatterns": [
+    ".module.ts$",
+    ".spec.ts$",
+    "src/infra/on-memory"
+  ]
 }

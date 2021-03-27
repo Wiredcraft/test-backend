@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/KengoTODA/test-backend/badge.svg?branch=master)](https://coveralls.io/github/KengoTODA/test-backend?branch=master)
+
 ## Developers' Note
 
 ### Run MongoDB in container

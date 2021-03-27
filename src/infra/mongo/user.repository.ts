@@ -58,7 +58,7 @@ export class MongoUserRepository extends UserRepository {
     }
     return new Promise(async (resolve) => {
       const updatedUser = this.userModel
-        .findByIdAndUpdate(user.id, mapToMongo(user))
+        .updateOne({ _id: user.id }, mapToMongo(user))
         .exec()
         .then(() => {
           resolve(void 0);
@@ -84,10 +84,10 @@ export class MongoUserRepository extends UserRepository {
     }
     return new Promise((resolve, reject) => {
       this.userModel
-        .findByIdAndDelete(id)
+        .deleteOne({ _id: id })
         .exec()
         .then((result) => {
-          if (!result) {
+          if (result.ok && result.deletedCount !== 1) {
             reject(new UserNotFoundException(id));
           }
           resolve(void 0);
