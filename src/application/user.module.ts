@@ -1,17 +1,10 @@
 import { Module } from '@nestjs/common';
-import { UserRepository } from '../domain/user.repository';
-import { OnMemoryUserRepository } from '../infra/on-memory/user.repository';
 import { UserAppService } from './user.service';
-
-export const userRepositoryProvider = {
-  provide: UserRepository,
-  useClass: OnMemoryUserRepository,
-};
+import { MongoUserModule } from '../infra/mongo/user.module';
 
 @Module({
-  imports: [],
-  controllers: [],
-  providers: [UserAppService, userRepositoryProvider],
+  imports: [MongoUserModule],
+  providers: [UserAppService],
   exports: [UserAppService],
 })
 export class UserModule {}

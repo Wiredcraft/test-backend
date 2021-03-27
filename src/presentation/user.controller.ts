@@ -4,21 +4,18 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Put,
+  UseFilters,
 } from '@nestjs/common';
-import {
-  UserId,
-  UserNotFoundException,
-  UserAppService,
-} from '../application/user.service';
+import { UserId, UserAppService } from '../application/user.service';
 import { UserDto, UserWithIdDto } from './user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UserNotFoundExceptionFilter } from './user.filter';
 @ApiTags('users')
 @Controller('/users')
+@UseFilters(new UserNotFoundExceptionFilter())
 export class UserController {
   constructor(private readonly UserAppService: UserAppService) {}
 
@@ -30,9 +27,9 @@ export class UserController {
     status: 200,
     description: 'The record has been successfully listed.',
   })
-  listUser(): UserWithIdDto[] {
+  async listUser(): Promise<UserWithIdDto[]> {
     // TODO handle as stream
-    return Array.from(this.UserAppService.listUser());
+    return Array.from(await this.UserAppService.listUser());
   }
 
   @Get(':id')
@@ -45,16 +42,8 @@ export class UserController {
     description: 'The record has been successfully found.',
   })
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
-  findUser(id: UserId): UserWithIdDto {
-    const user = this.UserAppService.getUser(id);
-    if (user === undefined) {
-      throw new HttpException(
-        `No user found with user ID ${id}`,
-        HttpStatus.NOT_FOUND,
-      );
-    } else {
-      return user;
-    }
+  async findUser(id: UserId): Promise<UserWithIdDto> {
+    return await this.UserAppService.getUser(id);
   }
 
   @Post()
@@ -66,9 +55,8 @@ export class UserController {
     status: 201,
     description: 'The record has been successfully created.',
   })
-  createUser(user: UserDto): UserWithIdDto {
-    const createdUser = this.UserAppService.createUser(user);
-    return createdUser;
+  createUser(user: UserDto): Promise<UserWithIdDto> {
+    return this.UserAppService.createUser(user);
   }
 
   @Put(':id')
@@ -81,21 +69,10 @@ export class UserController {
     description: 'The record has been successfully updated.',
   })
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
-  updateUser(id: string, user: UserDto): UserWithIdDto {
-    try {
-      const updated = { ...user, id };
-      this.UserAppService.updateUser(updated);
-      return updated;
-    } catch (e) {
-      if (e instanceof UserNotFoundException) {
-        throw new HttpException(
-          `No user found with user ID ${id}`,
-          HttpStatus.NOT_FOUND,
-        );
-      } else {
-        throw e;
-      }
-    }
+  async updateUser(id: string, user: UserDto): Promise<UserWithIdDto> {
+    const updated = { ...user, id };
+    await this.UserAppService.updateUser(updated);
+    return updated;
   }
 
   @Delete(':id')
@@ -108,13 +85,7 @@ export class UserController {
     description: 'The record has been successfully deleted.',
   })
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
-  deleteUser(id: UserId) {
-    const success = this.UserAppService.deleteUser(id);
-    if (!success) {
-      throw new HttpException(
-        `No user found with user ID ${id}`,
-        HttpStatus.NOT_FOUND,
-      );
-    }
+  async deleteUser(id: UserId) {
+    await this.UserAppService.deleteUser(id);
   }
 }

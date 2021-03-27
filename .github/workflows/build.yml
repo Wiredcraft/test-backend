@@ -9,6 +9,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:4.4
+        ports:
+          - '27017:27017'
     steps:
       - uses: actions/checkout@v2.3.4
       - uses: actions/setup-node@v2.1.5

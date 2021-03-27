@@ -1,8 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
-import { NewUser } from 'src/domain/user.interface';
+import { UserController } from '../src/presentation/user.controller';
+import { UserModule } from '../src/application/user.module';
+import { NewUser } from '../src/domain/user.interface';
+import { OnMemoryUserRepository } from '../src/infra/on-memory/user.repository';
+import { UserRepository } from '../src/domain/user.repository';
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
@@ -17,11 +21,25 @@ describe('UserController (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [UserModule, MongooseModule.forRoot('mongodb://localhost/e2e')],
+      controllers: [UserController],
+      providers: [
+        {
+          provide: UserRepository,
+          useClass: OnMemoryUserRepository,
+        },
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
+
+    const repository = app.get<UserRepository>(UserRepository);
+    return repository.deleteAll();
+  });
+
+  afterEach(() => {
+    app.close();
   });
 
   describe('/users (GET)', () => {

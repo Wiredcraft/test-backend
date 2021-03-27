@@ -6,7 +6,7 @@ import { UserRepository } from '../domain/user.repository';
 export class UserAppService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  listUser(): IterableIterator<User> {
+  async listUser(): Promise<IterableIterator<User>> {
     return this.userRepository.list();
   }
 
@@ -14,43 +14,27 @@ export class UserAppService {
    * @param id UserId of the target user
    * @returns the user data found by the given UserId
    */
-  getUser(id: UserId): User | undefined {
+  async getUser(id: UserId): Promise<User> {
     return this.userRepository.load(id);
   }
 
-  createUser(newUser: NewUser): User {
-    const id = this.createUserId();
-    const createdUser = { ...newUser, id };
-    this.userRepository.store(createdUser);
+  async createUser(newUser: NewUser): Promise<User> {
+    const createdUser = await this.userRepository.create(newUser);
     return createdUser;
   }
 
-  updateUser(user: User) {
-    const old = this.userRepository.load(user.id);
-    if (!old) {
-      throw new UserNotFoundException(user.id);
-    }
-    this.userRepository.store(user);
+  async updateUser(user: User) {
+    return this.userRepository.update(user);
   }
 
   /**
    * @param id UserId of the target user
    * @returns true if user is found and deleted
    */
-  deleteUser(id: UserId): boolean {
+  deleteUser(id: UserId): Promise<void> {
     return this.userRepository.delete(id);
-  }
-
-  private createUserId(): string {
-    // TODO generate user id randomly
-    return 'a';
-  }
-}
-
-export class UserNotFoundException extends Error {
-  constructor(id: string) {
-    super(`No user found with user ID ${id}`);
   }
 }
 
 export { User, NewUser, UserId } from '../domain/user.interface';
+export { UserNotFoundException } from '../domain/user.exception';
