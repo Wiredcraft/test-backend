@@ -1,5 +1,4 @@
 import { UserNotFoundException } from '../../domain/user.exception';
-import { NewUser, User, UserId } from '../../domain/user.interface';
 import { OnMemoryUserRepository } from './user.repository';
 
 describe('OnMemory infra tier', () => {
@@ -42,20 +41,29 @@ describe('OnMemory infra tier', () => {
   });
 
   describe('update()', () => {
-    it('throws an error if user not found', async () => {
-      async function tryUpdate() {
-        await repo.update({
+    it('throws an error if UserId is invalid', async () => {
+      expect(
+        repo.update({
           id: 'unknown',
           name: 'name',
           dob: new Date(),
           address: 'address',
           description: 'description',
           createdAt: new Date(),
-        });
-      }
-      expect(async () => {
-        await tryUpdate();
-      }).rejects.toThrow(UserNotFoundException);
+        }),
+      ).rejects.toThrow(UserNotFoundException);
+    });
+    it('throws an error if user not found', async () => {
+      expect(
+        repo.update({
+          id: '12characters',
+          name: 'name',
+          dob: new Date(),
+          address: 'address',
+          description: 'description',
+          createdAt: new Date(),
+        }),
+      ).rejects.toThrow(UserNotFoundException);
     });
     it('updates property', async () => {
       const created = await repo.create({

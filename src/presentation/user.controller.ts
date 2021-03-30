@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   Post,
   Put,
@@ -13,11 +14,14 @@ import { UserId, UserAppService } from '../application/user.service';
 import { UserDto, UserWithIdDto } from './user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserNotFoundExceptionFilter } from './user.filter';
+
+const CONTEXT = 'UserController';
+
 @ApiTags('users')
 @Controller('/users')
 @UseFilters(new UserNotFoundExceptionFilter())
 export class UserController {
-  constructor(private readonly UserAppService: UserAppService) {}
+  constructor(private readonly userAppService: UserAppService) {}
 
   @Get()
   @ApiOperation({
@@ -28,8 +32,13 @@ export class UserController {
     description: 'The record has been successfully listed.',
   })
   async listUser(): Promise<UserWithIdDto[]> {
+    Logger.debug(`listUser...`, CONTEXT);
     // TODO handle as stream
-    return Array.from(await this.UserAppService.listUser());
+    const result = await this.userAppService.listUser().then((iter) => {
+      return Array.from(iter);
+    });
+    Logger.debug(`listUser finished`, CONTEXT);
+    return result;
   }
 
   @Get(':id')
@@ -43,7 +52,10 @@ export class UserController {
   })
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
   async findUser(id: UserId): Promise<UserWithIdDto> {
-    return await this.UserAppService.getUser(id);
+    Logger.debug(`findUser with UserId ${id}...`, CONTEXT);
+    const result = await this.userAppService.getUser(id);
+    Logger.debug(`findUser finished with UserId ${id}`, CONTEXT);
+    return result;
   }
 
   @Post()
@@ -56,7 +68,11 @@ export class UserController {
     description: 'The record has been successfully created.',
   })
   createUser(user: UserDto): Promise<UserWithIdDto> {
-    return this.UserAppService.createUser(user);
+    Logger.debug(`createUser with ${user}...`, CONTEXT);
+    return this.userAppService.createUser(user).then((created) => {
+      Logger.debug(`createUser finished with ${user}`, CONTEXT);
+      return created;
+    });
   }
 
   @Put(':id')
@@ -71,7 +87,9 @@ export class UserController {
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
   async updateUser(id: string, user: UserDto): Promise<UserWithIdDto> {
     const updated = { ...user, id };
-    await this.UserAppService.updateUser(updated);
+    Logger.debug(`updateUser with user ${updated}...`, CONTEXT);
+    await this.userAppService.updateUser(updated);
+    Logger.debug(`updateUser finished with user ${updated}`, CONTEXT);
     return updated;
   }
 
@@ -86,6 +104,8 @@ export class UserController {
   })
   @ApiResponse({ status: 404, description: 'The record has not been found.' })
   async deleteUser(id: UserId) {
-    await this.UserAppService.deleteUser(id);
+    Logger.debug(`deleteUser with UserId ${id}...`, CONTEXT);
+    await this.userAppService.deleteUser(id);
+    Logger.debug(`deleteUser finished with UserId ${id}`, CONTEXT);
   }
 }

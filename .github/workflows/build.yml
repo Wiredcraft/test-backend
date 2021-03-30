@@ -21,7 +21,7 @@ jobs:
           npm ci
           npm run test:cov
           npm run test:e2e
-          npm run lint
+          npm run lint -- --max-warnings=0
       - uses: coverallsapp/github-action@v1.1.2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
