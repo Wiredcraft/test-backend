@@ -71,6 +71,32 @@ describe('UserController (e2e)', () => {
             .end(done);
         });
     });
+
+    it('returns user in limited size', async () => {
+      const responses = await Promise.all([
+        request(app.getHttpServer()).post('/users').send(user).expect(201),
+        request(app.getHttpServer()).post('/users').send(user).expect(201),
+        request(app.getHttpServer()).post('/users').send(user).expect(201),
+        request(app.getHttpServer()).post('/users').send(user).expect(201),
+      ]);
+      const userIds: string[] = responses.map((res) => {
+        return res.body.id;
+      });
+      userIds.sort();
+
+      const responseToList = await request(app.getHttpServer())
+        .get('/users')
+        .query({
+          limit: '2',
+          from: userIds[0],
+        })
+        .expect(200);
+
+      const idInList: string[] = responseToList.body.map((user) => {
+        return user.id;
+      });
+      expect(idInList).toStrictEqual([userIds[1], userIds[2]]);
+    });
   });
 
   describe('/users/:id (GET)', () => {

@@ -19,8 +19,8 @@ digraph G {
         color = gray
         "Repository (interface)" -> Entity -> ValueObject
         "Repository (interface)" -> ValueObject
-        "Repository (interface)" -> Exception
-        { rank = same; Entity; ValueObject; Exception; }
+        "Repository (interface)" -> Error
+        { rank = same; Entity; ValueObject; Error; }
     }
     subgraph cluster_infrastructure {
         label = "Infrastructure"
@@ -52,14 +52,12 @@ This tier represents the domain of target business. In this layer, we put the fo
 - Value object (VO) like UserId
 - Entity like User
 - Domain Service
-- Exception, and
+- Error, and
 - Repository interface
 
 ### Infrastructure
 
 This tier represents the infrastructure implementation of repository. In this layer, we put the Repository implementation.
-
-This tier is responsible to decide the ID of entities, because requirements for ID depends on the database system: one uses `UUID` and another uses `BLOB`. In case of Mongo it uses [ObjectId](https://docs.mongodb.com/manual/reference/bson-types/#objectid) that can be represented as a string with 12 characters.
 
 Ideally, this tier can be replaced with similar implementation that supports another datastore, without updating other tiers.
 

@@ -6,7 +6,12 @@
  */
 
 import { UserId } from 'src/domain/user.interface';
-import { IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumberString,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UserDto {
@@ -54,4 +59,24 @@ export class UserWithIdDto extends UserDto {
   @IsNotEmpty()
   @IsString()
   id: UserId;
+}
+
+export class ListConditionDto {
+  @ApiProperty({
+    required: false,
+    description:
+      'UserId exclusively starts from. Usually set the UserId of last element in previous result',
+  })
+  @IsNotEmpty()
+  @IsString()
+  @IsOptional()
+  from?: UserId;
+
+  @ApiProperty({
+    required: false,
+    description: 'Maximum length of the result',
+  })
+  @IsNumberString()
+  @IsOptional()
+  limit?: string;
 }

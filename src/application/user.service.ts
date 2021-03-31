@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { NewUser, User, UserId } from '../domain/user.interface';
 import { UserRepository } from '../domain/user.repository';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UserAppService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async listUser(): Promise<IterableIterator<User>> {
-    return this.userRepository.list();
+  async listUser(from: UserId, limit: number): Promise<User[]> {
+    return this.userRepository.list(from, limit);
   }
 
   /**
@@ -19,8 +20,10 @@ export class UserAppService {
   }
 
   async createUser(newUser: NewUser): Promise<User> {
-    const createdUser = await this.userRepository.create(newUser);
-    return createdUser;
+    const id = uuidv4();
+    const user = { ...newUser, id };
+    await this.userRepository.create(user);
+    return user;
   }
 
   async updateUser(user: User) {
@@ -37,4 +40,4 @@ export class UserAppService {
 }
 
 export { User, NewUser, UserId } from '../domain/user.interface';
-export { UserNotFoundException } from '../domain/user.exception';
+export { UserNotFoundError } from '../domain/user.error';

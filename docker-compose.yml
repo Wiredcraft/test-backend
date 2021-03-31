@@ -1,0 +1,14 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:4.4
+    expose:
+      - '27017'
+  app:
+    build: .
+    depends_on:
+      - mongo
+    ports:
+      - '3000:3000'
+    environment:
+      MONGO_SERVER: mongo

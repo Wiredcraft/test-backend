@@ -8,18 +8,19 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseFilters,
 } from '@nestjs/common';
 import { UserId, UserAppService } from '../application/user.service';
-import { UserDto, UserWithIdDto } from './user.dto';
+import { ListConditionDto, UserDto, UserWithIdDto } from './user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserNotFoundExceptionFilter } from './user.filter';
+import { UserNotFoundErrorFilter } from './user.filter';
 
 const CONTEXT = 'UserController';
 
 @ApiTags('users')
 @Controller('/users')
-@UseFilters(new UserNotFoundExceptionFilter())
+@UseFilters(new UserNotFoundErrorFilter())
 export class UserController {
   constructor(private readonly userAppService: UserAppService) {}
 
@@ -31,12 +32,16 @@ export class UserController {
     status: 200,
     description: 'The record has been successfully listed.',
   })
-  async listUser(): Promise<UserWithIdDto[]> {
-    Logger.debug(`listUser...`, CONTEXT);
-    // TODO handle as stream
-    const result = await this.userAppService.listUser().then((iter) => {
-      return Array.from(iter);
-    });
+  @Bind(Query())
+  async listUser(condition: ListConditionDto): Promise<UserWithIdDto[]> {
+    Logger.debug(
+      `listUser with condition ${JSON.stringify(condition)}...`,
+      CONTEXT,
+    );
+    const result = await this.userAppService.listUser(
+      condition.from,
+      Number.parseInt(condition.limit, 10) | 0,
+    );
     Logger.debug(`listUser finished`, CONTEXT);
     return result;
   }

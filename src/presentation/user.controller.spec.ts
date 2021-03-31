@@ -27,7 +27,7 @@ describe('UserController', () => {
 
   describe('root', () => {
     it('should return empty list', async () => {
-      const list = Array.from(await userController.listUser());
+      const list = Array.from(await userController.listUser({}));
       expect(list.length).toBe(0);
     });
 
@@ -40,7 +40,7 @@ describe('UserController', () => {
         createdAt: new Date(),
       });
 
-      const list = await userController.listUser();
+      const list = await userController.listUser({});
       expect(list.length).toBe(1);
       expect(list[0]).toEqual(created);
     });

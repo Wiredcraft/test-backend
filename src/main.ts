@@ -2,32 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { existsSync, readFileSync } from 'fs';
-import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 
 const CONTEXT = 'Main';
-const CERT_FILE = 'localhost.pem';
-const KEY_FILE = 'localhost-key.pem';
-
-function createApp(): Promise<INestApplication> {
-  let httpsOptions: HttpsOptions = {};
-  if (existsSync(`./${KEY_FILE}`) && existsSync(`./${CERT_FILE}`)) {
-    Logger.log('Certificate found, use HTTPS to serve app', CONTEXT);
-    httpsOptions = {
-      key: readFileSync(`./${KEY_FILE}`),
-      cert: readFileSync(`./${CERT_FILE}`),
-    };
-  } else if (process.env.NODE_ENV === 'development') {
-    Logger.log(
-      `Certificate files not found. Put ${KEY_FILE} and ${CERT_FILE} in the project root to use HTTPS.`,
-      CONTEXT,
-    );
-  }
-
-  return NestFactory.create(AppModule, {
-    httpsOptions,
-  });
-}
 
 function setUpOpenApi(app: INestApplication) {
   Logger.log('Setting up OpenApi document...', CONTEXT);
@@ -46,7 +22,7 @@ function setUpOpenApi(app: INestApplication) {
 
 async function bootstrap() {
   Logger.log('Bootstrapping app...', CONTEXT);
-  const app = await createApp();
+  const app = await NestFactory.create(AppModule);
   setUpOpenApi(app);
   app.useGlobalPipes(new ValidationPipe());
 

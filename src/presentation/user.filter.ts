@@ -1,10 +1,10 @@
 import { ArgumentsHost } from '@nestjs/common';
 import { Catch, HttpStatus } from '@nestjs/common';
-import { UserNotFoundException } from '../application/user.service';
+import { UserNotFoundError } from '../application/user.service';
 
-@Catch(UserNotFoundException)
-export class UserNotFoundExceptionFilter {
-  catch(exception: UserNotFoundException, host: ArgumentsHost) {
+@Catch(UserNotFoundError)
+export class UserNotFoundErrorFilter {
+  catch(exception: UserNotFoundError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
 
