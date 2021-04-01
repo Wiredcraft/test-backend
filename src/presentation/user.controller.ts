@@ -72,12 +72,11 @@ export class UserController {
     status: 201,
     description: 'The record has been successfully created.',
   })
-  createUser(user: UserDto): Promise<UserWithIdDto> {
+  async createUser(user: UserDto): Promise<UserWithIdDto> {
     Logger.debug(`createUser with ${user}...`, CONTEXT);
-    return this.userAppService.createUser(user).then((created) => {
-      Logger.debug(`createUser finished with ${user}`, CONTEXT);
-      return created;
-    });
+    const created = this.userAppService.createUser(user);
+    Logger.debug(`createUser finished with ${user}`, CONTEXT);
+    return created;
   }
 
   @Put(':id')
