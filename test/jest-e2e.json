@@ -7,7 +7,6 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "coverageDirectory": "coverage-e2e",
-  "collectCoverageFrom": ["src/**"],
   "coveragePathIgnorePatterns": [
     ".module.ts$",
     ".spec.ts$",
