@@ -4,15 +4,15 @@ import { UserId } from '../../domain/user.interface';
 
 @Schema()
 export class UserInMongo {
-  @Prop({ unique: true })
+  @Prop({ unique: true, minlength: 1, maxlength: 36 })
   id: UserId;
-  @Prop()
+  @Prop({ minlength: 1, maxlength: 50 })
   name: string;
   @Prop()
   dob: Date;
-  @Prop()
+  @Prop({ maxlength: 30 })
   address: string;
-  @Prop()
+  @Prop({ maxlength: 160 })
   description: string;
   @Prop()
   createdAt: Date;

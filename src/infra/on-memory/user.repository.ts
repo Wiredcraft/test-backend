@@ -12,7 +12,7 @@ export class OnMemoryUserRepository extends UserRepository {
     this.map = new Map<UserId, User>();
   }
 
-  list(from: UserId, limit?: number): Promise<User[]> {
+  list(from: UserId, limit = DEFAULT_LIST_SIZE): Promise<User[]> {
     if (limit <= 0) {
       limit = DEFAULT_LIST_SIZE;
     }
@@ -32,7 +32,8 @@ export class OnMemoryUserRepository extends UserRepository {
     if (start === list.length) {
       return Promise.resolve([]);
     }
-    return Promise.resolve(list.slice(start, limit));
+    const result = list.slice(start, start + limit);
+    return Promise.resolve(result);
   }
 
   create(user: User) {

@@ -13,7 +13,9 @@ describe('Mongo infra tier', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         MongoUserModule,
-        MongooseModule.forRoot('mongodb://localhost/unit'),
+        MongooseModule.forRoot(
+          'mongodb://localhost/unit' + Math.random().toString(36).substring(7),
+        ),
       ],
     }).compile();
 
