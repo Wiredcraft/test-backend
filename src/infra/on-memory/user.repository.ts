@@ -20,16 +20,10 @@ export class OnMemoryUserRepository extends UserRepository {
 
     const list = Array.from(this.map.values());
     list.sort((a, b) => a.id.localeCompare(b.id));
-    let start = 0;
-    if (from) {
-      for (const user of list) {
-        if (from.localeCompare(user.id) < 0) {
-          break;
-        }
-        ++start;
-      }
-    }
-    if (start === list.length) {
+    const start = from
+      ? list.findIndex((user) => from.localeCompare(user.id) < 0)
+      : 0;
+    if (start < 0) {
       return Promise.resolve([]);
     }
     const result = list.slice(start, start + limit);
