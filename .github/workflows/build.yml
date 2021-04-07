@@ -37,7 +37,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
-      - uses: actions/upload-artifact@v2.2.2
+      - uses: actions/upload-artifact@v2.2.3
         with:
           name: coverage
           path: coverage
