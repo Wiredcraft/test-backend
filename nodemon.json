@@ -1,0 +1,7 @@
+{
+	"exec": "babel-node -r dotenv/config src/index.js",
+	"watch": [
+		"src"
+	],
+	"ext": "js"
+}
