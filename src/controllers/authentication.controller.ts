@@ -54,6 +54,67 @@ export class AuthenticationController {
           },
         },
       },
+      '400': {
+        description: 'Wrong Request body Structure',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                error: {
+                  type: 'object',
+                  properties: {
+                    statusCode: {
+                      type: 'integer'
+                    },
+                    name: {
+                      type: 'string'
+                    },
+                    message: {
+                      type: 'string'
+                    } 
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '422': {
+        description: 'Invalid Request body',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                error: {
+                  type: 'object',
+                  properties: {
+                    statusCode: {
+                      type: 'integer'
+                    },
+                    name: {
+                      type: 'string'
+                    },
+                    message: {
+                      type: 'string'
+                    },
+                    code: {
+                      type: 'integer'
+                    },
+                    details: {
+                      type: 'array',
+                      items: {
+                        type: 'object'
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
     },
   })
   async signUp(
@@ -129,6 +190,67 @@ export class AuthenticationController {
             },
           },
         },
+      },
+      '400': {
+        description: 'Wrong Request body Structure',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                error: {
+                  type: 'object',
+                  properties: {
+                    statusCode: {
+                      type: 'integer'
+                    },
+                    name: {
+                      type: 'string'
+                    },
+                    message: {
+                      type: 'string'
+                    } 
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '422': {
+        description: 'Invalid Request body',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                error: {
+                  type: 'object',
+                  properties: {
+                    statusCode: {
+                      type: 'integer'
+                    },
+                    name: {
+                      type: 'string'
+                    },
+                    message: {
+                      type: 'string'
+                    },
+                    code: {
+                      type: 'integer'
+                    },
+                    details: {
+                      type: 'array',
+                      items: {
+                        type: 'object'
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       },
     },
   })
