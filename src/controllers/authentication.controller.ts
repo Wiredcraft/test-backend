@@ -285,4 +285,21 @@ export class AuthenticationController {
       throw new HttpErrors.Unauthorized('Invalid email or password.');
     }
   }
+
+  // Refresh 
+
+  // type Refresh = {
+  //   refresh_token: string;
+  // }
+
+  // async refresh(
+  //   @requestBody({
+  //     required: true,
+  //     description: 'add refresh token'
+  //   })
+    
+  // ): Promise<{tokenData: Tokens}>
+
+
+  // logout ==> user RevokeToken to logout the user
 }

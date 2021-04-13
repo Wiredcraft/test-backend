@@ -1,4 +1,4 @@
-import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
+import { inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
 import {juggler} from '@loopback/repository';
 
 // To FIX: Add .env file to house sensitive data
