@@ -52,6 +52,7 @@
     "@loopback/core": "^2.9.3",
     "@loopback/extension-health": "^0.4.11",
     "@loopback/extension-logging": "^0.3.11",
+    "@loopback/logging": "^0.5.1",
     "@loopback/repository": "^2.11.0",
     "@loopback/rest": "^6.0.0",
     "@loopback/rest-explorer": "^2.2.8",

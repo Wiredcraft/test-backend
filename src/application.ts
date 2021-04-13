@@ -44,7 +44,6 @@ export class TestBackendApplication extends BootMixin(ServiceMixin(RepositoryMix
     });
 
     // FIXME: Extract to separate log config file.
-    // setup logger with winston
     const customFormat = winston.format.combine(
       winston.format.splat(),
       winston.format.simple(),
@@ -56,6 +55,7 @@ export class TestBackendApplication extends BootMixin(ServiceMixin(RepositoryMix
     winston.loggers.add(LogConfig.logName, {
       exitOnError: false,
       format: winston.format.combine(customFormat),
+      
       transports: [
         new DailyRotateFile({
           filename: LogConfig.logDirectory + LogConfig.logFileError,
