@@ -24,6 +24,6 @@ export const swaggerOptions = (apiVersion) => {
         }
       ]
     },
-    apis: ['src/routes/users.js', 'src/models/User.js'],
+    apis: ['src/routes/*.js', 'src/models/*.js'],
   };
 };

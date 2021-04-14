@@ -36,6 +36,9 @@ describe('Users path', () => {
       name: 'Amy',
       dob: '2000-01-01',
       address: 'aaa',
+      location: {
+        coordinates: [121.65, 31.32]
+      },
       description: 'ddd'
     });
     await user.save();
@@ -43,12 +46,20 @@ describe('Users path', () => {
 
   afterAll(async () => {
     // remove all testing users and close connection.
-    await User.remove({});
+    await User.deleteMany({});
     mongoose.connection.close();
   });
 
   test('It should be able to create a user via /POST request', async done => {
-    const data = { name: 'Bob', dob: '2000-01-01', address: 'aaa', description: 'ddd' };
+    const data = {
+      name: 'Bob',
+      dob: '2000-01-01',
+      address: 'aaa',
+      location: {
+        coordinates: [121.65, 31.32]
+      },
+      description: 'ddd'
+    };
     const response = await request(app)
       .post('/v1/users')
       .send(data);
