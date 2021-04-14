@@ -183,13 +183,6 @@ export class AuthenticationController {
     validateCredentials(_.pick(newUserRequest, ['email', 'password']));
     const password = await this.passwordHasher.hashPassword(newUserRequest.password);
     try {
-      // const checkIfUserExist = await this.userRepository.findOne({ 
-      //   where: {email: _.pick(newUserRequest.email)},
-      // })
-      // if(checkIfUserExist) {
-      //   this.logger.error('User creation failed: ', 'User exist');
-      //   throw new HttpErrors.BadRequest('Sign up failed, This User exists');
-      // }
       const newUser = await this.userRepository.create(_.omit(newUserRequest, 'password'));
       await this.userRepository.userCredentials(newUser.id).create({password});
       const userProfile = this.userService.convertToUserProfile(newUser);
