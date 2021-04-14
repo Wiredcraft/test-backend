@@ -12,6 +12,6 @@ export const validateId = (resource) => {
     if(mongoose.Types.ObjectId.isValid(req.params.id)){
       return next();
     }
-    res.status(404).json({"message": `${resource} not found`});
-  } 
-}
+    res.status(404).json({'message': `${resource} not found`});
+  }; 
+};

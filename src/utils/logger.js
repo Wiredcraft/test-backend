@@ -1,4 +1,4 @@
-import winston, { format, transport } from 'winston';
+import winston, { format } from 'winston';
 import expressWinston from 'express-winston';
 
 export const accessLogger = expressWinston.logger({
