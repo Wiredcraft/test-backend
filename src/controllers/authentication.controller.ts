@@ -1,5 +1,5 @@
 // Uncomment these imports to begin using these cool features!
-import {TokenService, UserService} from '@loopback/authentication';
+import {authenticate, TokenService, UserService} from '@loopback/authentication';
 import {TokenServiceBindings, User, UserServiceBindings} from '@loopback/authentication-jwt';
 import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
@@ -9,6 +9,7 @@ import winston from 'winston';
 import {LogConfig} from '../config/logConfig';
 import {PasswordHasherBindings} from '../keys';
 import {NewUserRequest} from '../models';
+import { createTokens, Tokens } from '../services/auth-service';
 import {PasswordHasher} from '../services/hash.password.bcrypt';
 import {validateCredentials} from '../services/validator';
 import {Credentials, UserRepository} from './../repositories/user.repository';
@@ -129,15 +130,18 @@ export class AuthenticationController {
       },
     })
     newUserRequest: NewUserRequest,
-  ): Promise<{token: string}> {
+  ): Promise<{tokens: Tokens}> {
     validateCredentials(_.pick(newUserRequest, ['email', 'password']));
     const password = await this.passwordHasher.hashPassword(newUserRequest.password);
     try {
       const newUser = await this.userRepository.create(_.omit(newUserRequest, 'password'));
       await this.userRepository.userCredentials(newUser.id).create({password});
       const userProfile = this.userService.convertToUserProfile(newUser);
-      const token = await this.jwtService.generateToken(userProfile);
-      return {token};
+      // const token = await this.jwtService.generateToken(userProfile);
+
+      const tokens = await createTokens(userProfile)
+      
+      return {tokens};
     } catch (error) {
       // 11000 is a mongoDB error code thrown when there is for a duplicate key
       if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
@@ -286,7 +290,55 @@ export class AuthenticationController {
     }
   }
 
+
+  @authenticate('jwt')
+  @post('/logout', {
+    responses: {
+      '200': {
+        description: 'Logout a user',
+        content:{
+          'application/json': {
+            schema: {
+              type: 'string',
+              properties: {
+                res: 'string'
+              }
+            },
+          },
+        }
+      }
+    }
+  })
+  async logout(): Promise<string>{
+
+    return 'not working'
+  }
+
   // Refresh 
+
+
+  // @authenticate('jwt')
+  // @post('/refresh', {
+  //   responses: {
+  //     '200': {
+  //       description: 'refresh Token a user',
+  //       content:{
+  //         'application/json': {
+  //           schema: {
+  //             type: 'string',
+  //             properties: {
+  //               res: Tokens
+  //             }
+  //           },
+  //         },
+  //       }
+  //     }
+  //   }
+  // })
+  // async refresh(): Promise<string>{
+
+  //   return 'not working'
+  // }
 
   // type Refresh = {
   //   refresh_token: string;
@@ -302,4 +354,8 @@ export class AuthenticationController {
 
 
   // logout ==> user RevokeToken to logout the user
+
+
+
+
 }

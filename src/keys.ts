@@ -15,7 +15,8 @@ export namespace PasswordHasherBindings {
 }
 
 export namespace TokenServiceBindings {
-  export const TOKEN_SECRET = BindingKey.create<string>('authentication.jwt.secret');
+  // export const TOKEN_SECRET = BindingKey.create<string>('authentication.jwt.secret');
+  export const TOKEN_SECRET = BindingKey.create<string>(String(TokenServiceConstants.TOKEN_SECRET_VALUE));
   export const TOKEN_EXPIRES_IN = BindingKey.create<string>('authentication.jwt.expiresIn');
   export const TOKEN_SERVICE = BindingKey.create<TokenService>('services.jwt.service');
 }

@@ -8,6 +8,22 @@ services:
       - 27017:27017
     volumes:
       - test-mongo-data:/data/db
+    networks: 
+      - test-backend
+  redis:
+    image: 'redis:latest'
+    container_name: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+    networks:
+      - test-backend
+
+networks: 
+  test-backend: null
 
 volumes:
   test-mongo-data:
+  redis_data:
+  

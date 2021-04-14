@@ -1,24 +1,19 @@
 import { TokenKvRepository } from './../repositories/token-kv.repository';
 import {TokenService} from '@loopback/authentication';
-import {TokenServiceBindings} from '@loopback/authentication-jwt';
-import {inject} from '@loopback/core';
+// import {TokenServiceBindings} from '@loopback/authentication-jwt';
+// import {inject} from '@loopback/core';
 import {HttpErrors} from '@loopback/rest';
 import {securityId, UserProfile} from '@loopback/security';
 import {promisify} from 'util';
 import * as winston from 'winston';
 import {LogConfig} from '../config/logConfig';
 import { repository } from '@loopback/repository';
-import { TokenKv } from '../models';
+import { TokenServiceBindings } from '@loopback/authentication-jwt';
+import { inject } from '@loopback/core';
 
 const jwt = require('jsonwebtoken');
 const signAsync = promisify(jwt.sign);
 const verifyAsync = promisify(jwt.verify);
-
-export interface Tokens {
-  accessToken: string,
-  refreshToken: string,
-  expiresIn: number
-}
 
 export class JWTService implements TokenService {
   constructor(
@@ -38,7 +33,7 @@ export class JWTService implements TokenService {
 
     let userProfile: UserProfile;
     try {
-      const decodedToken = await verifyAsync(token, this.jwtSecret);
+      const decodedToken = await verifyAsync(token, process.env.JWT_SECRET);
       userProfile = Object.assign(
         {[securityId]: '', name: ''},
         {
@@ -83,29 +78,34 @@ export class JWTService implements TokenService {
     // Generate the JSON Web Token
     let token: string;
     try {
-      token = await signAsync(userDetails, this.jwtSecret, {expiresIn: Number(this.jwtExpires)});
+      token = await signAsync(userDetails, process.env.JWT_SECRET, {expiresIn: Number(process.env.JWT_EXPIRE)});
      
-      const tv = TokenKv.prototype
-      tv.token = token
-      
-      await this.tokenKv.set(userDetails.id.toString(), tv)
-      await this.tokenKv.expire(userDetails.id.toString(), Number(this.jwtExpires))
     } catch (error) {
       this.logger.error('jwt-service-generate: ', error);
       throw new HttpErrors.Unauthorized(`Error encoding token : ${error}`);
     }
-
-    // const Tokens = {
-    //   accessToken: token,
-    //   refreshToken: token,
-    //   expiresIn: this.jwtExpires
-    // }
-
     return token;
   }
 
 
-  
+  async generateRefreshToken(userProfile: UserProfile): Promise<string> {
+    if (!userProfile) {
+      this.logger.error('jwt-service-refresh: No user profile');
+      throw new HttpErrors.Unauthorized(`Error when refreshing token : userProfile is null`);
+    }
+    const userDetails = {
+      id: userProfile[securityId]
+    };
+    // Generate the JSON Web Token
+    let token: string;
+    try {
+      token = await signAsync(userDetails, process.env.JWT_REFRESH_SECRET, {expiresIn: Number(process.env.JWT_EXPIRE)});
+    } catch (error) {
+      this.logger.error('jwt-service-generate: ', error);
+      throw new HttpErrors.Unauthorized(`Error encoding token : ${error}`);
+    }
+    return token;
+  }
 
   // async generateRefreshToken(refreshToken: string): Promise<
 }

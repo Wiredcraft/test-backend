@@ -39,7 +39,7 @@ export class TestBackendApplication extends BootMixin(ServiceMixin(RepositoryMix
     // Load environment variables
     dotenv.config();
     dotenvExt.load({
-      schema: '.env.example',
+      schema: '.env',
       errorOnMissing: true,
     });
 
