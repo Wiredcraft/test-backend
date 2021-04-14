@@ -11,10 +11,4 @@ export class TokenKvRepository extends DefaultKeyValueRepository<
   ) {
     super(TokenKv, dataSource);
   }
-
-
-  async addToken(userId: string, token: TokenKv, expiresIn: number ) {
-    await this.set(userId, token)
-    await this.expire(userId, expiresIn)
-  }
 }

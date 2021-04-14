@@ -1,18 +1,66 @@
-// Uncomment these imports to begin using these cool features!
+import { AuthService, Tokens } from './../services/auth-service';
 import {authenticate, TokenService, UserService} from '@loopback/authentication';
 import {TokenServiceBindings, User, UserServiceBindings} from '@loopback/authentication-jwt';
 import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
-import {api, getModelSchemaRef, HttpErrors, post, requestBody} from '@loopback/rest';
+import {api, getModelSchemaRef, HttpErrors, post, requestBody, SchemaObject} from '@loopback/rest';
 import _ from 'lodash';
 import winston from 'winston';
 import {LogConfig} from '../config/logConfig';
-import {PasswordHasherBindings} from '../keys';
+import {AuthServiceBindings, PasswordHasherBindings} from '../keys';
 import {NewUserRequest} from '../models';
-import { createTokens, Tokens } from '../services/auth-service';
 import {PasswordHasher} from '../services/hash.password.bcrypt';
 import {validateCredentials} from '../services/validator';
 import {Credentials, UserRepository} from './../repositories/user.repository';
+
+
+
+
+type RefreshGrant = {
+  refreshToken: string;
+};
+
+const RefreshGrantSchema: SchemaObject = {
+  type: 'object',
+  required: ['refreshToken'],
+  properties: {
+    refreshToken: {
+      type: 'string',
+    },
+  },
+};
+
+const RefreshGrantRequestBody = {
+  description: 'Refresh the token',
+  required: true,
+  content: {
+    'application/json': {schema: RefreshGrantSchema},
+  },
+};
+
+
+
+type AccessGrant = {
+  accessToken: string;
+};
+
+const AccessGrantSchema: SchemaObject = {
+  type: 'object',
+  required: ['accessToken'],
+  properties: {
+    accessToken: {
+      type: 'string',
+    },
+  },
+};
+
+const AccessGrantRequestBody = {
+  description: 'Provide access token to logout',
+  required: true,
+  content: {
+    'application/json': {schema: AccessGrantSchema},
+  },
+};
 
 @api({basePath: '/auth'})
 export class AuthenticationController {
@@ -24,7 +72,8 @@ export class AuthenticationController {
     public jwtService: TokenService,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>,
-    // Inject Winston logger here
+    @inject(AuthServiceBindings.AUTH_SERVICE)
+    public authService: AuthService,
     public logger = winston.loggers.get(LogConfig.logName),
   ) {}
 
@@ -134,12 +183,18 @@ export class AuthenticationController {
     validateCredentials(_.pick(newUserRequest, ['email', 'password']));
     const password = await this.passwordHasher.hashPassword(newUserRequest.password);
     try {
+      // const checkIfUserExist = await this.userRepository.findOne({ 
+      //   where: {email: _.pick(newUserRequest.email)},
+      // })
+      // if(checkIfUserExist) {
+      //   this.logger.error('User creation failed: ', 'User exist');
+      //   throw new HttpErrors.BadRequest('Sign up failed, This User exists');
+      // }
       const newUser = await this.userRepository.create(_.omit(newUserRequest, 'password'));
       await this.userRepository.userCredentials(newUser.id).create({password});
       const userProfile = this.userService.convertToUserProfile(newUser);
-      // const token = await this.jwtService.generateToken(userProfile);
 
-      const tokens = await createTokens(userProfile)
+      const tokens = await this.authService.createTokens(userProfile)
       
       return {tokens};
     } catch (error) {
@@ -277,13 +332,14 @@ export class AuthenticationController {
       },
     })
     credentials: Credentials,
-  ): Promise<{token: string}> {
+  ): Promise<{tokens: Tokens}> {
     validateCredentials(_.pick(credentials, ['email', 'password']));
     try {
       const user = await this.userService.verifyCredentials(credentials);
       const userProfile = this.userService.convertToUserProfile(user);
-      const token = await this.jwtService.generateToken(userProfile);
-      return {token};
+      const tokens = await this.authService.createTokens(userProfile)
+
+      return {tokens};
     } catch (error) {
       this.logger.error('Login failed', error);
       throw new HttpErrors.Unauthorized('Invalid email or password.');
@@ -309,53 +365,60 @@ export class AuthenticationController {
       }
     }
   })
-  async logout(): Promise<string>{
-
-    return 'not working'
+  async logout(
+    @requestBody(AccessGrantRequestBody) logoutGrant: AccessGrant,
+  ): Promise<String>{
+    try {
+      const logOutRes = await this.authService.logout(logoutGrant.accessToken)
+      return logOutRes
+    } catch (error) {
+      this.logger.error('Logout failed', error);
+      throw new HttpErrors.Unauthorized('Logout failed');
+    }
   }
 
-  // Refresh 
 
+  
 
-  // @authenticate('jwt')
-  // @post('/refresh', {
-  //   responses: {
-  //     '200': {
-  //       description: 'refresh Token a user',
-  //       content:{
-  //         'application/json': {
-  //           schema: {
-  //             type: 'string',
-  //             properties: {
-  //               res: Tokens
-  //             }
-  //           },
-  //         },
-  //       }
-  //     }
-  //   }
-  // })
-  // async refresh(): Promise<string>{
+  
+  @post('/refresh', {
+    responses: {
+      '200': {
+        description: 'Token',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                accessToken: {
+                  type: 'string',
+                },
+                refreshToken: {
+                  type: 'string'
+                },
+                expiresIn: {
+                  type: 'integer'
+                }
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  async refresh(
+    @requestBody(RefreshGrantRequestBody) refreshGrant: RefreshGrant,
+  ): Promise<{tokens: Tokens}> {
+    try {
+        const tokens  = await this.authService.refreshToken(refreshGrant.refreshToken)
+        return {tokens}
+    } catch (error) {
+      this.logger.error('Refresh token failed', error);
+      throw new HttpErrors.Unauthorized('Check Refresh Token');
+    }
 
-  //   return 'not working'
-  // }
-
-  // type Refresh = {
-  //   refresh_token: string;
-  // }
-
-  // async refresh(
-  //   @requestBody({
-  //     required: true,
-  //     description: 'add refresh token'
-  //   })
-    
-  // ): Promise<{tokenData: Tokens}>
-
-
-  // logout ==> user RevokeToken to logout the user
-
-
-
+  }
 
 }
+
+

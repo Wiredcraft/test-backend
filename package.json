@@ -78,6 +78,7 @@
     "@loopback/eslint-config": "^10.1.1",
     "@loopback/testlab": "^3.3.1",
     "@types/bcryptjs": "^2.4.2",
+    "@types/bson": "^4.0.3",
     "@types/morgan": "^1.9.1",
     "@types/node": "^10.17.56",
     "eslint": "^7.23.0",

@@ -6,7 +6,12 @@ export class TokenKv extends Model {
   @property({
     type: 'string',
   })
-  token: string;
+  accessToken: string;
+
+  @property({
+    type: 'string',
+  })
+  refreshToken: string;
   
   constructor(data?: Partial<TokenKv>) {
     super(data);

@@ -1,3 +1,4 @@
+import { AuthService } from './services/auth-service';
 import {AuthenticationComponent} from '@loopback/authentication';
 import {JWTAuthenticationComponent, SecuritySpecEnhancer, TokenServiceBindings} from '@loopback/authentication-jwt';
 import {BootMixin} from '@loopback/boot';
@@ -14,7 +15,7 @@ import path from 'path';
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import {LogConfig} from './config/logConfig';
-import {PasswordHasherBindings, UserServiceBindings} from './keys';
+import { PasswordHasherBindings, UserServiceBindings, AuthServiceBindings } from './keys';
 import {MySequence} from './sequence';
 import {BcryptHasher} from './services/hash.password.bcrypt';
 import {JWTService} from './services/jwt-service';
@@ -115,6 +116,7 @@ export class TestBackendApplication extends BootMixin(ServiceMixin(RepositoryMix
     this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher);
     this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService);
     this.bind(UserServiceBindings.USER_SERVICE).toClass(CustomUserService);
+    this.bind(AuthServiceBindings.AUTH_SERVICE).toClass(AuthService)
     this.add(createBindingFromClass(SecuritySpecEnhancer));
   }
 }
