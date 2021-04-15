@@ -48,9 +48,189 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Wrong Request body Structure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "statusCode": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid Request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "statusCode": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "code": {
+                          "type": "integer"
+                        },
+                        "details": {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "operationId": "AuthenticationController.login"
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "x-controller-name": "AuthenticationController",
+        "x-operation-name": "logout",
+        "tags": [
+          "AuthenticationController"
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout a user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "properties": {
+                    "res": "string"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "statusCode": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "AuthenticationController.logout"
+      }
+    },
+    "/auth/refresh": {
+      "get": {
+        "x-controller-name": "AuthenticationController",
+        "x-operation-name": "refresh",
+        "tags": [
+          "AuthenticationController"
+        ],
+        "responses": {
+          "200": {
+            "description": "Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    },
+                    "refreshToken": {
+                      "type": "string"
+                    },
+                    "expiresIn": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong Request Data Structure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "statusCode": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "X-Refresh-Token",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "operationId": "AuthenticationController.refresh"
       }
     },
     "/auth/signup": {
@@ -70,6 +250,67 @@
                   "properties": {
                     "token": {
                       "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong Request body Structure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "statusCode": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid Request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "statusCode": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "code": {
+                          "type": "integer"
+                        },
+                        "details": {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -101,14 +342,16 @@
             "description": "User PATCH success"
           }
         },
-        "parameters": [{
-          "name": "id",
-          "in": "path",
-          "schema": {
-            "type": "string"
-          },
-          "required": true
-        }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -139,7 +382,8 @@
             }
           }
         },
-        "parameters": [{
+        "parameters": [
+          {
             "name": "id",
             "in": "path",
             "schema": {
@@ -172,14 +416,16 @@
             "description": "User DELETE success"
           }
         },
-        "parameters": [{
-          "name": "id",
-          "in": "path",
-          "schema": {
-            "type": "string"
-          },
-          "required": true
-        }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "operationId": "UserController.deleteById"
       }
     },
@@ -205,24 +451,28 @@
             }
           }
         },
-        "parameters": [{
-          "name": "filter",
-          "in": "query",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/User.Filter1"
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User.Filter1"
+                }
               }
             }
           }
-        }],
+        ],
         "operationId": "UserController.find"
       }
     }
   },
-  "servers": [{
-    "url": "http://localhost:3000/api/v1"
-  }],
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1"
+    }
+  ],
   "components": {
     "schemas": {
       "NewUser": {
@@ -437,34 +687,6 @@
         ],
         "additionalProperties": false
       },
-      "User.Fields": {
-        "title": "User.Fields",
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "boolean"
-          },
-          "name": {
-            "type": "boolean"
-          },
-          "dob": {
-            "type": "boolean"
-          },
-          "address": {
-            "type": "boolean"
-          },
-          "email": {
-            "type": "boolean"
-          },
-          "description": {
-            "type": "boolean"
-          },
-          "createdAt": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
       "User.ScopeFilter": {
         "properties": {
           "offset": {
@@ -481,19 +703,37 @@
             "minimum": 0
           },
           "order": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
           },
           "where": {
             "type": "object",
             "additionalProperties": true
           },
           "fields": {
-            "type": "object",
-            "properties": {},
-            "additionalProperties": true
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": true
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              }
+            ]
           },
           "include": {
             "type": "array",
@@ -537,19 +777,79 @@
             "minimum": 0
           },
           "order": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
           },
           "fields": {
-            "$ref": "#/components/schemas/User.Fields"
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "boolean"
+                  },
+                  "name": {
+                    "type": "boolean"
+                  },
+                  "dob": {
+                    "type": "boolean"
+                  },
+                  "address": {
+                    "type": "boolean"
+                  },
+                  "email": {
+                    "type": "boolean"
+                  },
+                  "description": {
+                    "type": "boolean"
+                  },
+                  "createdAt": {
+                    "type": "boolean"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "id",
+                    "name",
+                    "dob",
+                    "address",
+                    "email",
+                    "description",
+                    "createdAt"
+                  ],
+                  "example": "id"
+                },
+                "uniqueItems": true
+              }
+            ],
+            "title": "User.Fields"
           },
           "include": {
             "title": "User.IncludeFilter",
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/User.IncludeFilter.Items"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/User.IncludeFilter.Items"
+                },
+                {
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -574,10 +874,17 @@
             "minimum": 0
           },
           "order": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
           },
           "where": {
             "title": "User.WhereFilter",
@@ -585,13 +892,66 @@
             "additionalProperties": true
           },
           "fields": {
-            "$ref": "#/components/schemas/User.Fields"
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "boolean"
+                  },
+                  "name": {
+                    "type": "boolean"
+                  },
+                  "dob": {
+                    "type": "boolean"
+                  },
+                  "address": {
+                    "type": "boolean"
+                  },
+                  "email": {
+                    "type": "boolean"
+                  },
+                  "description": {
+                    "type": "boolean"
+                  },
+                  "createdAt": {
+                    "type": "boolean"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "id",
+                    "name",
+                    "dob",
+                    "address",
+                    "email",
+                    "description",
+                    "createdAt"
+                  ],
+                  "example": "id"
+                },
+                "uniqueItems": true
+              }
+            ],
+            "title": "User.Fields"
           },
           "include": {
             "title": "User.IncludeFilter",
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/User.IncludeFilter.Items"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/User.IncludeFilter.Items"
+                },
+                {
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -607,7 +967,9 @@
       }
     }
   },
-  "security": [{
-    "jwt": []
-  }]
+  "security": [
+    {
+      "jwt": []
+    }
+  ]
 }

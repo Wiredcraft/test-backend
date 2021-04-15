@@ -1,9 +1,9 @@
 import { AuthService, Tokens } from './../services/auth-service';
-import {TokenService, UserService} from '@loopback/authentication';
+import {authenticate, TokenService, UserService} from '@loopback/authentication';
 import {TokenServiceBindings, User, UserServiceBindings} from '@loopback/authentication-jwt';
 import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
-import {api, getModelSchemaRef, HttpErrors, post, requestBody, SchemaObject} from '@loopback/rest';
+import {api, getModelSchemaRef, HttpErrors, post, requestBody, RestBindings, Request, get, param} from '@loopback/rest';
 import _ from 'lodash';
 import winston from 'winston';
 import {LogConfig} from '../config/logConfig';
@@ -14,53 +14,6 @@ import {validateCredentials} from '../services/validator';
 import {Credentials, UserRepository} from './../repositories/user.repository';
 
 
-
-
-type RefreshGrant = {
-  refreshToken: string;
-};
-
-const RefreshGrantSchema: SchemaObject = {
-  type: 'object',
-  required: ['refreshToken'],
-  properties: {
-    refreshToken: {
-      type: 'string',
-    },
-  },
-};
-
-const RefreshGrantRequestBody = {
-  description: 'Refresh the token',
-  required: true,
-  content: {
-    'application/json': {schema: RefreshGrantSchema},
-  },
-};
-
-
-
-type AccessGrant = {
-  accessToken: string;
-};
-
-const AccessGrantSchema: SchemaObject = {
-  type: 'object',
-  required: ['accessToken'],
-  properties: {
-    accessToken: {
-      type: 'string',
-    },
-  },
-};
-
-const AccessGrantRequestBody = {
-  description: 'Provide access token to logout',
-  required: true,
-  content: {
-    'application/json': {schema: AccessGrantSchema},
-  },
-};
 
 @api({basePath: '/auth'})
 export class AuthenticationController {
@@ -74,6 +27,8 @@ export class AuthenticationController {
     public userService: UserService<User, Credentials>,
     @inject(AuthServiceBindings.AUTH_SERVICE)
     public authService: AuthService,
+    @inject(RestBindings.Http.REQUEST)
+    private request: Request,
     public logger = winston.loggers.get(LogConfig.logName),
   ) {}
 
@@ -331,7 +286,6 @@ export class AuthenticationController {
       const user = await this.userService.verifyCredentials(credentials);
       const userProfile = this.userService.convertToUserProfile(user);
       const tokens = await this.authService.createTokens(userProfile)
-
       return {tokens};
     } catch (error) {
       this.logger.error('Login failed', error);
@@ -340,7 +294,8 @@ export class AuthenticationController {
   }
 
 
-  @post('/logout', {
+  @authenticate('jwt')
+  @get('/logout', {
     responses: {
       '200': {
         description: 'Logout a user',
@@ -354,14 +309,40 @@ export class AuthenticationController {
             },
           },
         }
-      }
+      },
+      '400': {
+        description: 'Wrong Request',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                error: {
+                  type: 'object',
+                  properties: {
+                    statusCode: {
+                      type: 'integer'
+                    },
+                    name: {
+                      type: 'string'
+                    },
+                    message: {
+                      type: 'string'
+                    } 
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
     }
   })
-  async logout(
-    @requestBody(AccessGrantRequestBody) logoutGrant: AccessGrant,
-  ): Promise<String>{
+  async logout(): Promise<String>{
+    const headerToken = {...this.request.headers}
+    const h = headerToken.authorization?.split(" ")[1]
     try {
-      const logOutRes = await this.authService.logout(logoutGrant.accessToken)
+      const logOutRes = await this.authService.logout(String(h))
       return logOutRes
     } catch (error) {
       this.logger.error('Logout failed', error);
@@ -372,8 +353,8 @@ export class AuthenticationController {
 
   
 
-  
-  @post('/refresh', {
+  @authenticate('jwt')
+  @get('/refresh', {
     responses: {
       '200': {
         description: 'Token',
@@ -396,21 +377,43 @@ export class AuthenticationController {
           },
         },
       },
+      '400': {
+        description: 'Wrong Request Data Structure',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                error: {
+                  type: 'object',
+                  properties: {
+                    statusCode: {
+                      type: 'integer'
+                    },
+                    name: {
+                      type: 'string'
+                    },
+                    message: {
+                      type: 'string'
+                    } 
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
   })
-  async refresh(
-    @requestBody(RefreshGrantRequestBody) refreshGrant: RefreshGrant,
-  ): Promise<{tokens: Tokens}> {
+  async refresh(@param.header.string('X-Refresh-Token') rToken: string): Promise<{tokens: Tokens}> {
     try {
-        const tokens  = await this.authService.refreshToken(refreshGrant.refreshToken)
+        const tokens  = await this.authService.refreshToken(rToken)
         return {tokens}
     } catch (error) {
       this.logger.error('Refresh token failed', error);
       throw new HttpErrors.Unauthorized('Check Refresh Token');
     }
-
   }
-
 }
 
 

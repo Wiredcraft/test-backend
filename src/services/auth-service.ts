@@ -99,14 +99,6 @@ export class AuthService {
         throw new HttpErrors.Unauthorized('Error logging out');
       }
       await this.redisRepo.delete(String(user[securityId]))
-      
-
-      // not working.
-      // const revoke = await this.jwtService.revokeToken!(token)
-      // if (!revoke) {
-      //   this.logger.error('auth-service-logout: Failed to revoke token');
-      //   throw new HttpErrors.Unauthorized('Error logging out');
-      // }
 
       return 'Successfully logged user out'
     } catch (error) {
