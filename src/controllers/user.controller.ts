@@ -1,6 +1,5 @@
 import {authenticate, UserService} from '@loopback/authentication';
 import {inject} from '@loopback/core';
-// import {Logger, logInvocation} from '@loopback/extension-logging';
 import {Filter, FilterExcludingWhere, repository} from '@loopback/repository';
 import {api, del, get, getModelSchemaRef, HttpErrors, param, patch, requestBody} from '@loopback/rest';
 import * as winston from 'winston';

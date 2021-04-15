@@ -29,7 +29,7 @@ export class AuthService {
 
   /**
    * Takes a users and returns access and refresh tokens. 
-   * It also saves tokens into redis with ttl
+   * It also saves tokens into redis with ttl of 2 hours
    * @param userP User Profile
    * @returns 
    */
@@ -77,10 +77,22 @@ export class AuthService {
 
 
 
+/**
+ * 
+ * @param token a refreshed token
+ * @returns A new set of tokens.
+ */
   async refreshToken(token: string): Promise<Tokens> {
-
+    if(!token){
+      this.logger.error('auth-service-refresh: token is missing');
+      throw new HttpErrors.BadRequest('Error refreshing token');
+  }
     try {
       const user = await JWTService.prototype.verifyRefreshToken(token)
+      if (!user) {
+        this.logger.error('auth-service-refresh: Failed to verify token');
+        throw new HttpErrors.Unauthorized('Error refreshing token');
+      }
       const tokens = await this.createTokens(user)
       return tokens
     } catch (error) {
@@ -89,14 +101,21 @@ export class AuthService {
     }
   }
 
-
+/**
+ * 
+ * @param token an access_token
+ * @returns a string 
+ */
   async logout(token: string): Promise<String> {
+    if(!token){
+        this.logger.error('auth-service-logout: token is missing');
+        throw new HttpErrors.BadRequest('Error logging out');
+    }
     try {
-
       const user = await this.jwtService.verifyToken(token)
       if (!user) {
         this.logger.error('auth-service-logout: Failed to verify token');
-        throw new HttpErrors.Unauthorized('Error logging out');
+        throw new HttpErrors.BadRequest('Error logging out');
       }
       await this.redisRepo.delete(String(user[securityId]))
 
