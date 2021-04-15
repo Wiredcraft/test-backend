@@ -1,5 +1,5 @@
 import { AuthService, Tokens } from './../services/auth-service';
-import {authenticate, TokenService, UserService} from '@loopback/authentication';
+import {TokenService, UserService} from '@loopback/authentication';
 import {TokenServiceBindings, User, UserServiceBindings} from '@loopback/authentication-jwt';
 import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
@@ -340,7 +340,6 @@ export class AuthenticationController {
   }
 
 
-  @authenticate('jwt')
   @post('/logout', {
     responses: {
       '200': {

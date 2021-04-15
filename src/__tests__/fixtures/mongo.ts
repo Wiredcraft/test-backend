@@ -1,3 +1,4 @@
+/* eslint-disable mocha/handle-done-callback */
 import {Context} from 'mocha';
 import {GenericContainer, StartedTestContainer} from 'testcontainers';
 

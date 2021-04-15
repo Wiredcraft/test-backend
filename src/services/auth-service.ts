@@ -50,7 +50,7 @@ export class AuthService {
         userTokens.accessToken = accToken
         userTokens.refreshToken = refToken
         const tExist = await this.checkTokenExistence(userId)
-        if (tExist) { this.redisRepo.delete(userId) }
+        if (tExist) { await this.redisRepo.delete(userId) }
         await this.redisRepo.set(userId, userTokens)
         await this.redisRepo.expire(userId, Number(process.env.JWT_EXPIRE))
       }

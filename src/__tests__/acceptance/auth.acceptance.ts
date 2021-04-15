@@ -29,9 +29,11 @@ describe('Authentication service', function (this: Mocha.Suite) {
 
   let newUser: User;
   let jwtService: TokenService;
+  // let authSvc: AuthService;
   let userService: UserService<User, Credentials>;
   let bcryptHasher: PasswordHasher;
   let userRepo: UserRepository;
+  
 
   before(setupApp);
   after(async () => {
@@ -45,6 +47,7 @@ describe('Authentication service', function (this: Mocha.Suite) {
   before(cleanDB);
   before(createUser);
   before(testTokenService);
+  // before(testAuthService);
   before(testUserService);
 
   it('user service verifyCredentials() succeeds', async () => {
@@ -135,6 +138,12 @@ describe('Authentication service', function (this: Mocha.Suite) {
     expect(() => validateCredentials(credentials)).to.throw(expectedError);
   });
 
+  // it('Validator createTokens() succeeds with right data', () => {
+  //    const userProfile = userService.convertToUserProfile(newUser);
+  //    const tokens = authSvc.createTokens(userProfile);
+  //    expect(tokens).to.not.empty()
+  // })
+
   async function setupApp() {
     const applicationWithClient = await setupApplication();
     application = applicationWithClient.app;
@@ -148,6 +157,10 @@ describe('Authentication service', function (this: Mocha.Suite) {
   async function testUserService() {
     userService = await application.get(UserServiceBindings.USER_SERVICE);
   }
+
+  // async function testAuthService() {
+  //   authSvc = await application.get(AuthServiceBindings.AUTH_SERVICE)
+  // }
 
   async function cleanDB() {
     await userRepo.deleteAll();
