@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from 'src/application/user/user.service';
 import { CreateUserDto, UpdateUserDto } from 'src/domain/user/user.types';
-import { FriendService } from '../../application/friend/friend.service';
+import { FriendService } from '../../../application/friend/friend.service';
 
 @Controller('user')
 export class UserController {

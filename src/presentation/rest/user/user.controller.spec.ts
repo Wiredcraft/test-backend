@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
-import { UserService } from '../../application/user/user.service';
-import { UserRepositoryInMemory } from '../../infrastructure/in-memory/user/user.repository';
-import { FriendService } from '../../application/friend/friend.service';
+import { UserService } from '../../../application/user/user.service';
+import { UserRepositoryInMemory } from '../../../infrastructure/in-memory/user/user.repository';
+import { FriendService } from '../../../application/friend/friend.service';
 import { FriendRepositoryInMemory } from 'src/infrastructure/in-memory/friend/friend.repository';
-import { UserRepository } from '../../domain/user/user.repository';
+import { UserRepository } from '../../../domain/user/user.repository';
 
 describe('UserController', () => {
   let controller: UserController;
