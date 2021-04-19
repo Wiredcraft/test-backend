@@ -70,7 +70,7 @@ database "Infrastructure" {
 
 ### NestJS
 
-This project makes heavy use of NestJS as it allows to rapidly build applications in a maintainable manner.
+This project makes heavy use of NestJS as it allows to rapidly build applications in a maintainable manner. It enables dependency injection,
 
 ### PostgreSQL
 
@@ -78,4 +78,36 @@ The assignment asked for a NoSQL database but this assignment uses PostgreSQL.
 PostgreSQL allows to force a certain data structure on database level, not just application level. 
 This helps prevent data issues where application data structure has changed but was not forced through to the database.
 
-## Deployment diagram
+## Deployment
+
+The deployment depends on the scale of the application. 
+It is assumed that the application is deployed across multiple servers to allow for load handling and fall back. How the database is hosted is not a concern of this project, it is an SaaS in this project.
+
+```puml
+@startuml
+
+node "Backend server 1" {
+  agent "Node.JS_backend_1"
+}
+
+node "Backend server 2" {
+  agent "Node.JS_backend_2"
+}
+
+cloud {
+  database "PostgreSQL"
+}
+
+node "Load balancer server" {
+  agent "Load_balancer"
+}
+
+actor user
+user --> Load_balancer
+Load_balancer --> Node.JS_backend_1
+Load_balancer --> Node.JS_backend_2
+
+Node.JS_backend_1 --> PostgreSQL
+Node.JS_backend_2 --> PostgreSQL
+@enduml
+```
