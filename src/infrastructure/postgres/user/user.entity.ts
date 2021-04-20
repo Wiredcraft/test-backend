@@ -17,7 +17,7 @@ export class UserEntity extends Model {
   @Column({ defaultValue: DataType.UUIDV4 })
   id: string;
 
-  @Column
+  @Column({ allowNull: false })
   name: string;
 
   @Column({ type: DataType.DATEONLY })
