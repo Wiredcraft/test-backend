@@ -7,7 +7,7 @@ export interface UserRepository {
 
   create(params: { user: CreateUserDto }): Promise<User>;
 
-  updateById(params: { id: string; user: UpdateUserDto }): Promise<User>;
+  updateById(params: { id: string; user: UpdateUserDto }): Promise<boolean>;
 
   deleteById(params: { id: string }): Promise<boolean>;
 }

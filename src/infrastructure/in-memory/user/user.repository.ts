@@ -30,12 +30,15 @@ export class UserRepositoryInMemory implements UserRepository {
     return this.users.get(params.id);
   }
 
-  async updateById(params: { id: string; user: UpdateUserDto }): Promise<User> {
+  async updateById(params: {
+    id: string;
+    user: UpdateUserDto;
+  }): Promise<boolean> {
     if (!this.users.has(params.id)) {
-      throw new Error('User not found');
+      return false;
     }
     const newValue = { ...this.users.get(params.id), ...params.user };
     this.users.set(params.id, newValue);
-    return newValue;
+    return true;
   }
 }

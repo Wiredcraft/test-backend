@@ -7,7 +7,7 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
-import { GeoPosition } from '../../../domain/user/address.type';
+import { GeoPosition } from '../../../domain/address.type';
 
 @Table
 export class UserEntity extends Model {

@@ -45,7 +45,7 @@ export class FriendRepositoryInMemory implements FriendRepository {
         result.push(this.friends.get(key));
       }
     }
-    return result.slice(params.offset, params.offset+ params.limit);
+    return result.slice(params.offset, params.offset + params.limit);
   }
 
   async findByUserIds(params: {
