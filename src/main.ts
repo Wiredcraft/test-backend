@@ -2,6 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { CustomErrorFilter } from './presentation/rest/custom.error.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,9 +16,10 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: true
+      forbidNonWhitelisted: true,
     }),
   );
+  app.useGlobalFilters(new CustomErrorFilter());
   SwaggerModule.setup('api', app, document);
 
   await app.listen(process.env.PORT ? parseInt(process.env.PORT) : 3000);

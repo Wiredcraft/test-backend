@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CreateFriendDto } from 'src/domain/friend/friend.types';
 import { FriendRepository } from '../../domain/friend/friend.repository';
 import { UserService } from '../user/user.service';
+import { ErrorUserNotFound } from '../../utils/error.codes';
 
 @Injectable()
 export class FriendService {
@@ -16,7 +17,7 @@ export class FriendService {
       (await this.userService.findOne(createFriendDto.userId)) == null ||
       (await this.userService.findOne(createFriendDto.otherUserId)) == null
     ) {
-      throw new Error('User id not found');
+      throw new ErrorUserNotFound();
     }
     return this.friendRepository.create(createFriendDto);
   }

@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class UserRepositoryPostgres implements UserRepository {
   create(params: { user: CreateUserDto }): Promise<User> {
-    return UserEntity.create(params.user).then((res) => res.toJSON() as User);
+    return UserEntity.create(params.user).then((res) => res?.toJSON() as User);
   }
 
   deleteById(params: { id: string }): Promise<boolean> {
@@ -20,12 +20,12 @@ export class UserRepositoryPostgres implements UserRepository {
       offset: params.offset,
       limit: params.limit,
       order: ['createdAt'],
-    }).then((res) => res.map((value) => value.toJSON() as User));
+    }).then((res) => res.map((value) => value?.toJSON() as User));
   }
 
   getById(params: { id: string }): Promise<User> {
     return UserEntity.findOne({ where: { id: params.id } }).then(
-      (res) => res.toJSON() as User,
+      (res) => res?.toJSON() as User,
     );
   }
 

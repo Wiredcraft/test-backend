@@ -105,7 +105,7 @@ describe('UserController', () => {
 
       await expect(
         controller.createFriend(createdUser.id, 'SomeOtherId'),
-      ).rejects.toThrowError('User id not found');
+      ).rejects.toThrowError('User not found');
     });
   });
 
@@ -173,7 +173,7 @@ describe('UserController', () => {
     it('add friend, should throw error that user does not exist', async () => {
       await expect(
         controller.createFriend('SomeId', 'SomeOtherId'),
-      ).rejects.toThrowError('User id not found');
+      ).rejects.toThrowError('User not found');
     });
   });
 });
