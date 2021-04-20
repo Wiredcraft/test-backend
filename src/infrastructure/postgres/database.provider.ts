@@ -14,7 +14,7 @@ export const databaseProviders = [
           : 5432,
         username: process.env.DATABASE_USER ?? 'postgres',
         password: process.env.DATABASE_PASS ?? 'postgres',
-        database: process.env.DATABASE_NAME ?? 'wiredcraft-assignment',
+        database: process.env.DATABASE_NAME ?? 'wiredcraft',
       });
       sequelize.addModels([UserEntity, FriendEntity]);
       await sequelize.sync();
