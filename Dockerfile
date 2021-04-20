@@ -8,10 +8,14 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package*.json ./
 
+COPY yarn.lock ./
+
 RUN yarn install
 
 # Bundle app source
 COPY . .
+
+RUN yarn build
 
 EXPOSE 8080
 
