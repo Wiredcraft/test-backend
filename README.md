@@ -39,3 +39,19 @@ DELETE  /usr/{id}/friends/{otherId}
 
 This project uses the onion architecture which allows for maintainability.
 Please check out the `docs/architecture.md` for further informations.
+
+
+## Running tests
+
+### Unit tests
+
+Run as following `yarn test`.
+
+### End2end tests
+
+To run the E2E tests, please create the database `wiredcraft-test` in your local PostgreSQL.
+Further on, activate the PostGIS extension in that database:
+
+`CREATE EXTENSION postgis;`
+
+Then run tests with `yarn test:e2e`
