@@ -92,7 +92,7 @@ describe('UserController', () => {
 
     it('Add 1 user with full details', async () => {
       await controller.create({
-        address: { type: 'Point', coordinates: [13, 15] },
+        address: [31, 121],
         dateOfBirth: new Date('1975-06-01Z'),
         description: 'Character in Futurama',
         name: 'Philip J. Fry',
