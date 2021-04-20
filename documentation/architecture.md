@@ -78,6 +78,10 @@ The assignment asked for a NoSQL database but this assignment uses PostgreSQL.
 PostgreSQL allows to force a certain data structure on database level, not just application level. 
 This helps prevent data issues where application data structure has changed but was not forced through to the database.
 
+### Sequelize
+
+Sequelize provides an excellent abstraction layer for relational databases, also is it well established.
+
 ## Deployment
 
 The deployment depends on the scale of the application. 
