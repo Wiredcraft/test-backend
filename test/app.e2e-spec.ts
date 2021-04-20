@@ -5,6 +5,10 @@ import { AppModule } from './../src/app.module';
 import { CustomErrorFilter } from '../src/presentation/rest/custom.error.filter';
 import { UserEntity } from '../src/infrastructure/postgres/user/user.entity';
 import { FriendEntity } from '../src/infrastructure/postgres/friend/friend.entity';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+} from 'src/presentation/rest/user/user.types';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -27,6 +31,82 @@ describe('AppController (e2e)', () => {
     await FriendEntity.destroy({ where: {} });
     await UserEntity.destroy({ where: {} });
   });
+
+  async function createUser(value: CreateUserDto) {
+    return request(app.getHttpServer())
+      .post('/user')
+      .send(value)
+      .expect(201)
+      .then((response) => {
+        return response.body;
+      });
+  }
+
+  async function getUser(userId: string) {
+    return request(app.getHttpServer())
+      .get(`/user/${userId}`)
+      .expect(200)
+      .then((response) => {
+        return response.body;
+      });
+  }
+
+  async function getUsers() {
+    return request(app.getHttpServer())
+      .get(`/user`)
+      .expect(200)
+      .then((response) => {
+        return response.body;
+      });
+  }
+
+  async function deleteUser(userId: string) {
+    return request(app.getHttpServer())
+      .delete(`/user/${userId}`)
+      .expect(200)
+      .then((response) => {
+        return response.body;
+      });
+  }
+
+  async function updateUser(userId: string, body: UpdateUserDto) {
+    return request(app.getHttpServer())
+      .patch(`/user/${userId}`)
+      .send(body)
+      .expect(200)
+      .then((response) => {
+        return response.body;
+      });
+  }
+
+  async function createFriend(userId: string, userOtherId: string) {
+    return request(app.getHttpServer())
+      .post(`/user/${userId}/friend/${userOtherId}`)
+      .expect(201)
+      .then((response) => {
+        expect(response.body).toHaveProperty('userId', userId);
+        expect(response.body).toHaveProperty('otherUserId', userOtherId);
+        return response.body;
+      });
+  }
+
+  async function getFriendsNearby(userId: string) {
+    return request(app.getHttpServer())
+      .get(`/user/${userId}/friend/nearby`)
+      .expect(200)
+      .then((response) => {
+        return response.body;
+      });
+  }
+
+  async function getFriends(userId: string) {
+    return request(app.getHttpServer())
+        .get(`/user/${userId}/friend`)
+        .expect(200)
+        .then((response) => {
+          return response.body;
+        });
+  }
 
   it('/ (GET)', () => {
     return request(app.getHttpServer())
@@ -57,50 +137,52 @@ describe('AppController (e2e)', () => {
       );
   });
 
-  it('Add user - expect user', () => {
-    return request(app.getHttpServer())
-      .post('/user')
-      .send({ name: 'Philip J. Fry' })
-      .expect(201)
-      .then((response) => {
-        expect(response.body).toHaveProperty('name', 'Philip J. Fry');
-      });
+  it('Add user - expect user', async () => {
+    const user = await createUser({
+      name: 'Philip J. Fry 1st',
+    });
+    expect(user).toHaveProperty('name', 'Philip J. Fry 1st');
+    expect(user).toHaveProperty('id');
   });
 
-  it('Add user and update user - expect user', () => {
-    return request(app.getHttpServer())
-      .post('/user')
-      .send({ name: 'Philip J. Fry' })
-      .expect(201)
-      .then((response) => {
-        const user = response.body;
-        expect(user).toHaveProperty('name', 'Philip J. Fry');
-        expect(user).toHaveProperty('id');
-        return request(app.getHttpServer())
-          .get(`/user/${user.id}`)
-          .expect(200)
-          .then((response) => {
-            const returnedUser = response.body;
-            expect(returnedUser).toEqual(user);
+  it('Add user - list user and find one', async () => {
+    let listUsers = await getUsers();
+    expect(listUsers).toHaveLength(0);
 
-            return request(app.getHttpServer())
-              .patch(`/user/${user.id}`)
-              .send({ dateOfBirth: '2020-04-20' })
-              .expect(200)
-              .then((response) => {
-                return request(app.getHttpServer())
-                  .get(`/user/${user.id}`)
-                  .expect(200)
-                  .then((response) => {
-                    const updatedUser = response.body;
-                    expect(updatedUser).toHaveProperty(
-                      'dateOfBirth',
-                      '2020-04-20',
-                    );
-                  });
-              });
-          });
-      });
+    const user = await createUser({
+      name: 'Philip J. Fry 1st',
+    });
+
+    listUsers = await getUsers();
+    expect(listUsers).toHaveLength(1);
+    expect(listUsers[0]).toHaveProperty('name', 'Philip J. Fry 1st');
+    expect(listUsers[0]).toHaveProperty('id', user.id);
+  });
+
+  it('Add user and delete user - expect user deleted', async () => {
+    const user = await createUser({
+      name: 'Philip J. Fry 1st',
+    });
+
+    let returnedUser = await getUser(user.id);
+    expect(returnedUser).toEqual(user);
+    await deleteUser(user.id);
+
+    returnedUser = await getUser(user.id);
+    expect(returnedUser).toStrictEqual({});
+  });
+
+  it('Add user and update user - expect user', async () => {
+    const user = await createUser({
+      name: 'Philip J. Fry 1st',
+    });
+
+    let returnedUser = await getUser(user.id);
+    expect(returnedUser).toEqual(user);
+
+    await updateUser(user.id, { dateOfBirth: ('2020-04-20' as any) as Date });
+    returnedUser = await getUser(user.id);
+    expect(returnedUser).toHaveProperty('dateOfBirth', '2020-04-20');
   });
 
   it('Add friend with non existing users - throw error', () => {
@@ -112,64 +194,70 @@ describe('AppController (e2e)', () => {
       });
   });
 
-  it('Add two user and make a friend', () => {
-    return request(app.getHttpServer())
-      .post('/user')
-      .send({ name: 'Philip J. Fry 1st' })
-      .expect(201)
-      .then((response) => {
-        const user1 = response.body;
-        return request(app.getHttpServer())
-          .post('/user')
-          .send({ name: 'Philip J. Fry 2nd' })
-          .expect(201)
-          .then((response) => {
-            const user2 = response.body;
-            return request(app.getHttpServer())
-              .post(`/user/${user1.id}/friend/${user2.id}`)
-              .expect(201)
-              .then((response) => {
-                expect(response.body).toHaveProperty('userId', user1.id);
-                expect(response.body).toHaveProperty('otherUserId', user2.id);
-              });
-          });
-      });
+  it('Add two user and make a friend, should find friend for both', async () => {
+    const user = await createUser({
+      name: 'Philip J. Fry 1st',
+    });
+
+    const user2 = await createUser({
+      name: 'Philip J. Fry 2nd',
+    });
+
+
+    let friends = await getFriends(user.id);
+    expect(friends).toHaveLength(0);
+
+    await createFriend(user.id, user2.id);
+    friends = await getFriends(user.id);
+    expect(friends).toHaveLength(1);
+    expect(friends[0]).toHaveProperty('userId', user.id)
+    expect(friends[0]).toHaveProperty('otherUserId', user2.id)
+
+    friends = await getFriends(user2.id);
+    expect(friends).toHaveLength(1);
+    expect(friends[0]).toHaveProperty('userId', user.id)
+    expect(friends[0]).toHaveProperty('otherUserId', user2.id)
   });
 
-  it('Add two user, make a friend and check nearby', () => {
-    return request(app.getHttpServer())
-      .post('/user')
-      .send({ name: 'Philip J. Fry 1st', address: [31.226133, 121.466505] })
-      .expect(201)
-      .then((response) => {
-        const user1 = response.body;
-        return request(app.getHttpServer())
-          .post('/user')
-          .send({ name: 'Philip J. Fry 2nd', address: [31.225133, 121.465505] })
-          .expect(201)
-          .then((response) => {
-            const user2 = response.body;
-            return request(app.getHttpServer())
-              .post(`/user/${user1.id}/friend/${user2.id}`)
-              .expect(201)
-              .then((response) => {
-                expect(response.body).toHaveProperty('userId', user1.id);
-                expect(response.body).toHaveProperty('otherUserId', user2.id);
 
-                return request(app.getHttpServer())
-                  .get(`/user/${user1.id}/friend/nearby`)
-                  .expect(200)
-                  .then((response) => {
-                    expect(response.body).toHaveLength(1);
-                    expect(response.body[0]).toHaveProperty(
-                      'distance',
-                      146.18796597,
-                    );
-                    expect(response.body[0]).toHaveProperty('id', user2.id);
-                    expect(response.body[0]).toHaveProperty('name', user2.name);
-                  });
-              });
-          });
-      });
+  it('Add two users as friends, without address, do not find nearby', async () => {
+    const user = await createUser({
+      name: 'Philip J. Fry 1st',
+    });
+
+    const user2 = await createUser({
+      name: 'Philip J. Fry 2nd',
+    });
+
+    const friend = await createFriend(user.id, user2.id);
+    const friendsNearby = await getFriendsNearby(user.id);
+    expect(friendsNearby).toHaveLength(0);
+  });
+
+  it('Add two user, make a friend and check nearby', async () => {
+    const user = await createUser({
+      name: 'Philip J. Fry 1st',
+      address: [31.226133, 121.466505],
+    });
+
+    const user2 = await createUser({
+      name: 'Philip J. Fry 2nd',
+      address: [31.225133, 121.465505],
+    });
+
+    const friend = await createFriend(user.id, user2.id);
+    let friendsNearby = await getFriendsNearby(user.id);
+    expect(friendsNearby).toHaveLength(1);
+    expect(friendsNearby[0]).toHaveProperty('distance', 146.18796597);
+    expect(friendsNearby[0]).toHaveProperty('id', user2.id);
+    expect(friendsNearby[0]).toHaveProperty('name', user2.name)
+    expect(friendsNearby[0]).toHaveProperty('address', user2.address);
+
+    friendsNearby = await getFriendsNearby(user2.id);
+    expect(friendsNearby).toHaveLength(1);
+    expect(friendsNearby[0]).toHaveProperty('distance', 146.18796597);
+    expect(friendsNearby[0]).toHaveProperty('id', user.id);
+    expect(friendsNearby[0]).toHaveProperty('name', user.name);
+    expect(friendsNearby[0]).toHaveProperty('address', user.address);
   });
 });
