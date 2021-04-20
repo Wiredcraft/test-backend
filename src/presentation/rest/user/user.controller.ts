@@ -13,6 +13,7 @@ import { FriendService } from '../../../application/friend/friend.service';
 import { CreateUserDto, UpdateUserDto } from './user.types';
 import { GeoPosition } from '../../../domain/address.type';
 import { User } from 'src/domain/user/user.types';
+import { ApiQuery } from '@nestjs/swagger';
 
 @Controller('user')
 export class UserController {
@@ -33,6 +34,18 @@ export class UserController {
       .then((res) => this.mapUserAddressToOutside(res));
   }
 
+  @ApiQuery({
+    name: 'offset',
+    type: 'number',
+    example: 0,
+    required: false,
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: 'number',
+    example: 10,
+    required: false,
+  })
   @Get()
   findAll(@Query('offset') offset = 0, @Query('limit') limit = 10) {
     return this.userService
@@ -62,6 +75,18 @@ export class UserController {
     return this.userService.remove(id);
   }
 
+  @ApiQuery({
+    name: 'offset',
+    type: 'number',
+    example: 0,
+    required: false,
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: 'number',
+    example: 10,
+    required: false,
+  })
   @Get(':id/friends')
   getFriends(
     @Param('id') id: string,
@@ -71,6 +96,25 @@ export class UserController {
     return this.friendService.findByUserId({ userId: id, limit, offset });
   }
 
+  @ApiQuery({
+    name: 'range',
+    type: 'number',
+    example: 5000,
+    description: 'Range in meters',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'offset',
+    type: 'number',
+    example: 0,
+    required: false,
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: 'number',
+    example: 10,
+    required: false,
+  })
   @Get(':id/friends/nearby')
   getFriendsInRange(
     @Param('id') id: string,
@@ -88,14 +132,20 @@ export class UserController {
       .then((res) => res.map(this.mapUserAddressToOutside));
   }
 
-  @Post(':id/friends/:otherId')
-  createFriend(@Param('id') id: string, @Param('otherId') otherId: string) {
-    return this.friendService.create({ userId: id, otherUserId: otherId });
+  @Post(':id/friends/:otherUserId')
+  createFriend(
+    @Param('id') id: string,
+    @Param('otherUserId') otherUserId: string,
+  ) {
+    return this.friendService.create({ userId: id, otherUserId });
   }
 
-  @Delete(':id/friends/:otherId')
-  removeFriend(@Param('id') id: string, @Param('otherId') otherId: string) {
-    return this.friendService.remove({ userId: id, otherUserId: otherId });
+  @Delete(':id/friends/:otherUserId')
+  removeFriend(
+    @Param('id') id: string,
+    @Param('otherUserId') otherUserId: string,
+  ) {
+    return this.friendService.remove({ userId: id, otherUserId });
   }
 
   private transformLatLongToPostgresGeoPosition = (
