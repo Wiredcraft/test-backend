@@ -1,14 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { GeoPosition } from '../../../domain/address.type';
 import { PartialType } from '@nestjs/mapped-types';
-import {IsArray, IsDate, IsDateString, IsOptional, IsString} from 'class-validator';
+import { IsArray, IsDateString, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty()
   @IsString()
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsDateString()
   @IsOptional()
   dateOfBirth?: Date;
@@ -16,6 +15,7 @@ export class CreateUserDto {
   @IsArray()
   @IsOptional()
   @ApiProperty({
+    required: false,
     type: 'array',
     items: {
       type: 'number',
@@ -26,19 +26,19 @@ export class CreateUserDto {
   })
   address?: number[];
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
   description?: string;
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
   name?: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsDateString()
   @IsOptional()
   dateOfBirth?: Date;
@@ -46,6 +46,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsOptional()
   @IsArray()
   @ApiProperty({
+    required: false,
     type: 'array',
     items: {
       type: 'number',
@@ -58,6 +59,6 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @IsOptional()
   @IsString()
-  @ApiProperty()
+  @ApiProperty({ required: false })
   description?: string;
 }
