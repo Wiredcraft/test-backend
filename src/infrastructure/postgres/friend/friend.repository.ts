@@ -95,7 +95,7 @@ export class FriendRepositoryPostgres implements FriendRepository {
       if (!friend) {
         return FriendEntity.create(params, { transaction });
       }
-      throw new Error('Friend already exists');
+      return friend;
     });
   }
 
