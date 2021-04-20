@@ -19,6 +19,7 @@ export class UserRepositoryPostgres implements UserRepository {
     return UserEntity.findAll({
       offset: params.offset,
       limit: params.limit,
+      order: ['createdAt'],
     }).then((res) => res.map((value) => value.toJSON() as User));
   }
 
