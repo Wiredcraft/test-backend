@@ -29,10 +29,10 @@ GET     /user
 GET     /usr/{id}
 PATCH   /usr/{id}
 DELETE  /usr/{id}
-GET     /usr/{id}/friends
-GET     /usr/{id}/friends/nearby
-POST    /usr/{id}/friends/{otherId}
-DELETE  /usr/{id}/friends/{otherId}
+GET     /usr/{id}/friend
+GET     /usr/{id}/friend/nearby
+POST    /usr/{id}/friend/{otherUserId}
+DELETE  /usr/{id}/friend/{otherUserId}
 ```
 
 ## Architecture

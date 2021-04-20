@@ -87,7 +87,7 @@ export class UserController {
     example: 10,
     required: false,
   })
-  @Get(':id/friends')
+  @Get(':id/friend')
   getFriends(
     @Param('id') id: string,
     @Query('offset') offset = 0,
@@ -115,7 +115,7 @@ export class UserController {
     example: 10,
     required: false,
   })
-  @Get(':id/friends/nearby')
+  @Get(':id/friend/nearby')
   getFriendsInRange(
     @Param('id') id: string,
     @Query('offset') offset = 0,
@@ -132,7 +132,7 @@ export class UserController {
       .then((res) => res.map(this.mapUserAddressToOutside));
   }
 
-  @Post(':id/friends/:otherUserId')
+  @Post(':id/friend/:otherUserId')
   createFriend(
     @Param('id') id: string,
     @Param('otherUserId') otherUserId: string,
@@ -140,7 +140,7 @@ export class UserController {
     return this.friendService.create({ userId: id, otherUserId });
   }
 
-  @Delete(':id/friends/:otherUserId')
+  @Delete(':id/friend/:otherUserId')
   removeFriend(
     @Param('id') id: string,
     @Param('otherUserId') otherUserId: string,
