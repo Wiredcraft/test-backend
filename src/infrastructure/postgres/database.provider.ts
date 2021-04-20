@@ -8,11 +8,13 @@ export const databaseProviders = [
     useFactory: async () => {
       const sequelize = new Sequelize({
         dialect: 'postgres',
-        host: 'localhost',
-        port: 5432,
-        username: 'postgres',
-        password: 'postgres',
-        database: 'wiredcraft-assignment',
+        host: process.env.DATABASE_HOST ?? 'localhost',
+        port: process.env.DATABASE_PORT
+          ? parseInt(process.env.DATABASE_PORT)
+          : 5432,
+        username: process.env.DATABASE_USER ?? 'postgres',
+        password: process.env.DATABASE_PASS ?? 'postgres',
+        database: process.env.DATABASE_NAME ?? 'wiredcraft-assignment',
       });
       sequelize.addModels([UserEntity, FriendEntity]);
       await sequelize.sync();

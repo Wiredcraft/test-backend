@@ -1,0 +1,25 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+  db:
+    image: postgis/postgis:13-3.1
+    restart: always
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: wiredcraft
+  node:
+    build: .
+    restart: always
+    ports:
+      - "5000:8080"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      PORT: 8080
+      DATABASE_HOST: db
+      DATABASE_NAME: wiredcraft
+    depends_on:
+      - db
