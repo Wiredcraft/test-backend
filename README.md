@@ -26,19 +26,19 @@ The general routes available:
 ```
 POST    /user
 GET     /user
-GET     /usr/{id}
-PATCH   /usr/{id}
-DELETE  /usr/{id}
-GET     /usr/{id}/friend
-GET     /usr/{id}/friend/nearby
-POST    /usr/{id}/friend/{otherUserId}
-DELETE  /usr/{id}/friend/{otherUserId}
+GET     /user/{id}
+PATCH   /user/{id}
+DELETE  /user/{id}
+GET     /user/{id}/friend
+GET     /user/{id}/friend/nearby
+POST    /user/{id}/friend/{otherUserId}
+DELETE  /user/{id}/friend/{otherUserId}
 ```
 
 ## Architecture
 
 This project uses the onion architecture which allows for maintainability.
-Please check out the `docs/architecture.md` for further informations.
+Please check out the `documentation/architecture.md` for further informations.
 
 
 ## Running tests
