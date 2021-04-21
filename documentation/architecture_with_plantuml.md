@@ -16,8 +16,41 @@ This design pattern allows access from the outer layers, different presentation 
 
 The component architecture is visible in the following diagram.
 
+```puml
+@startuml
 
-![img_1.png](img_1.png)
+package "Presentation" {
+  HTTP - [User Controller]  
+}
+
+package "Application" {
+  [User Service]
+  [Friend Service]
+}
+
+package "Domain" {
+  [User Repository Interface]
+  [User Types]
+  [Friend Types]
+  [Friend Repository Interface]
+  [User Repository Interface] - [User Types]
+  [Friend Repository Interface] - [Friend Types]
+}
+
+database "Infrastructure" {
+    [User Repository Implementation]
+    [Friend Repository Implementation]
+}
+
+[User Controller] --> [User Service]
+[User Controller] --> [Friend Service]
+[Friend Service] --> [Friend Repository Interface]
+[Friend Service] --> [User Service]
+[User Repository Implementation] --> [User Repository Interface]
+[Friend Repository Implementation] --> [Friend Repository Interface]
+
+@enduml
+```
 
 - Presentation layer
     - Implements the REST API and accesses the user and friend service
@@ -54,4 +87,31 @@ Sequelize provides an excellent abstraction layer for relational databases, also
 The deployment depends on the scale of the application. 
 It is assumed that the application is deployed across multiple servers to allow for load handling and fall back. How the database is hosted is not a concern of this project, it is an SaaS in this project.
 
-![img_2.png](img_2.png)
+```puml
+@startuml
+
+node "Backend server 1" {
+  agent "Node.JS_backend_1"
+}
+
+node "Backend server 2" {
+  agent "Node.JS_backend_2"
+}
+
+cloud {
+  database "PostgreSQL"
+}
+
+node "Load balancer server" {
+  agent "Load_balancer"
+}
+
+actor user
+user --> Load_balancer
+Load_balancer --> Node.JS_backend_1
+Load_balancer --> Node.JS_backend_2
+
+Node.JS_backend_1 --> PostgreSQL
+Node.JS_backend_2 --> PostgreSQL
+@enduml
+```
