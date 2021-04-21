@@ -28,7 +28,7 @@ export class UserController {
     return this.userService
       .create({
         ...createUserDto,
-        address: this.transformLatLongToPostgresGeoPosition(
+        address: this.transformLatLongToGeoPosition(
           createUserDto.address,
         ),
       })
@@ -71,7 +71,7 @@ export class UserController {
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, {
       ...updateUserDto,
-      address: this.transformLatLongToPostgresGeoPosition(
+      address: this.transformLatLongToGeoPosition(
         updateUserDto.address,
       ),
     });
@@ -166,7 +166,7 @@ export class UserController {
   }
 
   // Transforms lat/long to long/lat for GeoPosition, used to display points in the application
-  private transformLatLongToPostgresGeoPosition = (
+  private transformLatLongToGeoPosition = (
     address: number[],
   ): GeoPosition => {
     if (address && address.length > 1) {
