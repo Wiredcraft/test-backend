@@ -148,6 +148,7 @@ export class UserController {
     return this.friendService.remove({ userId: id, otherUserId });
   }
 
+  // Transforms lat/long to long/lat for GeoPosition, used to display points in the application
   private transformLatLongToPostgresGeoPosition = (
     address: number[],
   ): GeoPosition => {
@@ -160,6 +161,7 @@ export class UserController {
     return undefined;
   };
 
+  // Transforms long/lat to lat/long
   private transformGeoPositionToAddress = (address: GeoPosition): number[] => {
     if (address) {
       return [address.coordinates[1], address.coordinates[0]];
@@ -167,7 +169,7 @@ export class UserController {
     return undefined;
   };
 
-  // Accept address as lat/lon, which is commonly used for
+  // Accept address as lat/lon, which is commonly used and standardised (https://epsg.io/4326)
   private mapUserAddressToOutside = (user: User) => {
     if (user && user.address) {
       return {
