@@ -18,8 +18,7 @@ export class CustomErrorFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
 
     if (exception instanceof ErrorUserNotFound) {
-      response.status(400);
-      status = HttpStatus.BAD_REQUEST;
+      status = HttpStatus.NOT_FOUND;
     }
 
     response.status(status).json({

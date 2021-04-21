@@ -42,10 +42,10 @@ describe('AppController (e2e)', () => {
       });
   }
 
-  async function getUser(userId: string) {
+  async function getUser(userId: string, responseCode = 200) {
     return request(app.getHttpServer())
       .get(`/user/${userId}`)
-      .expect(200)
+      .expect(responseCode)
       .then((response) => {
         return response.body;
       });
@@ -176,8 +176,7 @@ describe('AppController (e2e)', () => {
     expect(returnedUser).toEqual(user);
     await deleteUser(user.id);
 
-    returnedUser = await getUser(user.id);
-    expect(returnedUser).toStrictEqual({});
+    await getUser(user.id,404);
   });
 
   it('Add user and update user - expect user', async () => {
@@ -196,7 +195,7 @@ describe('AppController (e2e)', () => {
   it('Add friend with non existing users - throw error', () => {
     return request(app.getHttpServer())
       .post('/user/SomeId/friend/SomeOtherId')
-      .expect(400)
+      .expect(404)
       .then((response) => {
         expect(response.body).toHaveProperty('message', 'User not found');
       });
@@ -239,7 +238,7 @@ describe('AppController (e2e)', () => {
     expect(friends).toHaveLength(0);
 
     await createFriend(user.id, user2.id);
-    friends = await getFriends(user.id,1);
+    friends = await getFriends(user.id, 1);
     expect(friends).toHaveLength(0);
   });
 

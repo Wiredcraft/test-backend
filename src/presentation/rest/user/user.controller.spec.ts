@@ -5,6 +5,7 @@ import { UserRepositoryInMemory } from '../../../infrastructure/in-memory/user/u
 import { FriendService } from '../../../application/friend/friend.service';
 import { FriendRepositoryInMemory } from 'src/infrastructure/in-memory/friend/friend.repository';
 import { UserRepository } from '../../../domain/user/user.repository';
+import {HttpException} from "@nestjs/common";
 
 describe('UserController', () => {
   let controller: UserController;
@@ -32,6 +33,21 @@ describe('UserController', () => {
       const userToCreate = { name: 'Wiredcraft unit test' };
       const createdUser = await controller.create(userToCreate);
       expect(createdUser).toHaveProperty('id');
+    });
+
+    it('Add 1 user and update', async () => {
+      const userToCreate = { name: 'Wiredcraft unit test' };
+      const createdUser = await controller.create(userToCreate);
+      expect(createdUser).toHaveProperty('id');
+      expect(
+        await controller.update(createdUser.id, {
+          description: 'Some description',
+        }),
+      ).toEqual(true);
+      const foundUser = await controller.findOne(createdUser.id);
+      expect(foundUser).toHaveProperty('description', 'Some description');
+      expect(foundUser).toHaveProperty('id', createdUser.id);
+      expect(foundUser).toHaveProperty('address', undefined);
     });
 
     it('Add 1 user - expect to find users in find all', async () => {
@@ -62,32 +78,13 @@ describe('UserController', () => {
       let findAllUsers = await controller.findAll();
       expect(findAllUsers).toHaveLength(1);
 
-      expect(await controller.remove(createdUser.id)).toEqual(true);
-      expect(await controller.remove(createdUser.id)).toEqual(false);
+      expect(await controller.remove(createdUser.id)).toEqual(undefined);
+      await expect(controller.remove(createdUser.id)).rejects.toThrowError(new HttpException('User not found', 404))
 
       findAllUsers = await controller.findAll();
       expect(findAllUsers).toHaveLength(0);
 
-      const foundUser = await controller.findOne(createdUser.id);
-      expect(foundUser).toEqual(undefined);
-    });
-
-    it('Add 1 user - delete should remove user from get and findAll', async () => {
-      const userToCreate = { name: 'Wiredcraft unit test' };
-      const createdUser = await controller.create(userToCreate);
-      expect(createdUser).toHaveProperty('id');
-
-      let findAllUsers = await controller.findAll();
-      expect(findAllUsers).toHaveLength(1);
-
-      expect(await controller.remove(createdUser.id)).toEqual(true);
-      expect(await controller.remove(createdUser.id)).toEqual(false);
-
-      findAllUsers = await controller.findAll();
-      expect(findAllUsers).toHaveLength(0);
-
-      const foundUser = await controller.findOne(createdUser.id);
-      expect(foundUser).toEqual(undefined);
+      await expect(controller.findOne(createdUser.id)).rejects.toThrowError(new HttpException('User not found', 404))
     });
 
     it('Add 1 user with full details', async () => {
@@ -111,7 +108,7 @@ describe('UserController', () => {
 
       await expect(
         controller.createFriend(createdUser.id, 'SomeOtherId'),
-      ).rejects.toThrowError('User not found');
+      ).rejects.toThrowError(new HttpException('User not found', 404))
     });
   });
 
@@ -154,6 +151,16 @@ describe('UserController', () => {
       expect(await controller.getFriends(createdUser.id)).toHaveLength(1);
     });
 
+    it('add friend and remove friend, should retrieve 0 friends', async () => {
+      const userToCreate = { name: 'Wiredcraft unit test' };
+      const createdUser = await controller.create(userToCreate);
+      const createdUser2 = await controller.create(userToCreate);
+      await controller.createFriend(createdUser.id, createdUser2.id);
+      expect(await controller.getFriends(createdUser.id)).toHaveLength(1);
+      await controller.removeFriend(createdUser.id, createdUser2.id);
+      expect(await controller.getFriends(createdUser.id)).toHaveLength(0);
+    });
+
     it('add friend, supply offset, should retrieve empty friends', async () => {
       const userToCreate = { name: 'Wiredcraft unit test' };
       const createdUser = await controller.create(userToCreate);
@@ -174,8 +181,23 @@ describe('UserController', () => {
   });
 
   describe('no user', () => {
-    it('get by id should return undefined', async () => {
-      expect(await controller.findOne('SomeId')).toEqual(undefined);
+    it('get by id should return 404', async () => {
+      await expect(controller.findOne('SomeId')).rejects.toThrowError(new HttpException('User not found', 404))
+    });
+
+    it('Update non-existing user - return 404', async () => {
+      const userToCreate = { name: 'Wiredcraft unit test' };
+      const createdUser = await controller.create(userToCreate);
+      expect(createdUser).toHaveProperty('id');
+      expect(
+        await controller.update(createdUser.id, {
+          description: 'Some description',
+        }),
+      ).toEqual(true);
+      const foundUser = await controller.findOne(createdUser.id);
+      expect(foundUser).toHaveProperty('description', 'Some description');
+      expect(foundUser).toHaveProperty('id', createdUser.id);
+      expect(foundUser).toHaveProperty('address', undefined);
     });
 
     it('find all should return empty list', async () => {
@@ -183,13 +205,19 @@ describe('UserController', () => {
     });
 
     it('delete should return false', async () => {
-      expect(await controller.remove('SomeId')).toEqual(false);
+      await expect(controller.remove('SomeId')).rejects.toThrowError(new HttpException('User not found', 404))
     });
 
     it('add friend, should throw error that user does not exist', async () => {
       await expect(
         controller.createFriend('SomeId', 'SomeOtherId'),
-      ).rejects.toThrowError('User not found');
+      ).rejects.toThrowError(new HttpException('User not found', 404))
+    });
+
+    it('remove friend, should throw error that user does not exist', async () => {
+      await expect(
+          controller.removeFriend('SomeId', 'SomeOtherId'),
+      ).rejects.toThrowError(new HttpException('User not found', 404))
     });
   });
 });

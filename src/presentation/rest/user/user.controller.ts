@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
   Param,
   Patch,
   Post,
@@ -57,7 +58,13 @@ export class UserController {
   findOne(@Param('id') id: string) {
     return this.userService
       .findOne(id)
-      .then((res) => this.mapUserAddressToOutside(res));
+      .then((res) => this.mapUserAddressToOutside(res))
+      .then((res) => {
+        if (!res) {
+          throw new HttpException('User not found', 404);
+        }
+        return res;
+      });
   }
 
   @Patch(':id')
@@ -72,7 +79,11 @@ export class UserController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+    return this.userService.remove(id).then((res) => {
+      if (!res) {
+        throw new HttpException('User not found', 404);
+      }
+    });
   }
 
   @ApiQuery({
@@ -145,7 +156,13 @@ export class UserController {
     @Param('id') id: string,
     @Param('otherUserId') otherUserId: string,
   ) {
-    return this.friendService.remove({ userId: id, otherUserId });
+    return this.friendService
+      .remove({ userId: id, otherUserId })
+      .then((res) => {
+        if (!res) {
+          throw new HttpException('User not found', 404);
+        }
+      });
   }
 
   // Transforms lat/long to long/lat for GeoPosition, used to display points in the application
