@@ -91,12 +91,19 @@ describe('UserController', () => {
     });
 
     it('Add 1 user with full details', async () => {
-      await controller.create({
+      const user = await controller.create({
         address: [31, 121],
         dateOfBirth: new Date('1975-06-01Z'),
         description: 'Character in Futurama',
         name: 'Philip J. Fry',
       });
+      expect(user).toHaveProperty('id')
+      const foundUser = await controller.findOne(user.id)
+      expect(foundUser).toHaveProperty('address', user.address)
+      expect(foundUser).toHaveProperty('dateOfBirth', user.dateOfBirth)
+      expect(foundUser).toHaveProperty('description', user.description)
+      expect(foundUser).toHaveProperty('name', user.name)
+
     });
     it('Add 1 user, try add a non existing friend, throw error', async () => {
       const createdUser = await controller.create({
