@@ -90,22 +90,30 @@ describe('AppController (e2e)', () => {
       });
   }
 
-  async function getFriendsNearby(userId: string) {
+  async function getFriendsNearby(
+    userId: string,
+    offset: number = 0,
+    limit: number = 10,
+  ) {
     return request(app.getHttpServer())
-      .get(`/user/${userId}/friend/nearby`)
+      .get(`/user/${userId}/friend/nearby?offset=${offset}&limit=${limit}`)
       .expect(200)
       .then((response) => {
         return response.body;
       });
   }
 
-  async function getFriends(userId: string) {
+  async function getFriends(
+    userId: string,
+    offset: number = 0,
+    limit: number = 10,
+  ) {
     return request(app.getHttpServer())
-        .get(`/user/${userId}/friend`)
-        .expect(200)
-        .then((response) => {
-          return response.body;
-        });
+      .get(`/user/${userId}/friend?offset=${offset}&limit=${limit}`)
+      .expect(200)
+      .then((response) => {
+        return response.body;
+      });
   }
 
   it('/ (GET)', () => {
@@ -203,22 +211,37 @@ describe('AppController (e2e)', () => {
       name: 'Philip J. Fry 2nd',
     });
 
-
     let friends = await getFriends(user.id);
     expect(friends).toHaveLength(0);
 
     await createFriend(user.id, user2.id);
     friends = await getFriends(user.id);
     expect(friends).toHaveLength(1);
-    expect(friends[0]).toHaveProperty('userId', user.id)
-    expect(friends[0]).toHaveProperty('otherUserId', user2.id)
+    expect(friends[0]).toHaveProperty('userId', user.id);
+    expect(friends[0]).toHaveProperty('otherUserId', user2.id);
 
     friends = await getFriends(user2.id);
     expect(friends).toHaveLength(1);
-    expect(friends[0]).toHaveProperty('userId', user.id)
-    expect(friends[0]).toHaveProperty('otherUserId', user2.id)
+    expect(friends[0]).toHaveProperty('userId', user.id);
+    expect(friends[0]).toHaveProperty('otherUserId', user2.id);
   });
 
+  it('Add two user and make a friend, use offset of 1, should not find any friends', async () => {
+    const user = await createUser({
+      name: 'Philip J. Fry 1st',
+    });
+
+    const user2 = await createUser({
+      name: 'Philip J. Fry 2nd',
+    });
+
+    let friends = await getFriends(user.id);
+    expect(friends).toHaveLength(0);
+
+    await createFriend(user.id, user2.id);
+    friends = await getFriends(user.id,1);
+    expect(friends).toHaveLength(0);
+  });
 
   it('Add two users as friends, without address, do not find nearby', async () => {
     const user = await createUser({
@@ -250,7 +273,7 @@ describe('AppController (e2e)', () => {
     expect(friendsNearby).toHaveLength(1);
     expect(friendsNearby[0]).toHaveProperty('distance', 146.18796597);
     expect(friendsNearby[0]).toHaveProperty('id', user2.id);
-    expect(friendsNearby[0]).toHaveProperty('name', user2.name)
+    expect(friendsNearby[0]).toHaveProperty('name', user2.name);
     expect(friendsNearby[0]).toHaveProperty('address', user2.address);
 
     friendsNearby = await getFriendsNearby(user2.id);

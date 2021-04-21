@@ -97,13 +97,12 @@ describe('UserController', () => {
         description: 'Character in Futurama',
         name: 'Philip J. Fry',
       });
-      expect(user).toHaveProperty('id')
-      const foundUser = await controller.findOne(user.id)
-      expect(foundUser).toHaveProperty('address', user.address)
-      expect(foundUser).toHaveProperty('dateOfBirth', user.dateOfBirth)
-      expect(foundUser).toHaveProperty('description', user.description)
-      expect(foundUser).toHaveProperty('name', user.name)
-
+      expect(user).toHaveProperty('id');
+      const foundUser = await controller.findOne(user.id);
+      expect(foundUser).toHaveProperty('address', user.address);
+      expect(foundUser).toHaveProperty('dateOfBirth', user.dateOfBirth);
+      expect(foundUser).toHaveProperty('description', user.description);
+      expect(foundUser).toHaveProperty('name', user.name);
     });
     it('Add 1 user, try add a non existing friend, throw error', async () => {
       const createdUser = await controller.create({
@@ -117,11 +116,21 @@ describe('UserController', () => {
   });
 
   describe('multiple users', () => {
-    it('find all', async () => {
+    it('create 2 - find all', async () => {
       const userToCreate = { name: 'Wiredcraft unit test' };
       const createdUser = await controller.create(userToCreate);
       const createdUser2 = await controller.create(userToCreate);
       expect(await controller.findAll()).toHaveLength(2);
+    });
+
+    it('create 2 - offset 1 - find one', async () => {
+      const userToCreate = { name: 'Wiredcraft unit test' };
+      const createdUser = await controller.create(userToCreate);
+      const createdUser2 = await controller.create(userToCreate);
+      const result = await controller.findAll(1);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toHaveProperty('id', createdUser2.id);
     });
 
     it('delete one, should still find the other', async () => {

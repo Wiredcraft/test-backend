@@ -23,7 +23,10 @@ export class UserRepositoryInMemory implements UserRepository {
   }
 
   async findAll(params: { offset: number; limit: number }): Promise<User[]> {
-    return [...this.users.values()];
+    return [...this.users.values()].slice(
+      params.offset,
+      params.offset + params.limit,
+    );
   }
 
   async getById(params: { id: string }): Promise<User> {
