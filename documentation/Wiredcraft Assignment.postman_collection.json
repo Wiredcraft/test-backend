@@ -141,7 +141,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/user/{{USER_ID}}/friends/nearby?range=1000&limit=1",
+					"raw": "localhost:3000/user/{{USER_ID}}/friend/nearby?range=1000&limit=1",
 					"host": [
 						"localhost"
 					],
@@ -192,7 +192,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/user/{{USER_ID}}/friends/{{USER_ID_2}}",
+					"raw": "localhost:3000/user/{{USER_ID}}/friend/{{USER_ID_2}}",
 					"host": [
 						"localhost"
 					],
