@@ -3,20 +3,25 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
   Param,
   Patch,
   Post,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from 'src/application/user/user.service';
 import { FriendService } from '../../../application/friend/friend.service';
-import { CreateUserDto, UpdateUserDto } from './user.types';
-import { GeoPosition } from '../../../domain/address.type';
-import { User } from 'src/domain/user/user.types';
 import { ApiQuery } from '@nestjs/swagger';
+import { UserDTOTransformPipe } from './user.pipe';
+import {
+  CreateUserDtoPresentation,
+  UpdateUserDtoPresentation,
+} from './user.types';
+import { UserAddressResponseInterceptor } from './user.interceptor';
+import { CreateUserDto, UpdateUserDto } from '../../../domain/user/user.types';
 
 @Controller('user')
+@UseInterceptors(UserAddressResponseInterceptor)
 export class UserController {
   constructor(
     private readonly userService: UserService,
@@ -24,15 +29,8 @@ export class UserController {
   ) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService
-      .create({
-        ...createUserDto,
-        address: this.transformLatLongToGeoPosition(
-          createUserDto.address,
-        ),
-      })
-      .then((res) => this.mapUserAddressToOutside(res));
+  create(@Body(UserDTOTransformPipe) createUserDto: CreateUserDtoPresentation) {
+    return this.userService.create(createUserDto as CreateUserDto);
   }
 
   @ApiQuery({
@@ -49,41 +47,25 @@ export class UserController {
   })
   @Get()
   findAll(@Query('offset') offset = 0, @Query('limit') limit = 10) {
-    return this.userService
-      .findAll({ offset, limit })
-      .then((users) => users.map(this.mapUserAddressToOutside));
+    return this.userService.findAll({ offset, limit });
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.userService
-      .findOne(id)
-      .then((res) => this.mapUserAddressToOutside(res))
-      .then((res) => {
-        if (!res) {
-          throw new HttpException('User not found', 404);
-        }
-        return res;
-      });
+    return this.userService.findOneOrThrowException(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, {
-      ...updateUserDto,
-      address: this.transformLatLongToGeoPosition(
-        updateUserDto.address,
-      ),
-    });
+  update(
+    @Param('id') id: string,
+    @Body(UserDTOTransformPipe) updateUserDto: UpdateUserDtoPresentation,
+  ) {
+    return this.userService.update(id, updateUserDto as UpdateUserDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(id).then((res) => {
-      if (!res) {
-        throw new HttpException('User not found', 404);
-      }
-    });
+    return this.userService.remove(id);
   }
 
   @ApiQuery({
@@ -133,14 +115,12 @@ export class UserController {
     @Query('limit') limit = 10,
     @Query('range') range = 5000,
   ) {
-    return this.friendService
-      .findFriendsInRange({
-        userId: id,
-        limit,
-        offset,
-        distanceInMeters: range,
-      })
-      .then((res) => res.map(this.mapUserAddressToOutside));
+    return this.friendService.findFriendsInRange({
+      userId: id,
+      limit,
+      offset,
+      distanceInMeters: range,
+    });
   }
 
   @Post(':id/friend/:otherUserId')
@@ -156,44 +136,6 @@ export class UserController {
     @Param('id') id: string,
     @Param('otherUserId') otherUserId: string,
   ) {
-    return this.friendService
-      .remove({ userId: id, otherUserId })
-      .then((res) => {
-        if (!res) {
-          throw new HttpException('User not found', 404);
-        }
-      });
+    return this.friendService.remove({ userId: id, otherUserId });
   }
-
-  // Transforms lat/long to long/lat for GeoPosition, used to display points in the application
-  private transformLatLongToGeoPosition = (
-    address: number[],
-  ): GeoPosition => {
-    if (address && address.length > 1) {
-      return {
-        type: 'Point',
-        coordinates: [address[1], address[0]],
-      };
-    }
-    return undefined;
-  };
-
-  // Transforms long/lat to lat/long
-  private transformGeoPositionToAddress = (address: GeoPosition): number[] => {
-    if (address) {
-      return [address.coordinates[1], address.coordinates[0]];
-    }
-    return undefined;
-  };
-
-  // Accept address as lat/lon, which is commonly used and standardised (https://epsg.io/4326)
-  private mapUserAddressToOutside = (user: User) => {
-    if (user && user.address) {
-      return {
-        ...user,
-        address: this.transformGeoPositionToAddress(user.address),
-      };
-    }
-    return user;
-  };
 }

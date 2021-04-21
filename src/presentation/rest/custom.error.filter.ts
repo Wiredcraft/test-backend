@@ -5,7 +5,11 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { CustomError, ErrorUserNotFound } from '../../utils/error.codes';
+import {
+  CustomError,
+  ErrorFriendNotFound,
+  ErrorUserNotFound,
+} from '../../utils/error.codes';
 
 @Catch(CustomError)
 export class CustomErrorFilter implements ExceptionFilter {
@@ -17,7 +21,10 @@ export class CustomErrorFilter implements ExceptionFilter {
     const message = exception.message;
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
 
-    if (exception instanceof ErrorUserNotFound) {
+    if (
+      exception instanceof ErrorUserNotFound ||
+      exception instanceof ErrorFriendNotFound
+    ) {
       status = HttpStatus.NOT_FOUND;
     }
 

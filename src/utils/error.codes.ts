@@ -5,3 +5,9 @@ export class ErrorUserNotFound extends CustomError {
     super('User not found');
   }
 }
+
+export class ErrorFriendNotFound extends CustomError {
+  constructor() {
+    super('Friend not found');
+  }
+}

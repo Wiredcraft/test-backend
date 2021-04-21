@@ -1,6 +1,5 @@
 import { GeoPosition } from '../address.type';
 import { PartialType } from '@nestjs/mapped-types';
-import { ApiProperty } from '@nestjs/swagger';
 
 export interface User {
   id: string;

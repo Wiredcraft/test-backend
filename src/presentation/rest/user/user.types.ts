@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/mapped-types';
 import { IsArray, IsDateString, IsOptional, IsString } from 'class-validator';
+import { GeoPosition } from '../../../domain/address.type';
 
-export class CreateUserDto {
+export class CreateUserDtoPresentation {
   @ApiProperty()
   @IsString()
   name: string;
@@ -24,7 +25,7 @@ export class CreateUserDto {
       'Address is represented as a coordinate based on srid-4326 lat/lon. The given example is Shanghai.',
     example: [31.225133, 121.465505],
   })
-  address?: number[];
+  address?: GeoPosition | number[];
 
   @ApiProperty({ required: false })
   @IsString()
@@ -32,7 +33,9 @@ export class CreateUserDto {
   description?: string;
 }
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
+export class UpdateUserDtoPresentation extends PartialType(
+  CreateUserDtoPresentation,
+) {
   @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
@@ -55,7 +58,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
       'Address is represented as a coordinate based on srid-4326 lat/lon. The given example is Shanghai.',
     example: [31.225133, 121.465505],
   })
-  address?: number[];
+  address?: GeoPosition | number[];
 
   @IsOptional()
   @IsString()
