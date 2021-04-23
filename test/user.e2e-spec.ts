@@ -5,7 +5,11 @@ import { AppModule } from './../src/app.module';
 import { CustomErrorFilter } from '../src/presentation/rest/custom.error.filter';
 import { UserEntity } from '../src/infrastructure/postgres/user/user.entity';
 import { FriendEntity } from '../src/infrastructure/postgres/friend/friend.entity';
-import {CreateUserDtoPresentation, UpdateUserDtoPresentation} from "../src/presentation/rest/user/user.types";
+import {
+  CreateUserDtoPresentation,
+  UpdateUserDtoPresentation,
+} from '../src/presentation/rest/user/user.types';
+import { FriendRepositoryPostgres } from 'src/infrastructure/postgres/friend/friend.repository';
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
@@ -76,14 +80,27 @@ describe('UserController (e2e)', () => {
       });
   }
 
-  async function createFriend(userId: string, userOtherId: string) {
+  async function createFriend(
+    userId: string,
+    userOtherId: string,
+    responseCode = 201,
+  ) {
     return request(app.getHttpServer())
       .post(`/user/${userId}/friend/${userOtherId}`)
-      .expect(201)
+      .expect(responseCode)
       .then((response) => {
-        expect(response.body).toHaveProperty('userId', userId);
-        expect(response.body).toHaveProperty('otherUserId', userOtherId);
-        return response.body;
+        if (responseCode === 201) {
+          const userIds = FriendRepositoryPostgres.getOrderedUserIds({
+            userId,
+            otherUserId: userOtherId,
+          });
+          expect(response.body).toHaveProperty('userId', userIds.userId);
+          expect(response.body).toHaveProperty(
+            'otherUserId',
+            userIds.otherUserId,
+          );
+          return response.body;
+        }
       });
   }
 
@@ -116,22 +133,22 @@ describe('UserController (e2e)', () => {
   describe('Add user', function () {
     it('Add empty user - throw error', () => {
       return request(app.getHttpServer())
-          .post('/user')
-          .send({ abc: 'abc' })
-          .expect(400)
-          .expect(
-              '{"statusCode":400,"message":["property abc should not exist","name must be a string"],"error":"Bad Request"}',
-          );
+        .post('/user')
+        .send({ abc: 'abc' })
+        .expect(400)
+        .expect(
+          '{"statusCode":400,"message":["property abc should not exist","name must be a string"],"error":"Bad Request"}',
+        );
     });
 
     it('Add user with wrong address - expect error', () => {
       return request(app.getHttpServer())
-          .post('/user')
-          .send({ name: 'Philip J. Fry', address: 'Wrong address format' })
-          .expect(400)
-          .expect(
-              '{"statusCode":400,"message":["address must be an array"],"error":"Bad Request"}',
-          );
+        .post('/user')
+        .send({ name: 'Philip J. Fry', address: 'Wrong address format' })
+        .expect(400)
+        .expect(
+          '{"statusCode":400,"message":["address must be an array"],"error":"Bad Request"}',
+        );
     });
 
     it('Add user - expect user', async () => {
@@ -171,9 +188,7 @@ describe('UserController (e2e)', () => {
       expect(listUsers[0]).toHaveProperty('name', 'Philip J. Fry 1st');
       expect(listUsers[0]).toHaveProperty('id', user.id);
     });
-  })
-
-
+  });
 
   it('Add user and delete user - expect user deleted', async () => {
     const user = await createUser({
@@ -184,7 +199,7 @@ describe('UserController (e2e)', () => {
     expect(returnedUser).toEqual(user);
     await deleteUser(user.id);
 
-    await getUser(user.id,404);
+    await getUser(user.id, 404);
   });
 
   it('Add user and update user - expect user', async () => {
@@ -224,13 +239,18 @@ describe('UserController (e2e)', () => {
     await createFriend(user.id, user2.id);
     friends = await getFriends(user.id);
     expect(friends).toHaveLength(1);
-    expect(friends[0]).toHaveProperty('userId', user.id);
-    expect(friends[0]).toHaveProperty('otherUserId', user2.id);
+    const userIds = FriendRepositoryPostgres.getOrderedUserIds({
+      userId: user.id,
+      otherUserId: user2.id,
+    });
+
+    expect(friends[0]).toHaveProperty('userId', userIds.userId);
+    expect(friends[0]).toHaveProperty('otherUserId', userIds.otherUserId);
 
     friends = await getFriends(user2.id);
     expect(friends).toHaveLength(1);
-    expect(friends[0]).toHaveProperty('userId', user.id);
-    expect(friends[0]).toHaveProperty('otherUserId', user2.id);
+    expect(friends[0]).toHaveProperty('userId', userIds.userId);
+    expect(friends[0]).toHaveProperty('otherUserId', userIds.otherUserId);
   });
 
   it('Add two user and make a friend, use offset of 1, should not find any friends', async () => {
@@ -250,6 +270,41 @@ describe('UserController (e2e)', () => {
     expect(friends).toHaveLength(0);
   });
 
+  it('Add three users and make 2 different friends', async () => {
+    const user = await createUser({
+      name: 'Philip J. Fry 1st',
+    });
+
+    const user2 = await createUser({
+      name: 'Philip J. Fry 2nd',
+    });
+
+    const user3 = await createUser({
+      name: 'Philip J. Fry 3nd',
+    });
+
+    let friends = await getFriends(user.id);
+    expect(friends).toHaveLength(0);
+
+    friends = await getFriends(user.id);
+    expect(friends).toHaveLength(0);
+
+    await createFriend(user.id, user2.id);
+    await createFriend(user.id, user3.id);
+    friends = await getFriends(user.id);
+    expect(friends).toHaveLength(2);
+
+    friends = await getFriends(user2.id);
+    expect(friends).toHaveLength(1);
+    expect(friends[0].userId.indexOf([user.id, user2.id]) >= 0);
+    expect(friends[0].otherUserId.indexOf([user.id, user2.id]) >= 0);
+
+    friends = await getFriends(user3.id);
+    expect(friends).toHaveLength(1);
+    expect(friends[0].userId.indexOf([user.id, user3.id]) >= 0);
+    expect(friends[0].otherUserId.indexOf([user.id, user3.id]) >= 0);
+  });
+
   it('Add two users as friends, without address, do not find nearby', async () => {
     const user = await createUser({
       name: 'Philip J. Fry 1st',
@@ -264,6 +319,18 @@ describe('UserController (e2e)', () => {
     expect(friendsNearby).toHaveLength(0);
   });
 
+  it('Add two users twice as friends, should throw conflict error', async () => {
+    const user = await createUser({
+      name: 'Philip J. Fry 1st',
+    });
+
+    const user2 = await createUser({
+      name: 'Philip J. Fry 2nd',
+    });
+
+    await createFriend(user.id, user2.id);
+    await createFriend(user.id, user2.id, 409);
+  });
   it('Add two user, make a friend and check nearby', async () => {
     const user = await createUser({
       name: 'Philip J. Fry 1st',

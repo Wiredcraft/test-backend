@@ -6,12 +6,30 @@ import { Op, QueryTypes, Transaction } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { UserEntity } from '../user/user.entity';
 import { User } from 'src/domain/user/user.types';
+import { UniqueConstraintError } from 'sequelize';
+import { ErrorFriendAlreadyExists } from '../../../utils/error.codes';
 
 @Injectable()
 export class FriendRepositoryPostgres implements FriendRepository {
   constructor(
     @Inject('SEQUELIZE') private readonly sequelizeInstance: Sequelize,
   ) {}
+
+  public static getOrderedUserIds(params: {
+    userId: string;
+    otherUserId: string;
+  }) {
+    if (
+      params.userId === params.otherUserId ||
+      params.userId < params.otherUserId
+    ) {
+      return params;
+    }
+    return {
+      userId: params.otherUserId,
+      otherUserId: params.userId,
+    };
+  }
 
   findByUserId(params: {
     userId: string;
@@ -41,19 +59,13 @@ export class FriendRepositoryPostgres implements FriendRepository {
     otherUserId: string;
     transaction?: Transaction;
   }): Promise<Friend> {
+    const userIds = FriendRepositoryPostgres.getOrderedUserIds(params);
+
     return FriendEntity.findOne({
       transaction: params.transaction,
       where: {
-        [Op.or]: [
-          {
-            userId: params.userId,
-            otherUserId: params.otherUserId,
-          },
-          {
-            userId: params.otherUserId,
-            otherUserId: params.userId,
-          },
-        ],
+        userId: userIds.userId,
+        otherUserId: userIds.otherUserId,
       },
     });
   }
@@ -71,11 +83,11 @@ export class FriendRepositoryPostgres implements FriendRepository {
          ST_Distance(address, (SELECT address from "${UserEntity.tableName}" where id = $userId)) as distance 
          FROM  "${UserEntity.tableName}"
          WHERE id != $userId
-         AND (id IN (SELECT "userId" from "${FriendEntity.tableName}" WHERE "otherUserId" = $userId)
-         
-         ) OR id IN (SELECT "otherUserId" from "${FriendEntity.tableName}" WHERE "userId" = $userId)
-         
-         ) 
+         AND (
+          id IN (SELECT "userId" from "${FriendEntity.tableName}" WHERE "otherUserId" = $userId)
+          OR 
+          id IN (SELECT "otherUserId" from "${FriendEntity.tableName}" WHERE "userId" = $userId)
+         ))
         AS INNER_SELECT 
         WHERE distance IS NOT NULL 
         AND distance <= $maximumDistance
@@ -90,12 +102,12 @@ export class FriendRepositoryPostgres implements FriendRepository {
   }
 
   create(params: CreateFriendDto): Promise<Friend> {
-    return this.sequelizeInstance.transaction(async (transaction) => {
-      const friend = await this.findByUserIds({ ...params, transaction });
-      if (!friend) {
-        return FriendEntity.create(params, { transaction });
+    const userIds = FriendRepositoryPostgres.getOrderedUserIds(params);
+    return FriendEntity.create(userIds).catch((err) => {
+      if (err instanceof UniqueConstraintError) {
+        throw new ErrorFriendAlreadyExists();
       }
-      return friend;
+      throw err;
     });
   }
 
@@ -104,19 +116,13 @@ export class FriendRepositoryPostgres implements FriendRepository {
     otherUserId: string;
     transaction?: Transaction;
   }): Promise<boolean> {
+    const userIds = FriendRepositoryPostgres.getOrderedUserIds(params);
+
     return FriendEntity.destroy({
       transaction: params.transaction,
       where: {
-        [Op.or]: [
-          {
-            userId: params.userId,
-            otherUserId: params.otherUserId,
-          },
-          {
-            userId: params.otherUserId,
-            otherUserId: params.userId,
-          },
-        ],
+        userId: userIds.userId,
+        otherUserId: userIds.otherUserId,
       },
     }).then((val) => val > 0);
   }

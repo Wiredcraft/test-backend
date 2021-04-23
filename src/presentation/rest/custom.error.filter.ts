@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import {
-  CustomError,
+  CustomError, ErrorFriendAlreadyExists,
   ErrorFriendNotFound,
   ErrorUserNotFound,
 } from '../../utils/error.codes';
@@ -26,6 +26,11 @@ export class CustomErrorFilter implements ExceptionFilter {
       exception instanceof ErrorFriendNotFound
     ) {
       status = HttpStatus.NOT_FOUND;
+    }
+    if (
+        exception instanceof ErrorFriendAlreadyExists
+    ) {
+      status = HttpStatus.CONFLICT;
     }
 
     response.status(status).json({
