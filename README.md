@@ -56,10 +56,18 @@ This endpoint provides functionalities of `get/create/update/delete` user data.
 ```
 curl -X GET localhost:3000/users
 ```
+Example response:
+```
+[{"_id":"60893415fd3c670014aec654","name":"Brandy King","dob":"1988-08-08T00:00:00.000Z","address":"349 Maple Street","description":"My grandma is Irish.","createdAt":"2021-04-28T10:08:21.076Z","__v":0}]
+```
 
 * Get one user by ID
 ```
 curl -X GET localhost:3000/users/{userId}
+```
+Example response:
+```
+{"_id":"60893415fd3c670014aec654","name":"Brandy King","dob":"1988-08-08T00:00:00.000Z","address":"349 Maple Street","description":"My grandma is Irish.","createdAt":"2021-04-28T10:08:21.076Z","__v":0}
 ```
 
 * Create a user by ID
@@ -71,10 +79,18 @@ curl -H "Content-Type: application/json" -X POST -d '{
     "description": "I have ginger hair."
 }' localhost:3000/users
 ```
+Example response:
+```
+{"_id":"60893415fd3c670014aec654","name":"Brandy King","dob":"1988-08-08T00:00:00.000Z","address":"349 Maple Street","description":"My grandma is Irish.","createdAt":"2021-04-28T10:08:21.076Z","__v":0}
+```
 
 * Update a user by ID
 ```
 curl -X PATCH -d "name"="Marcelo Saciloto" -d "description"="I am a Brazilian papa." localhost:3000/users/{userId}
+```
+Example response:
+```
+{"_id":"60893415fd3c670014aec654","name":"Marcelo Saciloto","dob":"1988-08-08T00:00:00.000Z","address":"349 Maple Street","description":"I am a Brazilian papa.","createdAt":"2021-04-28T10:08:21.076Z","__v":0}
 ```
 
 * Delete a user by ID
