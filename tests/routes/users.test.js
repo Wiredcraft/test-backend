@@ -3,14 +3,17 @@ const supertest = require('supertest');
 const request = supertest(app);
 
 const mongoose = require('mongoose');
-const databaseName = 'test';;
 const User = require('../../src/models/user');
+
+const config = require('../../src/configs/config');
+
+const { db: { host, port, name } } = config;
+const connectionString = `mongodb://${host}:${port}/${name}`;
 
 beforeAll(async () => {
     // disconnect mongoose from the db of app instance
     await mongoose.disconnect();
-    const url = `mongodb://localhost:27017/${databaseName}`;
-    await mongoose.connect(url, {
+    await mongoose.connect(connectionString, {
         useNewUrlParser: true
     });
 

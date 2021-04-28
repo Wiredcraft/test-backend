@@ -3,8 +3,12 @@ const app = express();
 const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/users');
+const config = require('./configs/config');
 
-mongoose.connect('mongodb://localhost:27017/prod');
+const { db: { host, port, name } } = config;
+const connectionString = `mongodb://${host}:${port}/${name}`;
+
+mongoose.connect(connectionString);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
