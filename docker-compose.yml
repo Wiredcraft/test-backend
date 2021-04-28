@@ -1,0 +1,21 @@
+version: "3"
+services:
+  app:
+    restart: always
+    image: app
+    build: .
+    environment:
+      DEV_DB_HOST: mongo
+    ports:
+      - 3000:3000
+    links:
+      - mongo
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/data/db
+
+volumes:
+  mongo:

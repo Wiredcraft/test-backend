@@ -1,73 +1,85 @@
 # Wiredcraft Back-end Developer Test
+This is a backend service which can `get/create/update/delete` user data from MongoDB.
 
-Make sure you read the whole document carefully and follow the guidelines in it.
 
-## Context
+## Prerequisites
+* Node.js 15.0 or greater
+* Docker 20.0 or greater (optional if you use local MongoDB)
+* MongoDB 4.0 or greater (optional if you use docker)
 
-Build a RESTful API that can `get/create/update/delete` user data from a persistence database
+## How to run
+Download the project, go to the root directory of project. 
 
-### User Model
-
+### Run in docker
+Simply run:
 ```
-{
-  "id": "xxx",                  // user ID 
-  "name": "test",               // user name
-  "dob": "",                    // date of birth
-  "address": "",                // user address
-  "description": "",            // user description
-  "createdAt": ""               // user created date
-}
+docker-compose up
 ```
 
-## Requirements
-
-### Functionality
-
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper unit test.
-- Provide proper API document.
-
-### Tech stack
-
-- Use Node.js and any framework.
-- Use any DB. NoSQL DB is preferred.
-
-### Bonus
-
-- Write clear documentation on how it's designed and how to run the code.
-- Write good in-code comments.
-- Write good commit messages.
-- An online demo is always welcome.
-
-### Advanced requirements
-
-*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
-
-- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
-- Provide a complete logging (when/how/etc.) strategy.
-- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
-- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
-  - given a user name
-  - return the nearby friends
+### Run locally
+You need to set up MongoDB locally beforehand either by docker or installing it manually.
+* By docker, run the following commands (you can specify your own mount path):
+```
+docker pull mongo
+docker run -itd -v /mongodata:/data/db -p 27017:27017 --name mongodb mongo
+```
+The command above starts a MongoDB running on `localhost:27017`.
 
 
-## What We Care About
+* To install MongoDB manually, please refer to: [MongoDB official manual](https://docs.mongodb.com/manual/installation/)
 
-Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
 
-Here's what you should aim for:
+After configuring MongoDB, inside the root directory of project, install dependencies:
+```
+npm install
+```
 
-- Good use of current Node.js & API design best practices.
-- Good testing approach.
-- Extensible code.
+When the installation completes, start the server:
+```
+npm start
+```
 
-## FAQ
+In case you would like to run the tests:
+```
+npm run test
+```
 
-> Where should I send back the result when I'm done?
+## How to use
+This backend service runs on `localhost:3000` locally by default, and exposes one endpoint:
+```
+/users
+```
+This endpoint provides functionalities of `get/create/update/delete` user data.
 
-Fork this repo and send us a pull request when you think it's ready for review. You don't have to finish everything prior and you can continue to work on it. We don't have a deadline for the task.
+### Example
+* Get all users 
+```
+curl -X GET localhost:3000/users
+```
 
-> What if I have a question?
+* Get one user by ID
+```
+curl -X GET localhost:3000/users/{userId}
+```
 
-Create a new issue in the repo and we will get back to you shortly.
+* Create a user by ID
+```
+curl -H "Content-Type: application/json" -X POST -d '{                                            
+    "name": "Brandy King",  
+    "dob": "1988-08-08",
+    "address": "349 Maple Street",
+    "description": "I have ginger hair."
+}' localhost:3000/users
+```
+
+* Update a user by ID
+```
+curl -X PATCH -d "name"="Marcelo Saciloto" -d "description"="I am a Brazilian papa." localhost:3000/users/{userId}
+```
+
+* Delete a user by ID
+```
+curl -X DELETE localhost:3000/users/{userId}
+```
+
+Feel free to use other tools such as Postman to interact with it.
