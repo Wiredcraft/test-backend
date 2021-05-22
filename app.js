@@ -5,6 +5,7 @@ require('express-async-errors')
 const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser')
+const BaseController = require('./orm/controller/BaseController')
 
 const cors = require('cors')  // 跨域
 
@@ -59,7 +60,8 @@ const combinedModify = ':remote-addr :method :url :status :response-time ms :use
 const morganFormat = process.env.NODE_ENV === 'dev' ? devModify : combinedModify
 app.use(morgan(morganFormat, {stream: logger.stream}));
 
-app.use('/', express.static('public'));
+// app.use('/', express.static('public'));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -75,9 +77,52 @@ app.use((req, res, next) => {
     next()
 })
 
+// 开发环境集成 swagger
+if (process.env.NODE_ENV === 'dev') {
+
+    // const expressSwagger = require('express-swagger-generator')(app)
+
+    const expressSwagger = require('./lib/express-swagger-auto-eg')(app)
+    const options = {
+        scanScope: 3,
+        sequelize: {
+            modelPath: path.join(__dirname, '/orm/model/')
+        },
+        swaggerDefinition: {
+            info: {
+                description: '测试系统接口文档',
+                title: '测试系统接口文档',
+                version: '1.0.0',
+            },
+            host: '127.0.0.1:3001',
+            basePath: '/',
+            produces: [
+                "application/json",
+                "application/xml"
+            ],
+            schemes: ['http', 'https'],
+            securityDefinitions: {
+                JWT: {
+                    type: 'apiKey',
+                    in: 'header',
+                    name: 'Authorization',
+                    description: "",
+                }
+            }
+        },
+        basedir: __dirname,
+        files: [path.join(__dirname, '/routes/*.js')],
+        apiFetch: BaseController.getAllSepecificRouters
+        // apis: [ path.join(__dirname, '/routes/!*.js') ]
+    }
+    expressSwagger(options)
+
+}
 
 main(app)
 
 
+
+logger.info("API 文档地址: http://127.0.0.1:3001/api-docs")
 
 module.exports = app;

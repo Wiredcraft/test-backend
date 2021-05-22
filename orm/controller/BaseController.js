@@ -365,7 +365,7 @@ class BaseController {
             /**
              * 注册默认的增删改查接口，可在子类中覆盖并添加自定义 swagger 文档 TASK 可以在 model-scope 中通过自定义属性对 5 个接口进行一些限定（如关闭某个接口或者参数限定等）
              */
-            this.router.get('/', async (req, res) => {
+            this.router.post('/list', async (req, res) => {
                 await this.index(req, res)
             })
             this.router.get('/:id', async (req, res) => {

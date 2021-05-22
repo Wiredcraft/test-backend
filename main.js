@@ -1,8 +1,8 @@
 module.exports = app => {
 
     app.use(async function (req, res, next) {
-        // 清除之前的路由 shuqian 如果此处清除的数量不对的话会引起路由死循环,特别是内部抛出 error 的时候
-        const staticMiddleWareCount = 9 // 指在 main.js 之前定义的一些中间件,比如在 app.js 里,main(app)之前. 从 main 开始,后面的中间件都是动态刷新的
+        // 清除之前的路由 shuqian 如果此处清除的数量不对的话,会引起路由404,或者死循环,特别是内部抛出 error 的时候
+        const staticMiddleWareCount = 13 // 指在 main.js 之前定义的一些中间件,比如在 app.js 里,main(app)之前. 从 main 开始,后面的中间件都是动态刷新的
         app._router.stack.splice(staticMiddleWareCount, app._router.stack.length - 3)
 
         // 删除相关组件的缓存
