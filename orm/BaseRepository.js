@@ -3,11 +3,11 @@ const {MYSQL_CONFIG} = require("../config")
 const logger = require('../lib/logger')
 const nodeCache = require('../lib/cache/index')
 
-console.log('导入 BaseModel')
+logger.debug('导入 BaseModel')
 // 初始化数据库连接: 分别传递参数 (其它数据库)
 const initSequelize = (dbName) => {
     const currentSchema = nodeCache.getCache(nodeCache.CURRENT_TENANT_SCHEMA_KEY)
-    currentSchema && console.log('获取新的 sequelize, 当前缓存 db 名称是 ' + currentSchema)
+    currentSchema && logger.debug('获取新的 sequelize, 当前缓存 db 名称是 ' + currentSchema)
     const seq = new Sequelize(
         dbName || currentSchema || '',
         // MYSQL_CONFIG.database,

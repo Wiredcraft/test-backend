@@ -160,7 +160,6 @@ describe('用户模块', function () {
                     }, force: true
             }).then(ret=>{
             done()
-            process.exit(0)
         })
     })
 

@@ -12,7 +12,8 @@ const lodash = require('lodash')
 describe('用户关系测试', function () {
 
     const test_users = lodash.range(1, 10).map(i => new Object(
-        {name: `user-${i}`, dob: '2021-01-01', address: 'abc', description: `user-${i}`}))
+        {name: `user-${i}`, dob: '2021-01-01', address: 'abc', description: `user-${i}`,
+        lng: 90.123456 + (i*0.002), lat: 40.123456 + (i*0.002)}))
     let User
     let UserFollow
     let BaseRepository
@@ -120,7 +121,33 @@ describe('用户关系测试', function () {
             })
         })
 
+        describe('查询一位用户周围的人', function () {
+            it('9米以内', function (done) {
+                request.get(`/user/neighbouring/${test_users[6].id}/9`)
+                    .expect(200)
+                    .end((err, res) => {
+                        assert(!err)
+                        res.body.code.should.equal(0)
+                        res.body.data.list.length.should.equal(1, '9米以内应该只有当前用户自己')
+                        done()
+                    })
+
+            })
+            it('900米以内', function (done) {
+                request.get(`/user/neighbouring/${test_users[6].id}/900`)
+                    .expect(200)
+                    .end((err, res) => {
+                        assert(!err)
+                        res.body.code.should.equal(0)
+                        res.body.data.list.length.should.equal(6, '900米以内应该有6个人(包括自己)')
+                        done()
+                    })
+
+            })
+        })
+
         describe('调用删除接口批量删除刚刚的2条记录', function () {
+
             it('应删除成功', function (done) {
                 request.delete('/user')
                     .send({ids: test_users.map(user => user.id)})
@@ -144,6 +171,7 @@ describe('用户关系测试', function () {
                     })
 
             })
+
         })
 
 
@@ -168,7 +196,6 @@ describe('用户关系测试', function () {
                     }, force: true
             }).then(ret=>{
             done()
-            process.exit(0)
         })
 
     })

@@ -7,7 +7,7 @@
     "uat": "NODE_ENV=test node ./app_start.js",
     "production": "NODE_ENV=pro node ./app_start.js",
     "nodemon": "NODE_ENV=dev nodemon ./app_start.js",
-    "test": "NODE_ENV=dev mocha  --timeout 60000 -R mocha-multi --reporter-options nyan=-,json=.results.json test/ut"
+    "test": "NODE_ENV=unit-test mocha  --timeout 60000 -R mocha-multi --growl --bail --reporter-options nyan=-,json=.results.json test/ut/*.js"
   },
   "dependencies": {
     "archiver": "~3.1.1",

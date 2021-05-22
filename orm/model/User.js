@@ -25,6 +25,8 @@ User.init({
     dob: {type: DataTypes.DATE, comment: '出生日期'},
     address: {type: DataTypes.STRING, comment: '地址'},
     description: {type: DataTypes.STRING, comment: '描述'},
+    lng: {type: DataTypes.DECIMAL(9, 6), comment: '经度'},
+    lat: {type: DataTypes.DECIMAL(9, 6), comment: '纬度'},
     // createdAt 由 baseModel 自动创建
 
     FullName: {
