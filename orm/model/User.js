@@ -41,8 +41,8 @@ User.init({
     comment: '用户表',
     defaultScope: {},
     scopes: {
-        dry: {
-            include: [ 'Permissions'],
+        relation: {
+            include: [ 'follows', 'followers'],
         },
 
     },
@@ -86,8 +86,12 @@ User.init({
 module.exports = User
 // 在模型中定义多对多关联关系虽然会自动生产中间表，但是会产生外键，需要在配置中指定取消外键约束
 
+const UserFollow = require('./UserFollow')
 User.CascadeManyToManyModel = [
-    // User.belongsToMany(Permission, {through: UserPermissionExtension, constraints: false}),
+    User.belongsToMany(User, {as: 'follows', through: UserFollow, foreignKeyConstraint: false,
+        constraints: false, foreignKey: 'userId', sourceKey: 'id', targetKey: 'id' }),
+    User.belongsToMany(User, {as: 'followers', through: UserFollow, foreignKeyConstraint: false,
+        constraints: false, foreignKey: 'followId', sourceKey: 'id', targetKey: 'id' }),
 ]
 
 User.CascadeModel = [

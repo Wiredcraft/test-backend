@@ -12,6 +12,20 @@ class User extends BaseController {
      */
     registerRouter(parent) {
         // 此处可以注册 增删改查之外的其它接口 如: this.router.post('/apiname', (req, res)=>{// do something here})
+        this.router.post('/relations/list', (req, res) => {
+            return this.index(req,res, 'relation')
+        })
+    }
+
+    /**
+     * @override
+     * @param req
+     * @param res
+     * @param scope
+     * @return {Promise<void>}
+     */
+    async view(req, res, scope) {
+        super.view(req, res, 'relation');
     }
 
     /**

@@ -7,8 +7,8 @@ let CONSTANT = {
     port : 3306,
     user : 'root',
     password : '',
-    database : 'WIRED_TEST_BACKEND',
-    dbPrefix: 'WIRED_TEST_BACKEND_',
+    database : 'wired_test_backend',
+    dbPrefix: 'wired_test_backend_',
     tableToUpdateStucture: [], //此处填入需要更新表结构的表名
     multi_tenant_mode: false, // 是否启用多租户模式
     // config_center_host: 'http://localhost:3001', // 若启用多租户模式&&改节点是租户节点,此项必填
