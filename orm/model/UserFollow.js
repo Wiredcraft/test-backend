@@ -9,6 +9,12 @@ class UserFollow extends BaseModel {
 
 UserFollow.init({
     // 在这里定义模型属性
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false
+    },
     userId: {type: DataTypes.INTEGER, comment: '用户id'},
     followId: {type: DataTypes.INTEGER, comment: '关注的用户id'},
 
