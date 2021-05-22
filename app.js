@@ -90,8 +90,8 @@ if (process.env.NODE_ENV === 'dev') {
         },
         swaggerDefinition: {
             info: {
-                description: '测试系统接口文档',
-                title: '测试系统接口文档',
+                description: 'test-backend-WX 接口文档',
+                title: 'test-backend-WX 接口文档',
                 version: '1.0.0',
             },
             host: '127.0.0.1:3001',
