@@ -13,6 +13,7 @@
 
 ## quick-start
 - cd project root path
+- modify /config.js: MYSQL_CONFIG
 - `yarn install`
 - `npm run dev`
 - server listen on localhost port: 3001
