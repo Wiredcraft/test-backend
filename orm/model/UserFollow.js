@@ -20,7 +20,7 @@ UserFollow.init({
 
 }, {
     modelName: 'UserFollow',
-    comment: '用户表',
+    comment: '用户关注关系表',
     defaultScope: {},
     indexes: [
         {

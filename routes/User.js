@@ -9,14 +9,90 @@ const {QueryTypes} = require('sequelize')
 class User extends BaseController {
 
     /**
+     * @typedef User_Full
+     * @property {integer} id
+     * @property {string} name
+     * @property {string} dob - 出生日期
+     * @property {string} address - 地址
+     * @property {string} description - 描述
+     * @property {string} lng - 经度
+     * @property {string} lat - 纬度
+     * @property {Array.<User>} follows - 关注的人
+     * @property {Array.<User>} followers - 关注我的人
+     */
+    /**
+     * @typedef User_Full_Distance
+     * @property {integer} distance
+     * @property {integer} id
+     * @property {string} name
+     * @property {string} dob - 出生日期
+     * @property {string} address - 地址
+     * @property {string} description - 描述
+     * @property {string} lng - 经度
+     * @property {string} lat - 纬度
+     */
+
+    /**
+     * @typedef DataNode_List_UserFull
+     * @property {Array.<User_Full>} list
+     */
+    /**
+     * @typedef DataNode_List_UserFull_Distance
+     * @property {Array.<User_Full_Distance>} list
+     */
+
+    /**
+     * @typedef UserResponse
+     * @property {integer} code - eg: 0, 1
+     * @property {string} msg=success - eg: 'success'
+     * @property {User_Full.model} data
+     */
+    /**
+     * @typedef UserResponse_List
+     * @property {integer} code - eg: 0, 1
+     * @property {string} msg=success - eg: 'success'
+     * @property {DataNode_List_UserFull.model} data
+     */
+
+    /**
+     * @typedef UserResponse_Distance_List
+     * @property {integer} code - eg: 0, 1
+     * @property {string} msg=success - eg: 'success'
+     * @property {DataNode_List_UserFull_Distance.model} data
+     */
+
+    /**
      * @override
      */
     registerRouter(parent) {
         // 此处可以注册 增删改查之外的其它接口 如: this.router.post('/apiname', (req, res)=>{// do something here})
+
+
+        /**
+         * 附带关注数据的用户列表
+         * @route POST /user/relations/list
+         * @summary 附带关注数据的用户列表
+         * @group User[用户] - User表
+         * @produces application/json application/xml
+         * @consumes application/json application/xml
+         * @param {列表请求-分页及筛选参数.model} 请求体.body.required - 分页及筛选参数
+         * @returns {UserResponse_List.model} 200 - 符合条件的 User 列表
+         * @security JWT
+         */
         this.router.post('/relations/list', (req, res) => {
             return this.index(req, res, 'relation')
         })
 
+        /**
+         * 指定用户附近的用户
+         * @route GET /user/neighbouring/{id}/{distance}
+         * @summary 指定用户附近的用户(距离通过 path 传参指定)
+         * @group User[用户] - User表
+         * @param {integer} id.path.required - 用户 id
+         * @param {integer} distance.path.required - 要查询的距离范围
+         * @returns {UserResponse_Distance_List.model} 200 - 符合条件的 User 列表
+         * @security JWT
+         */
         this.router.get('/neighbouring/:id/:distance', async (req, res) => {
             const currentUser = await parent.CurrentModel.findByPk(req.params.id)
             if (!currentUser) return this.sendERROR(res, null, '没有找到当前用户')
@@ -43,7 +119,13 @@ class User extends BaseController {
     }
 
     /**
-     * @override
+     * 用户-详情
+     * @route GET /user/{id}
+     * @summary 用户-详情(附带互相关注信息)
+     * @group User[用户] - User表
+     * @param {integer} id.path.required - 用户 id
+     * @returns {UserResponse.model} 200 - 符合条件的 User 列表
+     * @security JWT
      */
     async view(req, res, scope) {
         super.view(req, res, 'relation');

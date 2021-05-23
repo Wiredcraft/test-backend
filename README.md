@@ -3,13 +3,13 @@
 - orm 层, 使用 sequelize 封装,可动态切换数据库
 - controller 层, 使用express 实现标准的RESTFUL 接口. (列表查询除外,因为要提交复杂的筛选提交,所以暂用 post 方法).常用接口无需手写,
     只要定义了 model,常规接口自动生成
-- 缓存等,使用 node-cache 轻量实现
+- 缓存,使用 node-cache 轻量实现
 - 用户模块: 用户的增删改查接口\用户的互相关注关系治理接口\用户周围指定范围的用户查询接口
 - Auth 模块: 因为时间紧张,所以起初打算使用 github 的 oauth功能来充当认证中心, 但是中途发现 github 兑换 access_token 的 url 是 404,
    因为时间实在不够,所以暂时没有继续做 oauth2 的集成了(因为需要额外实现一套认证服务,我的时间比较紧张)
 - 增删改查级联: 本项目已经封装了这些逻辑,常用的级联查询及更新\删除操作无需手动写代码
 - 数据库维护: 本项目会自动创建数据库, 表, 更新表字段, 插入初始数据
-- 本项目基于 swagger-ui 实现了自动文档 (详见下方)
+- 本项目基于 express-swagger-ui\express-swagger-generator等开源工具,通过定制化开发,实现了自动文档 (详见下方)
 - 本项目winston 和 morgan实现了根据运行环境变化级别的日志
 
 ## quick-start
@@ -22,7 +22,7 @@
 
 ## quick-test
 - cd project root path
-- npm run test
+- `npm run test`
 
 # 基于 orm （sequelize）的基本控制器、数据模型使用注意事项
 
