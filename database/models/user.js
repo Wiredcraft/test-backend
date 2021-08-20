@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Counter = require('./counter');
 
 const userSchema = mongoose.Schema({
-  id: Number, // user ID
+  _id: Number, // user ID
   name: String, // user name
   dob: Date, // date of birth
   address: String, // user address
@@ -20,7 +20,7 @@ userSchema.pre('save', function(next) {
     if (error) {
       return next(error);
     }
-    doc.id = counter.sequence_value;
+    doc._id = counter.sequence_value;
     next();
   });
 });
