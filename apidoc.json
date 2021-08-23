@@ -1,0 +1,13 @@
+{
+  "name": "test-backend",
+  "version": "0.0.1",
+  "description": "test-backend API Doc",
+  "title": "test-backend API Doc",
+  "url": "http://localhost:3000/api",
+  "sampleUrl": "http://localhost:3000/api",
+  "template": {
+    "forceLanguage": "en",
+    "withCompare": true,
+    "withGenerator": true
+  }
+}
