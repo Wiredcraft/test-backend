@@ -1,6 +1,6 @@
 const User = require('../database/models/user');
 const Result = require('../models/result');
-const validationResult = require('express-validator/check').validationResult;
+const { validationResult } = require('express-validator');
 
 exports.getUser = (req, res) => {
   const id = req.params.id,
@@ -50,14 +50,13 @@ exports.updateUser = (req, res) => {
   if (!errors.isEmpty()) {
     return new Result(errors.mapped(), 'error').fail(res);
   }
-  const id = req.params.id;
 
-  const obj = {
-    name: req.body.name,
-    dob: new Date(req.body.dob),
-    address: req.body.address,
-    description: req.body.description,
-  };
+  const id = req.params.id, obj = {};
+
+  if (req.body.name && req.body.name !== '') obj.name = req.body.name;
+  if (req.body.dob && req.body.dob !== '') obj.dob = new Date(req.body.dob);
+  if (req.body.address && req.body.address !== '') obj.address = req.body.address;
+  if (req.body.description) obj.description = req.body.description;
 
   User.updateOne({_id: id}, obj, (err) => {
     if (err) {

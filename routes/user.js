@@ -1,6 +1,6 @@
 const express = require('express');
 const userController = require('../controllers/user');
-const check = require('express-validator/check').check;
+const { check, oneOf } = require('express-validator');
 const router = express.Router();
 
 // check params
@@ -34,7 +34,7 @@ router.get('/', userController.getUser);
  * @apiGroup user
  * @apiDescription add a new user
  * @apiParam {String} name user name
- * @apiParam {String} dob date of birth
+ * @apiParam {String} dob date of birth, must be format YYYY/MM/DD
  * @apiParam {String} address user address
  * @apiParam {String} description user description
  * @apiName addUser
@@ -66,16 +66,16 @@ router.get('/:id', userController.getUser);
  * @apiGroup user
  * @apiDescription update user by id
  * @apiParam {Number} id Users unique ID.
- * @apiParam {String} name
- * @apiParam {String} dob
- * @apiParam {String} address
- * @apiParam {String} description
+ * @apiParam {String} name user name
+ * @apiParam {String} dob date of birth, must be format YYYY/MM/DD
+ * @apiParam {String} address user address
+ * @apiParam {String} description user description
  * @apiName updateUser
  * @apiSuccess {Number} code
  * @apiSuccess {String} msg
  * @apiVersion 0.0.1
  */
-router.post('/:id', checkUserHandlers, userController.updateUser);
+router.post('/:id', oneOf(checkUserHandlers), userController.updateUser);
 /**
  * @api {delete} /user/:id
  * @apiGroup user
