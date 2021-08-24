@@ -1,0 +1,73 @@
+[2021-08-23T17:05:42.193] [INFO] system - Express server listening on port 3000
+[2021-08-23T17:05:42.238] [INFO] redis - redis is connected
+[2021-08-23T17:05:42.279] [INFO] redis - redis ready
+[2021-08-23T17:05:47.861] [INFO] user - create_input_receive:{"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","longitude":"121.474103","latitude":"31.232862","description":"hello everyone"}
+[2021-08-23T17:05:47.885] [INFO] user - create_insert_db_res:{"id":1,"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","description":"hello everyone","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"createdAt":"2021-08-23T09:05:47.863Z"}
+[2021-08-23T17:05:50.221] [INFO] user - create_input_receive:{"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","longitude":"121.404103","latitude":"31.235862","description":"hello world"}
+[2021-08-23T17:05:50.224] [INFO] user - create_insert_db_res:{"id":2,"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","description":"hello world","gps":{"type":"Point","coordinates":[121.404103,31.235862]},"createdAt":"2021-08-23T09:05:50.221Z"}
+[2021-08-23T17:06:10.569] [INFO] user - queryNearbyUser_input_receive:distanceundefined,uId:2
+[2021-08-23T17:06:10.576] [INFO] user - queryNearbyUser_select_db_res:get 1 user
+[2021-08-23T17:07:51.431] [INFO] system - Express server listening on port 3000
+[2021-08-23T17:07:51.476] [INFO] redis - redis is connected
+[2021-08-23T17:07:51.518] [INFO] redis - redis ready
+[2021-08-23T17:07:56.493] [INFO] user - create_input_receive:{"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","longitude":"121.474103","latitude":"31.232862","description":"hello everyone"}
+[2021-08-23T17:07:56.504] [INFO] user - create_insert_db_res:{"id":1,"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","description":"hello everyone","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"createdAt":"2021-08-23T09:07:56.495Z"}
+[2021-08-23T17:08:00.117] [INFO] user - create_input_receive:{"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","longitude":"121.404103","latitude":"31.235862","description":"hello world"}
+[2021-08-23T17:08:00.137] [INFO] user - create_insert_db_res:{"id":2,"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","description":"hello world","gps":{"type":"Point","coordinates":[121.404103,31.235862]},"createdAt":"2021-08-23T09:08:00.117Z"}
+[2021-08-23T17:08:04.094] [INFO] user - queryNearbyUser_input_receive:distanceundefined,uId:2
+[2021-08-23T17:10:57.525] [INFO] system - Express server listening on port 3000
+[2021-08-23T17:10:57.570] [INFO] redis - redis is connected
+[2021-08-23T17:10:57.630] [INFO] redis - redis ready
+[2021-08-23T17:11:02.627] [INFO] user - create_input_receive:{"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","longitude":"121.474103","latitude":"31.232862","description":"hello everyone"}
+[2021-08-23T17:11:02.637] [INFO] user - create_insert_db_res:{"id":1,"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","description":"hello everyone","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"createdAt":"2021-08-23T09:11:02.628Z"}
+[2021-08-23T17:11:04.933] [INFO] user - create_input_receive:{"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","longitude":"121.404103","latitude":"31.235862","description":"hello world"}
+[2021-08-23T17:11:04.936] [INFO] user - create_insert_db_res:{"id":2,"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","description":"hello world","gps":{"type":"Point","coordinates":[121.404103,31.235862]},"createdAt":"2021-08-23T09:11:04.934Z"}
+[2021-08-23T17:11:10.106] [INFO] user - queryFans_input_receive:{"id":"2"}
+[2021-08-23T17:11:10.106] [INFO] redis - getter_receive_request|user:follower:2
+[2021-08-23T17:11:10.130] [INFO] redis - getter_get_response|user:follower:2||["1"]
+[2021-08-23T17:11:10.152] [INFO] user - queryFans_select_db_res:{"count":1,"rows":[{"id":1,"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"description":"hello everyone","createdAt":"2021-08-23T09:11:02.000Z"}]}
+[2021-08-23T17:11:15.378] [INFO] user - queryFans_input_receive:{"id":"2"}
+[2021-08-23T17:11:15.378] [INFO] redis - getter_receive_request|user:follower:2
+[2021-08-23T17:11:15.402] [INFO] redis - getter_get_response|user:follower:2||["1"]
+[2021-08-23T17:11:15.419] [INFO] user - queryFans_select_db_res:{"count":1,"rows":[{"id":1,"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"description":"hello everyone","createdAt":"2021-08-23T09:11:02.000Z"}]}
+[2021-08-23T17:11:20.952] [INFO] user - queryFans_input_receive:{"id":"1"}
+[2021-08-23T17:11:20.952] [INFO] redis - getter_receive_request|follow:user:1
+[2021-08-23T17:11:20.975] [INFO] redis - getter_get_response|follow:user:1||["2"]
+[2021-08-23T17:11:20.977] [INFO] user - queryFans_select_db_res:{"count":1,"rows":[{"id":2,"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","gps":{"type":"Point","coordinates":[121.404103,31.235862]},"description":"hello world","createdAt":"2021-08-23T09:11:04.000Z"}]}
+[2021-08-23T17:11:35.541] [INFO] user - queryNearbyUser_input_receive:distanceundefined,uId:2
+[2021-08-23T17:11:35.547] [INFO] user - queryNearbyUser_select_db_res:get 1 user
+[2021-08-23T17:11:45.121] [INFO] user - update_input_receive:{"id":"1"},{"name":"黄希希","latitude":"31.61"}
+[2021-08-23T17:11:45.141] [INFO] user - update_update_db_res,id:1,{"id":1,"name":"黄希希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","gps":{"type":"Point","coordinates":[121.474103,31.61]},"description":"hello everyone","createdAt":"2021-08-23T09:11:02.000Z"}
+[2021-08-23T17:11:52.179] [INFO] user - queryAll_input_receive:{}
+[2021-08-23T17:11:52.181] [INFO] user - queryAll_select_db_res:get 2 rows
+[2021-08-23T17:11:58.422] [INFO] user - queryNearbyUser_input_receive:distanceundefined,uId:2
+[2021-08-23T17:11:58.426] [INFO] user - queryNearbyUser_select_db_res:get 0 user
+[2021-08-23T17:15:15.966] [INFO] system - Express server listening on port 3000
+[2021-08-23T17:15:16.012] [INFO] redis - redis is connected
+[2021-08-23T17:15:16.066] [INFO] redis - redis ready
+[2021-08-23T17:15:50.725] [INFO] user - create_input_receive:{"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","longitude":"121.474103","latitude":"31.232862","description":"hello everyone"}
+[2021-08-23T17:15:50.751] [INFO] user - create_insert_db_res:{"id":1,"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","description":"hello everyone","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"createdAt":"2021-08-23T09:15:50.727Z"}
+[2021-08-23T17:15:51.567] [INFO] user - create_input_receive:{"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","longitude":"121.474103","latitude":"31.232862","description":"hello everyone"}
+[2021-08-23T17:15:51.586] [INFO] user - create_insert_db_err:Validation error
+[2021-08-23T17:16:27.451] [INFO] system - Express server listening on port 3000
+[2021-08-23T17:16:27.498] [INFO] redis - redis is connected
+[2021-08-23T17:16:27.540] [INFO] redis - redis ready
+[2021-08-23T17:16:33.637] [INFO] user - create_input_receive:{"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","longitude":"121.474103","latitude":"31.232862","description":"hello everyone"}
+[2021-08-23T17:16:33.649] [INFO] user - create_insert_db_res:{"id":1,"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","description":"hello everyone","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"createdAt":"2021-08-23T09:16:33.640Z"}
+[2021-08-23T17:16:34.680] [INFO] user - create_input_receive:{"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","longitude":"121.474103","latitude":"31.232862","description":"hello everyone"}
+[2021-08-23T17:20:04.490] [INFO] user - create_insert_db_err:Validation error
+[2021-08-23T17:23:06.436] [INFO] system - Express server listening on port 3000
+[2021-08-23T17:23:06.478] [INFO] redis - redis is connected
+[2021-08-23T17:23:06.520] [INFO] redis - redis ready
+[2021-08-23T17:23:11.431] [INFO] user - create_input_receive:{"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","longitude":"121.474103","latitude":"31.232862","description":"hello everyone"}
+[2021-08-23T17:23:11.455] [INFO] user - create_insert_db_res:{"id":1,"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","description":"hello everyone","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"createdAt":"2021-08-23T09:23:11.433Z"}
+[2021-08-23T17:23:12.674] [INFO] user - create_input_receive:{"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","longitude":"121.474103","latitude":"31.232862","description":"hello everyone"}
+[2021-08-23T17:23:12.679] [INFO] user - create_insert_db_err:Validation error
+[2021-08-23T17:23:26.511] [INFO] user - create_input_receive:{"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","longitude":"121.404103","latitude":"31.235862","description":"hello world"}
+[2021-08-23T17:23:26.533] [INFO] user - create_insert_db_res:{"id":3,"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","description":"hello world","gps":{"type":"Point","coordinates":[121.404103,31.235862]},"createdAt":"2021-08-23T09:23:26.512Z"}
+[2021-08-23T17:23:31.462] [INFO] user - queryNearbyUser_input_receive:distanceundefined,name:2
+[2021-08-23T17:23:31.466] [INFO] user - queryNearbyUser_select_db_res:get 0 user
+[2021-08-23T17:23:37.915] [INFO] user - create_input_receive:{"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","longitude":"121.404103","latitude":"31.235862","description":"hello world"}
+[2021-08-23T17:23:37.918] [INFO] user - create_insert_db_err:Validation error
+[2021-08-23T17:23:47.043] [INFO] user - queryNearbyUser_input_receive:distanceundefined,name:沈默
+[2021-08-23T17:23:47.045] [INFO] user - queryNearbyUser_select_db_res:get 1 user

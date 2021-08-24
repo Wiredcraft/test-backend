@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "lib": [
+      "es6"
+    ],
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "typeRoots": [
+      "node_modules/@types",
+      "src/typings"
+    ]
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

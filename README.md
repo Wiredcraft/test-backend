@@ -1,73 +1,37 @@
-# Wiredcraft Back-end Developer Test
+# A RESTful API Web Server
 
-Make sure you read the whole document carefully and follow the guidelines in it.
+This web application implements by Koa, that can get/create/update/delete user data from a persistence database.
 
-## Context
+And not only that,it also simplely implements user link to each other, can get a list of "followers/fans". In the user model, the 'gps' field used to storage the user addres latitude and longitude that can find user nearby friends.
 
-Build a RESTful API that can `get/create/update/delete` user data from a persistence database
+## DB Requirements  
 
-### User Model
+* MySQL5.7：storage user model data
+* Redis：storage user and follwers relation data  
 
-```
-{
-  "id": "xxx",                  // user ID 
-  "name": "test",               // user name
-  "dob": "",                    // date of birth
-  "address": "",                // user address
-  "description": "",            // user description
-  "createdAt": ""               // user created date
-}
-```
+## API Doc
 
-## Requirements
-
-### Functionality
-
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper unit test.
-- Provide proper API document.
-
-### Tech stack
-
-- Use Node.js and any framework.
-- Use any DB. NoSQL DB is preferred.
-
-### Bonus
-
-- Write clear documentation on how it's designed and how to run the code.
-- Write good in-code comments.
-- Write good commit messages.
-- An online demo is always welcome.
-
-### Advanced requirements
-
-*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
-
-- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
-- Provide a complete logging (when/how/etc.) strategy.
-- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
-- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
-  - given a user name
-  - return the nearby friends
+See detail from [this]('https://documenter.getpostman.com/view/7457278/TzzDLFak')
 
 
-## What We Care About
+## run application
 
-Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
+### install all packages  
+```npm install```
 
-Here's what you should aim for:
+### typescript build
+```npm run build```
 
-- Good use of current Node.js & API design best practices.
-- Good testing approach.
-- Extensible code.
+### run
+```npm run start```
 
-## FAQ
+## Code Test
 
-> Where should I send back the result when I'm done?
+If you want to test the API, you can run the test demo, it is in the `test` directory.
 
-Fork this repo and send us a pull request when you think it's ready for review. You don't have to finish everything prior and you can continue to work on it. We don't have a deadline for the task.
+## Log Print 
 
-> What if I have a question?
+When the Application running,it will print log at the important position, for example the apps start or error occur,and the API receive a request. 
+The the log file is in the `log` directory.
 
-Create a new issue in the repo and we will get back to you shortly.
+

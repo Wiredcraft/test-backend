@@ -1,0 +1,103 @@
+[2021-08-23T18:00:40.184] [INFO] system - Express server listening on port 3000
+[2021-08-23T18:00:40.230] [INFO] redis - redis is connected
+[2021-08-23T18:00:40.272] [INFO] redis - redis ready
+[2021-08-23T18:01:11.170] [INFO] user - create_input_receive:{"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","longitude":"121.474103","latitude":"31.232862","description":"hello everyone"}
+[2021-08-23T18:01:11.197] [INFO] user - create_insert_db_res:{"id":1,"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","description":"hello everyone","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"createdAt":"2021-08-23T10:01:11.171Z"}
+[2021-08-23T18:20:55.664] [INFO] system - Express server listening on port 3000
+[2021-08-23T18:20:55.705] [INFO] redis - redis is connected
+[2021-08-23T18:20:55.747] [INFO] redis - redis ready
+[2021-08-23T18:21:02.527] [INFO] user - create_input_receive:{"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","longitude":"121.474103","latitude":"31.232862","description":"hello everyone"}
+[2021-08-23T18:21:02.550] [INFO] user - create_insert_db_res:{"id":1,"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","description":"hello everyone","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"createdAt":"2021-08-23T10:21:02.529Z"}
+[2021-08-23T18:21:23.427] [INFO] user - create_input_receive:{"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","longitude":"121.404103","latitude":"31.235862","description":"hello world"}
+[2021-08-23T18:21:23.447] [INFO] user - create_insert_db_res:{"id":2,"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","description":"hello world","gps":{"type":"Point","coordinates":[121.404103,31.235862]},"createdAt":"2021-08-23T10:21:23.427Z"}
+[2021-08-23T18:21:26.416] [INFO] user - create_input_receive:{"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","longitude":"121.404103","latitude":"31.235862","description":"hello world"}
+[2021-08-23T18:21:26.436] [INFO] user - create_insert_db_err:Validation error
+[2021-08-23T18:21:41.620] [INFO] user - queryAll_input_receive:{}
+[2021-08-23T18:21:41.644] [INFO] user - queryAll_select_db_res:get 2 rows
+[2021-08-23T18:21:41.645] [INFO] error - warning on: DeprecationWarning OutgoingMessage.prototype._headers is deprecated DeprecationWarning: OutgoingMessage.prototype._headers is deprecated
+    at IncomingMessage.fresh (D:\workspace\myself\pro\RestfulApiDemo\node_modules\express\lib\request.js:457:42)
+    at ServerResponse.send (D:\workspace\myself\pro\RestfulApiDemo\node_modules\express\lib\response.js:190:11)
+    at ServerResponse.json (D:\workspace\myself\pro\RestfulApiDemo\node_modules\express\lib\response.js:250:15)
+    at ServerResponse.send (D:\workspace\myself\pro\RestfulApiDemo\node_modules\express\lib\response.js:152:21)
+    at D:\workspace\myself\pro\RestfulApiDemo\controllers\user.js:110:16
+    at Generator.next (<anonymous>)
+    at fulfilled (D:\workspace\myself\pro\RestfulApiDemo\controllers\user.js:5:58)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+[2021-08-23T18:21:57.517] [INFO] user - queryOneById_input_receive:{"id":"1"}
+[2021-08-23T18:21:57.522] [INFO] user - queryOneById_select_db_res:{"id":1,"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"description":"hello everyone","createdAt":"2021-08-23T10:21:02.000Z"}
+[2021-08-23T18:22:12.383] [INFO] user - update_input_receive:{"id":"1"},{"name":"测试用户"}
+[2021-08-23T18:22:12.389] [INFO] user - update_update_db_res,id:1,{"id":1,"name":"测试用户","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"description":"hello everyone","createdAt":"2021-08-23T10:21:02.000Z"}
+[2021-08-23T18:22:26.419] [INFO] error - env_http_request_error:undefined
+[2021-08-23T18:22:47.655] [INFO] user - fork_input_receive:followUserId2,uId:1
+[2021-08-23T18:22:47.659] [INFO] user - fork_query_db_res,id:1,{"success":true,"message":"success","data":null}
+[2021-08-23T18:22:47.660] [INFO] redis - getter_receive_request|user:follower:2
+[2021-08-23T18:22:47.660] [INFO] redis - getter_receive_request|follow:user:1
+[2021-08-23T18:22:47.680] [INFO] redis - getter_get_response|user:follower:2||["1"]
+[2021-08-23T18:22:47.700] [INFO] redis - getter_get_response|follow:user:1||["2"]
+[2021-08-23T18:22:47.701] [INFO] redis - setter_receive_request|user:follower:2|["1"]
+[2021-08-23T18:22:47.701] [INFO] redis - setter_receive_request|follow:user:1|["2"]
+[2021-08-23T18:22:47.721] [INFO] redis - setter_set_response|user:follower:2|OK
+[2021-08-23T18:22:47.742] [INFO] redis - setter_set_response|follow:user:1|OK
+[2021-08-23T18:23:03.957] [INFO] user - queryFans_input_receive:{"id":"2"}
+[2021-08-23T18:23:03.957] [INFO] redis - getter_receive_request|user:follower:2
+[2021-08-23T18:23:03.978] [INFO] redis - getter_get_response|user:follower:2||["1"]
+[2021-08-23T18:23:03.997] [INFO] user - queryFans_select_db_res:{"count":1,"rows":[{"id":1,"name":"测试用户","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"description":"hello everyone","createdAt":"2021-08-23T10:21:02.000Z"}]}
+[2021-08-23T18:23:24.716] [INFO] user - queryFans_input_receive:{"id":"20"}
+[2021-08-23T18:23:24.716] [INFO] redis - getter_receive_request|user:follower:20
+[2021-08-23T18:23:24.737] [INFO] redis - getter_get_response|user:follower:20||null
+[2021-08-23T18:23:40.212] [INFO] user - queryFans_input_receive:{"id":"1"}
+[2021-08-23T18:23:40.213] [INFO] redis - getter_receive_request|follow:user:1
+[2021-08-23T18:23:40.232] [INFO] redis - getter_get_response|follow:user:1||["2"]
+[2021-08-23T18:23:40.237] [INFO] user - queryFans_select_db_res:{"count":1,"rows":[{"id":2,"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","gps":{"type":"Point","coordinates":[121.404103,31.235862]},"description":"hello world","createdAt":"2021-08-23T10:21:23.000Z"}]}
+[2021-08-23T18:29:30.566] [INFO] system - Express server listening on port 3000
+[2021-08-23T18:29:30.609] [INFO] redis - redis is connected
+[2021-08-23T18:29:30.657] [INFO] redis - redis ready
+[2021-08-23T18:29:45.339] [INFO] user - create_input_receive:{"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","longitude":"121.474103","latitude":"31.232862","description":"hello everyone"}
+[2021-08-23T18:29:45.350] [INFO] user - create_insert_db_res:{"id":1,"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","description":"hello everyone","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"createdAt":"2021-08-23T10:29:45.341Z"}
+[2021-08-23T18:29:47.037] [INFO] user - create_input_receive:{"name":"黄希","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","longitude":"121.474103","latitude":"31.232862","description":"hello everyone"}
+[2021-08-23T18:29:47.040] [INFO] user - create_insert_db_err:Validation error
+[2021-08-23T18:30:15.342] [INFO] user - create_input_receive:{"dob":"2010-08-05","address":"上海市青浦区黄路3号","longitude":"121.404103","latitude":"31.235862","description":"hello world"}
+[2021-08-23T18:30:28.433] [INFO] user - create_input_receive:{"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","longitude":"121.404103","latitude":"31.235862","description":"hello world"}
+[2021-08-23T18:30:28.452] [INFO] user - create_insert_db_res:{"id":3,"name":"沈默","dob":"2010-08-05","address":"上海市青浦区黄路3号","description":"hello world","gps":{"type":"Point","coordinates":[121.404103,31.235862]},"createdAt":"2021-08-23T10:30:28.434Z"}
+[2021-08-23T18:30:46.489] [INFO] user - queryOneById_input_receive:{"id":"10"}
+[2021-08-23T18:30:46.495] [INFO] user - queryOneById_select_db_res:null
+[2021-08-23T18:30:46.497] [INFO] error - warning on: DeprecationWarning OutgoingMessage.prototype._headers is deprecated DeprecationWarning: OutgoingMessage.prototype._headers is deprecated
+    at IncomingMessage.fresh (D:\workspace\myself\pro\RestfulApiDemo\node_modules\express\lib\request.js:457:42)
+    at ServerResponse.send (D:\workspace\myself\pro\RestfulApiDemo\node_modules\express\lib\response.js:190:11)
+    at ServerResponse.json (D:\workspace\myself\pro\RestfulApiDemo\node_modules\express\lib\response.js:250:15)
+    at ServerResponse.send (D:\workspace\myself\pro\RestfulApiDemo\node_modules\express\lib\response.js:152:21)
+    at D:\workspace\myself\pro\RestfulApiDemo\controllers\user.js:140:16
+    at Generator.next (<anonymous>)
+    at fulfilled (D:\workspace\myself\pro\RestfulApiDemo\controllers\user.js:5:58)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+[2021-08-23T18:31:11.402] [INFO] user - update_input_receive:{"id":"1"},{"name":"测试用户"}
+[2021-08-23T18:31:11.426] [INFO] user - update_update_db_res,id:1,{"id":1,"name":"测试用户","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"description":"hello everyone","createdAt":"2021-08-23T10:29:45.000Z"}
+[2021-08-23T18:31:21.437] [INFO] user - fork_input_receive:followUserId2,uId:1
+[2021-08-23T18:31:21.439] [INFO] user - fork_query_db_res,id:1,{"success":true,"message":"success","data":null}
+[2021-08-23T18:31:37.516] [INFO] user - queryAll_input_receive:{}
+[2021-08-23T18:31:37.521] [INFO] user - queryAll_select_db_res:get 2 rows
+[2021-08-23T18:32:04.963] [INFO] user - queryFans_input_receive:{"id":"2"}
+[2021-08-23T18:32:04.967] [INFO] user - queryFans_select_db_res:null
+[2021-08-23T18:32:12.447] [INFO] user - queryFollowers_input_receive:{"id":"1"}
+[2021-08-23T18:32:12.448] [INFO] user - queryFollowers_select_db_res:{"id":1,"name":"测试用户","dob":"2000-03-25","address":"上海市浦东区渤海路2423号","gps":{"type":"Point","coordinates":[121.474103,31.232862]},"description":"hello everyone","createdAt":"2021-08-23T10:29:45.000Z"}
+[2021-08-23T18:32:12.448] [INFO] redis - getter_receive_request|follow:user:1
+[2021-08-23T18:32:12.472] [INFO] redis - getter_get_response|follow:user:1||["2"]
+[2021-08-23T18:32:12.475] [INFO] user - queryFollowers_select_db_res:{"count":0,"rows":[]}
+[2021-08-23T18:33:57.885] [INFO] system - Express server listening on port 3000
+[2021-08-23T18:33:57.927] [INFO] redis - redis is connected
+[2021-08-23T18:33:57.971] [INFO] redis - redis ready
+[2021-08-23T18:42:32.044] [INFO] system - Express server listening on port 3000
+[2021-08-23T18:42:32.085] [INFO] redis - redis is connected
+[2021-08-23T18:42:32.140] [INFO] redis - redis ready
+[2021-08-23T18:42:35.489] [INFO] error - warning on: DeprecationWarning OutgoingMessage.prototype._headers is deprecated DeprecationWarning: OutgoingMessage.prototype._headers is deprecated
+    at IncomingMessage.fresh (D:\workspace\myself\pro\RestfulApiDemo\node_modules\express\lib\request.js:457:42)
+    at ServerResponse.send (D:\workspace\myself\pro\RestfulApiDemo\node_modules\express\lib\response.js:190:11)
+    at done (D:\workspace\myself\pro\RestfulApiDemo\node_modules\express\lib\response.js:956:10)
+    at Object.exports.renderFile (D:\workspace\myself\pro\RestfulApiDemo\node_modules\pug\lib\index.js:422:12)
+    at View.exports.__express [as engine] (D:\workspace\myself\pro\RestfulApiDemo\node_modules\pug\lib\index.js:465:11)
+    at View.render (D:\workspace\myself\pro\RestfulApiDemo\node_modules\express\lib\view.js:126:8)
+    at tryRender (D:\workspace\myself\pro\RestfulApiDemo\node_modules\express\lib\application.js:639:10)
+    at Function.render (D:\workspace\myself\pro\RestfulApiDemo\node_modules\express\lib\application.js:591:3)
+    at ServerResponse.render (D:\workspace\myself\pro\RestfulApiDemo\node_modules\express\lib\response.js:960:7)
+    at D:\workspace\myself\pro\RestfulApiDemo\routes\index.js:9:9
+[2021-08-23T18:42:36.107] [INFO] error - env_http_request_error:undefined
