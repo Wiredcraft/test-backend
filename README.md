@@ -15,13 +15,14 @@ db.user.insertOne({
   description: '',
   createdAt: new Date(),
 });
-
 ```
 
 ### Edit DB_URL in database/db.js
 
 ```javascript
-const DB_URL = 'mongodb://haohaop:19960718@localhost:27017/dataDb?authSource=admin';
+const DB_USER = 'haohaop';
+const PASSWORD = encodeURIComponent('19960718');
+const DB_URL = `mongodb://${DB_USER}:${PASSWORD}@/dataDb?authSource=admin`;
 ```
 
 ### Running demo
