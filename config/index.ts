@@ -30,9 +30,9 @@ const MYSQL: any = {
  * REDIS数据库以及key定义
  */
 const REDIS: any = {
-    host: '101.37.33.128',
+    host: '127.0.0.1',
     port: 6379,
-    password: 'tengbantest123',
+    password: 'test123',
     db: 14,
     keys: {
         userFollower: 'user:follower:', // 用户粉丝列表，key是用户id，value是此用户的所有粉丝的用户id
