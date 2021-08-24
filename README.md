@@ -11,7 +11,7 @@ And not only that,it also simplely implements user link to each other, can get a
 
 ## API Doc
 
-See detail from [this]('https://documenter.getpostman.com/view/7457278/TzzDLFak')
+See detail from this [link](https://documenter.getpostman.com/view/7457278/TzzDLFak)
 
 
 ## run application
