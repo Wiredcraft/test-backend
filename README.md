@@ -7,14 +7,16 @@ And not only that,it also simplely implements user link to each other, can get a
 ## DB Requirements  
 
 * MySQL5.7：storage user model data
-* Redis：storage user and follwers relation data  
+* Redis：storage user and follwers relation data   
+
+*In the `config/index.ts` you must modify it if you want to run it in your environment.*
 
 ## API Doc
 
 See detail from this [link](https://documenter.getpostman.com/view/7457278/TzzDLFak)
 
 
-## run application
+## Run Application
 
 ### install all packages  
 ```npm install```
