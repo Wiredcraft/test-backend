@@ -420,8 +420,7 @@ const queryFans = async (req: any, res: any) => {
     try {
         let u: any = await User.findByPk(req.params.id);
         Logger.info(`queryFans_select_db_res:${JSON.stringify(u)}`);
-        result.data = u;
-
+        
         if (!u) {
             result.success = false;
             result.message = '没有找到对应的用户信息'
@@ -462,11 +461,11 @@ const queryFans = async (req: any, res: any) => {
             }
         });
         Logger.info(`queryFans_select_db_res:${JSON.stringify(u)}`);
-        result.data = u;
-
         if (!u) {
             result.success = false;
             result.message = '没有找到粉丝信息'
+        } else {
+            result.data = u;
         }
 
     } catch (ex) {
@@ -497,8 +496,7 @@ const queryFollowers = async (req: any, res: any) => {
 
     try {
         let u: any = await User.findByPk(req.params.id);
-        Logger.info(`queryFollowers_select_db_res:${JSON.stringify(u)}`);
-        result.data = u;
+        Logger.info(`queryFollowers_select_db_res:${JSON.stringify(u)}`);       
 
         if (!u) {
             result.success = false;
@@ -539,12 +537,13 @@ const queryFollowers = async (req: any, res: any) => {
                 }
             }
         });
-        Logger.info(`queryFollowers_select_db_res:${JSON.stringify(u)}`);
-        result.data = u;
+        Logger.info(`queryFollowers_select_db_res:${JSON.stringify(u)}`);        
 
         if (!u) {
             result.success = false;
             result.message = '没有找到关注者信息'
+        } else {
+            result.data = u;
         }
 
     } catch (ex) {
