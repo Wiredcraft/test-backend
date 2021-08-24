@@ -24,9 +24,10 @@ db.user.insertOne({
 const DB_URL = 'mongodb://haohaop:19960718@localhost:27017/dataDb?authSource=admin';
 ```
 
-### Running tests
+### Running demo
 
 ```
+npm install
 npm start
 ```
 

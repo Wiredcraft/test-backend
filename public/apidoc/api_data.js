@@ -2,7 +2,7 @@ define({ "api": [
   {
     "type": "put",
     "url": "/user",
-    "title": "",
+    "title": "add a new user",
     "group": "user",
     "description": "<p>add a new user</p>",
     "parameter": {
@@ -72,7 +72,7 @@ define({ "api": [
   {
     "type": "delete",
     "url": "/user/:id",
-    "title": "",
+    "title": "delete user by id",
     "group": "user",
     "description": "<p>delete user by id</p>",
     "parameter": {
@@ -121,7 +121,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/user/:id",
-    "title": "",
+    "title": "get user by id",
     "group": "user",
     "description": "<p>get user by id</p>",
     "parameter": {
@@ -178,7 +178,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "Number",
+            "type": "String",
             "optional": false,
             "field": "data.dob",
             "description": "<p>date of birth</p>"
@@ -199,7 +199,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "Number",
+            "type": "String",
             "optional": false,
             "field": "data.createdAt",
             "description": "<p>user created date</p>"
@@ -219,7 +219,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/user",
-    "title": "",
+    "title": "get all users",
     "group": "user",
     "description": "<p>get all users</p>",
     "parameter": {
@@ -283,7 +283,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "Number",
+            "type": "String",
             "optional": false,
             "field": "data.dob",
             "description": "<p>date of birth</p>"
@@ -304,7 +304,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "Number",
+            "type": "String",
             "optional": false,
             "field": "data.createdAt",
             "description": "<p>user created date</p>"
@@ -324,7 +324,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/user/:id",
-    "title": "",
+    "title": "update user by id",
     "group": "user",
     "description": "<p>update user by id</p>",
     "parameter": {

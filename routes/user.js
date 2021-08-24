@@ -11,7 +11,7 @@ const checkUserHandlers = [
 ];
 
 /**
- * @api {get} /user
+ * @api {get} /user get all users
  * @apiGroup user
  * @apiDescription get all users
  * @apiParam {Number} page
@@ -30,7 +30,7 @@ const checkUserHandlers = [
  */
 router.get('/', userController.getUser);
 /**
- * @api {put} /user
+ * @api {put} /user add a new user
  * @apiGroup user
  * @apiDescription add a new user
  * @apiParam {String} name user name
@@ -44,7 +44,7 @@ router.get('/', userController.getUser);
  */
 router.put('/', checkUserHandlers, userController.addUser);
 /**
- * @api {get} /user/:id
+ * @api {get} /user/:id get user by id
  * @apiGroup user
  * @apiDescription get user by id
  * @apiParam {Number} id Users unique ID.
@@ -62,7 +62,7 @@ router.put('/', checkUserHandlers, userController.addUser);
  */
 router.get('/:id', userController.getUser);
 /**
- * @api {post} /user/:id
+ * @api {post} /user/:id update user by id
  * @apiGroup user
  * @apiDescription update user by id
  * @apiParam {Number} id Users unique ID.
@@ -77,7 +77,7 @@ router.get('/:id', userController.getUser);
  */
 router.post('/:id', oneOf(checkUserHandlers), userController.updateUser);
 /**
- * @api {delete} /user/:id
+ * @api {delete} /user/:id delete user by id
  * @apiGroup user
  * @apiDescription delete user by id
  * @apiParam {Number} id Users unique ID.
