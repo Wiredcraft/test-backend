@@ -30,7 +30,7 @@ exports.addUser = (req, res) => {
   }
   const user = new User({
     name: req.body.name,
-    dob: new Date(req.body.dob),
+    dob: req.body.dob,
     address: req.body.address,
     description: req.body.description,
     createdAt: new Date(),
@@ -54,7 +54,7 @@ exports.updateUser = (req, res) => {
   const id = req.params.id, obj = {};
 
   if (req.body.name && req.body.name !== '') obj.name = req.body.name;
-  if (req.body.dob && req.body.dob !== '') obj.dob = new Date(req.body.dob);
+  if (req.body.dob && req.body.dob !== '') obj.dob = req.body.dob;
   if (req.body.address && req.body.address !== '') obj.address = req.body.address;
   if (req.body.description) obj.description = req.body.description;
 

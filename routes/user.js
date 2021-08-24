@@ -6,7 +6,7 @@ const router = express.Router();
 // check params
 const checkUserHandlers = [
   check('name').notEmpty().withMessage('can not empty'),
-  check('dob').notEmpty().isDate({format: 'YYYY/MM/DD'}).withMessage('must be format YYYY/MM/DD'),
+  check('dob').notEmpty().isInt().withMessage('must be a timestamp in milliseconds'),
   check('address').notEmpty().withMessage('can not empty'),
 ];
 
@@ -34,7 +34,7 @@ router.get('/', userController.getUser);
  * @apiGroup user
  * @apiDescription add a new user
  * @apiParam {String} name user name
- * @apiParam {String} dob date of birth, must be format YYYY/MM/DD
+ * @apiParam {Number} dob date of birth, must be a timestamp in milliseconds
  * @apiParam {String} address user address
  * @apiParam {String} description user description
  * @apiName addUser
@@ -67,7 +67,7 @@ router.get('/:id', userController.getUser);
  * @apiDescription update user by id
  * @apiParam {Number} id Users unique ID.
  * @apiParam {String} name user name
- * @apiParam {String} dob date of birth, must be format YYYY/MM/DD
+ * @apiParam {Number} dob date of birth, must be a timestamp in milliseconds
  * @apiParam {String} address user address
  * @apiParam {String} description user description
  * @apiName updateUser

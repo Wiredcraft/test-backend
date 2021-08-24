@@ -17,10 +17,10 @@
           },
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "dob",
-            "description": "<p>date of birth</p>"
+            "description": "<p>date of birth, must be a timestamp in milliseconds</p>"
           },
           {
             "group": "Parameter",
@@ -178,7 +178,7 @@
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "data.dob",
             "description": "<p>date of birth</p>"
@@ -199,7 +199,7 @@
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "data.createdAt",
             "description": "<p>user created date</p>"
@@ -283,7 +283,7 @@
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "data.dob",
             "description": "<p>date of birth</p>"
@@ -304,7 +304,7 @@
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "data.createdAt",
             "description": "<p>user created date</p>"
@@ -342,28 +342,28 @@
             "type": "String",
             "optional": false,
             "field": "name",
-            "description": ""
+            "description": "<p>user name</p>"
           },
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "dob",
-            "description": ""
+            "description": "<p>date of birth, must be a timestamp in milliseconds</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "address",
-            "description": ""
+            "description": "<p>user address</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "description",
-            "description": ""
+            "description": "<p>user description</p>"
           }
         ]
       }
