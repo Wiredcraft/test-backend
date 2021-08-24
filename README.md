@@ -1,6 +1,6 @@
 # A RESTful API Web Server
 
-This web application implements by Koa, that can get/create/update/delete user data from a persistence database.
+This web application implements by Express, that can get/create/update/delete user data from a persistence database.
 
 And not only that,it also simplely implements user link to each other, can get a list of "followers/fans". In the user model, the 'gps' field used to storage the user addres latitude and longitude that can find user nearby friends.
 
