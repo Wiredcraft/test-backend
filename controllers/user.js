@@ -2,10 +2,11 @@ const User = require('../database/models/user');
 const Result = require('../models/result');
 const { validationResult } = require('express-validator');
 
+// get user by id or get all users
 exports.getUser = (req, res) => {
   const id = req.params.id,
-    page = parseInt(req.body.page) || 1,
-    limit = parseInt(req.body.limit) || 20;
+    page = parseInt(req.query.page) || 1,
+    limit = parseInt(req.query.limit) || 20;
 
   const obj = {};
   id !== '' && id != null && (obj['_id'] = id);
@@ -13,7 +14,7 @@ exports.getUser = (req, res) => {
   User.find(obj, {__v: 0})
     .skip((page - 1) * limit)
     .limit(limit)
-    .sort({id: 1})
+    .sort({_id: 1})
     .exec((err, docs) => {
       if (err) {
         new Result('query error').fail(res);
@@ -23,6 +24,7 @@ exports.getUser = (req, res) => {
     });
 };
 
+// add a user
 exports.addUser = (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -45,6 +47,7 @@ exports.addUser = (req, res) => {
   });
 };
 
+// update user by id
 exports.updateUser = (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -68,6 +71,7 @@ exports.updateUser = (req, res) => {
   });
 };
 
+// delete user by id
 exports.delUser = (req, res) => {
   const id = req.params.id;
   const obj = {_id: id};

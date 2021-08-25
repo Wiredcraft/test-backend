@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const DB_USER = 'haohaop';
 const PASSWORD = encodeURIComponent('19960718');
-const DB_URL = `mongodb://${DB_USER}:${PASSWORD}@/dataDb?authSource=admin`;
+const DB_URL = `mongodb://${DB_USER}:${PASSWORD}@localhost:27017/dataDb?authSource=admin`;
 
 // connect MongoDB
 mongoose.connect(DB_URL, {
