@@ -19,13 +19,15 @@ const checkUserHandlers = [
  * @apiName getUsers
  * @apiSuccess {Number} code
  * @apiSuccess {String} msg
- * @apiSuccess {Object[]} data
- * @apiSuccess {String} data._id user ID
- * @apiSuccess {String} data.name user name
- * @apiSuccess {String} data.dob date of birth
- * @apiSuccess {String} data.address user address
- * @apiSuccess {String} data.description user description
- * @apiSuccess {String} data.createdAt user created date
+ * @apiSuccess {Object} result
+ * @apiSuccess {Number} result.total Total number of data
+ * @apiSuccess {Object[]} result.data
+ * @apiSuccess {String} result.data._id user ID
+ * @apiSuccess {String} result.data.name user name
+ * @apiSuccess {String} result.data.dob date of birth
+ * @apiSuccess {String} result.data.address user address
+ * @apiSuccess {String} result.data.description user description
+ * @apiSuccess {String} result.data.createdAt user created date
  * @apiVersion 0.0.1
  */
 router.get('/', userController.getUser);
@@ -51,13 +53,15 @@ router.put('/', checkUserHandlers, userController.addUser);
  * @apiName getUser
  * @apiSuccess {Number} code
  * @apiSuccess {String} msg
- * @apiSuccess {Object[]} data
- * @apiSuccess {String} data._id user ID
- * @apiSuccess {String} data.name user name
- * @apiSuccess {String} data.dob date of birth
- * @apiSuccess {String} data.address user address
- * @apiSuccess {String} data.description user description
- * @apiSuccess {String} data.createdAt user created date
+ * @apiSuccess {Object} result
+ * @apiSuccess {Number} result.total Total number of data
+ * @apiSuccess {Object[]} result.data
+ * @apiSuccess {String} result.data._id user ID
+ * @apiSuccess {String} result.data.name user name
+ * @apiSuccess {String} result.data.dob date of birth
+ * @apiSuccess {String} result.data.address user address
+ * @apiSuccess {String} result.data.description user description
+ * @apiSuccess {String} result.data.createdAt user created date
  * @apiVersion 0.0.1
  */
 router.get('/:id', userController.getUser);

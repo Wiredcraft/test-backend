@@ -157,51 +157,65 @@
           },
           {
             "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "result",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "result.total",
+            "description": "<p>Total number of data</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "Object[]",
             "optional": false,
-            "field": "data",
+            "field": "result.data",
             "description": ""
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "data._id",
+            "field": "result.data._id",
             "description": "<p>user ID</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "data.name",
+            "field": "result.data.name",
             "description": "<p>user name</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "data.dob",
+            "field": "result.data.dob",
             "description": "<p>date of birth</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "data.address",
+            "field": "result.data.address",
             "description": "<p>user address</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "data.description",
+            "field": "result.data.description",
             "description": "<p>user description</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "data.createdAt",
+            "field": "result.data.createdAt",
             "description": "<p>user created date</p>"
           }
         ]
@@ -262,51 +276,65 @@
           },
           {
             "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "result",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "result.total",
+            "description": "<p>Total number of data</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "Object[]",
             "optional": false,
-            "field": "data",
+            "field": "result.data",
             "description": ""
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "data._id",
+            "field": "result.data._id",
             "description": "<p>user ID</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "data.name",
+            "field": "result.data.name",
             "description": "<p>user name</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "data.dob",
+            "field": "result.data.dob",
             "description": "<p>date of birth</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "data.address",
+            "field": "result.data.address",
             "description": "<p>user address</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "data.description",
+            "field": "result.data.description",
             "description": "<p>user description</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "data.createdAt",
+            "field": "result.data.createdAt",
             "description": "<p>user created date</p>"
           }
         ]

@@ -1,23 +1,23 @@
 const {ERR_CODE, SUC_CODE} = require('../utils/constant');
 
 /**
- * This class is used to uniform return data format
+ * This class is used to uniform return result format
  */
 class Result {
   /**
    * Result constructor
-   * @param data
+   * @param result
    * @param msg
    * @param options
    */
-  constructor(data, msg = 'success', options) {
-    this.data = null;
+  constructor(result, msg = 'success', options) {
+    this.result = null;
     if (arguments.length === 0) {
       this.msg = 'success';
     } else if (arguments.length === 1) {
-      this.msg = data;
+      this.msg = result;
     } else {
-      this.data = data;
+      this.result = result;
       this.msg = msg;
       if (options) {
         this.options = options;
@@ -26,7 +26,7 @@ class Result {
   }
 
   /**
-   * return json data
+   * return json result
    * @param res
    * @returns {*}
    */
@@ -46,8 +46,8 @@ class Result {
       code: this.code,
       msg: this.msg,
     };
-    if (this.data) {
-      base.data = this.data;
+    if (this.result) {
+      base.result = this.result;
     }
     if (this.options) {
       base = {...base, ...this.options};

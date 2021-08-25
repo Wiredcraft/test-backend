@@ -22,13 +22,13 @@ describe('Access to DB', () => {
           res.should.have.status(200);
           res.should.be.json;
           res.body.code.should.equal(0);
-          res.body.data.should.be.a('array');
-          res.body.data[0].should.have.property('_id');
-          res.body.data[0].should.have.property('name');
-          res.body.data[0].should.have.property('dob');
-          res.body.data[0].should.have.property('address');
-          res.body.data[0].should.have.property('description');
-          res.body.data[0].should.have.property('createdAt');
+          res.body.result.data.should.be.a('array');
+          res.body.result.data[0].should.have.property('_id');
+          res.body.result.data[0].should.have.property('name');
+          res.body.result.data[0].should.have.property('dob');
+          res.body.result.data[0].should.have.property('address');
+          res.body.result.data[0].should.have.property('description');
+          res.body.result.data[0].should.have.property('createdAt');
           done();
         });
     });
@@ -48,13 +48,13 @@ describe('Access to DB', () => {
             response.should.have.status(200);
             response.should.be.json;
             response.body.code.should.equal(0);
-            response.body.data.should.be.a('array');
-            response.body.data[0].should.have.property('_id');
-            response.body.data[0].should.have.property('name');
-            response.body.data[0].should.have.property('dob');
-            response.body.data[0].should.have.property('address');
-            response.body.data[0].should.have.property('description');
-            response.body.data[0].should.have.property('createdAt');
+            response.body.result.data.should.be.a('array');
+            response.body.result.data[0].should.have.property('_id');
+            response.body.result.data[0].should.have.property('name');
+            response.body.result.data[0].should.have.property('dob');
+            response.body.result.data[0].should.have.property('address');
+            response.body.result.data[0].should.have.property('description');
+            response.body.result.data[0].should.have.property('createdAt');
             done();
           });
       });
@@ -82,7 +82,7 @@ describe('Access to DB', () => {
         .get('/api/user')
         .end((err, res) => {
           chai.request(app)
-            .delete('/api/user/' + res.body.data[res.body.data.length - 1]._id)
+            .delete('/api/user/' + res.body.result.data[res.body.result.data.length - 1]._id)
             .end((error, response) => {
               response.should.have.status(200);
               response.should.be.json;
@@ -97,7 +97,7 @@ describe('Access to DB', () => {
         .get('/api/user')
         .end((err, res) => {
           chai.request(app)
-            .post('/api/user/' + res.body.data[res.body.data.length - 1]._id)
+            .post('/api/user/' + res.body.result.data[res.body.result.data.length - 1]._id)
             .send({
               name: 'HaoHaoP',
               dob: new Date().valueOf(),

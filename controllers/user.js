@@ -1,6 +1,6 @@
 const User = require('../database/models/user');
 const Result = require('../models/result');
-const { validationResult } = require('express-validator');
+const {validationResult} = require('express-validator');
 
 // get user by id or get all users
 exports.getUser = (req, res) => {
@@ -10,18 +10,22 @@ exports.getUser = (req, res) => {
 
   const obj = {};
   id !== '' && id != null && (obj['_id'] = id);
-
-  User.find(obj, {__v: 0})
-    .skip((page - 1) * limit)
-    .limit(limit)
-    .sort({_id: 1})
-    .exec((err, docs) => {
-      if (err) {
-        new Result('query error').fail(res);
-      } else {
-        new Result(docs, 'success').json(res);
-      }
-    });
+  User.countDocuments({}, (error, count) => {
+    if (error) {
+      return new Result('query error').fail(res);
+    }
+    User.find(obj, {__v: 0})
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({_id: 1})
+      .exec((err, docs) => {
+        if (err) {
+          new Result('query error').fail(res);
+        } else {
+          new Result({data: docs, total: count}, 'success').json(res);
+        }
+      });
+  });
 };
 
 // add a user
