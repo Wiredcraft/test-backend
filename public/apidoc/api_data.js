@@ -1,6 +1,6 @@
 define({ "api": [
   {
-    "type": "put",
+    "type": "post",
     "url": "/user",
     "title": "add a new user",
     "group": "user",
@@ -350,7 +350,7 @@ define({ "api": [
     ]
   },
   {
-    "type": "post",
+    "type": "put",
     "url": "/user/:id",
     "title": "update user by id",
     "group": "user",

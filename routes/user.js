@@ -32,7 +32,7 @@ const checkUserHandlers = [
  */
 router.get('/', userController.getUser);
 /**
- * @api {put} /user add a new user
+ * @api {post} /user add a new user
  * @apiGroup user
  * @apiDescription add a new user
  * @apiParam {String} name user name
@@ -44,7 +44,7 @@ router.get('/', userController.getUser);
  * @apiSuccess {String} msg
  * @apiVersion 0.0.1
  */
-router.put('/', checkUserHandlers, userController.addUser);
+router.post('/', checkUserHandlers, userController.addUser);
 /**
  * @api {get} /user/:id get user by id
  * @apiGroup user
@@ -66,7 +66,7 @@ router.put('/', checkUserHandlers, userController.addUser);
  */
 router.get('/:id', userController.getUser);
 /**
- * @api {post} /user/:id update user by id
+ * @api {put} /user/:id update user by id
  * @apiGroup user
  * @apiDescription update user by id
  * @apiParam {Number} id Users unique ID.
@@ -79,7 +79,7 @@ router.get('/:id', userController.getUser);
  * @apiSuccess {String} msg
  * @apiVersion 0.0.1
  */
-router.post('/:id', oneOf(checkUserHandlers), userController.updateUser);
+router.put('/:id', oneOf(checkUserHandlers), userController.updateUser);
 /**
  * @api {delete} /user/:id delete user by id
  * @apiGroup user

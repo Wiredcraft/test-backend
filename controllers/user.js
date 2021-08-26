@@ -12,7 +12,7 @@ exports.getUser = (req, res) => {
   id !== '' && id != null && (obj['_id'] = id);
   User.countDocuments({}, (error, count) => {
     if (error) {
-      return new Result('query error').fail(res);
+      return new Result('query error').fail(res.status(400));
     }
     User.find(obj, {__v: 0})
       .skip((page - 1) * limit)
@@ -20,9 +20,9 @@ exports.getUser = (req, res) => {
       .sort({_id: 1})
       .exec((err, docs) => {
         if (err) {
-          new Result('query error').fail(res);
+          new Result('query error').fail(res.status(400));
         } else {
-          new Result({data: docs, total: count}, 'success').json(res);
+          new Result({data: docs, total: count}, 'success').json(res.status(200));
         }
       });
   });
@@ -32,7 +32,7 @@ exports.getUser = (req, res) => {
 exports.addUser = (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return new Result(errors.mapped(), 'error').fail(res);
+    return new Result(errors.mapped(), 'error').fail(res.status(400));
   }
   const user = new User({
     name: req.body.name,
@@ -44,9 +44,9 @@ exports.addUser = (req, res) => {
   user.save((err) => {
     if (err) {
       console.log(err);
-      new Result('add error').fail(res);
+      new Result('add error').fail(res.status(400));
     } else {
-      new Result().success(res);
+      new Result().success(res.status(201));
     }
   });
 };
@@ -55,7 +55,7 @@ exports.addUser = (req, res) => {
 exports.updateUser = (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return new Result(errors.mapped(), 'error').fail(res);
+    return new Result(errors.mapped(), 'error').fail(res.status(400));
   }
 
   const id = req.params.id, obj = {};
@@ -68,9 +68,9 @@ exports.updateUser = (req, res) => {
   User.updateOne({_id: id}, obj, (err) => {
     if (err) {
       console.log(err);
-      new Result('update error').fail(res);
+      new Result('update error').fail(res.status(400));
     } else {
-      new Result().success(res);
+      new Result().success(res.status(200));
     }
   });
 };
@@ -82,9 +82,9 @@ exports.delUser = (req, res) => {
   User.deleteOne(obj, (err) => {
     if (err) {
       console.log(err);
-      new Result('del error').fail(res);
+      new Result('del error').fail(res.status(400));
     } else {
-      new Result().success(res);
+      new Result().success(res.status(200));
     }
   });
 };

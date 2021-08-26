@@ -62,7 +62,7 @@ describe('Access to DB', () => {
 
     it('should add a SINGLE user on /api/user PUT', (done) => {
       chai.request(app)
-        .put('/api/user')
+        .post('/api/user')
         .send({
           name: 'HaoHaoP',
           dob: new Date().valueOf(),
@@ -70,7 +70,7 @@ describe('Access to DB', () => {
           description: 'In Shanghai',
         })
         .end((err, res) => {
-          res.should.have.status(200);
+          res.should.have.status(201);
           res.should.be.json;
           res.body.code.should.equal(0);
           done();
@@ -97,7 +97,7 @@ describe('Access to DB', () => {
         .get('/api/user')
         .end((err, res) => {
           chai.request(app)
-            .post('/api/user/' + res.body.result.data[res.body.result.data.length - 1]._id)
+            .put('/api/user/' + res.body.result.data[res.body.result.data.length - 1]._id)
             .send({
               name: 'HaoHaoP',
               dob: new Date().valueOf(),
