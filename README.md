@@ -30,8 +30,8 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 
 ### Tech stack
 
-- Use Node.js and any framework.
-- Use any DB. NoSQL DB is preferred.
+- Use Java and any framework.
+- Use any DB.
 
 ### Bonus
 
@@ -58,7 +58,7 @@ Feel free to use any open-source library as you see fit, but remember that we ar
 
 Here's what you should aim for:
 
-- Good use of current Node.js & API design best practices.
+- Good use of current Java & API design best practices.
 - Good testing approach.
 - Extensible code.
 
