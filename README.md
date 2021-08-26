@@ -1,5 +1,17 @@
 # Wiredcraft Back-end Developer Test
 
+## Demo
+
+Test demo on the website [Test](http://www.haohaop.com) and [API Doc](http://www.haohaop.com/apidoc).
+
+### Server description
+
+The service is deployed on Aliyun's serverless application center.Use Aliyun's Log Service to manage logs.
+
+### Front-end project URL
+
+https://github.com/HaoHaoP/haohaop-frontend
+
 ## How to get started
 
 ### Create MongoDB database
@@ -34,6 +46,4 @@ npm start
 
 ### API Doc
 
-```
 http://localhost:3000/apidoc/
-```
