@@ -12,7 +12,7 @@ exports.getUser = (req, res) => {
   id !== '' && id != null && (obj['_id'] = id);
   User.countDocuments({}, (error, count) => {
     if (error) {
-      return new Result('query error').fail(res.status(400));
+      return new Result('query error').fail(res.status(500));
     }
     User.find(obj, {__v: 0})
       .skip((page - 1) * limit)
