@@ -1,0 +1,22 @@
+{
+    "name": "test-backend",
+    "version": "1.0.0",
+    "scripts": {
+        "start": "node bin/www"
+    },
+    "dependencies": {
+        "jsonwebtoken": "^8.5.1",
+        "koa": "^2.13.1",
+        "koa-bodyparser": "^4.3.0",
+        "koa-logger": "^3.2.1",
+        "koa-router": "^10.1.1",
+        "mongodb": "^4.1.1"
+    },
+    "devDependencies": {
+        "debug": "^4.1.1",
+        "eslint": "^7.26.0",
+        "eslint-config-standard": "^16.0.2",
+        "eslint-plugin-standard": "^5.0.0",
+        "nodemon": "^1.19.1"
+    }
+}
