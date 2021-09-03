@@ -6,7 +6,7 @@ app.use(logger())
 app.use(bodyparser({
     enableTypes: ['json']
 }))
-const index = require('./routes/index')
+const index = require('./routers/index')
 // log excuting duration
 app.use(async (ctx, next) => {
     const start = new Date()
