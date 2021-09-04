@@ -1,0 +1,53 @@
+version: "3.1"
+
+services:
+  db:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: john
+      MONGO_INITDB_ROOT_PASSWORD: mysecretpassword
+      MONGO_INITDB_DATABASE: admin
+    ports:
+      - 27017:27017
+
+  redis:
+    image: "redis:alpine"
+    expose:
+      - 6379
+
+  myapp:
+    build: .
+    image: myapp
+    command: yarn start
+    environment:
+      APP_DB_HOST: db
+      APP_DB_USER: john
+      APP_DB_PASSWORD: mysecretpassword
+      APP_REDIS_HOST: redis
+      APP_REDIS_PORT: 6379
+      APP_EXTERNAL_URL: http://myapp-tests:8002/api
+    expose:
+      - 3001
+    ports:
+      - 3001:3001
+    depends_on:
+      - db
+      - redis
+
+  myapp-tests:
+    image: myapp
+    command: dockerize -wait tcp://db:27017 -wait tcp://redis:6379 -wait tcp://myapp:3001 -timeout 10s bash -c "node db/init.js && yarn test"
+    environment:
+      APP_URL: http://myapp:3001
+      APP_DB_HOST: db
+      APP_DB_USER: john
+      APP_DB_PASSWORD: mysecretpassword
+      APP_REDIS_HOST: redis
+      APP_REDIS_PORT: 6379
+      MOCK_SERVER_PORT: 8002
+    expose:
+      - 8002
+    depends_on:
+      - db
+      - redis
+      - myapp
