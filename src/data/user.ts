@@ -9,6 +9,7 @@ interface IUserRepo {
     UpdateUser(id: string, u: UserEntity): Promise<UpdateUserReply>;
     DeleteUser(id: string): Promise<DeleteUserReply>;
     GetUser(id: string): Promise<UserEntity>;
+    ListUserByIds(ids: string[]): Promise<UserEntity[]>;
 }
 
 export interface CreateUserReply {
@@ -25,8 +26,24 @@ export interface DeleteUserReply {
     ok: boolean;
 }
 
+export interface ListUserReply {
+    list: UserEntity[];
+    count: number;
+}
+
 //  data access, including encapsulation of cache, db, etc.
 class UserRepo implements IUserRepo {
+    async ListUserByIds(ids: string[]): Promise<UserEntity[]> {
+        const res = await User.find({
+            _id: {
+                $in: ids,
+            },
+        });
+
+        console.log("rrrr", res);
+
+        return res;
+    }
     async CreateUser(u: UserEntity): Promise<CreateUserReply> {
         const doc = new User({
             ...u,

@@ -4,6 +4,7 @@ import { redisClient } from "../db/redis";
 
 export interface UpdateUserGeoReply {
     _id: string;
+    user_id: string;
     ok?: boolean;
     geo?: number[];
 }
@@ -15,6 +16,7 @@ export interface ListNearbyReply {
 
 export interface GetUserGeoReply {
     _id: string;
+    user_id: string;
     geo?: number[];
 }
 
@@ -86,7 +88,7 @@ class UserGeoRepo implements IUserGeoRepo {
             },
             {
                 $match: {
-                    _id: { $ne: new mongoose.Types.ObjectId(id) },
+                    user_id: { $ne: id },
                 },
             },
             // pagination skip
@@ -116,7 +118,7 @@ class UserGeoRepo implements IUserGeoRepo {
             },
             {
                 $match: {
-                    _id: { $ne: new mongoose.Types.ObjectId(id) },
+                    user_id: { $ne: id },
                 },
             },
             {
@@ -135,7 +137,7 @@ class UserGeoRepo implements IUserGeoRepo {
         geo: [number]
     ): Promise<UpdateUserGeoReply> {
         const res = await UserGeo.updateOne(
-            { _id: _id },
+            { user_id: _id },
             {
                 $set: {
                     geo: geo,
@@ -146,6 +148,7 @@ class UserGeoRepo implements IUserGeoRepo {
 
         return {
             _id: _id,
+            user_id: _id,
             geo: geo,
             ok: !!res.matchedCount,
         };

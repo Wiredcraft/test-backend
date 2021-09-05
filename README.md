@@ -61,6 +61,48 @@ And I did some changes. so the entire project structrue is showed below.
 └── yarn.lock
 ```
 
+### DB Design
+
+#### User
+
+```javascript
+const UserSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    dob: Date,
+    address: String,
+    description: String,
+    createdAt: { type: Date, default: Date.now },
+});
+```
+
+#### User Geo
+
+```javascript
+const UserGeoSchema = new Schema({
+    user_id: {
+        type: String,
+        required: true,
+    },
+    geo: {
+        type: [Number],
+        index: {
+            type: "2dsphere",
+            sparse: true,
+        },
+    },
+
+    createdAt: { type: Date, default: Date.now },
+});
+```
+
+#### Why didn't store geo information in User Schema ?
+
+For some reason, user's basic data is updated infrequently.
+However, user's location will be updated frequently. So it's better to store the data separately and use cache like redis you can quickly get the geo information.
+
 ### How to run this repo
 
 You can simply just run :
