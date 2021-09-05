@@ -1,73 +1,131 @@
-# Wiredcraft Back-end Developer Test
+## Weirdcratf backend test repo
 
-Make sure you read the whole document carefully and follow the guidelines in it.
+### Start-kit
 
-## Context
+I use [Koa2-template](https://github.com/CaoMeiYouRen/koa2-template) as my start-kit.
+And I did some changes. so the entire project structrue is showed below.
 
-Build a RESTful API that can `get/create/update/delete` user data from a persistence database
-
-### User Model
+### Project Structure
 
 ```
-{
-  "id": "xxx",                  // user ID 
-  "name": "test",               // user name
-  "dob": "",                    // date of birth
-  "address": "",                // user address
-  "description": "",            // user description
-  "createdAt": ""               // user created date
-}
+.
+├── Dockerfile
+├── License
+├── README.md
+├── docker-compose.yml //
+├── logs
+├── package-lock.json
+├── package.json
+├── src
+│   ├── app.ts
+│   ├── bin
+│   │   └── www.ts
+│   ├── config
+│   │   └── index.ts // config file here
+│   ├── controllers
+│   │   └── user.ts // controller here to attach route
+│   ├── data
+│   │   ├── user.ts // to access user data both redis and mongodb
+│   │   └── user_geo.ts // to access user geo
+│   ├── db
+│   │   ├── index.ts
+│   │   └── redis.ts
+│   ├── helpers // helper file
+│   │   ├── ErrorCode.ts
+│   │   ├── HttpError.ts
+│   │   ├── HttpStatusCode.ts
+│   │   ├── ResponseDto.ts
+│   │   └── index.ts
+│   ├── index.ts
+│   ├── middleware
+│   │   ├── catchError.ts
+│   │   ├── index.ts
+│   │   ├── logger.ts
+│   │   └── timeout.ts
+│   ├── models // model definition here
+│   │   ├── index.ts
+│   │   ├── user.ts
+│   │   └── user_geo.ts
+│   ├── routes // import koa-swagger-decorator use decorator to register routes
+│   │   └── index.ts
+│   ├── services // user service file
+│   │   └── user.ts
+│   └── utils
+│   ├── helper.ts
+│   └── index.ts
+├── test // all tests
+│   ├── app.test.ts
+│   ├── geo.test.ts
+│   └── register.ts
+├── tsconfig.json
+└── yarn.lock
 ```
 
-## Requirements
+### How to run this repo
 
-### Functionality
+You can simply just run :
 
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper unit test.
-- Provide proper API document.
+```bash
+yarn run start
 
-### Tech stack
+```
 
-- Use Node.js and any framework.
-- Use any DB. NoSQL DB is preferred.
+If you dont have a local mongodb or redis environment.
 
-### Bonus
+You can run :
 
-- Write clear documentation on how it's designed and how to run the code.
-- Write good in-code comments.
-- Write good commit messages.
-- An online demo is always welcome.
+```
+docker-compose up -d
+```
 
-### Advanced requirements
+And also, all the test-case will use a dcoker container to run the testcase
 
-*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
+### Test case
 
-- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
-- Provide a complete logging (when/how/etc.) strategy.
-- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
-- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
-  - given a user name
-  - return the nearby friends
+I dint't write too much unit tests.
+I write 2 e2e tests to cover the whole process of user [create/ update/ delete] and user-geo [update / list / update/ list]
 
+After run `docker-compose up -d`
 
-## What We Care About
+```
 
-Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
+You can find an existed container named `koa2-template_myapp-tests_1`.
 
-Here's what you should aim for:
+You can see the test results in the container logs
 
-- Good use of current Node.js & API design best practices.
-- Good testing approach.
-- Extensible code.
+```
 
-## FAQ
+```
+ 6   -_-_-_-_,------,
+ 0   -_-_-_-_|   /\_/\
+ 0   -_-_-_-^|__( ^ .^)
+     -_-_-_-  ""  ""
 
-> Where should I send back the result when I'm done?
+  6 passing (246ms)
+```
 
-Fork this repo and send us a pull request when you think it's ready for review. You don't have to finish everything prior and you can continue to work on it. We don't have a deadline for the task.
+```
 
-> What if I have a question?
+```
 
-Create a new issue in the repo and we will get back to you shortly.
+### Production
+
+We may just use `docker-compose` to run project localy.
+
+When realease for production, we alaways use aws or aliyun mongodb and redis services.
+
+if you use `pm2` to host the project, you can just change the evnvironments.
+
+if you use `docker` , you can pass `--env` when you execute `docker run `
+
+if you use `kubernetes` ,you can set:
+
+```yaml
+env:
+    - name: DEMO_GREETING
+    value: "Hello from the environment"
+    - name: DEMO_FAREWELL
+    value: "Such a sweet sorrow"`
+```
+
+and if you have a `registry center`. Its more much easier to store the config.
