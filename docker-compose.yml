@@ -7,6 +7,8 @@ services:
       MONGO_INITDB_ROOT_USERNAME: john
       MONGO_INITDB_ROOT_PASSWORD: mysecretpassword
       MONGO_INITDB_DATABASE: admin
+    expose:
+      - 27017
     ports:
       - 27017:27017
 
@@ -25,6 +27,7 @@ services:
       APP_DB_PASSWORD: mysecretpassword
       APP_REDIS_HOST: redis
       APP_REDIS_PORT: 6379
+      PORT: 3001
       APP_EXTERNAL_URL: http://myapp-tests:8002/api
     expose:
       - 3001
