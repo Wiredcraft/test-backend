@@ -7,12 +7,14 @@ import cors from "@koa/cors";
 import { appLogger, catchError, timeout } from "./middleware";
 import routes from "./routes";
 import db from "./db";
+import { redisInit } from "./db/redis";
 
 const app = new Koa();
 const router = new Router();
 
 // dbinit();
 db.init();
+redisInit();
 
 app.proxy = true;
 
