@@ -1,65 +1,64 @@
-import { User } from "../models";
+import { User, UserEntity } from "../models";
 
-interface UserRepo {
-    // db
-    CreateUser(u: User): Promise<CreateUserReply>;
-    UpdateUser(u: User): UpdateUserReply;
-    DeleteUser(id: string): DeleteUserReply;
-    GetUser(id: string): User;
-    ListUser(q: ListUserRequest): [User];
-}
+import { pick } from "lodash";
 
-export interface User {
-    id: string;
-    name: String; // String is shorthand for {type: String}
-    dob?: String;
-    address?: String;
-    description?: String;
-    createdAt?: Date;
+const Allow_Update_Column = ["address", "name", "dob", "description"];
+
+interface IUserRepo {
+    CreateUser(u: UserEntity): Promise<CreateUserReply>;
+    UpdateUser(id: string, u: UserEntity): Promise<UpdateUserReply>;
+    DeleteUser(id: string): Promise<DeleteUserReply>;
+    GetUser(id: string): Promise<UserEntity>;
 }
 
 export interface CreateUserReply {
-    id: string;
+    _id: string;
 }
 
 export interface UpdateUserReply {
-    id: string;
-}
-
-export interface DeleteUserReply {
+    _id: string;
     ok: boolean;
 }
 
-export interface ListUserRequest {
-    offset: number;
-    limit: number;
-    name?: string;
+export interface DeleteUserReply {
+    _id: string;
+    ok: boolean;
 }
 
-class userRepo implements UserRepo {
-    async CreateUser(u: User): Promise<CreateUserReply> {
+//  data access, including encapsulation of cache, db, etc.
+class UserRepo implements IUserRepo {
+    async CreateUser(u: UserEntity): Promise<CreateUserReply> {
         const doc = new User({
             ...u,
         });
-
         await doc.save();
+        return {
+            _id: doc._id,
+        };
+    }
+    async UpdateUser(_id: string, u: any): Promise<UpdateUserReply> {
+        const res = await User.where({ _id: _id }).update({
+            $set: {
+                ...pick(u, Allow_Update_Column),
+            },
+        });
 
         return {
-            id: doc.id,
-        } as CreateUserReply;
+            _id: _id,
+            ok: !!res.matchedCount,
+        };
     }
-    UpdateUser(u: any): UpdateUserReply {
-        throw new Error("Method not implemented.");
+    async DeleteUser(_id: string): Promise<DeleteUserReply> {
+        const res = await User.deleteOne({ _id: _id });
+        return {
+            _id: _id,
+            ok: !!res.deletedCount,
+        };
     }
-    DeleteUser(id: string): DeleteUserReply {
-        throw new Error("Method not implemented.");
-    }
-    GetUser(id: string): User {
-        throw new Error("Method not implemented.");
-    }
-    ListUser(q: ListUserRequest): [User] {
-        throw new Error("Method not implemented.");
+    async GetUser(_id: string): Promise<UserEntity> {
+        const res = await User.findById(_id);
+        return res as UserEntity;
     }
 }
 
-export default userRepo;
+export default UserRepo;
