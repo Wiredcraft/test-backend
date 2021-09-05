@@ -1,5 +1,6 @@
 import { User, UserGeo, UserGeoEntity } from "../models";
 import mongoose from "mongoose";
+import { redisClient } from "../db/redis";
 
 export interface UpdateUserGeoReply {
     _id: string;
@@ -18,6 +19,7 @@ export interface GetUserGeoReply {
 }
 
 interface IUserGeoRepo {
+    // db
     GetUserGeo(id: string): Promise<GetUserGeoReply>;
     UpdateUserGeo(id: string, geo: number[]): Promise<UpdateUserGeoReply>;
     ListUserNearby(
@@ -27,9 +29,35 @@ interface IUserGeoRepo {
         offset: number,
         limit: number
     ): Promise<ListNearbyReply>;
+    // redis
+
+    GetUserGeoCache(id: string): Promise<number[]>;
+    SetUserGeoCache(id: string, geo: number[]): any;
+    DeleteUserGeoCache(id: string): any;
 }
 
+const USER_GEO_REDIS_PREFIX = "user_geo:";
+
 class UserGeoRepo implements IUserGeoRepo {
+    async GetUserGeoCache(id: string): Promise<number[]> {
+        let lnglat: number[] = [];
+        const res = await redisClient.get(`${USER_GEO_REDIS_PREFIX}${id}`);
+        lnglat = JSON.parse(res);
+        return lnglat;
+    }
+    async SetUserGeoCache(_id: string, geo: number[]) {
+        await redisClient.set(
+            `${USER_GEO_REDIS_PREFIX}${_id}`,
+            JSON.stringify(geo)
+        );
+        await redisClient.expire(
+            `${USER_GEO_REDIS_PREFIX}${_id}`,
+            60 * 60 * 24
+        );
+    }
+    async DeleteUserGeoCache(id: string) {
+        await redisClient.del(`${USER_GEO_REDIS_PREFIX}${id}`);
+    }
     async GetUserGeo(id: string): Promise<GetUserGeoReply> {
         const res = await UserGeo.findOne({
             user_id: id,
