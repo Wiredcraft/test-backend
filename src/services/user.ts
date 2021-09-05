@@ -2,11 +2,13 @@ import UserGeoRepo, {
     UpdateUserGeoReply,
     ListNearbyReply,
 } from "@/data/user_geo";
+import _ from "lodash";
 import { off } from "process";
 import UserRepo, {
     CreateUserReply,
     UpdateUserReply,
     DeleteUserReply,
+    ListUserReply,
 } from "../data/user";
 
 import { redisClient } from "../db/redis";
@@ -62,7 +64,7 @@ class userGeoUseCase {
         distance: number,
         offset: number,
         limit: number
-    ): Promise<ListNearbyReply> {
+    ): Promise<ListUserReply> {
         let lnglat: number[] = [];
         const res = await newUserGeoRepo().GetUserGeoCache(_id);
         if (res) {
@@ -82,13 +84,23 @@ class userGeoUseCase {
             };
         }
 
-        return await newUserGeoRepo().ListUserNearby(
+        // map nearByList to nearByUserList
+        // for nearbyList only store User
+        const nearByList = await newUserGeoRepo().ListUserNearby(
             _id,
             lnglat,
             distance,
             offset,
             limit
         );
+
+        const ids = nearByList.list.map((i) => i.user_id);
+        const userList = await newUserRepo().ListUserByIds(ids);
+
+        return {
+            list: userList,
+            count: nearByList.count,
+        };
     }
 }
 

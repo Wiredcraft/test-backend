@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 const { Schema, Document, Model } = mongoose;
 
 export interface UserGeoEntity extends Document {
-    id: string;
+    _id: string;
+    user_id: string;
     geo: [number];
-    // count
 }
 
 // models directory only contains the definition of schema
