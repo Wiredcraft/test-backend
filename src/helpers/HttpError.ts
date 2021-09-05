@@ -1,4 +1,4 @@
-import { HttpStatusCode } from './HttpStatusCode'
+import { HttpStatusCode } from "./HttpStatusCode";
 
 /**
  * 自定义HttpError
@@ -10,9 +10,9 @@ import { HttpStatusCode } from './HttpStatusCode'
  * @extends {Error}
  */
 export class HttpError extends Error {
-    statusCode: HttpStatusCode
+    statusCode: HttpStatusCode;
     constructor(statusCode: HttpStatusCode, message: string) {
-        super(message)
-        this.statusCode = statusCode
+        super(message);
+        this.statusCode = statusCode;
     }
 }

@@ -12,23 +12,18 @@ export class ResponseDto {
      */
     statusCode?: number;
     /**
-     * 消息说明
+     * message for frontend to show
      *
      * @type {string}
      */
     message?: string;
     /**
-     * 状态码>=400时的http status
+     * self-managed error_code
      *
      * @type {string}
      */
-    error?: string;
-    /**
-     * 错误堆栈
-     *
-     * @type {string}
-     */
-    stack?: string;
+    reason?: string;
+
     /**
      * 返回的数据
      *

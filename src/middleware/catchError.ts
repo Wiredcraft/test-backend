@@ -15,10 +15,6 @@ export async function catchError(ctx: Koa.Context, next: Koa.Next) {
             statusCode = e.statusCode;
         } else if (e instanceof Error) {
             message = e.message;
-            // 开发阶段打印堆栈信息
-            if (config.IS_DEBUG) {
-                stack = e.stack;
-            }
         } else if (typeof e === "string") {
             message = e;
         }
@@ -32,7 +28,6 @@ export async function catchError(ctx: Koa.Context, next: Koa.Next) {
         ctx.body = new ResponseDto({
             statusCode,
             message,
-            stack,
         });
     }
 }
