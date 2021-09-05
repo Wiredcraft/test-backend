@@ -48,12 +48,11 @@ class userGeoUseCase {
     ): Promise<UpdateUserGeoReply> {
         // set geo
         if (geo.length) {
-            await redisClient.set(`user_geo:${_id}`, JSON.stringify(geo));
-            await redisClient.expire(`user_geo:${_id}`, 60 * 60 * 24);
+            await newUserGeoRepo().SetUserGeoCache(_id, geo);
         } else {
             // delete geo
             // remove cache
-            await redisClient.del(`user_geo:${_id}`);
+            await newUserGeoRepo().DeleteUserGeoCache(_id);
         }
         return await newUserGeoRepo().UpdateUserGeo(_id, geo);
     }
@@ -65,13 +64,10 @@ class userGeoUseCase {
         limit: number
     ): Promise<ListNearbyReply> {
         let lnglat: number[] = [];
-
-        const res = await redisClient.get(`user_geo:${_id}`);
-
+        const res = await newUserGeoRepo().GetUserGeoCache(_id);
         if (res) {
             // get value in redis
-            const arr = JSON.parse(res);
-            lnglat = arr;
+            lnglat = res;
         } else {
             // no value in redis get data in mongo
             const userGeo = await newUserGeoRepo().GetUserGeo(_id);
