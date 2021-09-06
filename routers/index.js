@@ -10,14 +10,14 @@ const authJwt = async function (ctx, next) {
         const userData = jwt.verify(token, config.cert, { algorithms: ['RS256'] })
         ctx.userId = userData.id
       } catch (err) {
-        throw ApiError.JWT_TOKEN_ERROR
+        ctx.throw(401, 'Unauthorized')
+        return
       }
       await next()
       return
     }
-    ctx.userId = ctx.request.headers.userId
-    console.log('authJwt user:', ctx.userId, token)
-    await next()
+    ctx.throw(403, 'Forbidden')
+    return
 }
 
 router.all('/*', authJwt)
