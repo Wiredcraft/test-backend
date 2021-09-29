@@ -1,0 +1,32 @@
+{
+	"env": {
+		"node": true,
+		"es6": true
+	},
+	"parser": "babel-eslint",
+	"extends": "eslint:recommended",
+	"parserOptions": {
+		"sourceType": "module"
+	},
+	"rules": {
+		"no-useless-escape":0,
+		"no-mixed-spaces-and-tabs":0,
+		"no-unused-vars":0,
+		"no-console":0,
+		"global-require":1,
+		"no-inner-declarations":1,
+		"curly": "error",
+		"quotes": [
+			"off",
+			"single"
+		],
+		"semi": [
+			"off",
+			"always",
+			{
+				"omitLastInOneLineBlock": true
+			}
+		],
+		"no-new-require": "error"
+	}
+}

@@ -1,0 +1,18 @@
+{
+	"ignore": [
+        "local",
+        "node_modules",
+        "README.md",
+        "*spec.js",
+        "tmp",
+        "build",
+        "document",
+        "token.json"
+    ],
+    "execMap": {
+	    "js": "./node_modules/.bin/babel-node"
+    },
+    "events": {
+        "restart": "lsof -i tcp:9602 | grep -v PID | awk '{print $2}' | xargs kill"
+    }
+}

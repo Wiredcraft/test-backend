@@ -1,0 +1,20 @@
+{
+	"apps": [
+		{
+			"name": "",
+			"script": "src/app.js",
+			"watch": false,
+			"TZ": "Asia/Shanghai",
+			"env_dev": {
+				"NODE_ENV": "dev",
+				"appName": "app",
+				"TZ": "Asia/Shanghai"
+			},
+			"env_production": {
+				"NODE_ENV": "production",
+				"appName": "app",
+				"TZ": "Asia/Shanghai"
+			}
+		}
+	]
+}

@@ -1,0 +1,57 @@
+variables:
+    USER: "deploy"
+    HOSTNAME: "deployserver.com"
+    DEPLOY_PATH: "/mnt/builds/webapps/data-suite/automation"
+    DEPLOY_DOCUMENT_PATH: "/mnt/document/dist/"
+
+stages:
+    - deploy
+    - package
+
+before_script:
+    - echo ${CI_PROJECT_ID}
+    - mkdir -p ~/projects/${CI_PROJECT_ID}/node_modules
+    - ln -sf ~/projects/${CI_PROJECT_ID}/node_modules ./
+    - npm install --only=dev
+    - npm run build
+
+development:
+    stage: deploy
+    only:
+        - develop
+        - develop-3.0.0
+        # - develop-2.9.0-hashab
+    script:
+        - HOSTNAME="web-dev.chiefclouds.com"
+        - bash ./scripts/deploy.sh
+
+
+
+#test:
+#    stage: deploy
+#    only:
+#        - /^release-.*$/
+#    script:
+#        - HOSTNAME="web-dev2.chiefclouds.com"
+#        - echo ${CI_COMMIT_REF_NAME} > build/version.txt;
+#        - bash ./scripts/deploy.sh
+
+# staging:
+#     stage: deploy
+#     only:
+#         - master
+#     script:
+#         - echo "deploy to staging"
+
+package:
+    stage: package
+    only:
+        - tags
+    script:
+        - mkdir ${CI_BUILD_TAG}
+        - cp -r build ${CI_BUILD_TAG}/
+        - cp -r sql ${CI_BUILD_TAG}/
+        - echo ${CI_BUILD_TAG} > ${CI_BUILD_TAG}/build/version.txt;
+    artifacts:
+        paths:
+            - $CI_BUILD_TAG/

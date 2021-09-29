@@ -1,0 +1,27 @@
+{
+	"presets": [
+		["env", {
+			"targets": {
+				"node": "6.3.0"
+			},
+			"debug": false
+		}]
+	],
+	"plugins": [
+		"transform-object-rest-spread",
+		["transform-runtime", {
+			"polyfill": false,
+			"regenerator": true
+		}]
+	],
+	"env": {
+		"production": {
+			"plugins": [
+				["transform-remove-console", {
+					"exclude": ["error", "warn"]
+				}]
+			],
+			"ignore": ["src/**/*spec.js", "src/**/*test.js", "cookiejar.txt", "test/", "component-code.js", "component-code-util.js"]
+		}
+	}
+}

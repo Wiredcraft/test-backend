@@ -1,0 +1,29 @@
+{
+    "env": "development",
+    "port": 9602,
+    "mysql": {
+        "host": "",
+        "poolSize": 5,
+        "user": "user",
+        "password": "password",
+        "database": "database"
+    },
+    "appName": "",
+    "payloadEncodeConfig": {
+        "enable": 0,
+        "type": "aes",
+        "key": "7419a89b1fc3"
+    },
+    "enableGetShortUrlNumber": 1,
+    "logLevel": "info",
+    "logDir": "../tmp/logs",
+    "trackingLogDir": "../tmp/tracking-logs",
+    "uploadDir": "../tmp/files/tmp",
+    "maxidleTime": 72000,
+    "fileDir": "../tmp/files",
+    "maxUploadFileSize": 104857600,
+    "whitePaths": ["/consts", "/cache", "/file-token", "/wechat-source-proxy", "remote-log"],
+    "apiTimeout": 600000,
+    "poolSize": 5,
+    "logFileInterval": 20
+}
