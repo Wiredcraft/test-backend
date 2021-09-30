@@ -10,8 +10,8 @@ import {
 import { User } from '../models';
 
 export async function create(ctx, next) {
-	let data = null;
-	let error = null;
+    let data = null;
+    let error = null;
     let transaction;
 	try {
         transaction = await service.transaction();
