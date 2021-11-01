@@ -1,0 +1,33 @@
+{
+  "name": "test-backend",
+  "version": "1.0.0",
+  "description": "wiredcraft Back-end developer test",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taiworoqeeb/test-backend.git"
+  },
+  "author": "Taiwo Raqeeb",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/taiworoqeeb/test-backend/issues"
+  },
+  "homepage": "https://github.com/taiworoqeeb/test-backend#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.12",
+    "morgan": "^1.10.0",
+    "node": "^17.0.1",
+    "nodemon": "^2.0.14",
+    "router": "^1.3.5"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  }
+}
