@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+    postgres:
+        image: postgres:14
+        restart: always
+        volumes:
+            - ./docker_volumes/dev_postgres:/var/lib/postgresql/data
+        environment:
+            PGDATA: "/var/lib/postgresql/data"
+            POSTGRES_USER: "postgres"
+            POSTGRES_PASSWORD: "localpass"
+        ports:
+            - "9001:5432"
+
+    adminer:
+        image: adminer:4.8.1-standalone
+        restart: always
+        ports:
+            - "9002:8080"
+
+    redis:
+        image: redis:5.0
+        restart: always
+        volumes:
+            - ./docker_volumes/dev_redis:/data
+        ports:
+            - "9003:6379"

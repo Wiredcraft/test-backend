@@ -1,0 +1,11 @@
+# temp files
+node_modules
+dist
+data
+.DS_Store
+docker_volumes
+
+# local config
+.env
+.env.example
+package-lock.json

@@ -1,0 +1,16 @@
+export interface PhysicalTable {
+    'user': {
+        id: number;
+        name?: string;
+        dob?: Date;
+        address?: string;
+        description?: string;
+        created_at?: Date;
+        latitude?: number;
+        longitude?: number;
+        ip?: number;
+    }
+}
+// placeholder for views
+// export interface View {}
+// export type Tables = PhysicalTable&View

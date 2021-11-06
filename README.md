@@ -1,73 +1,54 @@
-# Wiredcraft Back-end Developer Test
+# User system
 
-Make sure you read the whole document carefully and follow the guidelines in it.
+## Development setup
 
-## Context
+### Environment
 
-Build a RESTful API that can `get/create/update/delete` user data from a persistence database
+* Install node.js
+    * `nvm` is recommended to manage node version, see [here](https://github.com/nvm-sh/nvm#installing-and-updating) for details.
+    * or you can install `node.js` manually [here](https://nodejs.org/en/download/).
+    * the specific version we are using, can be found in `./dockerfile`.
+* Install git
+    * normally it's already installed on Linux/MacOS.
+    * Windows users can install from [here](https://git-scm.com/downloads).
+* Install docker & docker-compose
+    * check details [here](https://docs.docker.com/get-docker/) and [here](https://docs.docker.com/compose/install/).
+* Install editor
+    * [VSCode](https://code.visualstudio.com/download) is recommended.
+    * NOTE: whatever editor you choose, you MUST enable `eslint` plugin.
 
-### User Model
+### Configuration
 
-```
-{
-  "id": "xxx",                  // user ID 
-  "name": "test",               // user name
-  "dob": "",                    // date of birth
-  "address": "",                // user address
-  "description": "",            // user description
-  "createdAt": ""               // user created date
-}
-```
+* create `.env` file, copy from `.env.example`. modify it if nessesary.
 
-## Requirements
+### Dependencies
 
-### Functionality
+* run `npm i` to install node dependencies.
+* run `docker-compose -f local.compose.yml up` to set up database.
+    * by default, you can visit [admin panel](http://localhost:9002) to check if the database is working.
+    * database configuration is in the `local.compose.yml` file.
 
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper unit test.
-- Provide proper API document.
+## Developing
 
-### Tech stack
+### Project structure
 
-- Use Node.js and any framework.
-- Use any DB. NoSQL DB is preferred.
+* `asset` folder contains fixed assets say icon, audio or text.
+* `dist` folder contains all compiled files for production.
+* `src` folder contains source codes.
+    * for interns, in most cases whatever you are asked to write should be here in `router` folder.
+* the rest of the files in root are mostly configuration files, DO NOT TOUCH unless you clearly understand what you are doing.
 
-### Bonus
+### CLI commands
 
-- Write clear documentation on how it's designed and how to run the code.
-- Write good in-code comments.
-- Write good commit messages.
-- An online demo is always welcome.
+* run `npm run migrate` to init or update database structure.
+* run `npm run dev`, visit [backend health check](http://localhost:9000/ping) to check if everything goes ok.
+* run `npm run test` to run tests.
+* run `npm run lint` to check code style.
+* run `npm run watch` to watch src files change and generate prod files.
+* run `npm start` to watch built files and running.
+* run `npm run build` to generate prod files.
+* run `npm run prod` to start backend in production mode.
+* run `docker build -f ./Dockerfile --no-cache -t backend:local .` to build image locally.
+* run `docker-compose -f local.test.yml up` to test built image.
 
-### Advanced requirements
-
-*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
-
-- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
-- Provide a complete logging (when/how/etc.) strategy.
-- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
-- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
-  - given a user name
-  - return the nearby friends
-
-
-## What We Care About
-
-Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
-
-Here's what you should aim for:
-
-- Good use of current Node.js & API design best practices.
-- Good testing approach.
-- Extensible code.
-
-## FAQ
-
-> Where should I send back the result when I'm done?
-
-Fork this repo and send us a pull request when you think it's ready for review. You don't have to finish everything prior and you can continue to work on it. We don't have a deadline for the task.
-
-> What if I have a question?
-
-Create a new issue in the repo and we will get back to you shortly.
+Note: for some npm commands, you can add `-h` or `--h` as option to check details how it can be used.
