@@ -82,7 +82,7 @@ export class Router {
     public logger:Logger;
     constructor(public app:App) {
         this.logger = this.app.loggers.getLogger('Router');
-        this.logger.level = 'info';
+        this.logger.level = this.app.config.logLevel;
     }
     public getIP(req:http.IncomingMessage) : string {
         const ips = getIPs(req);

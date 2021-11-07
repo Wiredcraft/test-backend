@@ -7,7 +7,7 @@ export class RequestService {
     private logger:Logger;
     constructor(private app: App) {
         this.logger = this.app.loggers.getLogger('Request');
-        this.logger.level = 'info';
+        this.logger.level = this.app.config.logLevel;
     }
 
     public req = async (targetUrl: string, method = 'GET', headers?: http.OutgoingHttpHeaders) => {

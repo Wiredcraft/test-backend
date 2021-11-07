@@ -83,6 +83,7 @@ export class Database {
         if (!this.pool) {
             throw new Error('db not inited');
         }
+        this.logger.debug(args);
         return this.pool.query.apply(this.pool, <any>args);
     });
 
@@ -116,12 +117,9 @@ export class Database {
         data:NullPartial<Tables[T]>,
         conflict = '',
     ) : Promise<All[T] | undefined> => {
-        if (!this.pool) {
-            throw new Error('db not inited');
-        }
         const keys = Object.keys(data);
         const values = Object.values(data);
-        const { rows } = await this.pool.query(
+        const { rows } = await this.query(
             `
                 insert into "${tableName}"
                     (${keys.map((key) => key).join(',')})
@@ -138,12 +136,14 @@ export class Database {
         selects:S[],
         condition:Partial<All[T]>,
     ) : Promise<Pick<All[T], S> | undefined> => {
-        if (!this.pool) {
-            throw new Error('db not inited');
+        for (const key in condition) {
+            if (typeof condition[key] === 'undefined') {
+                delete condition[key];
+            }
         }
         const keys = Object.keys(condition);
         const values = Object.values(condition);
-        const { rows } = await this.pool.query(
+        const { rows } = await this.query(
             `
                 select ${selects.length !== 0 ? selects.join(',') : '*'}
                     from "${tableName}"
@@ -160,9 +160,6 @@ export class Database {
         updates:Partial<All[T]>,
         condition:Partial<All[T]>,
     ) : Promise<All[T][]> => {
-        if (!this.pool) {
-            throw new Error('db not inited');
-        }
         if (!condition) {
             throw new Error('Can not update without where clause in crud mode');
         }
@@ -183,7 +180,7 @@ export class Database {
                 ${conditionKeys.map((key, i) => `${key}=$${updateValues.length + 1 + i}`).join(' and ')}
             returning *;
         `;
-        const { rows } = await this.pool.query(query, values);
+        const { rows } = await this.query(query, values);
         return rows;
     }
 
@@ -191,15 +188,12 @@ export class Database {
         tableName:T,
         condition:Partial<All[T]>,
     ):Promise<boolean> => {
-        if (!this.pool) {
-            throw new Error('db not inited');
-        }
         if (!condition) {
             throw new Error('Can not delete without where clause in crud mode');
         }
         const keys = Object.keys(condition);
         const values = Object.values(condition);
-        const { rows } = await this.pool.query(
+        const { rows } = await this.query(
             `
                 delete from "${tableName}"
                     where ${keys.map((key, i) => `${key} = $${i + 1}`).join(' and ')}

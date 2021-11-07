@@ -5,7 +5,11 @@ export const installUser = async (router:Router):Promise<void> => {
     const { checkAuth } = router.app.service!.session;
     router.route(HttpMethod.GET, /\/users.*/, async(req, _res) => {
         const params = parseUrl(req.url!, route);
-        const user = await router.app.service!.user.read(params);
+        const { id, name } = params;
+        const user = await router.app.service!.user.read({
+            id: id ? Number(id) : undefined,
+            name: name ? String(name) : undefined,
+        });
         if (!user) {
             router.logger.warn(params);
             return {
