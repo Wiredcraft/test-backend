@@ -3,12 +3,13 @@ import { parse } from 'querystring';
 
 export const installUser = async (router:Router):Promise<void> => {
     const route = 'users';
-    router.route(HttpMethod.GET, /\/users\/.*/, async(req, _res) => {
-        const params = parse(req.url!.substr(route.length + 2));
+    const { checkAuth } = router.app.service!.session;
+    router.route(HttpMethod.GET, /\/users.*/, async(req, _res) => {
+        const params = parse(req.url!.substr(route.length + 1));
         const user = await router.app.service!.user.read(params);
         if (!user) {
             return {
-                e: new Error('no data'),
+                err: new Error('no data'),
                 statusCode: 404,
             };
         } else {
@@ -19,7 +20,7 @@ export const installUser = async (router:Router):Promise<void> => {
         }
     });
     
-    router.route(HttpMethod.POST, /\/users\/.*/, async(_req, _res, body) => {
+    router.route(HttpMethod.POST, /\/users\/.*/, checkAuth, async(_req, _res, body) => {
         const user = await router.app.service!.user.create(body);
         if (!user) {
             return {
@@ -34,7 +35,7 @@ export const installUser = async (router:Router):Promise<void> => {
         }
     });
 
-    router.route(HttpMethod.PUT, /\/users\/.*/, async(req, _res, body) => {
+    router.route(HttpMethod.PUT, /\/users\/.*/, checkAuth, async(req, _res, body) => {
         const params = parse(req.url!.substr(route.length + 2));
         const { id } = params;
         if (id === undefined || isNaN(Number(id))) {
@@ -57,7 +58,7 @@ export const installUser = async (router:Router):Promise<void> => {
         }
     });
 
-    router.route(HttpMethod.DELETE, /\/users\/.*/, async(req, _res) => {
+    router.route(HttpMethod.DELETE, /\/users\/.*/, checkAuth, async(req, _res) => {
         const params = parse(req.url!.substr(route.length + 2));
         const { id } = params;
         if (id === undefined || isNaN(Number(id))) {

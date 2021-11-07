@@ -4,6 +4,8 @@ import { App } from '../entry/app';
 import { installUser } from './user';
 import fs from 'fs';
 import path from 'path';
+import { installLogin } from './login';
+import { installCallback } from './callback';
 
 export enum HttpMethod {
     GET = 'GET',
@@ -12,6 +14,13 @@ export enum HttpMethod {
     DELETE = 'DELETE',
     OPTIONS = 'OPTIONS',
 }
+
+export type RouterHandlerResult = {
+    err?: Error,
+    statusCode?: number,
+    data?: any,
+} | undefined | void;
+export type Handler = (req:http.IncomingMessage, res:http.ServerResponse, body?:any) => Promise<RouterHandlerResult>;
 
 const parseBody = async (req:http.IncomingMessage, limitSize?:number):Promise<unknown> => {
     const MAX_BODY_SIZE = limitSize || 10 * 1024 * 1024;
@@ -76,7 +85,7 @@ export class Router {
     public route = async (
         method:HttpMethod,
         name:string|RegExp,
-        ...handlers:[(req:http.IncomingMessage, res:http.ServerResponse, body?:any) => Promise<any>]
+        ...handlers:Handler[]
     ):Promise<void> => {
         this.routes.push({
             method,
@@ -91,11 +100,14 @@ export class Router {
                     res.end();
                     return;
                 }
-                let result;
+                let result:RouterHandlerResult;
                 try {
                     res.statusCode = 200;
                     for (let i = 0; i < handlers.length; i++) {
                         result = await handlers[i](req, res, body);
+                        if (result && result.err) {
+                            break;
+                        }
                     }
                     if (result) {
                         const { err, data, statusCode } = result;
@@ -112,7 +124,9 @@ export class Router {
                             res.end(JSON.stringify(data));
                         }
                     } else {
-                        res.end();
+                        if (res && res.destroyed === false) {
+                            res.end();
+                        }
                     }
                 } catch (e) {
                     // unknow error, should log and go fix;
@@ -141,6 +155,8 @@ export const getHttpHandler = async (router:Router):Promise<(req:http.IncomingMe
     });
     
     await installUser(router);
+    await installLogin(router);
+    await installCallback(router);
 
     const httpHandler = async (req:http.IncomingMessage, res:http.ServerResponse):Promise<void> => {
         // ideally, i would perfer to new an object that contains req, res and an unique requestId for each request, to trace error stack.

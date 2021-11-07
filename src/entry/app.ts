@@ -6,6 +6,7 @@ import { runMigrations } from '../db/migration';
 import { Database } from '../db/pg';
 import { Service } from '../service';
 import { getHttpHandler, Router } from '../router';
+import Redis from 'ioredis';
 
 export class App {
     public loggers:Log4js;
@@ -14,6 +15,7 @@ export class App {
     public service:Service|undefined;
     public router:Router|undefined;
     public appLogger:Logger;
+    public redis:Redis.Redis|undefined;
     private inited = false;
     constructor(public config:Config) {
         this.loggers = initSpec();
@@ -32,6 +34,12 @@ export class App {
         await this.db.init();
         this.service = new Service(this);
         this.router = new Router(this);
+        this.redis = new Redis({
+            port: this.config.redisPort,
+            host: this.config.redisHost,
+            password: this.config.redisPass,
+        });
+        // await this.redis.connect();
     }
     public start = async ():Promise<void> => {
         if (this.inited === false) {

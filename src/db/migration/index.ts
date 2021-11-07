@@ -12,6 +12,7 @@ export type Migration = {
 const importMigrations = () => {
     return [
         import('./2021/init'),
+        import('./2021/implementGithubLogin'),
     ];
 };
 

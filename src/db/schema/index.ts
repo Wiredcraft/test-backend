@@ -15,4 +15,10 @@ export interface PhysicalTable {
         description?: string;
         address?: string;
     }
+    'oauth_github': {
+        id: number;
+        user_id: number;
+        created_at?: Date;
+        node_id: string;
+    }
 }
