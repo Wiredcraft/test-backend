@@ -11,6 +11,7 @@ services:
             DB_PASS: "localpass"
             DB_DATABASE: "dev"
             REDIS_HOST: redis
+            REDIS_PORT: 6379
             REDIS_PASS: ""
             NODE_ENV: "local"
             LOG_LEVEL: "debug"
