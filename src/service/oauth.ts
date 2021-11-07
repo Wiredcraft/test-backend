@@ -10,7 +10,7 @@ export class OauthService {
     public renderTestPage = async (req:http.IncomingMessage, res:http.ServerResponse) => {
         const cbProtocal = this.app.config.origin === 'localhost' ? 'http': 'https';
         const cbPort = this.app.config.origin === 'localhost' ? this.app.config.port : '';
-        const cbUrl = `${cbProtocal}://${this.app.config.origin}${cbPort ? `:${cbPort}` : ''}/callback`
+        const cbUrl = `${cbProtocal}://${this.app.config.origin}${cbPort ? `:${cbPort}` : ''}/callback`;
         res.statusCode = 200;
         res.end(`
 <!DOCTYPE html>
@@ -33,7 +33,7 @@ export class OauthService {
 click to login
 </button>
         `);
-    }
+    };
     public renderLogInfo = async (req:http.IncomingMessage, res:http.ServerResponse, message?:string) => {
         res.end(`
 <p>${message || 'success'}</p>
@@ -45,9 +45,9 @@ click to login
 </script>
 `
         );
-    }
+    };
     public getUser = async (token:string, provider=Provider.github) => {
         const { req } = this.app.service!.request;
         return JSON.parse(await req(this.app.config.oauthUrl + 'getUser' + `?provider=${provider}&access_token=${token}`));
-    }
+    };
 }

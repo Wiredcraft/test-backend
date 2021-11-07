@@ -9,4 +9,4 @@ export function randomUsername (length = 10) {
         s += randomChar();
     }
     return s;
-};
+}

@@ -1,7 +1,7 @@
-import assert from "assert";
-import { config } from "../../config";
-import { App } from "../../entry/app";
-import { randomUsername } from "../../utils";
+import assert from 'assert';
+import { config } from '../../config';
+import { App } from '../../entry/app';
+import { randomUsername } from '../../utils';
 
 describe('UserService tests', function () {
     this.timeout(10000);
@@ -10,7 +10,7 @@ describe('UserService tests', function () {
         app.test().then(done);
     });
     beforeEach(function (done) {
-        app.db!.query(`delete from "user"`).then(() => {done()});
+        app.db!.query('delete from "user"').then(() => {done();});
     });
     after(function(done) {
         app.close().then(done);
@@ -44,5 +44,5 @@ describe('UserService tests', function () {
             const noUser = await app.service!.user.read(newUserInfo);
             assert.equal(noUser, undefined);
         });
-    })
+    });
 });

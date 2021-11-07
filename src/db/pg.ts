@@ -47,10 +47,10 @@ export class Database {
                 throw e;
             }
             if (this.app.config.env === 'test') {
-                this.logger.info(`Test process, dropping test database`);
+                this.logger.info('Test process, dropping test database');
                 try {
                     await c.query(`drop database ${dbConfig.database} with (force);`);
-                    this.logger.info(`Dropped`);
+                    this.logger.info('Dropped');
                 } catch (e) {
                     this.logger.debug(e);
                 }
@@ -77,7 +77,7 @@ export class Database {
             throw e;
         }
         this.logger.info('Db inited');
-    }
+    };
 
     public query:Pool['query'] = <any>(async (...args:any[]) => {
         if (!this.pool) {
@@ -110,7 +110,7 @@ export class Database {
             return;
         }
         await this.pool.end();
-    }
+    };
 
     public c = async <T extends keyof PhysicalTable> (
         tableName:T,
@@ -129,7 +129,7 @@ export class Database {
             values,
         );
         return rows[0];
-    }
+    };
 
     public r = async <T extends keyof PhysicalTable, S extends keyof All[T]> (
         tableName:T,
@@ -153,7 +153,7 @@ export class Database {
             values,
         );
         return rows[0];
-    }
+    };
 
     public u = async <T extends keyof PhysicalTable> (
         tableName:T,
@@ -182,7 +182,7 @@ export class Database {
         `;
         const { rows } = await this.query(query, values);
         return rows;
-    }
+    };
 
     public d = async <T extends keyof PhysicalTable> (
         tableName:T,
@@ -202,5 +202,5 @@ export class Database {
             values,
         );
         return !!rows[0];
-    }
+    };
 }

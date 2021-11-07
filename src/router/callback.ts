@@ -25,7 +25,7 @@ export const installCallback = async (router:Router):Promise<void> => {
             return {
                 err: new Error('auth process failed'),
                 statusCode: 401,
-            }
+            };
         }
         const boundUser = await router.app.service!.oauthGithub.read({
             node_id: userInfo.node_id,

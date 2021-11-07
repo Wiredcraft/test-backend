@@ -33,10 +33,10 @@ export class RequestService {
                 } catch (e) {
                     reject(e);
                 }
-            })
+            });
         } catch (e) {
             this.logger.error(e);
             throw e;
         }
-    }
+    };
 }

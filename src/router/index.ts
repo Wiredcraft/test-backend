@@ -52,26 +52,26 @@ function getIPs(req:http.IncomingMessage) : string[] {
     const xfwd = req.headers['X-Forwarded-For'];
     if (xfwd === undefined || xfwd.length === 0) {
         if (ip === undefined) {
-            throw new Error(`Could not get IP for request`);
+            throw new Error('Could not get IP for request');
         }
         return [ip];
     }
     if (Array.isArray(xfwd)) {
-        throw new Error(`Got array when retrieving X-Forwarded-For headers`);
+        throw new Error('Got array when retrieving X-Forwarded-For headers');
     }
     const fwdIPs = xfwd.split(',').map((s) => s.trim());
     if (fwdIPs.length === 0) {
         if (ip === undefined) {
-            throw new Error(`Could not get IP for request`);
+            throw new Error('Could not get IP for request');
         }
         return [ip];
     }
     return fwdIPs;
-};
+}
 
 export const parseUrl = (reqUrl:string, route:string) => {
     return parse(url.parse(reqUrl.substr(route.length + 1)).query!);
-}
+};
 
 export class Router {
     public routes:{
@@ -87,7 +87,7 @@ export class Router {
     public getIP(req:http.IncomingMessage) : string {
         const ips = getIPs(req);
         return ips[ips.length - 1];
-    };
+    }
     public route = async (
         method:HttpMethod,
         name:string|RegExp,
@@ -101,7 +101,7 @@ export class Router {
                 try {
                     body = method !== HttpMethod.GET ? parseBody(req) : undefined;
                 } catch (e) {
-                    this.logger.warn(`Parse body failed`);
+                    this.logger.warn('Parse body failed');
                     res.statusCode = e;
                     res.end();
                     return;
@@ -126,7 +126,7 @@ export class Router {
                             if (statusCode) {
                                 res.statusCode = statusCode;
                             }
-                            res.setHeader('content-type', 'application/json; charset=utf-8')
+                            res.setHeader('content-type', 'application/json; charset=utf-8');
                             res.end(JSON.stringify(data));
                         }
                     } else {
@@ -141,7 +141,7 @@ export class Router {
                 }
             },
         });
-    }
+    };
 }
 
 export const getHttpHandler = async (router:Router):Promise<(req:http.IncomingMessage, res:http.ServerResponse) => Promise<void>> => {
@@ -174,9 +174,9 @@ export const getHttpHandler = async (router:Router):Promise<(req:http.IncomingMe
             ) {
                 try {
                     await route.handler(req, res);
+                    return;
                 } catch (e) {
-                    router.logger.error(`unhandled error`, e);
-                } finally {
+                    router.logger.error('unhandled error', e);
                     return;
                 }
             }

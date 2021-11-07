@@ -1,8 +1,7 @@
 import { HttpMethod, Router } from '.';
-import { parse } from 'querystring';
 
 export const installLogin = async (router:Router):Promise<void> => {
-    const route = 'login';
+    // const route = 'login';
     router.route(HttpMethod.GET, /\/login.*/, async(req, res) => {
         await router.app.service!.oauth.renderTestPage(req, res);
     });

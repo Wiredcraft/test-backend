@@ -40,7 +40,7 @@ export class App {
             password: this.config.redisPass,
         });
         // await this.redis.connect();
-    }
+    };
     public start = async ():Promise<void> => {
         if (this.inited === false) {
             await this.init();
@@ -48,7 +48,7 @@ export class App {
         this.server = http.createServer(await getHttpHandler(this.router!)).listen(this.config.port);
         this.appLogger.info(`App start at http://${this.config.origin}:${this.config.port}\n` + 
         `Try http://${this.config.origin}:${this.config.port}/ping to test connection`);
-    }
+    };
     public migrate = async ():Promise<void> => {
         if (this.inited === false) {
             await this.init();
@@ -57,7 +57,7 @@ export class App {
         migrationLogger.level = this.config.logLevel;
         await runMigrations(this.db!, migrationLogger);
         await this.db!.close();
-    }
+    };
     public test = async ():Promise<void> => {
         if (this.inited === false) {
             this.config.env = 'test';
@@ -67,12 +67,12 @@ export class App {
             migrationLogger.level = this.config.logLevel;
             await runMigrations(this.db!, migrationLogger);
         }
-        this.appLogger.info(`Test app inited`);
-    }
+        this.appLogger.info('Test app inited');
+    };
     public close = async ():Promise<void> => {
         this.server && this.server.close();
         this.db && this.db.close();
-    }
+    };
 }
 
 export const run = async ():Promise<void> => {
