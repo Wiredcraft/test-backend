@@ -3,7 +3,7 @@ WORKDIR /usr/src/app
 COPY asset asset
 # copy package.json only to resue layer if no dependencies update
 COPY package.json .
-RUN npm config set registry https://registry.npm.taobao.org && npm install --no-package-lock
+RUN npm config set registry https://registry.npmmirror.com && npm install --no-package-lock
 
 COPY src src
 COPY tsconfig.json .
