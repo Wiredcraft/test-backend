@@ -1,7 +1,7 @@
 # User
 
 default response data format: `json`
-default params format of GET requests: ```?${params1}=${value1}&${params2}=${values2}```
+default params format of GET/DELETE requests: ```?${params1}=${value1}&${params2}=${values2}```
 default params format of other requests: json in body
 
 ## GET /users
@@ -55,7 +55,13 @@ default params format of other requests: json in body
 
 * update user info(login required)
 
-### Parameters
+### Parameters(in params)
+
+|Name       |Type   |Optional   |In	Description |
+|-----------|-------|-----------|---------------|
+|id         |number |f          |user id        |
+
+### Parameters(in body)
 
 |Name       |Type   |Optional   |In	Description |
 |-----------|-------|-----------|---------------|

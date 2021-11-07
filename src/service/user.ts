@@ -13,18 +13,19 @@ export class UserService {
     constructor(private app:App) {
     }
     public create = async (info: Partial<PhysicalTable['user']>) => {
+        // need some validator here to check data, should not count on ts only.
         return await this.app.db!.c('user', info);
     }
-    public read = async (filter:{
+    public read = async ({id, name}:{
         id?:number,
         name?:string,
     }) => {
-        return await this.app.db!.r('user', this.defaultSelects, filter);
+        return await this.app.db!.r('user', this.defaultSelects, {id, name});
     }
-    public update = async (filter:{id:number}, info: Partial<PhysicalTable['user']>) => {
-        return await this.app.db!.u('user', info, filter);
+    public update = async ({id}:{id:number}, info: Partial<PhysicalTable['user']>) => {
+        return await this.app.db!.u('user', info, {id});
     }
-    public delete = async (filter:{id:number}) => {
-        return await this.app.db!.d('user', filter);
+    public delete = async ({id}:{id:number}) => {
+        return await this.app.db!.d('user', {id});
     }
 }

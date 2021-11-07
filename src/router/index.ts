@@ -6,6 +6,8 @@ import fs from 'fs';
 import path from 'path';
 import { installLogin } from './login';
 import { installCallback } from './callback';
+import url from 'url';
+import { parse } from 'querystring';
 
 export enum HttpMethod {
     GET = 'GET',
@@ -66,6 +68,10 @@ function getIPs(req:http.IncomingMessage) : string[] {
     }
     return fwdIPs;
 };
+
+export const parseUrl = (reqUrl:string, route:string) => {
+    return parse(url.parse(reqUrl.substr(route.length + 1)).query!);
+}
 
 export class Router {
     public routes:{

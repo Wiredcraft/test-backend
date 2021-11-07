@@ -1,13 +1,13 @@
-import { HttpMethod, Router } from '.';
-import { parse } from 'querystring';
+import { HttpMethod, parseUrl, Router } from '.';
 
 export const installUser = async (router:Router):Promise<void> => {
     const route = 'users';
     const { checkAuth } = router.app.service!.session;
     router.route(HttpMethod.GET, /\/users.*/, async(req, _res) => {
-        const params = parse(req.url!.substr(route.length + 1));
+        const params = parseUrl(req.url!, route);
         const user = await router.app.service!.user.read(params);
         if (!user) {
+            router.logger.warn(params);
             return {
                 err: new Error('no data'),
                 statusCode: 404,
@@ -23,6 +23,7 @@ export const installUser = async (router:Router):Promise<void> => {
     router.route(HttpMethod.POST, /\/users\/.*/, checkAuth, async(_req, _res, body) => {
         const user = await router.app.service!.user.create(body);
         if (!user) {
+            router.logger.warn(body);
             return {
                 e: new Error('failed to create new user'),
                 statusCode: 404,
@@ -36,9 +37,10 @@ export const installUser = async (router:Router):Promise<void> => {
     });
 
     router.route(HttpMethod.PUT, /\/users\/.*/, checkAuth, async(req, _res, body) => {
-        const params = parse(req.url!.substr(route.length + 2));
+        const params = parseUrl(req.url!, route);
         const { id } = params;
         if (id === undefined || isNaN(Number(id))) {
+            router.logger.warn(params, body);
             return {
                 e: new Error('params error'),
                 statusCode: 400,
@@ -59,9 +61,10 @@ export const installUser = async (router:Router):Promise<void> => {
     });
 
     router.route(HttpMethod.DELETE, /\/users\/.*/, checkAuth, async(req, _res) => {
-        const params = parse(req.url!.substr(route.length + 2));
+        const params = parseUrl(req.url!, route);
         const { id } = params;
         if (id === undefined || isNaN(Number(id))) {
+            router.logger.warn(params, params);
             return {
                 e: new Error('params error'),
                 statusCode: 400,
