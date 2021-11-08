@@ -6,6 +6,12 @@ export const installUser = async (router:Router):Promise<void> => {
     router.route(HttpMethod.GET, /\/users.*/, async(req, _res) => {
         const params = parseUrl(req.url!, route);
         const { id, name } = params;
+        if ((id === undefined && name === undefined) || (id !== undefined && isNaN(Number(id)))) {
+            return {
+                err: new Error('param error'),
+                statusCode: 400,
+            }
+        }
         const user = await router.app.service!.user.read({
             id: id ? Number(id) : undefined,
             name: name ? String(name) : undefined,
