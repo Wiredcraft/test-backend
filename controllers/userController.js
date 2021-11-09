@@ -1,28 +1,52 @@
 const bcrypt = require('bcryptjs');
 const users = require('./../models/userModel');
+const jwt = require('jsonwebtoken');
+require("dotenv").config();
 
 exports.UserRegister = async(req, res) => {
     try{
+        
         const salt = await bcrypt.genSalt(11);
         const hashedPass = await bcrypt.hash(req.body.password, salt);
 
-        const savedPost = await new users({
+       const savedPost = await new users({
             username: req.body.username,
-            email: req.body.email,
+            email: req.body.email.tolowerCase(),
             password: hashedPass,
             dob: req.body.dob,
             address: req.body.address,
-            description: req.body.description,
-            createdAt: req.body.createdAt
+            token: req.body.token
         });
 
-        const resultPost = await savedPost.save();
+        if (!savedPost){
+            res.status(400).json({message: "All Input is required"});
+        }
 
+        const oldUser = await user.findOne({email});
 
-        res.status(200).json({
-            status: "success",
-            resultPost
-        });
+        if (oldUser) {
+            res.status(409).json({message: "User Already Exist"});
+        }
+
+        if (savedPost){
+            const resultPost = await savedPost.save();
+            res.status(200).json({
+                status: "success",
+                resultPost
+            });
+        }
+
+        const token = jwt.sign(
+            {user_id: user._id, email },
+            process.env.TOKEN_KEY,
+            {
+                expiresIn: "2h",
+            });
+
+            savedPost.token = token;
+
+       
+        
 
     } catch(err){
         console.log(err);
@@ -35,13 +59,23 @@ exports.UserRegister = async(req, res) => {
 
 exports.UserLogin = async(req, res)=>{
     try{
-        const user = await users.findOne({username: req.body.username});
-        !user && res.status(400).json('wrong user');
+        const user = await users.findOne({username: req.body.username} || {email: req.body.email});
+        !user && res.status(400).json('wrong username or email');
 
         const validate = await bcrypt.compare(req.body.password, user.password);
         !validate && res.status(400).json('wrong password');
 
         const {password, ...others} = user._doc;
+
+        const token = jwt.sign(
+            {user_id: user._id, email },
+            process.env.TOKEN_KEY,
+            {
+                expiresIn: "2h",
+            });
+
+            user.token = token;
+        
 
         res.status(200).json({
             status: "success",
