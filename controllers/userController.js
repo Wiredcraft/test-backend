@@ -5,47 +5,46 @@ require("dotenv").config();
 
 exports.UserRegister = async(req, res) => {
     try{
-        
         const salt = await bcrypt.genSalt(11);
         const hashedPass = await bcrypt.hash(req.body.password, salt);
 
-       const savedPost = await new users({
+        const NewUser = await new users({
             username: req.body.username,
-            email: req.body.email.tolowerCase(),
+            email: req.body.email,
             password: hashedPass,
+            passwordConfirm: hashedPass,
             dob: req.body.dob,
             address: req.body.address,
-            token: req.body.token
         });
 
-        if (!savedPost){
+      
+        if (!NewUser){
             res.status(400).json({message: "All Input is required"});
         }
 
-        const oldUser = await user.findOne({email});
+        const oldUser = await users.findOne({email: NewUser.email});
 
         if (oldUser) {
             res.status(409).json({message: "User Already Exist"});
         }
 
-        if (savedPost){
-            const resultPost = await savedPost.save();
+        const token = jwt.sign(
+            { id: NewUser._id },
+            process.env.TOKEN_KEY,
+            {
+                expiresIn: process.env.TOKEN_TIME,
+            });
+    
+            NewUser.token = token;
+            
+        if (NewUser){
+            const resultPost = await NewUser.save();
             res.status(200).json({
                 status: "success",
                 resultPost
             });
         }
 
-        const token = jwt.sign(
-            {user_id: user._id, email },
-            process.env.TOKEN_KEY,
-            {
-                expiresIn: "2h",
-            });
-
-            savedPost.token = token;
-
-       
         
 
     } catch(err){
@@ -59,22 +58,22 @@ exports.UserRegister = async(req, res) => {
 
 exports.UserLogin = async(req, res)=>{
     try{
-        const user = await users.findOne({username: req.body.username} || {email: req.body.email});
+        const user = await users.findOne({username: req.body.username});
         !user && res.status(400).json('wrong username or email');
 
         const validate = await bcrypt.compare(req.body.password, user.password);
         !validate && res.status(400).json('wrong password');
 
-        const {password, ...others} = user._doc;
+        const {password, passwordConfirm,...others} = user._doc;
 
         const token = jwt.sign(
-            {user_id: user._id, email },
+            { id: user._id },
             process.env.TOKEN_KEY,
             {
-                expiresIn: "2h",
+                expiresIn: process.env.TOKEN_TIME,
             });
 
-            user.token = token;
+        user.token = token;
         
 
         res.status(200).json({
