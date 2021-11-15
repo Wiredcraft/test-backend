@@ -1,0 +1,111 @@
+:host {
+    display: none;
+}
+main {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background: #ffffff15;
+    /* margin-top: 10px; */
+    padding: 15px;
+}
+.opearate {
+    display: flex;
+}
+li {
+    padding: 8px 12px;
+    border: solid 1px var(--border-color);
+    color: var(--primary);
+    cursor: pointer;
+    transition: var(--duration-thin);
+    font-size: 1.1rem;
+    display: grid;
+    place-content: center;    
+}
+li:not(.dots) + li {
+    border-left: none;
+}
+.total {
+    font-size: 1rem;
+    opacity: 0.7;
+    cursor: default;
+    pointer-events: none;
+    margin-right: 12px;
+}
+.total.empty {
+    font-size: 3rem;
+    margin-right: 1vw;
+    opacity: 0.3;
+    float: left;
+}
+li[disabled] {
+    color: #6c757d;
+    background-color: var(--border-color);
+    opacity: 0.4;
+}
+li:not([disabled], [active], :hover, .dots):hover {
+    background-color: #fff2;
+}
+
+li[active], li:hover {
+    color: #fff;
+    background-color: var(--page-button);
+    border-color: var(--page-button);
+}
+li[active] {
+    pointer-events: none;
+}
+li.dots {
+    color: #6c757d;
+    background: none;
+    border: none;
+    cursor: default;
+    --width: 15px;
+    display: grid;
+    place-items: center;
+    transform: scale(1.4);
+}
+.goto[unvisible] {
+    display: none;
+}
+.goto {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+.goto input {
+    border: solid 1px var(--border-color);
+    width: 58px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-family: 'Nunito';
+    padding: 0.3rem 0.3rem;
+    /* border-radius: 3px; */
+    color: var(--primary);
+    --border-color: #fff5;
+}
+.goto .go {
+    opacity: 0.3;
+    font-size: 1.2rem;
+    margin: 0 5px;
+}
+.goto input:focus + button {
+    opacity: 1;
+}
+
+capacity {
+    flex: 1;
+    display: flex;
+    gap: 7px;
+    opacity: 0.7;
+}
+capacity > button {
+    background: #0006;
+    color: #fffc;
+    border: solid 1px #fff5;
+}
+capacity > button:hover, 
+capacity > button.selected {
+    border-color: white;
+    background: #4446;
+}

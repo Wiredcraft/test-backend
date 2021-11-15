@@ -1,0 +1,18 @@
+#!/bin/bash
+cd ~/hotel/admin/screen
+
+name=$1
+
+# echo -e "import './${name}/${name}.js'    //auto\n" >> index.js
+mkdir $name
+cd $name
+touch $name.js
+echo -e "<screen>\n\t <iframe src=\"https://www.youtube.com/embed/jCqpzClUw1w\" title=\"The YouTube\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>
+\n</screen>" > $name.htm
+touch $name.css 
+
+node ~/hotel/admin/tools/create-component.js $name Screen > $name.js
+
+echo "Create Screen $name Done!"
+
+# ./create-screen day-weather

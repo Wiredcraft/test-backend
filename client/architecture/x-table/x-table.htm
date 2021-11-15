@@ -1,0 +1,125 @@
+<main>
+    <slot></slot>
+    <div class="container">
+        <table>
+            <thead v-if="data[0]">
+                <tr>
+                    <th v-for="({ column, $title, sort }, i) in data[0]" 
+                        :column="data[0][i].column" 
+                        :class="sort ? 'sort' : ''" 
+                        @click="sort && orderBy(sort)">
+                        <span>{{ $title ?? columns?.[i] ?? column }}</span>
+                        <svg-icon v-if="sort && (sortColumn !== sort || sortOrder ===  null )" icon="/src/icon/sort-none.svg"></svg-icon>                        
+                        <svg-icon v-if="sort && (sortColumn === sort && sortOrder === 'asc' )" icon="/src/icon/sort-up.svg"></svg-icon>                        
+                        <svg-icon v-if="sort && (sortColumn === sort && sortOrder === 'desc')" icon="/src/icon/sort-down.svg"></svg-icon>                        
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item, n) in data" :style="{ n }.$css" :key="item[0].index" :class="item[0].class">
+                    
+                    <template v-for="({ column, ...cont }, i) in item">
+                        <td v-if="column ==='@index'">{{ cont.index + 1 + (cont.offset ?? 0) }}</td>
+
+                        <td v-else-if="!cont">~</td>
+                        <td v-else-if="!column|| column ==='@text'" class="text">{{ cont.value ?? cont.text ?? '-' }}</td>
+
+
+                        <td v-else-if="column ==='@customer'" @click="cont.csid && toCustomer(cont.csid)">
+                            <div class="customer">                       
+                                <span class="link">{{ cont.name }}</span>
+                            </div>
+                        </td>
+                        <!-- <td v-else-if="column ==='@admin'" @click="toAdmin(cont.adid)">
+                            <span class="link">{{ cont.name }}</span>
+                        </td> -->
+                        <td v-else-if="column ==='@admin'" @click="toAdmin(cont.adid)">
+                            <span class="link">{{ cont.admin }}</span>
+                        </td>
+            
+                        <td v-else-if="column === '@member'" @click="toMember(cont.mmid)">
+                            <div class="member">
+                                <img :src="cont.cover" class="cover" loading="lazy" />
+                                <span class="link">{{ cont.name }}</span>
+                            </div>
+                        </td>
+                        
+
+                        <td v-else-if="column.endsWith('-comment')">
+                            <div class="operation"                    
+                                @click="prompt(cont, 'comment')">
+                                <svg-icon v-if="cont.comment" 
+                                          icon="chatbox-ellipses" 
+                                          :data-tip="cont.comment.replace(/\n/g, ' ')"></svg-icon>
+                                <svg-icon v-else 
+                                          icon="chatbox-outline"></svg-icon>
+                            </div>
+                        </td>
+
+
+                        <td v-else-if="column ==='@data-%'">
+                            <div class="statistics-wide">
+                                <span>{{ cont.data}}</span><span v-if="cont.rate">({{ cont.rate }})</span>
+                            </div>
+                        </td>
+
+                        <td v-else-if="column ==='@balance'">
+                            <short :class="cont.value <= 30 ? 'less' : ''">
+                                {{ cont.value }}
+                            </short>
+                        </td>
+                        <td v-else-if="column === '@date'" class="daytime" :strong="cont.strong">
+                            {{ cont.value?.daytime() ?? '-' }}
+                        </td>
+                        <td v-else-if="column ==='@day'">
+                            <span class="number">{{ cont.value?.day() || '-' }}</span>
+                        </td>
+                        <td v-else-if="column ==='@daytime'" class="daytime" :strong="cont.strong">
+                            {{ cont.value?.daytime(true) ?? '-' }} 
+                            <span>{{ cont.value?.weekday() ?? '' }}</span>
+                        </td>
+                   
+                        <td v-else-if="column ==='@money'" class="money">
+                            {{ cont.money ? cont.money.toPrice() : '-'}}
+                        </td>
+                        <td v-else-if="column ==='@unit-price'" class="money">
+                            {{ cont.unitPrice ? cont.unitPrice.toPrice() : '-'}}
+                        </td>
+                        <td v-else-if="column ==='@RMB'" class="money">
+                            {{ cont.RMB ? cont.RMB.toPrice() : '-'}}
+                        </td>
+
+                        <td v-else-if="column ==='@action'" class="action">
+                            {{ cont.action }}
+                        </td>
+
+                        <td v-else-if="column ==='@data'" class="data">
+                            {{ cont.data }}
+                        </td>
+
+                        <td v-else-if="column ==='@dealt'" class="deal">
+                            <!-- TODO Update it -->
+                            <span :class="cont.ptid ? (cont.offline ? 'offline' : 'dealt') : ''">{{ cont.ptid ? (cont.offline ? '已停学' : '已成交') : '未成交' }}</span>
+                        </td>
+                        <td v-else-if="column.oneOf('@phone', '@amount', '@price', '@payed')">
+                            <span class="number">{{ cont.value ?? '-'}}</span>
+                        </td>
+                        <td v-else-if="column.oneOf('@cost', '@count', '@consumed')">
+                            <span class="number">{{ cont.value || '-' }}</span>
+                        </td>
+
+                        <td v-else-if="column.oneOf('@grade', '@active', '@offline')">
+                            {{ cont.value }}
+                        </td>
+                        <td v-else>{{ cont }}</td>
+
+                    </template>
+                </tr>
+            </tbody>
+        </table>    
+        <page-switcher></page-switcher>
+
+    </div>
+    <empty></empty>
+</main>
+

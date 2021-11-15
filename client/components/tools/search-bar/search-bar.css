@@ -1,0 +1,28 @@
+
+main {
+    display: flex;
+    align-items: center;
+    --delay: 0.5s;
+    border-bottom: solid 1px var(--border-color);
+}
+svg-icon {
+    opacity: 0.5;
+    margin: 0 2px;
+}
+main input {
+    font-size: 1.1rem;
+    width: 260px;
+    padding-bottom: 10px;
+}
+.clear {
+    --opacity: 0.5;
+    animation: fade-in var(--duration);
+    cursor: pointer;
+}
+input:placeholder-shown + .clear {
+    display: none;
+}
+::placeholder {
+    font-size: 1.1rem;
+    opacity: 0.8;
+}

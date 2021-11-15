@@ -1,0 +1,9 @@
+<main>
+    <div v-for="{ title, total, data } in statistics" >
+        <div class="stat">
+            <span>{{ title }}</span>
+            <canvas :ref="push"></canvas>
+        </div>
+        <h5 class="sum">{{ total }}</h5>
+    </div>
+</main>

@@ -1,0 +1,35 @@
+<main>
+    <div class="logo">
+        <brand>WiredCraft</brand>
+        <!-- <img :src="logo" alt="Logo"> -->
+        <!-- <span>师道文化</span> -->
+    </div>
+
+    <div class="user" @click="gotoMyself">
+        <img class="avatar" :src="data.avatar" />
+        <span class="level">{{ data.meta }}</span>
+        <span class="name" :class="data.sex?.replace(':', '')">{{ data.name }}</span>
+    </div>
+
+    
+
+    <div class="menu">
+        <div v-for="({ title, icon, eng, items }, index) in menu" 
+             :selected="index === groupIndex">
+            <div class="group">
+                <svg-icon :icon="icon"></svg-icon>
+                <div class="status">{{ index === groupIndex ? '-' : '+'}}</div>
+            </div>
+            <ul v-if="items">
+                <li v-for="{ title, screen, eng, signal } in items" 
+                    :screen="screen ?? signal" 
+                    :selected="screen === selected" 
+                    @click="open({ signal, screen })">
+                    <span>{{ title }}</span>
+                    <span class="english">{{ eng }}</span>
+                </li>
+            </ul>
+        </div>
+        
+    </div>
+</main>

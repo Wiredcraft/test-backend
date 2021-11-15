@@ -1,0 +1,158 @@
+input {
+    flex-grow: 1;
+}
+input[type=text], input[type=number] {
+    width: 170px;
+    padding-right: 0;
+}
+datalist + button {
+    background: none;
+}
+span[required] {
+    position: relative;
+}
+span[required]::before {
+    content: "";
+    position: absolute;
+    --radius: 6px;
+    width: var(--radius);
+    height: var(--radius);
+    border-radius: var(--radius);
+    background: #F2365A;
+    left: 6px;
+}
+filter {
+    display: flex;
+    flex-direction: column;
+    background: var(--blank);
+    padding: 20px 15px;
+    flex-grow: 1;
+    gap: 15px;
+}
+filter > * {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.top-up-type {
+    display: flex;    
+    gap: var(--gap);
+}
+.top-up-type > * {
+    background-color: var(--bg-body);
+    padding: 15px;
+    transition: var(--duration);
+    border: dashed 1px #8882;
+    /* border-radius: 4px; */
+}
+.top-up-type > *:hover {
+    background-color: var(--bg-type-hover);
+    border-color: var(--border-color-deep);
+}
+.top-up-type > .selected:not(:hover) {
+    background-color: var(--bg-type-selected);
+}
+.top-up-type > *  {
+    flex: 1 0 calc(50% - var(--gap) / 2);
+}
+.top-up-type h3 {
+    margin-top: 5px;
+    font-weight: 500;
+}
+.top-up-type h4 {
+    opacity: 0.6;
+}
+#top-up one {
+    grid-template-columns: 1fr 1fr;
+}
+.period {
+    display: flex;
+    align-items: center;
+}
+.period > input {
+    flex-grow: 1;
+    border: none;
+}
+.to {
+    padding: 4px 10px;
+    background-color: var(--bg-body);
+    border-width: 0.0px;
+}
+
+
+one {
+    gap: var(--gap);
+    display: grid;
+    grid-template-columns: 6fr 5fr;
+    /* --width: 42px; */
+}
+form > div, one > div, form > one > div {
+    display: flex;
+    margin-bottom: 1rem;
+    border: solid 1px var(--input-border-color);
+    transition: var(--duration-thin);
+    /* flex-grow: 1; */
+}
+:is(form, one) div > span {
+    padding: 0 8px;
+    border: solid 1px var(--input-border-color);
+    border-width: 0 1px 0 0;
+    color: var(--form-title);
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    min-width: 70px;
+    justify-content: center;
+}
+form > div.avatar {
+    border: none;
+}
+form > div.avatar > span:first-child {
+    border: solid 1px var(--input-border-color);
+}
+form > div:not(.column) {
+    align-items: stretch;
+}
+.address {
+    flex-grow: 1;
+    display: flex;
+}
+.address > input:first-child {
+    width: 160px;
+    border-right: solid 1px var(--input-border-color);
+    flex-grow: 0;
+}
+.address > input:last-child {
+    flex-grow: 1;
+}
+
+
+form .select > :last-child {
+    flex-grow: 1;
+    --width: 100%;
+    --height: 42px;
+    align-self: center;
+}
+
+filter {
+    margin-bottom: 20px;
+}
+
+search > div {
+    display: flex;
+    border: solid 1px #d3d3d355;
+    transition: var(--duration-thin);
+    width: 210px;
+    background: #0005;
+}
+search > div:not(.column) {
+    align-items: center;
+    padding-right: 5px;
+}
+search > div:focus-within {
+    border-color: var(--focus-border);
+}
+search > div input {
+    border: none;
+}

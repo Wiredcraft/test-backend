@@ -1,0 +1,75 @@
+main {
+    /* border: var(--light-border); */
+}
+
+.school-select {
+    color: white;
+    background-color: var(--text);
+    padding: 8px;
+    width: 160px;
+    text-align: right;
+    display: flex;
+    justify-content: space-between;
+    --width: 18px;
+    cursor: pointer;
+}
+.title {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    height: 28px;
+    --width: 17px;
+    margin-left: 10px;
+}
+.title svg-icon {
+    margin-right: 5px;
+}
+ul {
+    /* display: grid; */
+    /* color: var(--blank); */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    background: var(--data-gradient);
+    padding: 45px 40px 40px;
+    justify-content: space-between;
+    display: flex;
+}
+
+ul li {
+    /* padding-left: 20px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+ul span {
+    padding-left: 3px;
+    --delay: 0.4s;
+}
+
+.type {
+    font-size: 14px;
+    color: #fff8;
+}
+.state {
+    display: flex;
+    align-items: center;
+}
+.fade-in {
+    color: #fffa;
+}
+ul svg-icon {
+    --width: 13px;
+    margin: 0 10px 0 2px;
+}
+
+digit-turn {
+    --width: 180px;
+    --height: 50px;
+    --font: Nunito;
+    --font-weight: 400;
+    /* font-family: Nunito; */ /* "Founders Grotesk", "Open Sans"; */
+    color: white;
+    margin: 10px 0;
+}

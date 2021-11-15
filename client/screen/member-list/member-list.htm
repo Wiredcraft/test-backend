@@ -1,0 +1,31 @@
+<screen>
+    <h1>用户列表</h1>
+    
+    <main>
+        <button class="dark-button">新增用户</button>
+        
+        <condition-where>
+            <search>
+                <div>
+                    <input type="text" placeholder="搜索用户名/手机号" id="name" />
+                    <svg-icon icon="search"></svg-icon>            
+                </div>
+                <div>
+                    <input type="text" placeholder="搜索地点" id="address" />
+                    <svg-icon icon="search"></svg-icon>            
+                </div>
+                <gap></gap>
+                <select id="yob">
+                    <option value="-">年份(全部)</option>
+                </select>
+                <select id="onoff">
+                    <option value="-">状态(全部)</option>
+                    <option value=":on">在线</option>
+                    <option value=":off">离线</option>
+                </select>
+            </search>
+        </condition-where>
+      
+        <x-table columns="序号,房号,标签,导师,年级,上课次数,共消课时,在读学员,添加时间,客房状态"></x-table>
+    </main>
+</screen>

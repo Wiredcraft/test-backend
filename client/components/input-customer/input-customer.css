@@ -1,0 +1,7 @@
+main {
+    height: 100%;
+}
+:host, input {
+    width: 100%;
+    min-height: 100%;
+}

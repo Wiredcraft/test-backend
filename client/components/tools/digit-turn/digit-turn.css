@@ -1,0 +1,4 @@
+canvas {
+    width: var(--width);
+    height: var(--height);
+}

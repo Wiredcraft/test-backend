@@ -1,0 +1,58 @@
+:host {
+    margin-top: 10px;
+    display: block;
+}
+main {
+    --border: #757575;
+    --box-height: var(--height, 40px);
+    position: relative;
+    margin: var(--margin-top, 20px) 0 0;
+    border-bottom: 1px solid var(--border);
+    width: var(--width, 240px);
+    /* background: var(--bg); */
+    max-width: var(--max-width, 1000px);
+}
+span {
+    transition: var(--duration);
+    position: absolute;
+    bottom: 5px;
+    left: 1px;
+    color: var(--placeholder-waiting, #535c6866);
+    font-size: 15px;
+    pointer-events: none;
+}
+span::after {
+    content: attr(data-title);
+}
+input {
+    border: none;
+    background: transparent;
+    height: var(--box-height);
+    color: var(--color, #535c68);
+    font-size: var(--font-size, calc(0.42 * var(--box-height)));
+    font-weight: 300;
+    font-family: inherit;
+    width: 100%;
+    transform: translateY(4px);
+    box-shadow: none;
+    padding: 0 0 0 2px;
+}
+input:focus + span, input:valid + span {
+    color: var(--placeholder-active, #535c68);
+    font-size: 10px;
+    bottom: calc(var(--box-height) - 10px);
+    opacity: 0.6;
+}
+main::after {
+    transition: var(--duration);
+    content: " ";
+    height: 1px;
+    width: 0;
+    left: 0;
+    background: var(--focus-border);
+    position: absolute;
+    bottom: -1px;
+}
+main:focus-within::after, main.valued::after {
+    width: 100%;
+}

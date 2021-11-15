@@ -1,0 +1,15 @@
+main {
+    --diameter: 28px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+main, input {
+    width: var(--diameter);
+    height: var(--diameter);
+}
+input {
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    transform: scale(2);
+}

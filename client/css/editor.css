@@ -1,0 +1,130 @@
+screen {
+    --bg-box: white;
+    margin-bottom: 0;
+}
+input-box {
+    --height: 45px;
+    --color: #333;
+    --placeholder-waiting: #0005;
+    --placeholder-active: #333c;
+    --margin-top: 5px;
+}
+input-box#desc {
+    --width: 100%;
+}
+button#submit {
+    width: 100px;
+    margin: 0;
+}
+#price {
+    --color: var(--price);
+    --width: 120px;
+}
+box {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 12px;
+    background: #ccc2;
+    border-radius: 3px;
+    position: relative;
+}
+box h3 {
+    /* opacity: 0.7; */
+    padding-left: 2px;
+    font-size: 1.4rem;
+    color: #273c75;
+    font-weight: 600;
+}
+.row {
+    flex-direction: row;
+    gap: 20px;
+}
+.top-two {
+    justify-content: space-between;
+}
+.the-right {
+    /* margin-top: 10px; */
+    background: white;
+    padding: 20px;
+    max-height: calc(100vh - 100px);
+    --text: #333;
+    color: var(--text);
+}
+.box-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    animation: fade-in var(--duration-thin);
+}
+#tags {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+#tags .items {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    flex-grow: 1;
+}
+#tags button {
+    border-radius: 3px;
+    box-shadow: 0 0 4px #0004;
+}
+#tags button.selected {
+    color: white;
+    background: var(--bg-tag);
+}
+#tags button::after {
+    content: var(--count);
+    font-size: 0.95rem;
+    opacity: 0.25;
+    transform: translateX(5px);
+    display: inline-block;
+}
+
+.selectors {
+    gap: 10px;
+}
+.selectors > div {
+    display: flex;
+}
+.selectors span {
+    color: white;
+    background: #6a89cc;
+    padding: 0 12px;
+    display: grid;
+    place-content: center;
+}
+.the-right::-webkit-scrollbar {
+    width: 0.4rem;
+}
+.the-right::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+.the-right::-webkit-scrollbar-thumb {
+    background: #60a3bc;
+}
+
+
+check-room {
+    box-shadow: 2px 2px 8px #0004;
+}
+.prev-box {    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+input-box#comment {
+    --font-size: 16px;
+    --width: 100%;
+}
+textarea#comment {
+    border: solid 1px var(--light-border-color);
+    background: var(--bg-body);
+}
+select {
+    min-width: 150px;
+}

@@ -1,0 +1,17 @@
+:root {
+    --thin-duration: 0.2s;
+    --duration-thin: var(--thin-duration);
+    --duration: 0.4s;
+    --duration-longer: 1s;
+
+}
+
+:root {
+    --default-icon-width: 6.4vw;
+    --tab-height: 65px;
+    --left-width: 245px;
+    --box-padding: 22px;
+    --box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14),
+    0  6px 30px 5px rgba(0, 0, 0, 0.12),
+    0  8px 10px -5px rgba(0, 0, 0, 0.4);
+}

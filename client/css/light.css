@@ -1,0 +1,4 @@
+:root[theme="light"] {
+    --leftbar-bg: linear-gradient(180deg, #2c6aa6, #3f91bd);
+    --tabbar-bg: #343a40;
+}

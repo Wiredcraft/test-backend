@@ -1,0 +1,66 @@
+<screen>
+    <h1 id="name"></h1>
+    <div class="profile">
+        <div class="stat">
+			<div class="basic">
+				<img id="cover" />
+
+                <span class="opear">
+                    <button class="dark-button" id="edit">编辑</button>
+                    <button noself class="dark-button" id="delete">删除</button>
+                </span>
+
+                <span class="meta">
+                    <button noself class="light-button" id="follow">关注</button>
+                    <button noself class="off-button" id="unfollow">取消关注</button>
+                </span>
+			</div>
+        </div>
+        <div class="fields">
+            <div>
+                <span>手机</span>
+                <value class="phone">
+                    <span id="phone"></span>
+                </value>
+            </div>
+            <div>
+                <span>加入时间</span>
+                <value id="createAt"></value>
+            </div>
+            <div class="span-2x">
+                <span>生日</span>
+                <value id="dob"></value>
+            </div>
+            <div class="span-2x">
+                <span>地理位置</span>
+                <value id="address"></value>
+            </div>
+            <div class="remark">
+                <span>备注</span>
+                <textarea disabled id="description"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-list">
+		<button id="tab-near">附近伙伴</button>
+		<button id="tab-following">关注</button>
+		<button id="tab-followed">粉丝</button>
+    </div>
+
+    <div id="container">
+
+        <div id="near">
+            <x-table></x-table>
+        </div>
+
+        <div id="following">
+            <x-table></x-table>        
+        </div>
+
+        <div id="followed">
+            <x-table></x-table>
+        </div>
+                
+    </div>
+</screen>

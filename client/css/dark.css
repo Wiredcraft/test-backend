@@ -1,0 +1,19 @@
+:root[theme="dark"] {
+    --leftbar-bg: #222429;
+    --tabbar-bg: #2a2a2a;
+    --blank: #2e2e42;
+    --shadow-blank: #0000;
+    --color: white;
+    --text: #eeeeee;
+    --bg-body: #171622;
+    --bg: #212130;
+    --bg-2nd: #40739e;
+    --title-header: var(--bg);
+
+    --placeholder: #ffffff4c;
+    --red: #c23616;
+}
+select {
+    background: #fffa;
+    color: var(--bg-dark);
+}

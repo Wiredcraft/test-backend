@@ -1,0 +1,16 @@
+.period-type button {
+    font-size: 1.1rem;
+    padding: 10px 15px;
+    background: var(--bg-body);
+    font-weight: 500;
+    border: solid 1px var(--border-color);
+    border-radius: 3px;
+    opacity: 0.5;
+}
+.period-type button:first-child {
+    background: var(--bg-type-selected);
+    opacity: 1;
+}
+svg-icon {
+    opacity: 0.3;
+}

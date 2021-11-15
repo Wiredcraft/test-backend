@@ -1,0 +1,553 @@
+"proname","nspname","pg_get_functiondef"
+"delete_member","broadcast","CREATE OR REPLACE FUNCTION broadcast.delete_member(""from"" integer, mmid integer)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    _name text := widget.mname(mmid);
+BEGIN
+	UPDATE member
+	SET following = array_remove(following, mmid), info = jsonb_set(info, '{ count, following }', (coalesce(array_length(following, 1), 0) - 1)::text::jsonb)
+	WHERE (select followed from member where id = mmid) @> ARRAY[id];
+
+	UPDATE member
+	SET followed = array_remove(following, mmid), info = jsonb_set(info, '{ count, followed }', (coalesce(array_length(following, 1), 0) - 1)::text::jsonb)
+	WHERE (select following from member where id = mmid) @> ARRAY[id] ;
+
+
+	DELETE FROM member
+	WHERE id = mmid;
+
+	CALL logging.append_action(""from"", ':delete-member', jsonb_build_object('deleted', _name));
+
+
+	RETURN jsonb_build_object('notification', format('<strong>%s</strong> 删除了<strong>%s</strong>', widget.mname(""from""), _name), 
+							  'important', format('%s 删除了%s', widget.mname(""from""), _name),
+							  'mmid', mmid,
+							  'icon', '/src/' || (""from"" % 7 + 1) ||'.jpg');
+
+END;							  
+$function$
+"
+"edit","broadcast","CREATE OR REPLACE FUNCTION broadcast.edit(""from"" integer, mmid integer, name text, phone character, dob date, address text, description text)
+ RETURNS jsonb
+ LANGUAGE sql
+AS $function$
+
+	UPDATE member
+	SET name = $3, phone = $4, dob = $5, address = $6, description = $7
+	WHERE id = $2;
+	
+	CALL logging.append_action(""from"", ':edit-member', jsonb_build_object('name', name, 'description', description, 'mmid', mmid));
+    
+    SELECT jsonb_build_object('notification', format('<strong>%s</strong> 信息更新', name), 
+							  'url', 'member/' || mmid,
+							  'mmid', mmid, --the_member(mmid),
+							  'name', name,
+							  'self', (mmid = ""from""),
+							  'important', format('%s 信息更新', name),
+							  'icon', '/src/' || (mmid % 7 + 1) ||'.jpg');
+							  	
+$function$
+"
+"follow","broadcast","CREATE OR REPLACE FUNCTION broadcast.follow(""from"" integer, mmid integer)
+ RETURNS jsonb
+ LANGUAGE sql
+AS $function$
+
+	UPDATE member
+	SET following = following || mmid, info = jsonb_set(info, '{ count, following }', (coalesce(array_length(following, 1), 0) + 1)::text::jsonb)
+	WHERE id = ""from"" and NOT (mmid = ANY(following));
+
+	-- UPDATE member SET info =  jsonb_set( info, '{count, followed}', '989'::jsonb) where id = 2;
+
+	UPDATE member
+	SET followed = followed || ""from"", info = jsonb_set(info, '{ count, followed }', (coalesce(array_length(followed, 1), 0) + 1)::text::jsonb)
+	WHERE id = mmid and NOT (""from"" = ANY(followed));
+
+	CALL logging.append_action(""from"", ':follow', jsonb_build_object('member', widget.mname(mmid)));
+        
+	SELECT jsonb_build_object('notification', format('<strong>%s</strong> 关注了 <strong>%s</strong>', widget.mname(""from""), widget.mname(mmid)),
+							  'url', 'member/' || mmid,
+							  'mmid', mmid,
+							  'from', ""from"",
+							  'important', format('%s 关注了 %s', widget.mname(""from""), widget.mname(mmid)),
+							  'icon', '/src/' || (mmid % 7 + 1) ||'.jpg');
+
+$function$
+"
+"unfollow","broadcast","CREATE OR REPLACE FUNCTION broadcast.unfollow(""from"" integer, mmid integer)
+ RETURNS jsonb
+ LANGUAGE sql
+AS $function$
+
+	UPDATE member
+	SET following = array_remove(following, mmid), info = jsonb_set(info, '{ count, following }', (coalesce(array_length(following, 1), 0) - 1)::text::jsonb)
+	WHERE id = ""from"" and (mmid = ANY(following));
+
+	UPDATE member
+	SET followed = array_remove(followed, ""from""), info = jsonb_set(info, '{ count, followed }', (coalesce(array_length(followed, 1), 0) - 1)::text::jsonb)
+	WHERE id = mmid and (""from"" = ANY(followed));
+
+	CALL logging.append_action(""from"", ':unfollow', jsonb_build_object('member', widget.mname(mmid)));
+
+	SELECT jsonb_build_object('notification', format('<strong>%s</strong> 取关了 <strong>%s</strong>', widget.mname(""from""), widget.mname(mmid)),
+							  'url', 'member/' || mmid,
+							  'mmid', mmid,
+							  'from', ""from"",
+							  'important', format('%s 取关了 %s', widget.mname(""from""), widget.mname(mmid)),
+							  'icon', '/src/' || (mmid % 7 + 1) ||'.jpg');
+     
+$function$
+"
+"create_member","broadcast","CREATE OR REPLACE FUNCTION broadcast.create_member(""from"" integer, name text, phone character, dob date, address text, description text, latitude double precision, longitude double precision)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    _mmid integer;
+BEGIN
+	INSERT INTO member (name, phone, dob, address, description)
+	VALUES ($2, $3, $4, $5, $6)
+	RETURNING id INTO _mmid;
+	
+	UPDATE member 		-- For testing
+	SET coordinate = if_else (latitude is null, '(33.979801, 115.885506)' + format('(%s, %s)', random() * 20, random() * 20)::point, format('(%s, %s)', latitude, longitude)::point)
+	WHERE id = _mmid;	
+
+	CALL logging.append_action(""from"", ':create-member', jsonb_build_object('name', name, 'description', description ));
+    
+    RETURN jsonb_build_object('notification', format('<strong>%s</strong> 创建了用户 <strong>%s</strong>', widget.mname(""from""), name), 
+							  'url', 'member/' || _mmid,
+							  'mmid', _mmid,
+							  'important', format('%s 创建了用户 %s', widget.mname(""from""), name),
+							  'icon', '/src/' || (_mmid % 7 + 1) ||'.jpg');
+END;							  	
+$function$
+"
+"nearby_friends","client","CREATE OR REPLACE FUNCTION client.nearby_friends(""from"" integer, mmid integer, ""limit"" integer DEFAULT 20, ""offset"" integer DEFAULT 0)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    _friends int[] := (select tool.array_distinct(following || followed) from member where id = mmid);
+	_coord point := (SELECT coordinate FROM member WHERE id = mmid);
+    _total integer;
+	_near jsonb;
+BEGIN
+    
+	SELECT count(*) INTO _total 
+	FROM member 
+	WHERE id = ANY(_friends) AND tool.near(coordinate, _coord); -- id = ANY(_friends) AND 
+
+	SELECT COALESCE(jsonb_agg(tmpt), '[]') 
+	INTO _near
+   	FROM (
+		SELECT id, name, phone, dob, address, 
+		   ('/src/' || (id % 7+1) ||'.jpg') as cover, -- Test
+		   ARRAY[coordinate[0], coordinate[1]] as coordinate, 
+		   info, create_at as ""createAt"", description, onoff
+		
+		FROM member
+		WHERE id = ANY(_friends) AND tool.near(coordinate, _coord)	--id = ANY(_friends) AND 
+		ORDER BY (onoff = ':on') desc, id desc 
+		LIMIT $3 OFFSET $4) tmpt;
+		
+	
+	CALL logging.append_action(""from"", ':visit-nearby', jsonb_build_object('who', widget.mname(mmid), 'mmid', mmid));
+	
+	RETURN jsonb_build_object( 'total', _total, 'near', _near );
+END;
+$function$
+"
+"overview","client","CREATE OR REPLACE FUNCTION client.overview(""from"" integer)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    _friends int[] := (select tool.array_distinct(following || followed) from member where id = $1 and onoff = ':on');
+	_coord point := (SELECT coordinate FROM member WHERE id = $1);
+	_near integer := (SELECT count(*) FROM member WHERE tool.near(coordinate, _coord));
+	
+BEGIN
+	
+	
+	CALL logging.append_action(""from"", ':overview', '{}');
+	RETURN FORMAT('[
+		{
+			""seq"": 1,
+			""data"": %s,
+			""info"": ""23%%"",
+			""meta"": ""This year"",
+			""title"": ""用户总数"",
+			""direction"": ""+""
+		},
+		{
+			""seq"": 2,
+			""data"": %s,
+			""info"": ""13%%"",
+			""meta"": ""Last Month"",
+			""title"": ""在线用户"",
+			""direction"": ""-""
+		},
+		{
+			""seq"": 3,
+			""data"": %s,
+			""info"": ""15%%"",
+			""meta"": ""Last Week"",
+			""title"": ""附近用户"",
+			""direction"": ""+""
+		},
+		{
+			""seq"": 4,
+			""data"": %s,
+			""info"": ""30%%"",
+			""meta"": ""This Week"",
+			""title"": ""在线好友"",
+			""direction"": ""+""
+		}
+	]', (select count(*) from member),
+		(select count(*) from member where onoff = ':on'),
+		_near,
+		coalesce(array_length(_friends, 1), 0))::jsonb;
+
+END;
+$function$
+"
+"the_logs","client","CREATE OR REPLACE FUNCTION client.the_logs(""from"" integer, ""limit"" integer DEFAULT 20, ""offset"" integer DEFAULT 0, ""where"" text DEFAULT ''::text)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+AS $function$
+DECLARE 
+    _logs jsonb;
+    _total integer;
+BEGIN 
+	""where"" := replace(""where"", 'data ', 'data::text ');
+	
+    EXECUTE FORMAT(E'SELECT count(*)::int 				   
+		FROM logging.action				   
+		WHERE true %s', ""where"")
+	INTO _total;
+
+    EXECUTE FORMAT($$ 
+        SELECT coalesce(jsonb_agg(tmpt), '[]')
+        FROM (
+            SELECT id, member, name, action, data, time, ('/src/' || (member %% 7+1) ||'.jpg') as cover
+            FROM logging.action
+            WHERE true %s
+            ORDER BY id DESC
+            LIMIT $1 OFFSET $2) tmpt $$, ""where"")
+    INTO _logs
+    USING ""limit"", ""offset"";
+    
+    RETURN jsonb_build_object('total', _total, 'actions', _logs);
+END;
+$function$
+"
+"the_sessions","client","CREATE OR REPLACE FUNCTION client.the_sessions(""from"" integer, ""limit"" integer DEFAULT 20, ""offset"" integer DEFAULT 0, ""where"" text DEFAULT ''::text)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+AS $function$
+DECLARE 
+    _sessions jsonb;
+    _total integer;
+BEGIN 
+	""where"" := replace(""where"", 'time ', 'time_in ');
+	
+    EXECUTE FORMAT(E'SELECT count(*)::int 				   
+		FROM logging.session				   
+		WHERE true %s', ""where"")
+	INTO _total;
+
+    EXECUTE FORMAT($$ 
+        SELECT coalesce(jsonb_agg(tmpt), '[]')
+        FROM (
+            SELECT id, mmid, name, ('/src/' || (mmid %% 7+1) ||'.jpg') as cover, duration, time_in as ""timeIn"", time_out as ""timeOut""
+            FROM logging.session
+            WHERE true %s
+            ORDER BY id DESC
+            LIMIT $1 OFFSET $2) tmpt $$, ""where"")
+    INTO _sessions
+    USING ""limit"", ""offset"";
+    
+    RETURN jsonb_build_object('total', _total, 'sessions', _sessions);
+END;
+$function$
+"
+"the_member","client","CREATE OR REPLACE FUNCTION client.the_member(""from"" integer, mmid integer)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+	
+	IF ""from"" IS NOT NULL THEN
+		CALL logging.append_action(""from"", ':visit-member', jsonb_build_object('who', widget.mname(mmid), 'mmid', mmid));
+	END IF;
+	
+	RETURN to_jsonb(tmpl) 
+	FROM (SELECT id, name, phone, password, dob, address, 
+		  
+		  ('/src/' || (id % 7+1) ||'.jpg') as cover,
+		  (mmid = ""from"") as self,
+		  ARRAY[coordinate[0], coordinate[1]] as coordinate, 
+		  info, create_at as ""createAt"", description, onoff,
+		  (""from"" = ANY(following)) as ""followingMe"",
+		  (""from"" = ANY(followed)) as ""followedByMe""
+
+		 FROM member
+		 WHERE id = mmid) AS tmpl;
+END;		 
+$function$
+"
+"following_of","client","CREATE OR REPLACE FUNCTION client.following_of(""from"" integer, mmid integer, ""limit"" integer DEFAULT 30, ""offset"" integer DEFAULT 0)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    _following int[] = (select following from member where id = mmid);
+BEGIN
+    
+	CALL logging.append_action(""from"", ':visit-following', jsonb_build_object('who', widget.mname(mmid), 'mmid', mmid));
+	
+	RETURN jsonb_build_object('total', array_length(_following, 1), 
+							  'members', coalesce(jsonb_agg(members), '[]'))
+	FROM (
+		SELECT the_member(NULL, id) members
+		FROM member
+		WHERE id = ANY(_following)
+		ORDER BY (onoff = ':on') desc, id desc
+		LIMIT $3 OFFSET $4) tmpt;
+		
+
+END;
+$function$
+"
+"update_follow","client","CREATE OR REPLACE PROCEDURE client.update_follow()
+ LANGUAGE sql
+AS $procedure$
+	UPDATE member
+	SET info = jsonb_set(info, '{ count, followed }', coalesce(array_length(followed, 1), 0)::text::jsonb);
+
+	UPDATE member
+	SET info = jsonb_set(info, '{ count, following }', coalesce(array_length(following, 1), 0)::text::jsonb);
+$procedure$
+"
+"followed_of","client","CREATE OR REPLACE FUNCTION client.followed_of(""from"" integer, mmid integer, ""limit"" integer DEFAULT 30, ""offset"" integer DEFAULT 0)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    _followed int[] = (select followed from member where id = mmid);
+BEGIN
+    
+	CALL logging.append_action(""from"", ':visit-followed', jsonb_build_object('who', widget.mname(mmid), 'mmid', mmid));
+	
+	RETURN jsonb_build_object('total', array_length(_followed, 1), 
+							  'members', coalesce(jsonb_agg(members), '[]'))
+	FROM (
+		SELECT the_member(NULL, id) members
+		FROM member
+		WHERE id = ANY(_followed)
+		ORDER BY (onoff = ':on') desc, id desc
+		LIMIT $3 OFFSET $4) tmpt;
+		
+
+END;
+$function$
+"
+"member_list","client","CREATE OR REPLACE FUNCTION client.member_list(""from"" integer, ""limit"" integer DEFAULT 30, ""offset"" integer DEFAULT 0, ""where"" text DEFAULT ''::text, sort text DEFAULT ''::text)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    _members jsonb;
+    _total integer;
+BEGIN
+    
+
+	EXECUTE FORMAT($$ SELECT count(*) FROM member WHERE true %s $$, ""where"")
+	INTO _total;
+
+	sort := replace(sort, 'createAt', 'create_at');
+	sort := replace(sort, 'following', $$ (info->'count'->>'following')::int $$ );
+	sort := replace(sort, 'followed', $$ (info->'count'->>'followed')::int $$ );
+	
+	IF sort = '' THEN
+         sort := 'id desc ';
+    END IF;
+	
+	CALL logging.append_action(""from"", ':visit-member-list', jsonb_build_object('where', ""where"", 'offset', ""offset"", 'limit', ""limit"", 'sort', ""sort"" ));
+	
+	EXECUTE FORMAT($$
+           SELECT COALESCE(jsonb_agg(tmpt), '[]') 
+		   FROM (
+			SELECT id, name, phone, password, dob, address, 
+			   ('/src/' || (id %% 7+1) ||'.jpg') as cover, 
+			   ARRAY[coordinate[0], coordinate[1]] as coordinate, 
+			   info, create_at as ""createAt"", description, onoff
+			FROM member
+			WHERE true %s
+			ORDER BY (onoff = ':on') desc, %s 
+			LIMIT $1 OFFSET $2) AS tmpt $$, ""where"", sort)
+    INTO _members
+    USING ""limit"", ""offset"";
+		
+	RETURN jsonb_build_object( 'total', _total, 'members', _members );
+END;
+$function$
+"
+"log_member","logging","CREATE OR REPLACE PROCEDURE logging.log_member(ssid integer, mmid integer, name text)
+ LANGUAGE sql
+AS $procedure$
+    UPDATE logging.session
+    SET mmid = $2, name = $3
+    WHERE id = $1;
+$procedure$
+"
+"come_in","logging","CREATE OR REPLACE FUNCTION logging.come_in(ip inet, location character varying, user_agent text)
+ RETURNS integer
+ LANGUAGE sql
+AS $function$
+INSERT INTO logging.session (location, ip, user_agent) values (location, ip, user_agent)
+RETURNING id;
+$function$
+"
+"come_out","logging","CREATE OR REPLACE PROCEDURE logging.come_out(ssid integer)
+ LANGUAGE sql
+AS $procedure$
+UPDATE logging.session
+    SET time_out = now(), duration = now()::timestamp(0) - time_in
+    WHERE id = ssid;
+$procedure$
+"
+"append_action","logging","CREATE OR REPLACE PROCEDURE logging.append_action(member integer, action text, data jsonb)
+ LANGUAGE sql
+AS $procedure$
+
+    INSERT INTO logging.action (member, name, action, data)
+    VALUES (member, widget.mname(member), action, data);
+
+$procedure$
+"
+"functions","system","CREATE OR REPLACE FUNCTION system.functions(OUT text, OUT text, OUT text)
+ RETURNS SETOF record
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+	RETURN QUERY 
+	SELECT proname::text, nspname::text, pg_get_functiondef(f.oid)
+	FROM pg_catalog.pg_proc f
+	INNER JOIN pg_catalog.pg_namespace n ON (f.pronamespace = n.oid)
+	WHERE n.nspname !~ '^pg_' AND proname !~ '^_'
+	order by nspname;
+	END;
+$function$
+"
+"code","system","CREATE OR REPLACE FUNCTION system.code(OUT schema name, OUT name name, OUT type text, OUT args text[])
+ RETURNS SETOF record
+ LANGUAGE sql
+AS $function$
+SELECT n.nspname as ""Schema"",
+   p.proname as ""Name"",
+   pg_catalog.pg_get_function_result(p.oid) as ""Type"",
+   regexp_split_to_array(replace(pg_catalog.pg_get_function_arguments(p.oid), '""', ''), ', ') as ""Args""
+   FROM pg_catalog.pg_proc p
+   LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace
+   WHERE pg_catalog.pg_function_is_visible(p.oid)
+   AND n.nspname IN ('client', 'broadcast')		-- Just start that Schemas
+   AND pg_catalog.pg_get_function_result(p.oid) IN ('text', 'void', 'jsonb', 'json')	-- jsonb is also OK, because it will become text in Lisp
+  -- AND (regexp_split_to_array(pg_catalog.pg_get_function_arguments(p.oid), ' '))[1] = 'htid' --Only for thoses starts with ogid, so exclude 'htid'
+   ORDER BY 1, 2, 4;
+$function$
+"
+"login","test","CREATE OR REPLACE FUNCTION test.login(ip inet, location character varying, user_agent text)
+ RETURNS TABLE(mmid integer, name text)
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    _mmid integer;
+    _name text;
+BEGIN
+
+    SELECT id, mm.name INTO _mmid, _name 
+    FROM member mm 
+    WHERE id = (select anyone(array_agg(id)) from member);
+    
+	INSERT INTO logging.session (mmid, name, location, ip, user_agent) 
+    VALUES (_mmid, _name, location, ip, user_agent);
+
+    RETURN QUERY SELECT _mmid, _name;
+END;
+$function$
+"
+"add_friends","test","CREATE OR REPLACE FUNCTION test.add_friends()
+ RETURNS jsonb
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    _mmid integer;
+    _mmid2 integer;
+BEGIN
+    
+	UPDATE member
+	SET followed = '{}', following = '{}';
+	
+	FOR _mmid in (SELECT id FROM member where random() > 0.3 ORDER BY id)
+	LOOP
+		for _mmid2 in (SELECT id FROM member where id != _mmid and random() < 0.04 ORDER BY id) 
+		loop
+
+			UPDATE member
+			SET following = following || _mmid2
+			WHERE id = _mmid;
+
+			UPDATE member
+			SET followed = followed || _mmid
+			WHERE id = _mmid2;
+
+		end loop;
+	END LOOP;
+	
+	CALL client.update_follow();
+
+	RETURN '{""status"": "":OK"" }';
+END;
+$function$
+"
+"anyone","tool","CREATE OR REPLACE FUNCTION tool.anyone(sth anyarray)
+ RETURNS anyelement
+ LANGUAGE sql
+AS $function$
+SELECT sth[floor(random() * array_length(sth, 1) + 1)]
+$function$
+"
+"array_distinct","tool","CREATE OR REPLACE FUNCTION tool.array_distinct(anyarray)
+ RETURNS anyarray
+ LANGUAGE sql
+ IMMUTABLE
+AS $function$
+  SELECT array_agg(DISTINCT x) FROM unnest($1) t(x);
+
+$function$
+"
+"if_else","tool","CREATE OR REPLACE FUNCTION tool.if_else(boolean, anyelement, anyelement)
+ RETURNS anyelement
+ LANGUAGE sql
+AS $function$
+SELECT CASE WHEN $1 THEN $2 ELSE $3 END
+$function$
+"
+"near","tool","CREATE OR REPLACE FUNCTION tool.near(coord1 point, coord2 point, space double precision DEFAULT 20.0)
+ RETURNS boolean
+ LANGUAGE sql
+AS $function$
+
+SELECT power(coord1[0] - coord2[0], 2) + power(coord1[1] - coord2[1], 2) < space;
+
+$function$
+"
+"mname","widget","CREATE OR REPLACE FUNCTION widget.mname(mmid integer)
+ RETURNS text
+ LANGUAGE sql
+AS $function$SELECT name FROM member WHERE id = $1$function$
+"

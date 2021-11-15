@@ -1,0 +1,81 @@
+@import "./color.css";
+@import "./var.css";
+@import "./animate.css";
+@import "./common.css";
+@import "./shared.css";
+@import "./font.css";
+@import "/components/tools/prompt/prompt.css";
+
+:root {
+    font-size: 13px;
+    color: var(--color);
+}
+body {
+    /* color: var(--text); */
+    display: grid;
+    grid-template: auto 1fr / auto 1fr;
+    height: 100vh;
+    width: 100vw;
+    --font:  Nunito, LantingHei SC, Microsoft YaHei;
+    font-family: var(--font);
+    overflow-x: hidden;
+    overflow-y: scroll;
+    background: var(--bg-body);
+}
+
+left-bar {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+    /* border-right: solid 3px var(--primary); */
+}
+tab-bar {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    height: var(--tab-height);
+}
+screen-box {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    overflow-y: scroll;
+    /* height: 100%; */
+    min-width: 900px;
+    /* background: var(--bg-body); */
+    overflow-x: hidden;
+}
+screen-box > *:not(.current) {
+    display: none;
+}
+screen-box:empty {
+    display: grid;
+    place-content: center;
+}
+screen-box:empty::after {
+    content: var(--org);
+    font-size: 8rem;
+    opacity: 0.10;
+    filter: blur(3px);
+}
+:not(:defined) {
+    display:    inline-block;
+    opacity: 0;
+}
+/* :defined { */
+    /* animation: fade-in var(--duration, 0.3s) 0.1s both; */
+    /* width: 100%; */
+    /* height: 30px; */
+/* } */
+
+screen-box::-webkit-scrollbar {
+    width: 0.6rem;
+}
+screen-box::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+screen-box::-webkit-scrollbar-thumb {
+    background: var(--primary);
+}
+notification-list {
+  /* position: fixed; */
+  /* right: 0; */
+  top: 60px;
+}

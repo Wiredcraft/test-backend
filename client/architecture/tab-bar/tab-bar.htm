@@ -1,0 +1,37 @@
+<main>
+    <div class="tabs">
+        <div ref="scrollBar">        
+            <nav>
+                <div v-for="({ name, uri }, index) in tabs"
+                     @animationend="el => onClosed(index, el)"
+                     :key="uri"
+                     :class="closingIndex === index ? 'closing' : ''"
+                     :style="closingIndex === index ? '--width: ' + closingWidth : ''"
+                     :selected="uri === current ? '' : undefined" >
+                    
+                    <div class="tab-box">
+                        <button class="tab" @click="open(uri)">
+                            {{ name }}
+                        </button>
+                        <button class="close" @click="close(uri, index)" v-if="tabs.length > 1">
+                            <svg-icon :icon="'close'"></svg-icon>
+                        </button>
+                    </div>
+
+                </div>
+            </nav>  
+        </div>
+    </div>
+
+    
+    <!-- <button>
+        <svg-icon icon="notifications-outline"></svg-icon>
+    </button> -->
+    <button @click="emit('@quick-search')">
+        <svg-icon icon="search-outline"></svg-icon>
+    </button>
+    <button @click="emit('@close-others')">
+        <svg-icon icon="power"></svg-icon>
+    </button>
+
+</main>

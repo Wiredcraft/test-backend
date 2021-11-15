@@ -1,0 +1,102 @@
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: var(--opacity, 1);
+    }
+}
+@keyframes fade-top-in {
+    from {
+        opacity: 0;
+        transform: translateY(var(--from, 50px));
+    }
+    to {
+        opacity: var(--opacity, 1);
+        transform: translateY(var(--to, 0));
+    }
+}
+@keyframes toggle-horizental {
+    from {
+        transform: translateX(calc(-1 * var(--x, 20px)));
+    }
+    to {
+        transform: translateX(var(--x, 20px));
+    }
+}
+@keyframes fly-away {
+    from {
+        transform: translateY(var(--from, 0));
+    }
+    to {
+        transform: translateY(var(--to, -60px));
+    }
+}
+@keyframes fade-away {
+    to {
+        transform: scale(0.94);
+        opacity: 0;
+    }
+}
+@keyframes fade-out {
+    to {
+        opacity: 0;
+    }
+}
+@keyframes sketch-in {
+    from {
+        width: calc(var(--width, 100) * 1px);
+        /* min-width: 100px; */
+    }
+    to {
+        width: 0;
+        padding: 0;
+    }
+}
+@keyframes sketch-out {
+    from {
+        max-width: 0;
+        padding-left: 0;
+    }
+    to {
+        max-width: var(--width, 120px);
+        padding-left: var(--padding-left, 15px);
+    }
+}
+
+@keyframes expand-width {
+    from {
+        width: 0;
+    }
+    to {
+        width: var(--width);
+    }
+}
+
+@keyframes prompt-out {
+    from {
+        opacity: 0;
+        transform: translateX(-50%);
+    }
+    40% {
+        transform: translateX(-50%);
+        opacity: 1;
+    }
+    to {
+        transform: translate(-50%, -50px);
+        opacity: 0;
+    }
+}
+@property --ratio {
+    syntax: '<number>'; /* <- defined as type number for the transition to work */
+    initial-value: 0;
+    inherits: false;
+}
+@keyframes just-in {
+    from {
+        --ratio: 0;
+    }
+    to {
+        --ratio: 1;
+    }
+}

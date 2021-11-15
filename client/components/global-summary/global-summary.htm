@@ -1,0 +1,23 @@
+<main>
+    <nav>
+        <div class="title">
+            <svg-icon icon="stats-chart-sharp"></svg-icon>
+            数据总览
+        </div>
+        <!-- <select id="brid">
+            <option value="-">全部分店</option>
+        </select> -->
+    </nav>
+    <ul>
+        <li v-for="({ title, data, info, meta, direction }, index) in overall">
+            <span class="type fade-in">{{ title }}</span>
+            <digit-turn :delay="(overall.length - index - 1) * 200">{{ data }}</digit-turn>
+            <span class="state fade-in">
+                {{ info }}
+                <svg-icon :icon="direction === '-' ? 'caret-down' : 'caret-up' "></svg-icon>
+                {{ meta }}
+            </span>
+        </li>
+    </ul>
+
+</main>

@@ -1,0 +1,41 @@
+list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 40px 40px 50px;
+    max-width: 980px;
+}
+customer {
+    --width: 80px;
+    width: var(--width);
+    flex: 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer;
+}
+img {
+    border-radius: 50%;
+    border: solid 2px transparent;
+    transition: border-color var(--duration);
+}
+[male]:hover {
+    border-color: #0652DD;
+}
+[female]:hover {
+    border-color: #FDA7DF;
+}
+span {
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+.offline {
+    filter: grayscale(1) opacity(0.8);
+}
+dialog list {
+    overflow: scroll;
+    max-height: 82vh;
+}

@@ -1,0 +1,67 @@
+dialog {
+    width: var(--width, 600px);
+    --text: #333;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 30px;
+}
+:is(form, one) > div:not(.column) > span:first-child {
+    min-width: 90px;
+    min-height: 38px;
+    justify-content: center;
+}
+one > div {
+    width: calc(50% - 5px);
+}
+
+
+form > div.select {
+    width: 260px;
+}
+.avatar img {
+    --width: 42px;
+    /* border: solid 1px var(--input-border-color); */
+    cursor: pointer;
+}
+
+
+.add-time {
+    display: flex;
+    width: 100%;
+    /* padding: 0 10px; */
+    flex-direction: column;
+    gap: 5px;
+}
+one upload {
+    width: 100%;
+}
+form > one {
+    display: flex;
+    justify-content: space-between;
+}
+select-salesman {
+    flex-grow: 1;
+}
+
+role {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    margin-left: 20px;
+}
+role > span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+role label {
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: #353b48;
+}
+role input {
+    transform: scale(1.2);
+    cursor: pointer;
+}

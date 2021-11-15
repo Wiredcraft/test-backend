@@ -1,0 +1,42 @@
+main {
+    display: grid;
+    grid-template-areas:
+        "title title"
+        "who   meta";
+    grid-row-gap: 10px;
+    border-radius: 5px;
+    padding: 15px;
+    background: white;
+    margin-bottom: 25px;
+    position: relative;
+}
+main.offline {
+    background: var(--bg-text-info);
+}
+#title {
+    grid-area: title;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text-info-title);
+}
+#title > span {
+    opacity: 0.4;
+    color: var(--usual)
+}
+.offline #title > span {
+    color: var(--delete)
+}
+#who {
+    grid-area: who;
+    font-size: 0.9rem;
+    color: var(--meta-left);
+}
+#meta {
+    grid-area: meta;
+    text-align: right;
+    font-size: 0.9rem;
+    color: var(--meta-right);
+}
+main.usual img {
+    display: none;
+}

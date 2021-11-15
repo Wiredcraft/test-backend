@@ -1,0 +1,111 @@
+container {
+    position: relative;
+    display: block;
+    padding: 0 12px 0px;
+    /* background-color: #2220; */
+}
+container::after {
+    /* content: ""; */
+    position: absolute;
+    /* background-color: #0004; */
+    left: 0;
+    width: 100%;
+    height: 40px;
+    top: 10px;
+}
+
+stars {
+    --width: 1.2rem;
+    display: flex;
+    justify-content: center;
+    color: var(--star);
+    margin: 5px 0;
+}
+stars.empty {
+    filter: grayscale(0.8);
+    opacity: 0.4;
+}
+container:hover scores:not(:empty) {
+    display: flex;
+}
+scores {
+    --width: 200px;
+    --bg: var(--blank);
+
+    display: none;
+    
+    background: var(--bg);
+    position: absolute;
+
+    width: var(--width);
+    flex-direction: column;
+    gap: 7px;
+
+    box-shadow: 0 0 8px var(--light-gray);
+    left: 50%;
+    top: 35px;
+
+    z-index: 1;
+    padding: 25px 15px 10px;
+    margin-left: calc(var(--width) / -2);
+    
+    animation: fade-in var(--duration);
+}
+scores::before {
+    content: "";
+    transform: rotate(-135deg);
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    top: -8px;
+    left: calc(50% - 7px);
+    overflow: hidden;
+    pointer-events: none;
+    box-shadow: 0 0 6px #0004;
+    background: var(--bg);
+    z-index: -1;
+}
+scores::after {
+    content: "";
+    height: 20px;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: var(--bg);
+}
+scores > div {
+    opacity: 0.7;
+    font-size: 1rem;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+scores > div > span {
+    width: 30px;
+}
+ratio {
+    --height: 5px;
+    /* width: 100%; */
+    position: relative;
+    background-color: var(--bg-bar);
+    height: var(--height);
+    border-radius: calc(var(--height) / 2);
+    /* margin-top: 10px; */
+    flex-grow: 1;
+}
+ratio::after {
+    border-radius: calc(var(--height) / 2);
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background-color: var(--star);
+    width: var(--width);
+}
+h4 {
+    text-align: center;
+    opacity: 0.8;
+    margin-top: 5px;
+}

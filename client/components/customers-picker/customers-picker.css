@@ -1,0 +1,116 @@
+dialog {
+    width: 620px;
+    height: 660px;
+    display: flex;
+    flex-direction: column;
+}
+main {
+    flex-grow: 1;
+    display: flex;
+    padding: 30px 40px;
+    overflow: hidden;
+}
+main > div {
+    /* border: solid 1px #0002; */
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* height: 600px; */
+}
+main > svg-icon {
+    --width: 24px;
+    align-self: center;
+    color: var(--light-navy);
+    margin: 5px;
+}
+#select {
+    border-top-width: 0;
+}
+box {
+    border: solid 1px var(--light-gray);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: scroll;
+    height: 600px;
+    gap: 4px;
+    padding: 12px 0;
+}
+item {
+    display: flex;
+    
+        /* "avatar phone"; */
+    gap: 10px;
+    align-items: center;
+    padding: 6px 20px;
+    transition: background-color var(--duration-thin);
+    font-size: 1.05rem;
+}
+#select item {
+    cursor: pointer;
+}
+#select .nope {
+    display: none;
+}
+:not(#already) > item:hover {
+    background-color: var(--light-shadow);
+}
+item > img {
+    --width: 26px;
+    border-radius: var(--width);
+}
+item > name {
+    opacity: 0.8;
+    min-width: 5.2rem;
+}
+item > phone {
+    opacity: 0.25;
+    width: 80px;
+}
+item > svg-icon {
+    --width: 20px;
+    opacity: 0;
+    padding: 5px;
+    box-shadow: 0 0 5px var(--light-navy);
+    border-radius: 5px;
+    transition: opacity var(--duration);
+    color: var(--delete);
+}
+#select item > svg-icon {
+    display: none;
+}
+#active item {
+    padding-right: 10px;
+}
+#active item > svg-icon {
+    /* opacity: 0.4; */
+    margin-left: 6px;
+}
+#picking item:hover > svg-icon {
+    /* display: inherit; */
+    opacity: 0.8;
+    cursor: pointer;
+}
+number {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    color: white;
+    background-color: var(--number);
+    padding: 5px;
+    border-radius: 20px;
+    min-width: 25px;
+    text-align: center;
+}
+space {
+    flex-grow: 1;
+    min-height: 20px;
+}
+#already {
+    width: calc(100% - 20px);
+    border-radius: 5px;
+    box-shadow: 0 0 5px var(--bg-shadow);
+    background: var(--bg-body);
+    align-self: center;
+}

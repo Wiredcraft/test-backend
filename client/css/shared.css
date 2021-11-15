@@ -1,0 +1,134 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    list-style: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 400;
+    line-height: 1.2;
+    margin-top: var(--top, 0);
+    margin-bottom: var(--bottom, 0.1rem);
+    user-select: none;
+}
+h1 {
+    font-size: 1.7rem;
+}
+h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+h3 {
+    font-size: 1.25rem;
+    white-space: nowrap;
+}
+h4 {
+    margin-bottom: 0.3rem;
+    font-size: 0.95rem;
+}
+small {
+    opacity: 0.5;
+    font-size: 90%;
+    font-weight: 400;
+}
+img {
+    width: var(--width);
+    height: var(--width);
+    object-fit: cover;
+}
+textarea, input {
+    border: solid 1px var(--input-border-color);
+    padding: 7px 10px;
+    color: var(--text);
+    font-family: Nunito, LantingHei SC, Microsoft YaHei;
+}
+textarea {
+    left: auto;
+    top: auto;
+    position: static;
+    text-transform: none;
+    letter-spacing: normal;
+    font: normal 14px "LantingHei SC", Tahoma, Arial;
+    resize: none;
+    outline-offset: 0;
+    width: 100%;
+    min-height: 72px;
+    line-height: 22px;
+}
+input {line-height: 24px;}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+::placeholder {
+    color: var(--placeholder);
+}
+button {
+    border-radius: 1px;
+    font-family: var(--font);
+    cursor:        pointer;
+    border: none;
+    transition: var(--duration-thin);
+    padding: 6px 14px;
+    /* background: var(--bg-2nd); */
+    user-select: none;
+    /* height: 36px; */
+}
+button.order {
+    color: white;
+    background: linear-gradient(to bottom right, #f96e73, #e22114);
+    font-weight: 500;
+    font-size: 1.1rem;
+    border-radius: 3px;
+}
+table {
+    border-spacing: 8px;
+    width: 100%;
+}
+
+input, textarea {
+    border-color: transparent;
+    background: none;
+    transition: border-color var(--duration-thin);
+}
+input:focus, :focus-within > input {
+    border-color: var(--focus-border);
+}
+
+x-table > nav, main > nav {
+    display: flex;
+    justify-content: space-between;
+    background: var(--title-header);
+    /* color: rgba(0,0,0,.9); */
+    padding: 1rem;
+    align-items: center;
+}
+
+input.invalid:not(:focus) {
+    color: var(--invalid);
+}
+
+
+select {
+    border: none;
+    padding: 10px 30px 10px 10px;
+    appearance: none;
+    -webkit-appearance: none;
+    width: var(--width, max-width);
+    cursor: pointer;
+    background: var(--bg-dark);
+    color: white;
+    height: var(--height, 38px);
+    min-width: 120px;
+}
+iframe {
+    box-shadow: 8px 8px 30px #0005;
+    border: solid 3px white;
+    width: 760px;
+    height: 428px;
+    display: block;
+    margin: 10px 0 20px;
+    border-radius: 0px;
+}

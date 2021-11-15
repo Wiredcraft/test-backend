@@ -1,0 +1,6 @@
+<main>
+    <input list="customers" :placeholder="placeholder" v-model="text" :class="cssClass" @blur="check" />
+    <datalist id="customers">
+        <option v-for="{ name, phone } in customerList" :value="name" :label="phone">
+    </datalist>  
+</main>

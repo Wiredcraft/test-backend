@@ -1,0 +1,96 @@
+@import "./dark.css";
+@import "./light.css";
+:root { /* Main */
+    --primary: #59C4BC;
+    --secondary: #637AAE;
+    --data-gradient: linear-gradient(45deg, var(--primary), var(--secondary));
+    --female-gradient: linear-gradient(45deg, #ff6699, #ffe869);
+    --selected-tab: #5cb7ba;
+}
+:root { /* Text Content */
+    --text: #202223;
+    --title-light: #eeeeee;
+    --form-title: #777777;
+    --light-text: #626569;
+    --tab-title: #555555;
+    --user-name: #007bff;
+    --placeholder: #0005;
+    --text-muted: #9A9A9A;
+    --text-grey: #6c757d;
+    --command: #dc3545;
+    --number: var(--command);
+    --link: #3e7cf3;
+    --price: #ee5a5a;
+    --meta-left: #0007;
+    --meta-right: #0005;
+    --bg-text-info: #0001;
+    --light-gray: #0003;
+    --light-shadow: #5571;
+    --light-navy: #0066;
+    --light-border-color: #3333;
+}
+:root { /* Control */
+    --prompt-submit: #dc3545;
+    --cancel: #4e639e44;
+    --focus-border: #59C4BC;
+    --submit: #17a2b8;
+    /* --submit: linear-gradient(45deg, #59C4BC, #637AAE); */
+    --menu-left-line: #b7babd23;
+    --bg-shadow: #e2e2e2;
+    --finish-button-shadow: #c7c1c1;
+    --page-button: #0d80fb;
+    --title-header: #f8f9fa;
+    --active-button: #5B5BE3;
+    --delete: #c44569;
+    --cancel: #b71540;
+    --offline: #6F1E51;
+    --online: #059e39;
+    --usual: var(--online);
+    --star: #cf6a87;
+    --invalid: var(--delete);
+    --update-button: #3867d6;
+}
+:root { /* Background */
+    --blank: #fff;
+    --shadow-blank: #fff1;
+    --bg-dark: #343a40;
+    --bg-selected-tab: #fff2;
+    --bg-mask: #000000ba;
+    --bg-body: #F3F4F8; /*#f1f1f1; */
+    --bg-bar: #eeeeee;
+    --dark: #202223;
+    --bg-type-selected: #c8d6e589;
+    --bg-type-hover: #5552;
+    --bg-hover: #9992;
+    --bg-light-dark: #00000030;
+    --bg-tag: #222f3eaa;
+    --bg-search: #2f3437;
+    --bg-search-shadow: #0f0f0f1a 0px 0px 0px 1px, 
+                        #0f0f0f33 0px 5px 10px, 
+                        #0f0f0f66 0px 15px 40px;
+    --bg-dark-screen: #0f0f0f99;
+}
+
+:root { /* Border */
+    --input-border-color: #d9dde0;
+    --button-border-color: #e2e2e2;
+    --border-color: #0000401d;
+    --border-color-deep: #00000033;
+    --border-color-light: #0000040C;
+}
+@media (prefers-color-scheme: dark) {
+    :root { /* Text Content */
+        /* --text: #ccc;
+        --blank: #333; */
+        /* --title-light: #eeeeee;
+        --form-title: #777777;
+        --light-text: #626569;
+        --tab-title: #555555;
+        --user-name: #007bff;
+        --placeholder: #0005;
+        --text-muted: #9A9A9A;
+        --text-grey: #6c757d;
+        --command: #dc3545;
+        --link: #3c40c6; */
+    }
+}

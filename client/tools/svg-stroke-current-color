@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd svg 
+# grep -r "fill:#000;" .
+sed -i '.bak' 's/stroke:#000;//g' *
+sed -i '.bak' 's/ stroke="#000"//g' *

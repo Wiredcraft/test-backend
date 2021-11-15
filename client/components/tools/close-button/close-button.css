@@ -1,0 +1,14 @@
+main {
+    cursor: pointer;
+    --width: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 5px black;
+    padding: 0;
+    background: var(--bg, black);
+    color: var(--color, #f7f1e3);
+}
+svg-icon {
+    display: block;
+    transform: scale(1.3);
+}

@@ -1,0 +1,5 @@
+poor-customers::after {
+    content: "";
+    display: block;
+    height: 20px;
+}

@@ -1,0 +1,15 @@
+#!/bin/bash
+cd ~/hotel/admin/components
+
+name=$1
+
+echo -e "import './${name}/${name}.js'    //auto `date +'%m-%d %H:%M'`" >> index.js
+mkdir $name
+cd $name
+touch $name.js
+echo -e "<main>\n$name\n</main>" > $name.htm
+touch $name.css 
+
+node ~/hotel/admin/tools/create-component.js $name $2 > $name.js
+
+echo "Created component $name `date`"

@@ -1,0 +1,105 @@
+main {
+    display: flex;
+    overflow: scroll;
+    position: relative;
+    padding-right: 12px;
+    background-color: var(--tabbar-bg);
+    border-bottom: solid 1px var(--thin-light-border);
+    align-items: center;
+    width: calc(100vw - var(--left-width));
+    height: 100%;
+    /* box-shadow: 1px 4px 5px var(--bg-hover); */
+}
+button {
+    background: var(--bg);
+    color: var(--text);
+    padding: 0 calc(var(--height) / 2.5 );
+    height: var(--height);
+}
+.tabs {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    flex: 1;
+}
+.tabs::after {
+    content: "";
+    /* background: linear-gradient(to left, var(--blank), var(--shadow-blank)); */
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 30px;
+    height: var(
+    --tab-height);
+}
+.tabs > * {
+    flex: 1;
+    overflow: scroll;
+    /* padding-right: 30px; */
+    height: 100%;
+    /* scroll-behavior: smooth; */
+}
+nav {
+    display: flex;
+    align-items: center;
+    border-bottom: solid 1px var(--thin-light-border);
+    height: 100%;
+    min-width: max-content;
+    padding-right: 50px;
+}
+nav > div {
+    --padding-left: 15px;
+    --width: 120px;
+    padding-left: var(--padding-left);
+    overflow: hidden;
+    animation: sketch-out var(--duration) backwards;
+    /* --width: 126px; */
+}
+nav > div.closing {
+    animation: sketch-in var(--duration) both;
+}
+nav .tab-box {
+    display: flex;
+    width: max-content;
+    background: var(--bg);
+}
+main > button {
+    --radius: 35px;
+    display: grid;
+    place-items: center;
+    color: var(--color);
+    border-radius: 50%;
+    width: var(--radius);
+    height: var(--radius);
+    padding: 0;
+    margin: 5px;
+    transition: var(--duration-thin);
+    --bg: #fff1;
+}
+main svg-icon {
+    --width: 17px;
+}
+main > button:hover {
+    background: var(--bg-shadow);
+    color: var(--dark);
+}
+nav button {
+    font-size: 0.95rem;
+    --height: 30px;
+    opacity: 0.5;
+}
+nav [selected] button {
+    opacity: 1;
+}
+[selected] .tab {
+    /* color: var(--selected-tab); */
+    --bg: var(--bg-selected-tab);
+}
+
+::-webkit-scrollbar {
+    width: 0; 
+    height: 0; /* Remove scrollbar space */
+    
+    background: transparent;  /* Optional: just make scrollbar invisible */
+    
+}

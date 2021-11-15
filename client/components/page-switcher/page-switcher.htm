@@ -1,0 +1,37 @@
+<main>
+    <capacity>            
+        <button class="selected">20</button>
+        <!-- <button>30</button> -->
+        <button>50</button>
+        <button>100</button>
+    </capacity>
+    
+    <div class="total" :class="empty">{{ info }}</div>    
+
+    <ul class="opearate">
+        <li :disabled="page === 0 ? true : null" @click="prev" v-if="indexes?.length > 1">
+            Previous
+        </li>
+        <li v-for="i in (indexes.slice(0, kMaxPages))" @click="select(i)" :active="i === page ? true : null">
+            {{ i + 1 }}
+        </li>
+
+        <li v-if="indexes.length > kMaxPages + 1" 
+            class="dots">
+            <svg-icon icon="ellipsis-horizontal"></svg-icon>
+        </li>
+        <li v-if="indexes.length > kMaxPages"
+            @click="select(indexes.length - 1)" 
+            :active="indexes.length - 1 === page ? true : null">
+            {{ indexes.length }}
+        </li>                
+
+        <li :disabled="page === indexes.length - 1 ? true : null" @click="next" v-if="indexes?.length > 1">
+            Next
+        </li>
+    </ul>
+    <div class="goto" :unvisible="indexes?.length < 10 ? true : null">
+        <input placeholder="Go to" type="number" ref="inputRef">
+        <button class="go" @click="goto">Go</button>
+    </div>
+</main>
