@@ -29,7 +29,10 @@ HTTP.createServer(async (req, res) => {
         }
         return res.end(JSON.stringify(data))
     }
-
+    if (!headers.passport) {
+        res.writeHead(401, {'Content-Type': 'text/plain'})
+        return res.end('Who Are You?');
+    }
     const from = Number.parseInt(decrypt(headers.passport))
     const values = [from] 
     const args = [`"from" => $1`]
