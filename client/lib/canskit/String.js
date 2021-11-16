@@ -88,6 +88,9 @@ String.extendMethods({
          */
         return JSON.parse(`"${this}"`);
     },
+    withinLength (length = 6) {
+        return this.length > length ? this.slice(0, length - 2).replace(/ [^.\n ]*$/, '') + '...' : this
+    },
     assignLeft (...objs) {
         for (let i = 0; i < objs.length - 1; i++) {
             // if (objs[i + 1][this] !== undefined) {

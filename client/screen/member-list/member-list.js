@@ -8,23 +8,22 @@ class MemberList extends Screen {
         const search = async where => {
             where = where ?? search.where 
             search.assign({ where })
-            // where = where.replace('room.status', 'status').replace(' AND room ', ' AND title ')
             xtable.make(async (n, sort, limit) => {
                 const offset = n * limit
                 const { total, members } = await $memo(':member-list', { offset, where, limit, sort })
                 // | id |  name  |    phone    | password | dob | address | coordinate | info |       createAt        | description | onoff
-                const data = members.map(({ name, id, dob, createAt, cover, coordinate, info, onoff, description }, index) => ([
+                const data = members.map(({ name, id, dob, createAt, cover, address, coordinate, info, onoff, description }, index) => ([
                         { column: '@index', $title: '序号', index: index + offset, class: onoff.slice(1) },
                         { column: '@member',  $title: '会员用户', name, mmid: id, cover },
                         { column: '@day',  $title: '生日', value: dob, sort: 'dob' },
-                        { column: '@data',  $title: '关注人数', data: info.count.following, sort: 'following' },
-                        { column: '@data',  $title: '粉丝人数', data: info.count.followed, sort: 'followed' },
+                        { column: '@address',  $title: '地址', address },
+                        { column: '@number',  $title: '关注人数', data: info.count.following, sort: 'following' },
+                        { column: '@number',  $title: '粉丝人数', data: info.count.followed, sort: 'followed' },
                         { column: '@day',   $title: '创建时间', value: createAt, sort: `createAt`  },
                         { column: '@text',  $title: '状态', value: onoff === ':on' ? '在线' : '离线' },
                         { column: '@member-comment',  $title: '备注', comment: description, title: name + ' 备注', id },
                     ]
                 ))
-//                 console.log(data)
                 return { data, total }
             })
         }

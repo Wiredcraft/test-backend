@@ -96,6 +96,13 @@
                         <td v-else-if="column ==='@data'" class="data">
                             {{ cont.data }}
                         </td>
+                        <td v-else-if="column ==='@address'" class="address">
+                            <span :data-tip="cont.address?.length >= 5 ? cont.address : null">
+                                {{ cont.address?.withinLength(10) ?? '-' }}
+                            </span>
+                        </td>
+
+                        
 
                         <td v-else-if="column ==='@dealt'" class="deal">
                             <!-- TODO Update it -->
@@ -108,8 +115,8 @@
                             <span class="number">{{ cont.value || '-' }}</span>
                         </td>
 
-                        <td v-else-if="column.oneOf('@grade', '@active', '@offline')">
-                            {{ cont.value }}
+                        <td v-else-if="column.oneOf('@number', '@active', '@offline')">
+                            {{ cont.value || cont.data }}
                         </td>
                         <td v-else>{{ cont }}</td>
 

@@ -87,7 +87,7 @@ th[column="@action"] {
 }
 th[column="@customer"], 
 th[column="@customers"],
-th[column="@grade"], 
+th[column="@number"], 
 th[column="@day"],
 th[column="@text"],
 th[column="@room-time"], 
@@ -100,7 +100,8 @@ th[column="@date"] {
     width: 120px;
 }
 
-th[column="@tags"] {
+th[column="@tags"],
+th[column="@address"] {
     width: 140px;
 }
 th[column="@daytime"],
