@@ -62,15 +62,16 @@ async function $login () {
     const data = await $memo(':login', { phone: '15089323844', password: 'test' })
     console.log(data)
     if (data.state === ':ok') {
-        const { passport } = data
+        const { passport, mmid, ssid } = data
         headers = new Headers({ 
             passport,
+            ssid,
             'Accept': 'application/json',
             'Content-Type': 'application/json'
-         }) // For following http request verification
+         })
          console.log({ headers })
         $sure('@login', data)
-        window.$mmid = data.mmid
+        window.$mmid = mmid
     }
 }
 $login()

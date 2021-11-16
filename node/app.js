@@ -6,7 +6,7 @@ const domain = $remote ? 'https://wcraft.canskit.com' : 'https://canskit.wcraft.
 HTTP.createServer(async (req, res) => {
     const { headers, url, method } = req
 
-    res.writeHead(200, {'Content-Type': 'application/json'})
+    res.writeHead(200, { 'Content-Type': 'application/json' })
 
     const [fn, ...params] = url.split('/').filter(x => x).splice(1).map(x => decodeURIComponent(x).underline())
 
@@ -16,20 +16,29 @@ HTTP.createServer(async (req, res) => {
               location = 'Get From Cloud Server by IP',
               userAgent = headers['user-agent']
               
-        const { mmid, name } = await $query(sql`SELECT * FROM test.login(ip => $1, location => $2, user_agent => $3)`, [ip, location, userAgent])
+        const { mmid, name, ssid } = await $query(sql`SELECT * FROM test.login("ip" => $1, "location" => $2, "user_agent" => $3)`, [ip, location, userAgent])
 
         const passport = encrypt(mmid.toString())
+        
         const data = {
             state: ':ok',
-            mmid, name, domain, passport,
-            avatar: `/src/${mmid %7 + 1}.jpg`,
+            mmid, name, domain, 
+            passport, 
+            ssid: encrypt(ssid.toString()),
+            avatar: `/src/${mmid %7 + 1}.jpg`,  // For Testing
         }
         return res.end(JSON.stringify(data))
     }
     if (!headers.passport) {
-        res.writeHead(401, {'Content-Type': 'text/plain'})
+        res.writeHead(401, { 'Content-Type': 'text/plain' })
         return res.end('Who Are You?');
     }
+
+    if (fn === 'logging.leave') {
+        const ssid = Number.parseInt(decrypt(headers.ssid))
+        return $query(sql`CALL logging.come_out("ssid" => $1)`, [ssid])
+    }
+
     const from = Number.parseInt(decrypt(headers.passport))
     const values = [from] 
     const args = [`"from" => $1`]

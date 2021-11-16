@@ -662,12 +662,21 @@ $$;
 ALTER FUNCTION test.add_friends() OWNER TO postgres;
 
 
-CREATE FUNCTION test.login(ip inet, location character varying, user_agent text) RETURNS TABLE(mmid integer, name text)
-    LANGUAGE plpgsql
-    AS $$
+CREATE FUNCTION test.login(
+	ip inet,
+	location character varying,
+	user_agent text)
+    RETURNS TABLE(mmid integer, name text, ssid integer) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
 DECLARE
     _mmid integer;
     _name text;
+    _ssid integer;	--Add session id
 BEGIN
 
     SELECT id, mm.name INTO _mmid, _name 
@@ -675,11 +684,12 @@ BEGIN
     WHERE id = (select anyone(array_agg(id)) from member);
     
 	INSERT INTO logging.session (mmid, name, location, ip, user_agent) 
-    VALUES (_mmid, _name, location, ip, user_agent);
+    VALUES (_mmid, _name, location, ip, user_agent)
+    RETURNING id INTO _ssid;
 
-    RETURN QUERY SELECT _mmid, _name;
+    RETURN QUERY SELECT _mmid, _name, _ssid;
 END;
-$$;
+$BODY$;
 
 
 ALTER FUNCTION test.login(ip inet, location character varying, user_agent text) OWNER TO postgres;
