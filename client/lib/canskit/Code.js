@@ -23,39 +23,18 @@ const Code = {
 
     memorized (fn) {          // Save HTML file?
         fn.cache = fn.cache || new Map();
-        if (fn.isa('AsyncFunction')) {
-            fn.fetching = fn.fetching || new Set();         //Cache the request
-            const event = new EventTarget();
-            return async (...args) => {
-                const key = args.jsonString();
-                const cached = fn.cache.get(key);
-                if (cached) {
-                    return cached;
-                }
-                if (fn.fetching.has(key)) {
-                    return await event.waitFor(key);
-                }
-                fn.fetching.add(key);
-                const value = await fn(...args);
-                fn.cache.set(key, value);
-                event.emit(key, value);
-                fn.fetching.delete(key);
-                return value;
+        const dest = (...args) => {
+            const key = args.jsonString();
+            // fn.cache.has(key) || fn.cache.set(key, fn(...args));
+            if (fn.cache.has(key)) {
+                console.log(`%c=> Memorized ${fn.name} ${key}`, 'color: #666')
+            } else {
+                fn.cache.set(key, fn(...args))
             }
-        } else {
-            const dest = (...args) => {
-                const key = args.jsonString();
-                // fn.cache.has(key) || fn.cache.set(key, fn(...args));
-                if (fn.cache.has(key)) {
-                    console.log(`%c=> Cached ${fn.name} ${key}`, 'color: #666')
-                } else {
-                    fn.cache.set(key, fn(...args))
-                }
-                return fn.cache.get(key);
-            }
-            dest.$source = fn 
-            return dest
+            return fn.cache.get(key);
         }
+        dest.$source = fn 
+        return dest
     },
     clearAllCache (dest) {
         dest.$source?.cache?.clear()

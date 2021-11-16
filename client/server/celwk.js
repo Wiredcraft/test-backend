@@ -133,6 +133,7 @@ async function $login () {
         ;({ passport, mmid } = data)
         headers = new Headers({ passport }) // For following http request verification
         loggedIn = true 
+        window.$mmid = mmid
         $sure('@login', data)
     }
 }

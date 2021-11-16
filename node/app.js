@@ -1,13 +1,10 @@
 const HTTP = require('http')
 const { $fetch, encrypt, decrypt, $query } = require('./tool')
 const PORT = 1954
-const { SERVER } = process.env
-const $remote = SERVER === 'celwk'
+
 const domain = $remote ? 'https://wcraft.canskit.com' : 'https://canskit.wcraft.cn' // Antoher Lisp Version: https://wcraft.celwk.com
 HTTP.createServer(async (req, res) => {
     const { headers, url, method } = req
-    console.log(headers)
-    // console.log({ headers, url, method })
 
     res.writeHead(200, {'Content-Type': 'application/json'})
 
@@ -43,7 +40,7 @@ HTTP.createServer(async (req, res) => {
                 data.push([params[i], params[i + 1]])
             }
             break
-        case 'POST':
+        default:    // Including POST/DELETE/PUT
             data.push(...Object.entries(await $fetch(req)))
             break
     }
@@ -55,9 +52,13 @@ HTTP.createServer(async (req, res) => {
 
     const code = sql`SELECT jsonb::text FROM ${fn}(${args.join(', ')}) as jsonb`;
     console.log({ fn, values, code })
-    const { jsonb } = await $query(code, values);
-
-    res.end(jsonb || 'null');
+    const { jsonb, ...error } = await $query(code, values);
+    if (!jsonb) {
+        res.writeHead(500, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify(error) );
+    } else {
+        res.end(jsonb);
+    }
 }).listen(PORT);
 
 console.log(`Server running at ${domain}`);

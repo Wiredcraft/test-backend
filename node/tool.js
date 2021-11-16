@@ -1,5 +1,8 @@
 const { Pool } = require('pg');
 const crypto = require('crypto');
+
+global.$remote = process.env.SERVER === 'celwk'
+
 String.prototype.underline = function () {
     return this.replace(/-/g, '_')
 }
@@ -37,8 +40,13 @@ const pool = new Pool({
 }) 
 
 const $query = async (...args) => {
-    const { rows: [ data ] } = await pool.query(...args);
-    return data
+    try {
+        const { rows: [ data ] } = await pool.query(...args);
+        return data
+    } catch (error) {
+        console.error(error)
+        return $remote ? { severity: 'ERROR', hint: 'Sorry, there is an internal error' } : error // { error: error.hint }
+    }
 }
 
 module.exports = { encrypt, decrypt, $fetch, $query }

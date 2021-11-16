@@ -47,13 +47,12 @@ class LeftBar extends Architecture {
             ':edit': ({ name }) => data.assign({ name })
         })
         const gotoMyself = () => {
-            $open(`member/${$admin.mmid}`)
+            $open(`member/${$mmid}`)
         }
 
         return { data, open, selected, groupIndex, gotoMyself }
     }
-    canSync ({ self }, event) {    // When Update Org Name?
-
+    canSync ({ self }) {    // When Update Org Name?
         return self
     }
 }

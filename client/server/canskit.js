@@ -22,18 +22,21 @@ const $broadcast = async (broadcast, data) => {
     window.nextFrame(() => $emit(broadcast, { ...values, $self: true, broadcast: true }))
 }
 
-const $memo = $once //.memorized()
-const $clear = (...args) => $memo.unmemorize(...args)
+const $$ = $once.memorized()
+const $clear = (...args) => $$.unmemorize(...args)
 const $cleanUp = (sth) => {
-    $memo.clearAllCache()
+    $$.clearAllCache()
     console.log(`%c[[ CLEAN UP ]] `, 'color: #ED4C67', sth)
 }
-const $renew = (...args) => {
-    console.log(`%c|| CLEAR => ${args.jsonString()}`, 'color: #e5503966')
-    $clear(...args)
-    return $$(...args)
+const $memo = async (...args) => {
+    const data = await $$(...args)
+    if (data?.severity === 'ERROR') {
+        Prompt.alert(data.hint)
+        return new Promise(() => console.log('Wait forever..., ignore it'))
+    } else {
+        return data
+    }
 }
-
 window.Global = window
 
 function $buildTabRemember (name) {
@@ -49,7 +52,6 @@ Object.assign(window, {
     $once,
     $memo, 
     $clear, 
-    $renew, 
     $cleanUp,
     $buildTabRemember
 })
@@ -66,7 +68,9 @@ async function $login () {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
          }) // For following http request verification
+         console.log({ headers })
         $sure('@login', data)
+        window.$mmid = data.mmid
     }
 }
 $login()
