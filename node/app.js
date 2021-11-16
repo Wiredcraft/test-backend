@@ -3,7 +3,7 @@ const { $fetch, encrypt, decrypt, $query } = require('./tool')
 const PORT = 1954
 const { SERVER } = process.env
 const $remote = SERVER === 'celwk'
-const domain = $remote ? 'https://nodecraft.celwk.com' : 'https://node.wcraft.com'
+const domain = $remote ? 'https://wcraft.canskit.com' : 'https://canskit.wcraft.cn'
 HTTP.createServer(async (req, res) => {
     const { headers, url, method } = req
     console.log(headers)
