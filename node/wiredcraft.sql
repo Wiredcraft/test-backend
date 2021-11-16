@@ -724,7 +724,9 @@ SELECT power(coord1[0] - coord2[0], 2) + power(coord1[1] - coord2[1], 2) < space
 
 $$;
 
-
+COMMENT ON FUNCTION tool.near(point, point, double precision)
+    IS 'Maybe I should use PostGIS?';
+	
 ALTER FUNCTION tool.near(coord1 point, coord2 point, space double precision) OWNER TO postgres;
 
 

@@ -3,7 +3,7 @@ const { $fetch, encrypt, decrypt, $query } = require('./tool')
 const PORT = 1954
 const { SERVER } = process.env
 const $remote = SERVER === 'celwk'
-const domain = $remote ? 'https://wcraft.canskit.com' : 'https://canskit.wcraft.cn'
+const domain = $remote ? 'https://wcraft.canskit.com' : 'https://canskit.wcraft.cn' // Antoher Lisp Version: https://wcraft.celwk.com
 HTTP.createServer(async (req, res) => {
     const { headers, url, method } = req
     console.log(headers)
@@ -11,7 +11,7 @@ HTTP.createServer(async (req, res) => {
 
     res.writeHead(200, {'Content-Type': 'application/json'})
 
-    const [fn, ...params] = url.split('/').filter(x => x).splice(1).map(x => decodeURI(x).underline())
+    const [fn, ...params] = url.split('/').filter(x => x).splice(1).map(x => decodeURIComponent(x).underline())
 
     // For testing, login a random member
     if (fn === 'login') {
@@ -19,7 +19,7 @@ HTTP.createServer(async (req, res) => {
               location = 'Get From Cloud Server by IP',
               userAgent = headers['user-agent']
               
-        const { mmid, name } = await $query(`SELECT * FROM test.login(ip => $1, location => $2, user_agent => $3)`, [ip, location, userAgent])
+        const { mmid, name } = await $query(sql`SELECT * FROM test.login(ip => $1, location => $2, user_agent => $3)`, [ip, location, userAgent])
 
         const passport = encrypt(mmid.toString())
         const data = {
@@ -37,7 +37,7 @@ HTTP.createServer(async (req, res) => {
     switch (method) {
         case 'GET':
             for (let i = 0; i < params.length; i += 2) {
-                data.push([params[i], decodeURIComponent(params[i + 1])])
+                data.push([params[i], params[i + 1]])
             }
             break
         case 'POST':

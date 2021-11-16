@@ -1,0 +1,48 @@
+* Push the whole projects including front-end and backend. 
+** Lisp: https://wcraft.celwk.com/ 
+** Node: https://wcraft.canskit.com/ 
+Most works are done by postgres functions/procedures. So I haven't used Express/Koa as normal. 
+
+
+* Missed
+** Node.js Code
+Very less, most of the jobs about data are done by database...
+** User Auth 
+Does it mean user name/phone and password(with md5 or so)? 
+** Code Comment...
+I have read a book called <Programmers At Work> (by Susan Lammers on 1989). I saw most coders prefer to write comments as less as possible.
+They would like to express what they are doing in their codes. (Like Mathemathics??)
+I would think of names of my variables/functions carefully usually.
+Maybe the main reason is: I am a individual developer (Like to be a hacer?).
+** Test Unit
+I am interested in using Unit Test of Lisp, maybe I will in the future, with Lisp: https://pcl.celwk.com/09.practical-building-a-unit-test-framework.htm
+* Features
+** Messages 
+Subscript and emit messages instead of callback(unlike I did mostly before), with either JS or Lisp.
+I like Functional Programming better than Object-Oriented.
+** Front-end JavaScript
+I use web-component frequently, try to discard Vue/React.
+I care about UI/UX very much.
+** SQL functions/procedures 
+Most works relative to data can be done by database, I can update the function without restart server, very convinient and efficiently...
+I read other developers' code in this project, mine is too different--very less node code, lots of JavaScript code in front-end and lots of functions code in database...
+I used MySQL before, but now Postgres. I haven't used MongoDB yet.
+Should I use PostGIS for finding nearby friends? (Currently I just use point distaces)
+
+* APIs
+All functions in database of Schema "broadcast"(for POST) and "client" (for GET) are opened APIs ("from", the first parameter, is the session member):
+** broadcast
+*** create-member (name, phone, dob, address, description, latitude, longitude)
+*** edit (mmid, name, phone, dob, address, description)
+*** follow (mmid)
+*** unfollow (mmid)
+*** delete-member (mmid)
+** client
+*** the-member (mmid)
+*** member-list (limit, offset, where, sort)
+*** nearby-friends (mmid, limit, offset)
+*** followed-of (mmid, limit, offset)
+*** following-of (mmid, limit, offset)
+*** the-logs (limit, offset, where)
+*** the-sessions (limit, offset, where)
+*** overview ()
