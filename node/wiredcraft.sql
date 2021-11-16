@@ -580,7 +580,7 @@ CREATE PROCEDURE logging.log_member(ssid integer, mmid integer, name text)
     LANGUAGE sql
     AS $_$
     UPDATE logging.session
-    SET mmid = $2, name = $3
+    SET mmid = $2, name = $3 || '(lisp)'
     WHERE id = $1;
 $_$;
 
@@ -679,7 +679,7 @@ DECLARE
     _ssid integer;	--Add session id
 BEGIN
 
-    SELECT id, mm.name INTO _mmid, _name 
+    SELECT id, (mm.name || '(web)') INTO _mmid, _name 
     FROM member mm 
     WHERE id = (select anyone(array_agg(id)) from member);
     
