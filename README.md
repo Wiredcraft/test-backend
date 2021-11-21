@@ -43,12 +43,11 @@
 
 `./dev up-staging`, (wating for all services started) then the service will served on `http://localhost:3000`
 
-Using `./dev down-staging` to remove containers. Remove `tmp/staging` to clear all files of `staging`
+Using `./dev down-staging` to remove containers.
 
-### To build
+### To build a fresh image
 
-1. Building a docker image: `./dev build`
-1. To test: `docker run --rm -p 8000:80 test-backend-staging:latest`
+`./dev build`
 
 ## Explaining
 
@@ -60,7 +59,7 @@ Here is a comprehensive description of this program
 
 ### Features
 
-[√] The API should follow typical RESTful API design pattern.
+[√] The API should follow a typical RESTful API design pattern.
 [√] The data should be saved in the DB.
 [√] Provide proper unit test.
 [√] Provide proper API document.
