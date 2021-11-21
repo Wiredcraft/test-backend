@@ -33,6 +33,8 @@
     "nodemon": "^2.0.15",
     "prettier": "^2.4.1",
     "slash": "^4.0.0",
-    "supertest": "^6.1.6"
+    "supertest": "^6.1.6",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6"
   }
 }

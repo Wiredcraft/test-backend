@@ -2,6 +2,8 @@ import express from 'express';
 import membersApi from './backend/routers/members';
 import accessFileLogger from './backend/logger/access';
 import { logErrors, errorHandler } from './backend/logger/error';
+import { swaggerSpec } from './backend/docs/swagger';
+import swaggerUi from 'swagger-ui-express';
 
 const app = express();
 
@@ -21,6 +23,11 @@ if (process.env.NODE_ENV == 'dev' || process.env.NODE_ENV == 'staging') {
 
 if (process.env.NODE_ENV == 'prod') {
   // The logging stack here should revolves the ELK in the mode of production
+}
+
+// Adding the API docs
+if (process.env.NODE_ENV == 'dev' || process.env.NODE_ENV == 'staging') {
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 }
 
 // APIs
