@@ -108,3 +108,37 @@ test('DELETE /api/v1/members/1', async () => {
       expect(response.body.deleted).toEqual(true);
     });
 });
+
+// Test the nearby api
+test('GET /api/v1/nearby/', async () => {
+  // Close to 121.458715, 31.221061
+  await supertest(app)
+    .get('/api/v1/nearby/?distance=300&long=121.459102&lat=31.222101')
+    .expect(200)
+    .then((response) => {
+      // Check status
+      expect(response.body.length).toEqual(1);
+    });
+});
+
+test('GET /api/v1/nearby/', async () => {
+  // try errors
+  await supertest(app)
+    .get('/api/v1/nearby/?distance=fff&long=121.459102&lat=31.222101')
+    .expect(400)
+    .then((response) => {
+      // Check status
+      expect(response.body.length).toEqual(1);
+    });
+});
+
+test('GET /api/v1/nearby/', async () => {
+  // try errors
+  await supertest(app)
+    .get('/api/v1/nearby/?distance=fff&long=999&lat=-999')
+    .expect(400)
+    .then((response) => {
+      // Check status
+      expect(response.body.length).toEqual(3);
+    });
+});

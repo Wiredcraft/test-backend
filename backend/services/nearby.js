@@ -1,5 +1,6 @@
 import { Member } from '../db/models';
 import { Sequelize } from 'sequelize';
+import { checkSchema, validationResult } from 'express-validator';
 
 // Search firends in the boundary which is created by a point
 /*
@@ -77,5 +78,43 @@ export const findInBoundary = async (req, res, next) => {
     res.send(data);
   } catch (err) {
     next(err);
+  }
+};
+
+// Check received values
+export const validator = checkSchema({
+  distance: {
+    errorMessage: 'distance is wrong',
+    isInt: true,
+    toInt: true,
+  },
+  long: {
+    errorMessage: 'longitude is wrong',
+    isFloat: {
+      options: {
+        min: -180,
+        max: 180,
+      },
+    },
+    toFloat: true,
+  },
+  lat: {
+    errorMessage: 'latitude is wrong',
+    isFloat: {
+      options: {
+        min: -90,
+        max: 90,
+      },
+    },
+    toFloat: true,
+  },
+});
+
+export const validation = (req, res, next) => {
+  const result = validationResult(req).array();
+  if (result.length) {
+    res.status(400).send(result);
+  } else {
+    next();
   }
 };

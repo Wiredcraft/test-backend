@@ -3321,6 +3321,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"express-validator@npm:^6.13.0":
+  version: 6.13.0
+  resolution: "express-validator@npm:6.13.0"
+  dependencies:
+    lodash: ^4.17.21
+    validator: ^13.6.0
+  checksum: d0541cfa7719b882bd1c01300f38345a7a3b7c3ca056c256cb19cca8368339434595a8cbf6da89ef6eec69b471bc954f9c9e027334956d1e7e5b71d73ccc3c28
+  languageName: node
+  linkType: hard
+
 "express@npm:^4.17.1":
   version: 4.17.1
   resolution: "express@npm:4.17.1"
@@ -5101,7 +5111,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.20, lodash@npm:^4.7.0":
+"lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -6404,6 +6414,7 @@ __metadata:
     eslint: ^8.2.0
     eslint-config-prettier: ^8.3.0
     express: ^4.17.1
+    express-validator: ^6.13.0
     jest: ^27.3.1
     moment: ^2.29.1
     moment-timezone: ^0.5.34

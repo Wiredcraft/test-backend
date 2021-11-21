@@ -1,6 +1,6 @@
 // routers/nearby.js
 import express from 'express';
-import { findInBoundary } from '../services/nearby';
+import { validator, validation, findInBoundary } from '../services/nearby';
 
 const router = express.Router();
 
@@ -64,6 +64,6 @@ const router = express.Router();
  *                     description: distance from assigned point, in meter.
  *                     example: 460
  */
-router.get('/', findInBoundary);
+router.get('/', validator, validation, findInBoundary);
 
 export default router;

@@ -1,6 +1,7 @@
 import express from 'express';
 import accessFileLogger from './backend/logger/access';
 import { logErrors, errorHandler } from './backend/logger/error';
+import { notFoundHandler } from './backend/logger/notfound';
 import { swaggerSpec } from './backend/docs/swagger';
 import swaggerUi from 'swagger-ui-express';
 
@@ -39,5 +40,7 @@ app.use(
   membersApi
 );
 app.use('/api/v1/nearby/', nearbyApi);
+
+app.use(notFoundHandler)
 
 export default app;

@@ -74,7 +74,7 @@ router.get('/', list /* here should has a middleware of pagination */);
  *                       description: Time for creation of the user.
  *                       example: "2021-11-21T02:27:31.546Z"
  */
-router.get('/:id', getOne);
+router.get('/:id([0-9]+)', getOne);
 
 /**
  * @swagger
@@ -146,7 +146,7 @@ router.post('/', create);
  *       404:
  *         description: Not found.
  */
-router.put('/:id', update);
+router.put('/:id([0-9]+)', update);
 
 /**
  * @swagger
@@ -165,6 +165,6 @@ router.put('/:id', update);
  *       200:
  *         description: Succeed.
  */
-router.delete('/:id', destory);
+router.delete('/:id([0-9]+)', destory);
 
 export default router;
