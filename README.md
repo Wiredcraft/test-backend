@@ -40,7 +40,7 @@
 
 ### Playing around directly
 
-`./dev up-staging`, then the service will served on `http://localhost:3000`
+`./dev up-staging`, (wating for all services started) then the service will served on `http://localhost:3000`
 
 Using `./dev down-staging` to remove containers. Remove `tmp/staging` to clear all files of `staging`
 

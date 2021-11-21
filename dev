@@ -3,7 +3,7 @@ while [ "$1" != "" ]
 do
     case "$1" in
         backend)
-            mkdir -p ./tmp/{db,data,cache,logs,staging}
+            mkdir -p ./tmp/{db,data,cache,logs}
             docker-compose -f docker/docker-compose.dev.yml run -p 3000:3000 backend bash
             ;;
         down)
@@ -11,17 +11,18 @@ do
             ;;
         build)
             cp ./docker/.dockerignore ./
-            cp ./docker/docker-entrypoint.sh ./
+            cp ./docker/docker-entrypoint-staging.sh ./
             cp ./docker/Dockerfile ./
             docker build -t freeyeti/test-backend:staging-latest .
-            rm ./.dockerignore ./docker-entrypoint.sh ./Dockerfile
+            rm ./.dockerignore ./docker-entrypoint-staging.sh ./Dockerfile
             ;;
         up-staging)
-            mkdir -p ./tmp/{db,staging}
+            mkdir -p ./tmp/staging/{db,logs}
             docker-compose -f docker/docker-compose.yml up
             ;;
         down-staging)
             docker-compose -f docker/docker-compose.yml down
+            rm -rf ./tmp/staging && echo "Temporary files are removed."
             ;;
         -h | --help)
             echo $"Usage: $0 {backend|down|build|up-staging|down-staging}"

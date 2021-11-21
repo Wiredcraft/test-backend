@@ -6,11 +6,12 @@ services:
     ports:
       - "0.0.0.0:5432:5432"
     volumes:
-      - ../tmp/db:/var/lib/postgresql/data
+      - ../tmp/staging/db:/var/lib/postgresql/data
       - ./create-test-db.sh:/docker-entrypoint-initdb.d/create-test-db.sh
     env_file: ../.env
   backend:
     image: docker.io/freeyeti/test-backend:staging-latest
+    restart: on-failure
     env_file: ../.env
     environment: 
       - NODE_ENV=staging
@@ -19,6 +20,6 @@ services:
     ports:
       - "0.0.0.0:3000:3000"
     volumes:
-      - ../tmp/staging:/data
+      - ../tmp/staging/logs:/data/logs
     depends_on:
       - postgis
