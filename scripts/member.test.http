@@ -41,3 +41,6 @@ content-type: application/json
 ###
 DELETE http://localhost:3000/api/v1/members/2 HTTP/1.1
 content-type: application/json
+
+###
+GET http://localhost:3000/api/v1/nearby/?distance=500&long=121.468023&lat=31.205885

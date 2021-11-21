@@ -21,7 +21,8 @@
 
 ### To access
 
-* `http://localhost:3000/`
+* Dev-site: `http://localhost:3000/` 
+* API-docs: `http://localhost:3000/docs/`
 
 ### To recycle the resources of development:
 
@@ -53,3 +54,19 @@ Using `./dev down-staging` to remove containers. Remove `tmp/staging` to clear a
 Here is a comprehensive description of this program
 
 [Click here to learn more](./docs/design.md)
+
+## Task response
+
+### Features
+
+[√] The API should follow typical RESTful API design pattern.
+[√] The data should be saved in the DB.
+[√] Provide proper unit test.
+[√] Provide proper API document.
+
+### Tech stack
+
+[√] Use Node.js and any framework.
+[√] Use any DB. NoSQL DB is preferred.
+
+* Addition: Docker and shell

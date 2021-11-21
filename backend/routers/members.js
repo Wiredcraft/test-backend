@@ -22,6 +22,14 @@ router.get('/', list /* here should has a middleware of pagination */);
  *   get:
  *     summary: Retrieve a single member.
  *     description: Retrieve a single member. Can be used to populate a member profile when prototyping or testing an API.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The member ID
  *     responses:
  *       200:
  *         description: A single user.
@@ -105,6 +113,14 @@ router.post('/', create);
  * /api/v1/members/{id}:
  *   put:
  *     summary: Updating a member's information.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The member ID
  *     requestBody:
  *       content:
  *         application/json:
@@ -137,6 +153,14 @@ router.put('/:id', update);
  * /api/v1/members/{id}:
  *   delete:
  *     summary: Remove a member
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The member ID
  *     responses:
  *       200:
  *         description: Succeed.
