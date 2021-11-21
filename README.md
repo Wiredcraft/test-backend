@@ -39,13 +39,14 @@
 * A terminal tool based on `bash` or `zsh`
 * Local port of 3000 is free (able to change in the `docker/docker-compose.yml`)
 
-### Playing around directly
+### Playing with staging
 
 `./dev up-staging`, (wating for all services started) then the service will served on `http://localhost:3000`
 
 Using `./dev down-staging` to remove containers. Remove `tmp/staging` to clear all files of `staging`
 
 ### To build
+
 1. Building a docker image: `./dev build`
 1. To test: `docker run --rm -p 8000:80 test-backend-staging:latest`
 

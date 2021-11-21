@@ -12,7 +12,7 @@ There are three typical approachs to implement the search of near firends:
 [√]  2. Creating a buffer to my coordinate, and search according the boundary of the buffer.
         This way in fit of scenario of millions user.
 
-[ ]  3. Caching all locations as GeoHashing. Whereas, all of the hashing should stored
+[ ]  3. Caching all locations as GeoHashing (a spatial hashing-map). Whereas, all of the hashing should stored
         in a ElasticSearch cluster. This could stand over trillions user.
 */
 export const findInBoundary = async (req, res, next) => {
