@@ -1,73 +1,55 @@
-# Wiredcraft Back-end Developer Test
+# test-backend
 
-Make sure you read the whole document carefully and follow the guidelines in it.
+## development
 
-## Context
+### Requirements:
 
-Build a RESTful API that can `get/create/update/delete` user data from a persistence database
+* Docker installed
+* A terminal tool based on `bash` or `zsh`
 
-### User Model
+### To develop:
 
-```
-{
-  "id": "xxx",                  // user ID 
-  "name": "test",               // user name
-  "dob": "",                    // date of birth
-  "address": "",                // user address
-  "description": "",            // user description
-  "createdAt": ""               // user created date
-}
-```
+1. `./dev backend` to start and `enter` the container of development
 
-## Requirements
+* Next commands are only available in the container
 
-### Functionality
+1. `yarn install` to install dependences
+1. `yarn init-db` to initialize the database, and to import some mock daata
+1. `yarn test` to run tests
+1. `yarn dev` to start a development server which implemented by nodemon
+1. `yarn start` to start a non-reload server (for staging)
 
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper unit test.
-- Provide proper API document.
+### To access
 
-### Tech stack
+* `http://localhost:3000/`
 
-- Use Node.js and any framework.
-- Use any DB. NoSQL DB is preferred.
+### To recycle the resources of development:
 
-### Bonus
+1. `./dev down` : this command can drop all the development containers, don't worry, all data are persistent
+1. If you try to prune all the data and code, just `delete` the directory of this project.
 
-- Write clear documentation on how it's designed and how to run the code.
-- Write good in-code comments.
-- Write good commit messages.
-- An online demo is always welcome.
+[Read more](./docs/about-dev.md)
 
-### Advanced requirements
+## Staging
 
-*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
+### Requirements:
 
-- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
-- Provide a complete logging (when/how/etc.) strategy.
-- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
-- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
-  - given a user name
-  - return the nearby friends
+* Docker installed
+* A terminal tool based on `bash` or `zsh`
+* Local port of 3000 is free (able to change in the `docker/docker-compose.yml`)
 
+### Playing around directly
 
-## What We Care About
+`./dev up-staging`, then the service will served on `http://localhost:3000`
 
-Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
+Using `./dev down-staging` to remove containers. Remove `tmp/staging` to clear all files of `staging`
 
-Here's what you should aim for:
+### To build
+1. Building a docker image: `./dev build`
+1. To test: `docker run --rm -p 8000:80 test-backend-staging:latest`
 
-- Good use of current Node.js & API design best practices.
-- Good testing approach.
-- Extensible code.
+## Explaining
 
-## FAQ
+Here is a comprehensive description of this program
 
-> Where should I send back the result when I'm done?
-
-Fork this repo and send us a pull request when you think it's ready for review. You don't have to finish everything prior and you can continue to work on it. We don't have a deadline for the task.
-
-> What if I have a question?
-
-Create a new issue in the repo and we will get back to you shortly.
+[Click here to learn more](./docs/design.md)

@@ -1,0 +1,43 @@
+GET http://localhost:3000/api/v1/members/ HTTP/1.1
+content-type: application/json
+
+###
+GET http://localhost:3000/api/v1/members/1 HTTP/1.1
+content-type: application/json
+
+###
+POST http://localhost:3000/api/v1/members/ HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Daniel Craig",
+  "dob": "1968-03-02",
+  "address": [121.458715, 31.221061],
+  "description": "Daniel Wroughton Craig is an English actor."
+}
+
+###
+PUT http://localhost:3000/api/v1/members/5 HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Jack Li",
+  "dob": "8888-88-88",
+  "address": [121.461966, 31.220272],
+  "description": "Daniel Wroughton Craig is an English actor."
+}
+
+###
+PUT http://localhost:3000/api/v1/members/1 HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Jack Li",
+  "dob": "8888-88-88",
+  "address": [121.461966, 31.220272],
+  "description": "Very cool guy"
+}
+
+###
+DELETE http://localhost:3000/api/v1/members/2 HTTP/1.1
+content-type: application/json

@@ -1,0 +1,32 @@
+#!/bin/bash
+while [ "$1" != "" ]
+do
+    case "$1" in
+        backend)
+            mkdir -p ./tmp/{db,data,cache,logs,staging}
+            docker-compose -f docker/docker-compose.dev.yml run -p 3000:3000 backend bash
+            ;;
+        down)
+            docker-compose -f docker/docker-compose.dev.yml down
+            ;;
+        build)
+            cp ./docker/.dockerignore ./
+            cp ./docker/docker-entrypoint.sh ./
+            cp ./docker/Dockerfile ./
+            docker build -t freeyeti/test-backend:staging-latest .
+            rm ./.dockerignore ./docker-entrypoint.sh ./Dockerfile
+            ;;
+        up-staging)
+            mkdir -p ./tmp/{db,staging}
+            docker-compose -f docker/docker-compose.yml up
+            ;;
+        down-staging)
+            docker-compose -f docker/docker-compose.yml down
+            ;;
+        -h | --help)
+            echo $"Usage: $0 {backend|down|build|up-staging|down-staging}"
+            exit 1
+            ;;
+    esac
+    shift
+done

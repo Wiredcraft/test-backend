@@ -1,0 +1,24 @@
+version: "3.5"
+
+services:
+  postgis:
+    image: postgis/postgis:13-master
+    ports:
+      - "0.0.0.0:5432:5432"
+    volumes:
+      - ../tmp/db:/var/lib/postgresql/data
+      - ./create-test-db.sh:/docker-entrypoint-initdb.d/create-test-db.sh
+    env_file: ../.env
+  backend:
+    image: docker.io/freeyeti/test-backend:staging-latest
+    env_file: ../.env
+    environment: 
+      - NODE_ENV=staging
+      - LOG_PATH=/data/logs/
+      # - HTTPS_PROXY="http://host.docker.internal:1087" 
+    ports:
+      - "0.0.0.0:3000:3000"
+    volumes:
+      - ../tmp/staging:/data
+    depends_on:
+      - postgis

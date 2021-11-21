@@ -1,0 +1,23 @@
+version: "3.5"
+
+services:
+  postgis:
+    image: postgis/postgis:13-master
+    ports:
+      - "0.0.0.0:5432:5432"
+    volumes:
+      - ../tmp/db:/var/lib/postgresql/data
+      - ./create-test-db.sh:/docker-entrypoint-initdb.d/create-test-db.sh
+    env_file: ../.env
+  backend:
+    image: freeyeti/dev-in-docker:node-16-yarn-2
+    env_file: ../.env
+    environment: 
+      - NODE_ENV=dev
+      # - HTTPS_PROXY="http://host.docker.internal:1087" 
+    ports:
+      - "0.0.0.0:3000:3000"
+    volumes:
+      - ../:/code
+    depends_on:
+      - postgis
