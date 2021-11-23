@@ -59,14 +59,14 @@ Here is a comprehensive description of this program
 
 ### Features
 
-[√] The API should follow a typical RESTful API design pattern.
-[√] The data should be saved in the DB.
-[√] Provide proper unit test.
-[√] Provide proper API document.
+* [√] The API should follow a typical RESTful API design pattern.
+* [√] The data should be saved in the DB.
+* [√] Provide proper unit test.
+* [√] Provide proper API document.
 
 ### Tech stack
 
-[√] Use Node.js and any framework.
-[√] Use any DB. NoSQL DB is preferred.
+* [√] Use Node.js and any framework.
+* [√] Use any DB. NoSQL DB is preferred.
 
 * Addition: Docker and shell
