@@ -9,30 +9,37 @@ There are three typical approachs to implement the search of near firends:
 [ ]  1. Using ST_Distance(a PostGIS function) to calculate the real distance between me and my firend.
         This approach is slowest, and just in fit of thousands or ten-thousands data.
 
-[√]  2. Creating a buffer to my coordinate, and search according the boundary of the buffer.
-        This way in fit of scenario of millions user.
+[√]  2. Creating a buffer to "my" coordinate, and search according the boundary of the buffer.
+        This way in fit of scenario of millions user. If we need more precise result, we could transform
+        all address to CRS EPSG:3857(https://epsg.io/3857), then create buffer with it, and make the buffer
+        more smooth.
 
 [ ]  3. Caching all locations as GeoHashing (a spatial hashing-map). Whereas, all of the hashing should stored
         in a ElasticSearch cluster. This could stand over trillions user.
 */
+
+const arcMeter = 111;
+const precision = 1000; // about 30m on the ground, but difference when reprojected.
+const defaultCRS = 4326;
+
 export const findInBoundary = async (req, res, next) => {
   /*
   A typical sql:
   SELECT 
     me.id, me.name, ST_AsText(me.address), me.address, 
-    ROUND((ST_Distance(me.address, ST_GeomFromText('POINT(121.468023 31.205885)', 4326)) * 1000 * 30)::numeric) as distance
+    ROUND((ST_DistanceSphere(me.address, ST_GeomFromText('POINT(121.468023 31.205885)', 4326)))::numeric) as distance
   FROM members me
   WHERE
     ST_Intersects(
       me.address,
       ST_Buffer(
         ST_GeomFromText('POINT(121.468023 31.205885)', 4326), 
-        ROUND(((500 / 30)::numeric / 1000)::numeric, 4), 
+        ROUND(((500 / 111)::numeric / 1000)::numeric, 4), 
         'endcap=square quad_segs=4')
       )
 
   Note: ST_Buffer(point, range, options), the range is degree of 360 here, 
-        which means arc of earth, 0.001 degree is about 30 meter.
+        which means arc of earth, 0.001 degree is about 111 meter.
         But under the CRS of EPSG:3857, the range should be a real distance in meter.
         So, 500 under the ST_Buffer is range of the search.
   */
@@ -45,10 +52,10 @@ export const findInBoundary = async (req, res, next) => {
       Sequelize.col('address'),
       Sequelize.fn(
         'ST_Buffer',
-        Sequelize.fn('ST_GeomFromText', point, 4326),
+        Sequelize.fn('ST_GeomFromText', point, defaultCRS),
         Sequelize.fn(
           'ROUND',
-          Sequelize.literal(`((${distance} / 30)::numeric / 1000)::numeric`),
+          Sequelize.literal(`((${distance} / ${arcMeter})::numeric / ${precision})::numeric`),
           4
         ),
         'endcap=square quad_segs=4'
@@ -63,7 +70,7 @@ export const findInBoundary = async (req, res, next) => {
     [Sequelize.fn('ST_AsText', Sequelize.col('address')), 'location'],
     [
       Sequelize.literal(
-        `ROUND((ST_Distance("address", ST_GeomFromText('${point}', 4326)) * 1000 * 30)::numeric)`
+        `ROUND((ST_DistanceSphere("address", ST_GeomFromText('${point}', ${defaultCRS})))::numeric)`
       ),
       'distance',
     ],

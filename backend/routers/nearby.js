@@ -18,7 +18,7 @@ const router = express.Router();
  *           minimum: 1
  *           maximum: 100000
  *           default: 500
- *         description: The radius of search, in meter, 1 to 100000. You could try 100, 400, 500, 3000.
+ *         description: The radius of search, in meter, 1 to 100000. You could try 500, 1600, 2000, 10000.
  *       - in: query
  *         name: long
  *         required: true
