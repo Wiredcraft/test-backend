@@ -13,6 +13,11 @@ export const list = async (req, res, next) => {
 export const getOne = async (req, res, next) => {
   try {
     const data = await Member.findOne({ where: { id: req.params.id } });
+    if (!data) {
+      res.sendStatus(404);
+      return;
+    }
+
     res.send(data);
   } catch (err) {
     next(err);

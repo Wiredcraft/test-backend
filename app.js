@@ -21,8 +21,6 @@ app.use(express.json());
 if (process.env.NODE_ENV == 'dev' || process.env.NODE_ENV == 'staging') {
   // Saving logs to the log files
   app.use(accessFileLogger);
-  app.use(logErrors);
-  app.use(errorHandler);
 }
 
 if (process.env.NODE_ENV == 'prod') {
@@ -40,6 +38,19 @@ app.use(
   membersApi
 );
 app.use('/api/v1/nearby/', nearbyApi);
+
+// Applying error capturing middlewares below
+if (process.env.NODE_ENV == 'dev' || process.env.NODE_ENV == 'staging') {
+  // In this test, error logs just display in console
+  app.use(logErrors);
+  app.use(errorHandler);
+}
+
+if (process.env.NODE_ENV == 'prod') {
+  // In the environment of production, save error and report the problem.
+  // The feature of error report could be combine with Auto DevOps tools,
+  // so it could be a automatic stage in SLDC
+}
 
 app.use(notFoundHandler)
 
