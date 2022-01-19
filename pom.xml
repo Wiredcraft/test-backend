@@ -40,8 +40,6 @@
 			<artifactId>mybatis-spring-boot-starter</artifactId>
 			<version>2.2.1</version>
 		</dependency>
-
-		<!-- either mysql or h2 -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
