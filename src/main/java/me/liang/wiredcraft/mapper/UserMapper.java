@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserMapper {
 
-    @Select("SELECT * FROM USER WHERE id = #{userId}")
+    @Select("SELECT * FROM USER WHERE user_id = #{userId}")
     User getUser(@Param("userId") final String userId);
 
 }

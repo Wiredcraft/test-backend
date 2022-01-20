@@ -12,28 +12,28 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/user")
+@RestController
 @AllArgsConstructor
 public class UserController {
 
     private UserMapper userMapper;
 
-    @GetMapping(value="/{userId}")
+    @GetMapping(value="user/{userId}")
     public User getUser(@PathVariable String userId) {
         return userMapper.getUser(userId);
     }
 
-    @PutMapping(value="/")
+    @PutMapping(value="user")
     public User createUser(@RequestBody User user) {
         return User.builder().build();
     }
 
-    @PostMapping(value="/")
+    @PostMapping(value="user")
     public User updateUser(@RequestBody User user) {
         return User.builder().build();
     }
 
-    @DeleteMapping(value = "{userId}")
+    @DeleteMapping(value = "user/{userId}")
     public void delete(@PathVariable String userId) {
         return ;
     }
