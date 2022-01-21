@@ -6,5 +6,6 @@ CREATE TABLE USER (
     latitude DECIMAL(10, 7),
     longitude DECIMAL(10, 7),
     description VARCHAR(4096),
-    create_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
+    create_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    version INT NOT NULL
 );
