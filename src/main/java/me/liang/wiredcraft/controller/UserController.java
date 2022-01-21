@@ -3,7 +3,6 @@ package me.liang.wiredcraft.controller;
 import lombok.AllArgsConstructor;
 import me.liang.wiredcraft.mapper.UserMapper;
 import me.liang.wiredcraft.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,22 +19,24 @@ public class UserController {
 
     @GetMapping(value="user/{userId}")
     public User getUser(@PathVariable String userId) {
-        return userMapper.getUser(userId);
+        Long userIdAsLong = Long.parseLong(userId);
+        return userMapper.getUser(userIdAsLong);
     }
 
     @PutMapping(value="user")
-    public User createUser(@RequestBody User user) {
-        return User.builder().build();
+    public void createUser(@RequestBody User user) {
+        userMapper.insertUser(user);
     }
 
     @PostMapping(value="user")
-    public User updateUser(@RequestBody User user) {
-        return User.builder().build();
+    public int updateUser(@RequestBody User user) {
+        return userMapper.updateUser(user);
     }
 
     @DeleteMapping(value = "user/{userId}")
-    public void delete(@PathVariable String userId) {
-        return ;
+    public int delete(@PathVariable String userId) {
+        Long userIdAsLong = Long.parseLong(userId);
+        return userMapper.deleteUser(userIdAsLong);
     }
 
 }
