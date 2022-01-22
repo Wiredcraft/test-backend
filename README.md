@@ -1,73 +1,46 @@
-# Wiredcraft Back-end Developer Test
+## Wiredcraft User Service
 
-Make sure you read the whole document carefully and follow the guidelines in it.
+### Basic Requirements
 
-## Context
+Build a RESTful API that can get/create/update/delete user data from a persistence database.
 
-Build a RESTful API that can `get/create/update/delete` user data from a persistence database
+### Proposal
+#### Get API
+The get API follows REST that returns the user given the userId and return 404 if no user is found.
 
-### User Model
+#### Create API
+The create API uses `PUT` to create the user into the service. 
+And the userId is generated from other systems, instead of generated inside this user service.
 
-```
-{
-  "id": "xxx",                  // user ID 
-  "name": "test",               // user name
-  "dob": "",                    // date of birth
-  "address": "",                // user address
-  "description": "",            // user description
-  "createdAt": ""               // user created date
-}
-```
+#### Update API
+The update API has to pass-in the `version`, which value can be fetched by the get API. 
+The purpose of `version` is like the optimistic lock, 
+to avoid the lost update or other anomalies in case of data race. 
 
-## Requirements
+#### Delete API
+The delete API is to delete by userId, leveraging  `DELETE` semantics in REST world.
 
-### Functionality
+#### Data Storage
+Actually the data storage only requires **transactional** and **durable** **KV** storage. 
+And in Amazon the DynamoDB is the best choice while I have no idea which KV storage fits best. 
+MongoDB does not support transaction. Redis requires extra effort to support duration. 
+And I am not quite familiar with Cassandra or other similar DB. 
+Therefore, I choose MySQL as the data storage. It supports transaction and duration well 
+and it can act as the KV store if we only get/set/delete by userId. 
 
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper unit test.
-- Provide proper API document.
+MySQL has some other advantages and drawbacks in function extensibility and service scalability, 
+which are widely debated and I will not cover here. 
+Be free to ask for in your comments if you'd like further discussion ;)    
 
-### Tech stack
-
-- Use Java and any framework.
-- Use any DB.
-
-### Bonus
-
-- Write clear documentation on how it's designed and how to run the code.
-- Write good in-code comments.
-- Write good commit messages.
-- An online demo is always welcome.
-
-### Advanced requirements
-
-*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
-
-- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
-- Provide a complete logging (when/how/etc.) strategy.
-- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
-- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
-  - given a user name
-  - return the nearby friends
+#### Architecture
 
 
-## What We Care About
+### Advanced Requirements
+#### Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
 
-Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
+#### Provide a complete logging (when/how/etc.) strategy.
 
-Here's what you should aim for:
+#### Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it? 
 
-- Good use of current Java & API design best practices.
-- Good testing approach.
-- Extensible code.
+#### Related to the requirement above, suppose the address of the user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that, given a user name return the nearby friends
 
-## FAQ
-
-> Where should I send back the result when I'm done?
-
-Preferred way is to push it to github and give our team access to it.
-
-> What if I have a question?
-
-Feel free to make your own assumptions about the scope of this task but try to document those. You can also reach to us for questions.
