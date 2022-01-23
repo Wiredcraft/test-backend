@@ -1,5 +1,13 @@
 ## Wiredcraft User Service
 
+### TL;DR
+#### How to run the demo?
+Supposing you have installed the docker and mysql cli, and you are running on the Mac/Linux
+
+1. `make env-up` to start the env
+2. `make server-up` to run the server
+3. `make clean-data` to tear down and clean the env
+
 ### Basic Requirements
 
 Build a RESTful API that can get/create/update/delete user data from a persistence database.
@@ -18,7 +26,7 @@ The purpose of `version` is like the optimistic lock,
 to avoid the lost update or other anomalies in case of data race. 
 
 #### Delete API
-The delete API is to delete by userId, leveraging  `DELETE` semantics in REST world.
+The delete API is to delete by userId, leveraging the `DELETE` semantics in REST world.
 
 #### Data Storage
 Actually the data storage only requires **transactional** and **durable** **KV** storage. 

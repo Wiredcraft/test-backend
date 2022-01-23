@@ -39,4 +39,8 @@ public class UserController {
         return userMapper.deleteUser(userIdAsLong);
     }
 
+    private void validateUser(final User user) {
+
+    }
+
 }
