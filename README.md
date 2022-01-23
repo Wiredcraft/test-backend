@@ -1,4 +1,4 @@
-# Wiredcraft Back-end Developer Test
+# Backend Developer (Node.js) test
 
 Make sure you read the whole document carefully and follow the guidelines in it.
 
