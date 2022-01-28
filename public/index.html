@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="/css/jquery-ui.min.css">
+  <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="/js/jquery-ui.min.js"></script>
+  <style>
+    .ui-controlgroup-label{
+      width : 100px;
+      display : inline-block;
+    }
+  </style>
+</head>
+<body>
+<div id="tabs">
+  <ul>
+    <li><a href="#tabs-1" data-name = "Get">Get</a></li>
+    <li><a href="#tabs-2">Create</a></li>
+    <li><a href="#tabs-3">Update</a></li>
+    <li><a href="#tabs-4">Delete</a></li>
+  </ul>
+  <div id="tabs-1">
+    <div>
+      <div>
+        <label for="nameFilter" class="ui-controlgroup-label">name</label>
+        <input id="nameFilter">
+      </div>
+      <div>
+        <input type="button" value = "submit"  id = "getUser">
+      </div>
+    </div>
+    <hr>
+    <div id = "tabs-12">
+
+    </div>
+  </div>
+  <div id="tabs-2">
+    <div>
+      <div>
+        <label for="name" class="ui-controlgroup-label">name</label>
+        <input id="name">
+      </div>
+      <div>
+        <label for="dob" class="ui-controlgroup-label">date of birth</label>
+        <input id="dob">
+      </div>
+      <div>
+        <label for="address" class="ui-controlgroup-label">address</label>
+        <input id="address">
+      </div>
+      <div>
+        <label for="description" class="ui-controlgroup-label">description</label>
+        <input id="description">
+      </div>
+      <div>
+        <input type="button" value = "submit"  id = "createForm">
+      </div>
+    </div>
+    <hr>
+    <div id = "tabs-22">
+
+    </div>
+  </div>
+  <div id="tabs-3">
+    <div>
+      <div>
+        <label for="nameUpdate" class="ui-controlgroup-label">name</label>
+        <input id="nameUpdate">
+      </div>
+      <div>
+        <label for="dobUpdate" class="ui-controlgroup-label">date of birth</label>
+        <input id="dobUpdate">
+      </div>
+      <div>
+        <label for="addressUpdate" class="ui-controlgroup-label">address</label>
+        <input id="addressUpdate">
+      </div>
+      <div>
+        <label for="descriptionUpdate" class="ui-controlgroup-label">description</label>
+        <input id="descriptionUpdate">
+      </div>
+      <div>
+        <input type="button" value = "submit"  id = "updateForm">
+      </div>
+    </div>
+    <hr>
+    <div id = "tabs-32">
+
+    </div>
+  </div>
+  <div id="tabs-4">
+    <div>
+      <div>
+        <label for="nameDelete" class="ui-controlgroup-label">name</label>
+        <input id="nameDelete">
+      </div>
+      <div>
+        <input type="button" value = "submit"  id = "deleteForm">
+      </div>
+    </div>
+    <hr>
+    <div id = "tabs-42">
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<script>
+
+  function request (name) {
+    switch (name) {
+      case "Get" :
+      {
+        // $.ajax({
+        //   url : "/crud/get",
+        //   method : "GET",
+        //   success : function (data) {
+        //     $("#tabs-1").html(data)
+        //   },
+        //   error : function (errorMessage) {
+        //     $("#tabs-1").html(errorMessage.responseText)
+        //   }
+        // })
+        // break;
+      };
+      case "Create" :
+      {
+        // $.ajax({
+        //   url : "/crud/create",
+        //   method : "PUT",
+        //   success : function (data) {
+        //     $("#tabs-22").html(data)
+        //   },
+        //   error : function (errorMessage) {
+        //     $("#tabs-22").html(errorMessage.responseText)
+        //   }
+        // })
+        // break;
+      };
+      case "Update" :
+      // {
+      //   $.ajax({
+      //     url : "/crud/update",
+      //     method : "POST",
+      //     success : function (data) {
+      //       $("#tabs-3").html(data)
+      //     },
+      //     error : function (errorMessage) {
+      //       $("#tabs-3").html(errorMessage.responseText)
+      //     }
+      //   })
+      //   break;
+      // };
+      case "Delete" :
+      {
+
+        break;
+      };
+    }
+  }
+
+
+
+  function getUser () {
+    const data  = {
+      "name" : $("#nameFilter").val()
+    }
+
+    $.ajax({
+      url : "/crud/get",
+      method : "GET",
+      data,
+      success : function (data) {
+        let content = "";
+        for (let key in data) {
+          content = content + key + " : " + data[key] + "<br>";
+        }
+        $("#tabs-12").html(content);
+      },
+      error : function (errorMessage) {
+        $("#tabs-12").html(errorMessage.responseText)
+      }
+    })
+  }
+
+  /**
+   *
+   */
+  function createForm () {
+    const data = {
+      "name" : $("#name").val(),
+      "dob" : $("#dob").val(),
+      "address" : $("#address").val(),
+      "description" : $("#description").val()
+    }
+    $.ajax({
+      url : "/crud/create",
+      method : "PUT",
+      data ,
+      dataType : "JSON",
+      success : function (data) {
+        let content = "";
+        for (let key in data) {
+          content = content + key + " : " + data[key] + "<br>";
+        }
+        $("#tabs-22").html(content);
+      },
+      error : function (errorMessage) {
+        $("#tabs-22").html(errorMessage.responseText)
+      }
+    })
+  }
+
+  function updateForm () {
+    const data = {
+      "name" : $("#nameUpdate").val(),
+      "dob" : $("#dobUpdate").val(),
+      "address" : $("#addressUpdate").val(),
+      "description" : $("#descriptionUpdate").val()
+    }
+    $.ajax({
+      url : "/crud/update",
+      method : "POST",
+      data,
+      success : function (data) {
+        let content = "";
+        for (let key in data) {
+          content = content + key + " : " + data[key] + "<br>";
+        }
+        $("#tabs-32").html(content);
+      },
+      error : function (errorMessage) {
+        $("#tabs-32").html(errorMessage.responseText)
+      }
+    })
+  }
+
+  function deleteForm () {
+    const data = {
+      "name" : $("#nameDelete").val()
+    }
+    $.ajax({
+      url : "/crud/delete",
+      method : "DELETE",
+      data,
+      success : function (data) {
+        let content = "";
+        for (let key in data) {
+          content = content + key + " : " + data[key] + "<br>";
+        }
+        $("#tabs-42").html(content);
+      },
+      error : function (errorMessage) {
+        $("#tabs-42").html(errorMessage.responseText)
+      }
+    })
+  }
+
+  $( function() {
+    // $("#tabs-1").html(123)
+    $( "#tabs" ).tabs();
+
+    // listen
+    $("#tabs").click(function(e){
+      let name = e.target.innerHTML;
+      request(name)
+    });
+
+    $("#createForm").click(createForm);
+    $("#getUser").click(getUser);
+    $("#updateForm").click(updateForm);
+    $("#deleteForm").click(deleteForm);
+
+  } );
+</script>
+</body>
+</html>

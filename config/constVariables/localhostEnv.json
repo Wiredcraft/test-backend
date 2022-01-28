@@ -1,0 +1,6 @@
+{
+  "mongodbUser" : "",
+  "mongodbPassword" : "",
+  "mongodbHost" : "",
+  "mongodbPort" : 0
+}

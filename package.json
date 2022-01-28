@@ -1,0 +1,23 @@
+{
+  "name": "express-peng",
+  "version": "1.0.0",
+  "description": "{**When you're done, you can delete the content in this README and update the file with details for others getting started with your repository**}",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc --reporter=text mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "log4js": "^6.4.1",
+    "mongodb": "^4.3.1"
+  },
+  "devDependencies": {
+    "i": "^0.3.7",
+    "mocha": "^9.2.0",
+    "nyc": "^15.1.0"
+  }
+}
