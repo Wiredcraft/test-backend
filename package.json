@@ -1,0 +1,29 @@
+{
+  "name": "test-backend",
+  "version": "1.0.0",
+  "description": "Make sure you read the whole document carefully and follow the guidelines in it.",
+  "main": "index.js",
+  "type": "module",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wiredcraft/test-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Wiredcraft/test-backend/issues"
+  },
+  "homepage": "https://github.com/Wiredcraft/test-backend#readme",
+  "dependencies": {
+    "dotenv": "^14.3.2",
+    "express": "^4.17.2",
+    "mongoose": "^6.1.8"
+  }
+}
