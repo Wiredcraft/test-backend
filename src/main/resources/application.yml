@@ -1,0 +1,5 @@
+server:
+  port: 443
+spring:
+  profiles:
+    active: dev

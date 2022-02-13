@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wiredcraft.myhomework.mapper.UserMapper">
+  <resultMap id="baseResult" type="com.wiredcraft.myhomework.common.User">
+    <result column="id" property="userId" jdbcType="BIGINT"/>
+    <result column="name" property="name" jdbcType="VARCHAR"/>
+    <result column="date_of_birth" property="dateOfBirth" jdbcType="DATE"/>
+    <result column="address" property="address" jdbcType="DATE"/>
+    <result column="description" property="description" jdbcType="VARCHAR"/>
+    <result column="create_at" property="createdAt" jdbcType="VARCHAR"/>
+    <result column="latitude" property="geoPosition.latitude" jdbcType="DECIMAL"/>
+    <result column="longitude" property="geoPosition.longitude" jdbcType="DECIMAL"/>
+  </resultMap>
+  <select id="findUserById" resultMap="baseResult">
+    SELECT id,
+           name,
+           date_of_birth,
+           address,
+           description,
+           create_at,
+           latitude,
+           longitude
+    FROM user
+    WHERE id = #{id}
+  </select>
+  <select id="findUserByName" resultMap="baseResult">
+    SELECT id,
+           name,
+           date_of_birth,
+           address,
+           description,
+           create_at,
+           latitude,
+           longitude
+    FROM user
+    WHERE name = #{name}
+  </select>
+  <delete id="deleteUserById">
+    DELETE
+    FROM user
+    WHERE id = #{id}
+  </delete>
+  <insert id="insertUser" parameterType="com.wiredcraft.myhomework.common.User">
+    INSERT INTO user (id, name, date_of_birth, address, description, create_at, latitude, longitude)
+    VALUES (#{userId}, #{name}, #{dateOfBirth}, #{address}, #{description}, #{createdAt}, #{geoPosition.latitude},
+            #{geoPosition.longitude})
+  </insert>
+  <update id="updateUser" parameterType="com.wiredcraft.myhomework.common.User">
+    UPDATE user
+    SET name          = #{name},
+        date_of_birth = #{dateOfBirth},
+        address       = #{address},
+        description   = #{description},
+        create_at     = #{createdAt},
+        latitude      = #{geoPosition.latitude},
+        longitude     = #{geoPosition.longitude}
+    WHERE id = #{userId}
+  </update>
+
+</mapper>

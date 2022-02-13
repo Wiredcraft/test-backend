@@ -1,0 +1,32 @@
+version: "1"
+services:
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    container_name: wiredcraft-redis
+
+  mysql:
+    image: mysql:8.0.28
+    restart: always
+    environment:
+      MYSQL_DATABASE: "wiredcraft"
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: "user"
+      # You can use whatever password you like
+      MYSQL_PASSWORD: "password"
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: "password"
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - "3306:3306"
+    container_name: wiredcraft-mysql
+    expose:
+      # Opens port 3306 on the container
+      - "3306"
+    # Where our data will be persisted
+    volumes:
+      - my-db:/var/lib/mysql
+# Names our volume
+volumes:
+  my-db: { }

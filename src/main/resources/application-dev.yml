@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: password
+    url: jdbc:mysql://localhost:3306/wiredcraft?characterEncoding=utf-8
+
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+
+mybatis:
+  type-aliases-package: com.wiredcraft.myhomework.common
+  mapper-locations: classpath:mapper/**/*.xml
+  check-config-location: true

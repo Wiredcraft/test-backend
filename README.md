@@ -42,19 +42,24 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 
 ### Advanced requirements
 
-*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
+*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to
+try out.*
 
-- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth. This should provide a way to allow end users to securely login, autenticate requests and only access their own information.
+- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth. This should provide a way to
+  allow end users to securely login, autenticate requests and only access their own information.
 - Provide a complete logging (when/how/etc.) strategy.
-- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
-- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
+- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "
+  followers/following" or "friends". Can you find out how you would design the model structure and what API you would
+  build for querying or modifying it?
+- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and
+  longitude), can you build an API that,
   - given a user name
   - return the nearby friends
 
-
 ## What We Care About
 
-Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
+Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and
+problem solving skills.
 
 Here's what you should aim for:
 
@@ -70,4 +75,5 @@ Preferred way is to push it to github and give our team access to it.
 
 > What if I have a question?
 
-Feel free to make your own assumptions about the scope of this task but try to document those. You can also reach to us for questions.
+Feel free to make your own assumptions about the scope of this task but try to document those. You can also reach to us
+for questions.
