@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -32,8 +33,9 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public int updateUser(Long id, String name, String address, String description, Date dateOfBirth, GeoPosition geoPosition) {
+  public int updateUserBaseInfo(Long id, String name, String address, String description, Date dateOfBirth) {
     final User user = userMapper.findUserById(id);
+    int res = 0;
     if (user != null) {
       if (StringUtils.hasText(name)) {
         user.setName(name);
@@ -47,18 +49,43 @@ public class UserServiceImpl implements UserService {
       if (dateOfBirth != null) {
         user.setDateOfBirth(dateOfBirth);
       }
-      if (geoPosition != null) {
-        user.setGeoPosition(geoPosition);
-      }
-      userMapper.updateUser(user);
+      res = userMapper.updateUser(user);
     }
-    return 1;
+    return res;
+  }
+
+  @Override
+  public int updateGeoPositionForUser(Long id, GeoPosition geoPosition) {
+    final User user = userMapper.findUserById(id);
+    user.setGeoPosition(geoPosition);
+    return userMapper.updateUser(user);
   }
 
   @Override
   public User getUserById(Long userId) {
     return userMapper.findUserById(userId);
   }
+
+  @Override
+  public Set<User> getFollowersByUserId(Long userId) {
+    return userMapper.getFollowersByUserId(userId);
+  }
+
+  @Override
+  public Set<User> getFollowingByUserId(Long userId) {
+    return userMapper.getFollowingByUserId(userId);
+  }
+
+  @Override
+  public int followUser(Long followingId, Long followerId) {
+    return userMapper.followerUser(followingId, followerId);
+  }
+
+  @Override
+  public int unFollowUser(Long followingId, Long followerId) {
+    return userMapper.unFollowerUser(followingId, followerId);
+  }
+
 
   public UserMapper getUserMapper() {
     return userMapper;

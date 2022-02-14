@@ -58,5 +58,45 @@
         longitude     = #{geoPosition.longitude}
     WHERE id = #{userId}
   </update>
-
+  <select id="getFollowingByUserId" resultMap="baseResult">
+    SELECT id,
+           name,
+           date_of_birth,
+           address,
+      describe,
+      create_at,
+      latitude,
+      longitude
+    FROM user
+    WHERE id IN (SELECT following_id FROM following WHERE follower_id = #{id})
+  </select>
+  <select id="getFollowersByUserId" resultMap="baseResult">
+    SELECT id,
+           name,
+           date_of_birth,
+           address,
+      describe,
+      create_at,
+      latitude,
+      longitude
+    FROM user
+    WHERE id IN (
+      SELECT follower_id
+      FROM following
+      WHERE following_id = #{id}
+      )
+  </select>
+  <insert id="followUser">
+    INSERT
+    following VALUES (
+    #{followingId},
+    #{followerId}
+    )
+  </insert>
+  <delete id="unfollowUser">
+    DELETE
+    FROM following
+    WHERE following_id = #{followingId}
+      AND follower_id = #{followerId}
+  </delete>
 </mapper>
