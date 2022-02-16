@@ -5,6 +5,7 @@ import com.wiredcraft.myhomework.common.User;
 import com.wiredcraft.myhomework.exception.UserException;
 import com.wiredcraft.myhomework.mapper.UserMapper;
 import com.wiredcraft.myhomework.service.UserService;
+import com.wiredcraft.myhomework.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.GeoResult;
@@ -13,7 +14,7 @@ import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.GeoOperations;
-import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -36,16 +37,18 @@ public class UserServiceImpl implements UserService {
 
   private UserMapper userMapper;
 
-  private HashOperations<String, String, Object> hashOperations;
-
   private SetOperations<String, Object> setOperations;
 
   private GeoOperations<String, Object> geoOperations;
+
+  private RedisTemplate<String, Long> redisLongTemplate;
 
   @Override
   public int createUser(User user) throws UserException {
     final User existUser = userMapper.findUserByName(user.getName());
     if (existUser == null) {
+      UserUtils.validateUser(user);
+      user.setCreatedAt(new Date());
       return userMapper.insertUser(user);
     } else {
       throw new UserException("There is already a user who exists with name:{}" + user.getName());
@@ -53,12 +56,16 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public int deleteUserById(Long userId) {
-    return userMapper.deleteUserById(userId);
+  public int deleteUserById(Long userId) throws UserException {
+    int res = userMapper.deleteUserById(userId);
+    if (res == 0) {
+      throw new UserException("User don't exist.");
+    }
+    return res;
   }
 
   @Override
-  public int updateUserBaseInfo(Long id, String name, String address, String description, Date dateOfBirth) {
+  public int updateUserBaseInfo(Long id, String name, String address, String description, Date dateOfBirth) throws UserException {
     final User user = userMapper.findUserById(id);
     int res = 0;
     if (user != null) {
@@ -75,6 +82,8 @@ public class UserServiceImpl implements UserService {
         user.setDateOfBirth(dateOfBirth);
       }
       res = userMapper.updateUser(user);
+    } else {
+      throw new UserException("User who need to be updated doesn't exist.");
     }
     return res;
   }
@@ -85,8 +94,12 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User getUserById(Long userId) {
-    return userMapper.findUserById(userId);
+  public User getUserById(Long userId) throws Exception {
+    User res = userMapper.findUserById(userId);
+    if (res == null) {
+      throw new Exception("There is no user with user id: " + userId);
+    }
+    return res;
   }
 
   @Override
@@ -122,15 +135,19 @@ public class UserServiceImpl implements UserService {
     User follower = userMapper.findUserById(followerId);
     User following = userMapper.findUserById(followingId);
     if (following != null && follower != null) {
-      setOperations.add(followerId + FOLLOWING, followingId);
-      setOperations.add(followingId + FOLLOWER, followerId);
+      redisLongTemplate.multi();
+      redisLongTemplate.opsForSet().add(followerId + FOLLOWING, followingId);
+      redisLongTemplate.opsForSet().add(followingId + FOLLOWER, followerId);
+      redisLongTemplate.exec();
     }
   }
 
   @Override
   public void unFollowUser(Long followingId, Long followerId) {
-    setOperations.remove(followerId + FOLLOWING, followingId);
-    setOperations.remove(followingId + FOLLOWER, followerId);
+    redisLongTemplate.multi();
+    redisLongTemplate.opsForSet().remove(followerId + FOLLOWING, followingId);
+    redisLongTemplate.opsForSet().remove(followingId + FOLLOWER, followerId);
+    redisLongTemplate.exec();
   }
 
   @Override
@@ -162,14 +179,13 @@ public class UserServiceImpl implements UserService {
     return geoPositions;
   }
 
-
-  public HashOperations<String, String, Object> getHashOperations() {
-    return hashOperations;
+  public RedisTemplate<String, Long> getRedisLongTemplate() {
+    return redisLongTemplate;
   }
 
   @Autowired
-  public void setHashOperations(HashOperations<String, String, Object> hashOperations) {
-    this.hashOperations = hashOperations;
+  public void setRedisLongTemplate(RedisTemplate<String, Long> redisLongTemplate) {
+    this.redisLongTemplate = redisLongTemplate;
   }
 
   public SetOperations<String, Object> getSetOperations() {

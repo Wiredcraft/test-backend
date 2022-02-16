@@ -31,8 +31,6 @@ public class UserController {
   public static final String SUCCESS = "Success.";
   private UserService userService;
 
-  private final static Logger logger = LoggerFactory.getLogger(UserController.class);
-
   @GetMapping("/{userId}")
   public WiredCraftResponseEntity<User> getUserByUserId(@PathVariable Long userId) {
     User user = userService.getUserById(userId);
@@ -47,29 +45,30 @@ public class UserController {
                                                       @RequestParam(required = false) String userName,
                                                       @RequestParam(required = false) String address,
                                                       @RequestParam(required = false) String description,
-                                                      @RequestParam(required = false) Date dateOfBirth) {
+                                                      @RequestParam(required = false) Date dateOfBirth) throws UserException {
     int res = userService.updateUserBaseInfo(userId, userName, address, description, dateOfBirth);
     if (res != 1) {
-      return new WiredCraftResponseEntity<>(1, res, "Error Happens when updating user.");
+      return new WiredCraftResponseEntity<>(-1, res, "Error Happens when updating user.");
     }
     return new WiredCraftResponseEntity<>(0, res, SUCCESS);
   }
 
 
   @DeleteMapping("/{userId}")
-  public WiredCraftResponseEntity<Integer> deleteUserById(@PathVariable Long userId) {
+  public WiredCraftResponseEntity<Integer> deleteUserById(@PathVariable Long userId) throws UserException {
     int res = userService.deleteUserById(userId);
-    if (res != 1) {
-      return new WiredCraftResponseEntity<>(1, res, "Error Happens when deleting user by id.");
+    if (res == 1) {
+      return new WiredCraftResponseEntity<>(0, res, SUCCESS);
+    } else {
+      return new WiredCraftResponseEntity<>(-1, res, "Error Happens when deleting user by id.");
     }
-    return new WiredCraftResponseEntity<>(0, res, SUCCESS);
   }
 
   @PostMapping
   public WiredCraftResponseEntity<Integer> createUser(@RequestBody User user) throws UserException {
     int res = userService.createUser(user);
     if (res != 1) {
-      return new WiredCraftResponseEntity<>(1, res, "Error Happens when creating user by id.");
+      return new WiredCraftResponseEntity<>(-1, res, "Error Happens when creating user by id.");
     }
     return new WiredCraftResponseEntity<>(0, res, SUCCESS);
   }
@@ -109,8 +108,8 @@ public class UserController {
   @PutMapping("/{userName}/geo")
   public WiredCraftResponseEntity<Long> updateGeoPositionForUser(@PathVariable String userName, @RequestBody Point geoPosition) {
     Long res = userService.updateGeoPositionForUser(userName, geoPosition);
-    if (res != 1) {
-      return new WiredCraftResponseEntity<>(1, res, "Error Happens when updating user geo.");
+    if (res == null) {
+      return new WiredCraftResponseEntity<>(1, null, "Error Happens when updating user geo.");
     }
     return new WiredCraftResponseEntity<>(0, res, SUCCESS);
   }

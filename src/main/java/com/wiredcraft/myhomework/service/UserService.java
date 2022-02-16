@@ -3,19 +3,28 @@ package com.wiredcraft.myhomework.service;
 import com.wiredcraft.myhomework.common.GeoPosition;
 import com.wiredcraft.myhomework.common.User;
 import com.wiredcraft.myhomework.exception.UserException;
-import io.lettuce.core.GeoArgs;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 public interface UserService {
 
+  /**
+   * create user
+   * @param user user
+   * @return row updated num
+   * @throws UserException user exception
+   */
   int createUser(User user) throws UserException;
 
-  int deleteUserById(Long userId);
+  /**
+   * delete user by id
+   * @param userId user id
+   * @return row updated num
+   */
+  int deleteUserById(Long userId) throws UserException;
 
   /**
    * update user's base information
@@ -28,7 +37,7 @@ public interface UserService {
    * @return the num of updated rows
    */
   int updateUserBaseInfo(Long id, String name, String address, String description,
-                         Date dateOfBirth);
+                         Date dateOfBirth) throws UserException;
 
   /**
    * update geo position for user
@@ -45,7 +54,7 @@ public interface UserService {
    * @param userId user id
    * @return user
    */
-  User getUserById(Long userId);
+  User getUserById(Long userId) throws Exception;
 
   /**
    * get followers for user
@@ -97,6 +106,5 @@ public interface UserService {
    * @return user geo list
    */
   List<GeoPosition> findNearbyUsersByUserName(String userName, double distance, Metrics metrics);
-
 
 }
