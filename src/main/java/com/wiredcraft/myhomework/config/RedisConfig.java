@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.GeoOperations;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -28,6 +30,16 @@ public class RedisConfig {
   @Bean
   public HashOperations<String, String, Object> hashOperations(RedisTemplate<String, Object> redisTemplate) {
     return redisTemplate.opsForHash();
+  }
+
+  @Bean
+  public SetOperations<String, Object> setOperations(RedisTemplate<String, Object> redisTemplate) {
+    return redisTemplate.opsForSet();
+  }
+
+  @Bean
+  public GeoOperations<String, Object> geoOperations(RedisTemplate<String, Object> redisTemplate){
+    return redisTemplate.opsForGeo();
   }
 
 

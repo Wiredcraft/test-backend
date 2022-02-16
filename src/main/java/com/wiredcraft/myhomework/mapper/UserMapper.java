@@ -3,12 +3,14 @@ package com.wiredcraft.myhomework.mapper;
 import com.wiredcraft.myhomework.common.User;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.Set;
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
 
   User findUserById(Long id);
+
+  List<User> findUsersByIdList(List<Long> idList);
 
   User findUserByName(String name);
 
@@ -18,12 +20,4 @@ public interface UserMapper {
 
   int updateUser(User user);
 
-  Set<User> getFollowingByUserId(Long id);
-
-  Set<User> getFollowersByUserId(Long id);
-
-  int followerUser(Long followingId, Long followerId);
-
-  int unFollowerUser(Long followingId, Long followerId);
-  
 }

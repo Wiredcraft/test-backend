@@ -1,31 +1,47 @@
 package com.wiredcraft.myhomework.common;
 
-import java.math.BigDecimal;
-
 public class GeoPosition {
 
-  private BigDecimal latitude;
-
-  private BigDecimal longitude;
-
-  public GeoPosition(BigDecimal latitude, BigDecimal longitude) {
-    this.latitude = latitude;
-    this.longitude = longitude;
+  public GeoPosition() {
   }
 
-  public BigDecimal getLatitude() {
+  private String userName;
+
+  private double distance;
+
+  private double latitude;
+
+  private double longitude;
+
+  public String getUserName() {
+    return userName;
+  }
+
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
+
+  public double getDistance() {
+    return distance;
+  }
+
+  public void setDistance(double distance) {
+    this.distance = distance;
+  }
+
+  public double getLatitude() {
     return latitude;
   }
 
-  public void setLatitude(BigDecimal latitude) {
+  public void setLatitude(double latitude) {
     this.latitude = latitude;
   }
 
-  public BigDecimal getLongitude() {
+  public double getLongitude() {
     return longitude;
   }
 
-  public void setLongitude(BigDecimal longitude) {
+  public void setLongitude(double longitude) {
     this.longitude = longitude;
   }
 }

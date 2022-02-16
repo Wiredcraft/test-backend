@@ -24,7 +24,6 @@ public class User {
   @JsonFormat(pattern = "yyyy-MM-dd")
   private Date createdAt;
 
-  private GeoPosition geoPosition;
 
   public Long getUserId() {
     return userId;
@@ -74,11 +73,4 @@ public class User {
     this.createdAt = createdAt;
   }
 
-  public GeoPosition getGeoPosition() {
-    return geoPosition;
-  }
-
-  public void setGeoPosition(GeoPosition geoPosition) {
-    this.geoPosition = geoPosition;
-  }
 }

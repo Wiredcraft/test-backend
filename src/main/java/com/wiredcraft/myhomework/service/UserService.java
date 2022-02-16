@@ -3,8 +3,12 @@ package com.wiredcraft.myhomework.service;
 import com.wiredcraft.myhomework.common.GeoPosition;
 import com.wiredcraft.myhomework.common.User;
 import com.wiredcraft.myhomework.exception.UserException;
+import io.lettuce.core.GeoArgs;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 public interface UserService {
@@ -29,11 +33,11 @@ public interface UserService {
   /**
    * update geo position for user
    *
-   * @param id          user id
+   * @param userName    username
    * @param geoPosition geo position
    * @return the num of updated rows
    */
-  int updateGeoPositionForUser(Long id, GeoPosition geoPosition);
+  Long updateGeoPositionForUser(String userName, Point geoPosition);
 
   /**
    * get user by id
@@ -49,7 +53,7 @@ public interface UserService {
    * @param userId user id
    * @return followers set
    */
-  Set<User> getFollowersByUserId(Long userId);
+  List<User> getFollowersByUserId(Long userId);
 
   /**
    * get following for user
@@ -57,16 +61,15 @@ public interface UserService {
    * @param userId user id
    * @return following set
    */
-  Set<User> getFollowingByUserId(Long userId);
+  List<User> getFollowingByUserId(Long userId);
 
   /**
    * follow user
    *
    * @param followingId user who is followed
    * @param followerId  follower id
-   * @return result of follow action
    */
-  int followUser(Long followingId, Long followerId);
+  void followUser(Long followingId, Long followerId);
 
 
   /**
@@ -74,7 +77,26 @@ public interface UserService {
    *
    * @param followingId user who is followed
    * @param followerId  follower id
-   * @return result of unfollow action
    */
-  int unFollowUser(Long followingId, Long followerId);
+  void unFollowUser(Long followingId, Long followerId);
+
+  /**
+   * get friends by user id, friend example: A follow B, B follow A
+   *
+   * @param userId user id
+   * @return friends
+   */
+  List<User> getFriendsByUserId(Long userId);
+
+  /**
+   * get nearby users by username
+   *
+   * @param userName username
+   * @param distance distance
+   * @param metrics  metrics
+   * @return user geo list
+   */
+  List<GeoPosition> findNearbyUsersByUserName(String userName, double distance, Metrics metrics);
+
+
 }

@@ -9,6 +9,8 @@ import com.wiredcraft.myhomework.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -54,14 +55,6 @@ public class UserController {
     return new WiredCraftResponseEntity<>(0, res, SUCCESS);
   }
 
-  @PutMapping("/{userId}/geoposition")
-  public WiredCraftResponseEntity<Integer> updateGeoPositionForUser(@PathVariable Long userId, GeoPosition geoPosition) {
-    int res = userService.updateGeoPositionForUser(userId, geoPosition);
-    if (res != 1) {
-      return new WiredCraftResponseEntity<>(1, res, "Error Happens when updating user.");
-    }
-    return new WiredCraftResponseEntity<>(0, res, SUCCESS);
-  }
 
   @DeleteMapping("/{userId}")
   public WiredCraftResponseEntity<Integer> deleteUserById(@PathVariable Long userId) {
@@ -83,33 +76,51 @@ public class UserController {
 
 
   @GetMapping("/{userId}/followers")
-  public WiredCraftResponseEntity<Set<User>> getFollowers(@PathVariable Long userId) {
-    Set<User> followers = userService.getFollowersByUserId(userId);
+  public WiredCraftResponseEntity<List<User>> getFollowers(@PathVariable Long userId) {
+    List<User> followers = userService.getFollowersByUserId(userId);
     return new WiredCraftResponseEntity<>(0, followers, SUCCESS);
   }
 
   @GetMapping("/{userId}/following")
-  public WiredCraftResponseEntity<Set<User>> getFollowing(@PathVariable Long userId) {
-    Set<User> following = userService.getFollowingByUserId(userId);
+  public WiredCraftResponseEntity<List<User>> getFollowing(@PathVariable Long userId) {
+    List<User> following = userService.getFollowingByUserId(userId);
     return new WiredCraftResponseEntity<>(0, following, SUCCESS);
   }
 
   @PostMapping("/{userId}/follower")
   public WiredCraftResponseEntity<Integer> updateFollowing(@PathVariable Long userId, Long loginUserId) {
-    int res = userService.followUser(userId, loginUserId);
-    return new WiredCraftResponseEntity<>(0, res, SUCCESS);
+    userService.followUser(userId, loginUserId);
+    return new WiredCraftResponseEntity<>(0, null, SUCCESS);
   }
 
   @DeleteMapping("/{userId}/follower")
   public WiredCraftResponseEntity<Integer> deleteFollowing(@PathVariable Long userId, Long loginUserId) {
-    int res = userService.unFollowUser(userId, loginUserId);
-    return new WiredCraftResponseEntity<>(0, res, SUCCESS);
+    userService.unFollowUser(userId, loginUserId);
+    return new WiredCraftResponseEntity<>(0, null, SUCCESS);
   }
 
   @GetMapping("/{userId}/friends")
-  public WiredCraftResponseEntity<Set<User>> getFriendsByUserId(@PathVariable Long userId) {
-    Set<User> friends = new HashSet<>();
+  public WiredCraftResponseEntity<List<User>> getFriendsByUserId(@PathVariable Long userId) {
+    List<User> friends = userService.getFriendsByUserId(userId);
     return new WiredCraftResponseEntity<>(0, friends, SUCCESS);
+  }
+
+
+  @PutMapping("/{userName}/geo")
+  public WiredCraftResponseEntity<Long> updateGeoPositionForUser(@PathVariable String userName, @RequestBody Point geoPosition) {
+    Long res = userService.updateGeoPositionForUser(userName, geoPosition);
+    if (res != 1) {
+      return new WiredCraftResponseEntity<>(1, res, "Error Happens when updating user geo.");
+    }
+    return new WiredCraftResponseEntity<>(0, res, SUCCESS);
+  }
+
+  @GetMapping("/{userName}/nearby")
+  public WiredCraftResponseEntity<List<GeoPosition>> findNearByUsers(@PathVariable String userName,
+                                                                     @RequestParam(required = false, defaultValue = "5.0") double distance,
+                                                                     @RequestParam(required = false, defaultValue = "KILOMETERS") String metrics) {
+    List<GeoPosition> nearbyUserList = userService.findNearbyUsersByUserName(userName, distance, Metrics.valueOf(metrics));
+    return new WiredCraftResponseEntity<>(0, nearbyUserList, SUCCESS);
   }
 
   public UserService getUserService() {
