@@ -11,6 +11,7 @@ import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,7 +39,7 @@ public class UserController {
     return new WiredCraftResponseEntity<>(0, user, SUCCESS);
   }
 
-  @PutMapping
+  @PatchMapping
   public WiredCraftResponseEntity<Integer> updateUser(@RequestParam Long userId,
                                                       @RequestParam(required = false) String userName,
                                                       @RequestParam(required = false) String address,

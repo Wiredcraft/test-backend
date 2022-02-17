@@ -7,7 +7,6 @@ import com.wiredcraft.myhomework.mapper.UserMapper;
 import com.wiredcraft.myhomework.service.UserService;
 import com.wiredcraft.myhomework.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.GeoResult;
 import org.springframework.data.geo.GeoResults;
@@ -15,9 +14,7 @@ import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.GeoOperations;
-import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -38,6 +35,8 @@ public class UserServiceImpl implements UserService {
   private final static String FRIENDS = "_FRIENDS";
 
   private final static String NEARBY = "NEARBY";
+
+  private final static String GEO = "GEO";
 
   private UserMapper userMapper;
 
@@ -94,6 +93,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Long updateGeoPositionForUser(String userName, Point geoPosition) {
+    setOperations.add(GEO, userName);
     return geoOperations.add(NEARBY, geoPosition, userName);
   }
 
@@ -162,25 +162,27 @@ public class UserServiceImpl implements UserService {
     List<GeoPosition> geoPositions = new ArrayList<>();
     User user = userMapper.findUserByName(userName);
     if (user != null) {
-      List<User> friends = getFriendsByUserId(user.getUserId());
-      if (friends != null && !friends.isEmpty()) {
-        Set<String> friendNameSet = friends.stream().map(User::getName).collect(Collectors.toSet());
-        GeoResults<RedisGeoCommands.GeoLocation<Object>> result = geoOperations.radius(NEARBY, userName, new Distance(distance, metrics), RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs()
-                .includeDistance()
-                .includeCoordinates().sortAscending());
-        if (result != null) {
-          List<GeoResult<RedisGeoCommands.GeoLocation<Object>>> content = result.getContent();
-          content.forEach(a -> {
-            String name = (String) a.getContent().getName();
-            if (!name.equals(userName) && friendNameSet.contains(name)) {
-              GeoPosition geoPosition = new GeoPosition();
-              geoPosition.setUserName(name);
-              geoPosition.setDistance(a.getDistance().getValue());
-              geoPosition.setLatitude(a.getContent().getPoint().getX());
-              geoPosition.setLongitude(a.getContent().getPoint().getY());
-              geoPositions.add(geoPosition);
-            }
-          });
+      if (Boolean.TRUE.equals(setOperations.isMember(GEO, userName))) {
+        List<User> friends = getFriendsByUserId(user.getUserId());
+        if (friends != null && !friends.isEmpty()) {
+          Set<String> friendNameSet = friends.stream().map(User::getName).collect(Collectors.toSet());
+          GeoResults<RedisGeoCommands.GeoLocation<Object>> result = geoOperations.radius(NEARBY, userName, new Distance(distance, metrics), RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs()
+                  .includeDistance()
+                  .includeCoordinates().sortAscending());
+          if (result != null) {
+            List<GeoResult<RedisGeoCommands.GeoLocation<Object>>> content = result.getContent();
+            content.forEach(a -> {
+              String name = (String) a.getContent().getName();
+              if (!name.equals(userName) && friendNameSet.contains(name)) {
+                GeoPosition geoPosition = new GeoPosition();
+                geoPosition.setUserName(name);
+                geoPosition.setDistance(a.getDistance().getValue());
+                geoPosition.setLatitude(a.getContent().getPoint().getX());
+                geoPosition.setLongitude(a.getContent().getPoint().getY());
+                geoPositions.add(geoPosition);
+              }
+            });
+          }
         }
       }
     }

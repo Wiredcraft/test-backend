@@ -56,7 +56,7 @@
   <update id="updateUser" parameterType="com.wiredcraft.myhomework.common.User">
     UPDATE user
     SET name          = #{name},
-        date_of_birth = #{dateOfBirth},
+        date_of_birth = #{dob},
         address       = #{address},
         description   = #{description},
         create_at     = #{createdAt}

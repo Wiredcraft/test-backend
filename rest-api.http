@@ -1,0 +1,167 @@
+###
+POST http://localhost:443/users
+Content-Type: application/json
+
+{
+  "name": "admin",
+  "address": "chengdu",
+  "dob": "1990-11-09",
+  "description": "test data"
+}
+
+<> 2022-02-17T204259.200.json
+
+
+
+
+###
+POST http://localhost:443/users
+Content-Type: application/json
+
+{
+  "name": "admin2",
+  "address": "shanghai",
+  "dob": "1990-11-11",
+  "description": "test data"
+}
+
+<> 2022-02-17T204357.200.json
+
+
+###
+POST http://localhost:443/users
+Content-Type: application/json
+
+{
+  "name": "admin4",
+  "address": "beijing",
+  "dob": "1990-11-11",
+  "description": "test data"
+}
+
+
+###
+GET http://localhost:443/users/1
+Accept: application/json
+
+<> 2022-02-17T204613.200.json
+
+
+
+###
+PATCH localhost:443/users?userId=1&userName=root&address=shanghai&dateOfBirth=1990/11/10&description=admin users
+Accept: application/json
+
+<> 2022-02-17T204738.200.json
+<> 2022-02-17T204629.500.json
+
+##
+
+###  USERID 2 FOLLOW USER WITH ID 1
+POST localhost:443/users/1/follower?loginUserId=2
+Accept: application/json
+
+<> 2022-02-17T205353.200.json
+<> 2022-02-17T204914.200.json
+
+###  USERID 1 FOLLOW USER WITH ID 2
+POST localhost:443/users/2/follower?loginUserId=1
+Accept: application/json
+
+<> 2022-02-17T205059.200.json
+
+### USERID 1 FOLLOW USER WITH ID 3
+POST localhost:443/users/3/follower?loginUserId=1
+Accept: application/json
+
+<> 2022-02-17T205101.200.json
+
+### USERID 3 FOLLOW USER WITH ID 1
+POST localhost:443/users/1/follower?loginUserId=3
+Accept: application/json
+
+<> 2022-02-17T205409.200.json
+
+
+### USERID 3 FOLLOW USER WITH ID 2
+POST localhost:443/users/2/follower?loginUserId=3
+Accept: application/json
+
+<> 2022-02-17T205413.200.json
+
+
+### USERID 1 FOLLOW USER WITH ID 4
+POST localhost:443/users/4/follower?loginUserId=1
+Accept: application/json
+
+<> 2022-02-17T205103.200.json
+
+### USER ID 2 UNFOLLOW USER ID 1
+DELETE localhost:443/users/1/follower?loginUserId=2
+
+
+###  USERID 2 FOLLOW USER WITH ID 1
+POST localhost:443/users/1/follower?loginUserId=2
+Accept: application/json
+
+
+### GET USER 1's following
+GET localhost:443/users/1/following
+Accept: application/json
+
+<> 2022-02-17T205522.200.json
+
+### GET USER 1's follower
+GET localhost:443/users/1/followers
+Accept: application/json
+
+<> 2022-02-17T205544.200.json
+
+
+### GET USER 1'S friends
+GET localhost:443/users/1/friends
+Accept: application/json
+
+<> 2022-02-17T205649.200.json
+<> 2022-02-17T205544.200.jso
+
+
+### update admin2's geo
+PUT localhost:443/users/admin2/geo
+Content-Type: application/json
+
+{
+  "x": "23.2544",
+  "y": "12.2342"
+}
+
+### update admin3's geo
+PUT localhost:443/users/admin3/geo
+Content-Type: application/json
+
+{
+  "x": "23.2744",
+  "y": "12.2342"
+}
+
+### update root's geo
+PUT localhost:443/users/root/geo
+Content-Type: application/json
+
+{
+  "x": "23.2944",
+  "y": "12.2342"
+}
+
+### update admin4's geo
+PUT localhost:443/users/admin4/geo
+Content-Type: application/json
+
+{
+  "x": "23.2644",
+  "y": "12.2342"
+}
+
+###  get near by friends
+GET localhost:443/users/root/nearby
+
