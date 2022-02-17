@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public int updateUserBaseInfo(Long id, String name, String address, String description, Date dateOfBirth) throws UserException {
     final User user = userMapper.findUserById(id);
-    int res = 0;
+    int res;
     if (user != null) {
       if (StringUtils.hasText(name)) {
         user.setName(name);
@@ -94,10 +94,10 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User getUserById(Long userId) throws Exception {
+  public User getUserById(Long userId) throws UserException {
     User res = userMapper.findUserById(userId);
     if (res == null) {
-      throw new Exception("There is no user with user id: " + userId);
+      throw new UserException("There is no user with user id: " + userId);
     }
     return res;
   }

@@ -6,8 +6,6 @@ import com.wiredcraft.myhomework.common.User;
 import com.wiredcraft.myhomework.common.WiredCraftResponseEntity;
 import com.wiredcraft.myhomework.exception.UserException;
 import com.wiredcraft.myhomework.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
@@ -32,7 +30,7 @@ public class UserController {
   private UserService userService;
 
   @GetMapping("/{userId}")
-  public WiredCraftResponseEntity<User> getUserByUserId(@PathVariable Long userId) {
+  public WiredCraftResponseEntity<User> getUserByUserId(@PathVariable Long userId) throws UserException {
     User user = userService.getUserById(userId);
     if (user == null) {
       return new WiredCraftResponseEntity<>(1, null, "There is no user found by id.");

@@ -6,7 +6,7 @@ import org.springframework.util.StringUtils;
 
 public class GeoUtils {
 
-  public static void volidateGeo(GeoPosition geoPosition) throws UserException {
+  public static void validateGeo(GeoPosition geoPosition) throws UserException {
     if (geoPosition == null) {
       throw new UserException("user's geo position should not be null.");
     }
@@ -15,9 +15,13 @@ public class GeoUtils {
       throw new UserException("geo position should belong to a user.");
     }
 
-    if (geoPosition.getLongitude() > 180 || geoPosition.getLongitude() < -180 || geoPosition.getLatitude() > 180 || geoPosition.getLatitude() < -180) {
+    if (geoPosition.getLongitude() > 180
+            || geoPosition.getLongitude() < -180
+            || geoPosition.getLatitude() > 180
+            || geoPosition.getLatitude() < -180) {
       throw new UserException("User should be on Earth.");
     }
+
 
     if (geoPosition.getDistance() < 0) {
       throw new UserException("Distance could not be negative.");

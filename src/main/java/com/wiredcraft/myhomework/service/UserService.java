@@ -13,6 +13,7 @@ public interface UserService {
 
   /**
    * create user
+   *
    * @param user user
    * @return row updated num
    * @throws UserException user exception
@@ -21,6 +22,7 @@ public interface UserService {
 
   /**
    * delete user by id
+   *
    * @param userId user id
    * @return row updated num
    */
@@ -54,7 +56,7 @@ public interface UserService {
    * @param userId user id
    * @return user
    */
-  User getUserById(Long userId) throws Exception;
+  User getUserById(Long userId) throws UserException;
 
   /**
    * get followers for user
@@ -90,7 +92,10 @@ public interface UserService {
   void unFollowUser(Long followingId, Long followerId);
 
   /**
-   * get friends by user id, friend example: A follow B, B follow A
+   * get friends by user id,
+   * <p>
+   * friend definition: Someone gets followed and following at same time by this user
+   * for example: A follow B, B follow A and we can say A and B are friends.
    *
    * @param userId user id
    * @return friends
