@@ -16,7 +16,7 @@ public class User {
   private String name;
 
   @JsonFormat(pattern = "yyyy-MM-dd")
-  private Date dateOfBirth;
+  private Date dob;
 
   private String address;
   private String description;
@@ -41,12 +41,12 @@ public class User {
     this.name = name;
   }
 
-  public Date getDateOfBirth() {
-    return dateOfBirth;
+  public Date getDob() {
+    return dob;
   }
 
-  public void setDateOfBirth(Date dateOfBirth) {
-    this.dateOfBirth = dateOfBirth;
+  public void setDob(Date dob) {
+    this.dob = dob;
   }
 
   public String getAddress() {

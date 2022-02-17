@@ -6,7 +6,7 @@
   <resultMap id="baseResult" type="com.wiredcraft.myhomework.common.User">
     <result column="id" property="userId" jdbcType="BIGINT"/>
     <result column="name" property="name" jdbcType="VARCHAR"/>
-    <result column="date_of_birth" property="dateOfBirth" jdbcType="DATE"/>
+    <result column="date_of_birth" property="dob" jdbcType="DATE"/>
     <result column="address" property="address" jdbcType="DATE"/>
     <result column="description" property="description" jdbcType="VARCHAR"/>
     <result column="create_at" property="createdAt" jdbcType="VARCHAR"/>
@@ -51,7 +51,7 @@
   </delete>
   <insert id="insertUser" parameterType="com.wiredcraft.myhomework.common.User">
     INSERT INTO user (id, name, date_of_birth, address, description, create_at)
-    VALUES (#{userId}, #{name}, #{dateOfBirth}, #{address}, #{description}, #{createdAt})
+    VALUES (#{userId}, #{name}, #{dob}, #{address}, #{description}, #{createdAt})
   </insert>
   <update id="updateUser" parameterType="com.wiredcraft.myhomework.common.User">
     UPDATE user

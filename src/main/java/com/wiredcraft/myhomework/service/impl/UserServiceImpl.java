@@ -7,6 +7,7 @@ import com.wiredcraft.myhomework.mapper.UserMapper;
 import com.wiredcraft.myhomework.service.UserService;
 import com.wiredcraft.myhomework.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.GeoResult;
 import org.springframework.data.geo.GeoResults;
@@ -14,7 +15,9 @@ import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.GeoOperations;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -79,7 +83,7 @@ public class UserServiceImpl implements UserService {
         user.setDescription(description);
       }
       if (dateOfBirth != null) {
-        user.setDateOfBirth(dateOfBirth);
+        user.setDob(dateOfBirth);
       }
       res = userMapper.updateUser(user);
     } else {
@@ -122,12 +126,13 @@ public class UserServiceImpl implements UserService {
   private List<User> getUsersFromRedisByKey(Long userId, String key) {
     Set<Object> caches = setOperations.members(userId + key);
     List<Long> userList = new ArrayList<>();
-    if (caches != null) {
+    if (caches != null && !caches.isEmpty()) {
       for (Object cache : caches) {
-        userList.add((Long) cache);
+        userList.add(Long.valueOf(String.valueOf(cache)));
       }
+      return userMapper.findUsersByIdList(userList);
     }
-    return userMapper.findUsersByIdList(userList);
+    return new ArrayList<>();
   }
 
   @Override
@@ -135,19 +140,15 @@ public class UserServiceImpl implements UserService {
     User follower = userMapper.findUserById(followerId);
     User following = userMapper.findUserById(followingId);
     if (following != null && follower != null) {
-      redisLongTemplate.multi();
       redisLongTemplate.opsForSet().add(followerId + FOLLOWING, followingId);
       redisLongTemplate.opsForSet().add(followingId + FOLLOWER, followerId);
-      redisLongTemplate.exec();
     }
   }
 
   @Override
   public void unFollowUser(Long followingId, Long followerId) {
-    redisLongTemplate.multi();
     redisLongTemplate.opsForSet().remove(followerId + FOLLOWING, followingId);
     redisLongTemplate.opsForSet().remove(followingId + FOLLOWER, followerId);
-    redisLongTemplate.exec();
   }
 
   @Override
@@ -159,22 +160,29 @@ public class UserServiceImpl implements UserService {
   @Override
   public List<GeoPosition> findNearbyUsersByUserName(String userName, double distance, Metrics metrics) {
     List<GeoPosition> geoPositions = new ArrayList<>();
-    GeoResults<RedisGeoCommands.GeoLocation<Object>> result = geoOperations.radius(NEARBY, userName, new Distance(distance, metrics), RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs()
-            .includeDistance()
-            .includeCoordinates().sortAscending());
-    if (result != null) {
-      List<GeoResult<RedisGeoCommands.GeoLocation<Object>>> content = result.getContent();
-      content.forEach(a -> {
-        String name = (String) a.getContent().getName();
-        if (!name.equals(userName)) {
-          GeoPosition geoPosition = new GeoPosition();
-          geoPosition.setUserName(name);
-          geoPosition.setDistance(a.getDistance().getValue());
-          geoPosition.setLatitude(a.getContent().getPoint().getX());
-          geoPosition.setLongitude(a.getContent().getPoint().getY());
-          geoPositions.add(geoPosition);
+    User user = userMapper.findUserByName(userName);
+    if (user != null) {
+      List<User> friends = getFriendsByUserId(user.getUserId());
+      if (friends != null && !friends.isEmpty()) {
+        Set<String> friendNameSet = friends.stream().map(User::getName).collect(Collectors.toSet());
+        GeoResults<RedisGeoCommands.GeoLocation<Object>> result = geoOperations.radius(NEARBY, userName, new Distance(distance, metrics), RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs()
+                .includeDistance()
+                .includeCoordinates().sortAscending());
+        if (result != null) {
+          List<GeoResult<RedisGeoCommands.GeoLocation<Object>>> content = result.getContent();
+          content.forEach(a -> {
+            String name = (String) a.getContent().getName();
+            if (!name.equals(userName) && friendNameSet.contains(name)) {
+              GeoPosition geoPosition = new GeoPosition();
+              geoPosition.setUserName(name);
+              geoPosition.setDistance(a.getDistance().getValue());
+              geoPosition.setLatitude(a.getContent().getPoint().getX());
+              geoPosition.setLongitude(a.getContent().getPoint().getY());
+              geoPositions.add(geoPosition);
+            }
+          });
         }
-      });
+      }
     }
     return geoPositions;
   }
