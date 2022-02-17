@@ -152,7 +152,7 @@ The delete API use **DELETE** to delete user by user id.
 Use OAuth2 to implement this kind of requirement.
 
 ***Authentication***
-Usually we would implement an auth-service to handle authentication request. There are several ways to provide token to user such as 'authorization_code','password','refresh_token'.
+Usually we would implement an auth-service to handle authentication request. There are several ways to provide token to user such as 'authorization\_code','password','refresh\_token'.
 
 ***Authorization***: 
 
@@ -238,7 +238,7 @@ Get following for user by user id.
 
 Follow user: since i don't implement login part requirement so i pass the loginUserId as request param.
 
-In this action, we will put values into two set with name: #{UserId}_FOLLOWING AND #{UserId}_FOLLOWER.
+In this action, we will put values into two set with name: #{UserId}\_FOLLOWING AND #{UserId}\_FOLLOWER.
 
 **Request:**  [POST] localhost:443/users/6/follower?loginUserId=1
 
@@ -256,7 +256,7 @@ In this action, we will put values into two set with name: #{UserId}_FOLLOWING A
 
 ### Unfollow User
 
-Unfollow user: remove the related values from two sets: #{UserId}_FOLLOWING AND #{UserId}_FOLLOWER.
+Unfollow user: remove the related values from two sets: #{UserId}\_FOLLOWING AND #{UserId}\_FOLLOWER.
 
 
 **Request:** [DELETE] localhost:443/users/1/follower?loginUserId=2
@@ -276,9 +276,9 @@ Unfollow user: remove the related values from two sets: #{UserId}_FOLLOWING AND 
 
 Friend Definition: if A follow B and B follow A, then we can say A and B are friends.
 
-Implmentation Logic: Get the intersection of two sets: #{UserId}_FOLLOWING AND #{UserId}_FOLLOWER.
+Implmentation Logic: Get the intersection of two sets: #{UserId}\_FOLLOWING AND #{UserId}\_FOLLOWER.
 
-For example: A_FOLLOWING contains: {B, C, D} A__FOLLOWER contains {B,C,E,F}, then we can say {B, C} is A's friends set.
+For example: A\_FOLLOWING contains: {B, C, D} A\_FOLLOWER contains {B,C,E,F}, then we can say {B, C} is A's friends set.
 
 
 **Request:** [GET] localhost:443/users/2/friends
