@@ -1,14 +1,27 @@
 # test-backend
 
+## Document
 
+- [api doc](./document/api doc.md)(export from yapi)
+- [postman collection](./document/test_backend.postman_collection.json)
+- [postman environment](./document/test_backend.postman_environment.json)
+
+## Online Test
+
+- ~~prod_url: http://wiredcraft.hwzy1.net/ ~~  (Need to check AliCloud's Port this morning)
 
 ## QuickStart
 
-<!-- add docs here for user -->
-
-see [egg docs][egg] for more detail.
-
 ### Development
+
+#### Mysql
+
+- create a database `wiredcraft`
+- update username and password in `database/config.json` and `config/config.default.js`
+- `npm install --save-dev sequelize-cli`
+- run sequelize: `npx sequelize db:migrate`
+
+#### Develop
 
 ```bash
 $ npm i
@@ -23,11 +36,6 @@ $ npm start
 $ npm stop
 ```
 
-### npm scripts
+## TODO
 
-- Use `npm run lint` to check code style.
-- Use `npm test` to run unit test.
-- Use `npm run autod` to auto detect dependencies upgrade, see [autod](https://www.npmjs.com/package/autod) for more detail.
-
-
-[egg]: https://eggjs.org
+- add test files
