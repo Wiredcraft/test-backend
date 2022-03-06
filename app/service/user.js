@@ -4,6 +4,11 @@ const Service = require('egg').Service;
 const moment = require('moment');
 
 class UserService extends Service {
+  /**
+   * create new User
+   * @param {obj} userOpt 
+   * @returns User
+   */
   async createUser(userOpt) {
     const { ctx } = this;
     userOpt.pwd = ctx.helper.md5Encrypto(userOpt.pwd);
@@ -12,6 +17,13 @@ class UserService extends Service {
     return user;
   }
 
+  /**
+   * return User list and count
+   * @param {obj} query 
+   * @param {int} offset 
+   * @param {int} limit 
+   * @returns {count: int, rows: User[]}
+   */
   async findUsers(query = {}, offset = 0, limit = 20) {
     // console.log('opt:', opt);
     if (!query.deletedAt) {
@@ -27,6 +39,11 @@ class UserService extends Service {
     });
   }
 
+  /**
+   * getUserById
+   * @param {int} id 
+   * @returns User | null
+   */
   async getUserById(id) {
     return this.ctx.model.User.findOne({
       attributes: {
@@ -38,6 +55,12 @@ class UserService extends Service {
     });
   }
 
+  /**
+   * updateUserById
+   * @param {int} id 
+   * @param {obj} userOpt 
+   * @returns User
+   */
   async updateUserById(id, userOpt) {
     return this.ctx.model.User.update(userOpt, {
       where: {
@@ -64,6 +87,11 @@ class UserService extends Service {
     );
   }
 
+  /**
+   * check if username has been used
+   * @param {string} name 
+   * @returns bool
+   */
   async checkUsername(name) {
     const user = await this.ctx.model.User.findOne({
       where: {

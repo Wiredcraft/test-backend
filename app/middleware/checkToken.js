@@ -10,7 +10,7 @@ module.exports = (options) => {
       }
       ctx.headers.userId = userId;
     } catch (e) {
-      console.log('err:', e);
+      ctx.swLog.error('checkToken Error:', e);
       throw new Error('Token Error');
     }
     await next();

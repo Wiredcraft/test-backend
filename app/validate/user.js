@@ -11,7 +11,7 @@ module.exports = app => {
 
   validator.addRule('password', (rule, value) => {
     if (!/^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/.test(value)) {
-      return 'password should includes xxxxxx';
+      return 'password should includes uppercase letters, lowercase letters, numbers and special characters';
     }
   });
 

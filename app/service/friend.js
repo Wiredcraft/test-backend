@@ -7,8 +7,8 @@ const { QueryTypes } = require('sequelize');
 class LoginService extends Service {
   /**
    *
-   * @param {*} user1
-   * @param {*} user2
+   * @param {int} user1
+   * @param {int} user2
    * @returns flag  0x00: no follow relationship
    * 0x01: user1 follow user2
    * 0x10: user2 follow user1
@@ -38,6 +38,12 @@ class LoginService extends Service {
     return flag;
   }
 
+  /**
+   * 
+   * @param {int} user1 
+   * @param {int} user2 
+   * @returns User
+   */
   async createFriend(user1, user2) {
     return this.ctx.model.Friend.create({
       following: user1,
@@ -46,6 +52,12 @@ class LoginService extends Service {
     });
   }
 
+  /**
+   * 
+   * @param {int} user1 
+   * @param {int} user2 
+   * @returns 
+   */
   async removeFriend(user1, user2) {
     return this.ctx.model.Friend.destroy({
       where: {
@@ -55,6 +67,13 @@ class LoginService extends Service {
     });
   }
 
+  /**
+   * get rows and count of users who follow userId
+   * @param {int} userId 
+   * @param {int} offset 
+   * @param {int} limit 
+   * @returns {count: int, rows: Friend[]}
+   */
   async getFollowingIds(userId, offset, limit) {
     return this.ctx.model.Friend.findAndCountAll({
       where: {
@@ -66,6 +85,13 @@ class LoginService extends Service {
     });
   }
 
+  /**
+   * get rows and count of users who followed by userId
+   * @param {int} userId 
+   * @param {int} offset 
+   * @param {int} limit 
+   * @returns {count: int, rows: Friend[]}
+   */
   async getFollowerIds(userId, offset, limit) {
     return this.ctx.model.Friend.findAndCountAll({
       where: {
@@ -77,6 +103,13 @@ class LoginService extends Service {
     });
   }
 
+  /**
+   * get rows and count of users who follow userId and also followed by userId
+   * @param {int} userId 
+   * @param {int} offset 
+   * @param {int} limit 
+   * @returns {count: int, rows: Friend[]}
+   */
   async getFriendIds(userId, offset, limit) {
     const followingIds = await this.ctx.model.Friend.findAll({
       where: {
@@ -96,7 +129,6 @@ class LoginService extends Service {
       };
     }
 
-    console.log('followingIds:', followingIds);
     return this.ctx.model.Friend.findAndCountAll({
       where: {
         follower: followingIds,
@@ -108,6 +140,15 @@ class LoginService extends Service {
     });
   }
 
+  /**
+   * get Friends sort by distance
+   * @param {int} userId 
+   * @param {float} latitude 
+   * @param {float} longitude 
+   * @param {int} offset 
+   * @param {int} limit 
+   * @returns 
+   */
   async getFriendsByDistance(userId, latitude = 0, longitude = 0, offset, limit) {
     const querySql = `SELECT id, 
       ROUND(6378.138 * 2 * ASIN(

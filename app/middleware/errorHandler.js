@@ -4,7 +4,7 @@ module.exports = (options) => {
       await next();
     } catch (err) {
       // ctx.app.emit('error', ctx);
-      ctx.swLog.error('err:', err);
+      ctx.swLog.error('err Handler:', err);
 
       let error = err.message;
 
