@@ -1,0 +1,368 @@
+{
+	"info": {
+		"_postman_id": "f6d7fd9e-60bb-417b-9b1d-5780ed7380b4",
+		"name": "test_backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "local",
+			"item": [
+				{
+					"name": "user login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set('token', jsonData.body.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"test001\",\n    \"pwd\": \"QWEqwe123!@#\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_url}}/login",
+							"host": [
+								"{{local_url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"test005\",\n    \"pwd\": \"QWEqwe123!@#\",\n    \"dob\": \"2000-01-01\",\n    \"address\": \"Shanghai Pudong\",\n    \"description\": \"a test user\",\n    \"latitude\": 41.1,\n    \"longitude\": 120.1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_url}}/user",
+							"host": [
+								"{{local_url}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_user_by_id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local_url}}/user/2",
+							"host": [
+								"{{local_url}}"
+							],
+							"path": [
+								"user",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_user_list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local_url}}/user?page=1&count=5",
+							"host": [
+								"{{local_url}}"
+							],
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update_user_by_id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"test007\",\n    \"pwd\": \"QWEqwe123!@#\",\n    \"dob\": \"2000-01-01\",\n    \"address\": \"Shanghai Pudong ccc\",\n    \"description\": \"test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_url}}/user/2",
+							"host": [
+								"{{local_url}}"
+							],
+							"path": [
+								"user",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete_user",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local_url}}/user/6",
+							"host": [
+								"{{local_url}}"
+							],
+							"path": [
+								"user",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_user_who_following_someone",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local_url}}/friend/1/following?page=1&pagecount=20",
+							"host": [
+								"{{local_url}}"
+							],
+							"path": [
+								"friend",
+								"1",
+								"following"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pagecount",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_user_who_followed_by someone",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local_url}}/friend/1/follower",
+							"host": [
+								"{{local_url}}"
+							],
+							"path": [
+								"friend",
+								"1",
+								"follower"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_friends(mutual_follow)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_url}}/friend/1/mutual",
+							"host": [
+								"{{local_url}}"
+							],
+							"path": [
+								"friend",
+								"1",
+								"mutual"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_friends_sort_by_distance",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local_url}}/friend/1/nearby",
+							"host": [
+								"{{local_url}}"
+							],
+							"path": [
+								"friend",
+								"1",
+								"nearby"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "follow_new_user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local_url}}/friend/follower/3",
+							"host": [
+								"{{local_url}}"
+							],
+							"path": [
+								"friend",
+								"follower",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove_following_relation",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local_url}}/friend/follower/3",
+							"host": [
+								"{{local_url}}"
+							],
+							"path": [
+								"friend",
+								"follower",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
