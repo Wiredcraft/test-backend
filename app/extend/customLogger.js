@@ -10,4 +10,4 @@ module.exports = function (ctx) {
     file: 'app.log'
   }, ctx));
   return logger;
-}
+};

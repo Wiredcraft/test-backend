@@ -1,0 +1,20 @@
+{
+  "extends": "eslint:recommended",
+  "parser": "babel-eslint",
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "rules": {
+    "semi": ["error", "always"],
+    "quotes": 0,
+    "no-console": 0,
+    "no-unused-vars": 0,
+    "no-unreachable": 0,
+    "no-redeclare": 1,
+    "no-irregular-whitespace": 2,
+    "no-trailing-spaces": 2,
+    "no-var": 2,
+    "comma-dangle": [2, "never"]
+  }
+}

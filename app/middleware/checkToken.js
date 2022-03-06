@@ -14,5 +14,5 @@ module.exports = (options) => {
       throw new Error('Token Error');
     }
     await next();
-  }
-}
+  };
+};

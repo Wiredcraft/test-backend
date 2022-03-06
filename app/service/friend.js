@@ -39,9 +39,9 @@ class LoginService extends Service {
   }
 
   /**
-   * 
-   * @param {int} user1 
-   * @param {int} user2 
+   * create Relation that user1 follow user2
+   * @param {int} user1
+   * @param {int} user2
    * @returns User
    */
   async createFriend(user1, user2) {
@@ -53,10 +53,10 @@ class LoginService extends Service {
   }
 
   /**
-   * 
-   * @param {int} user1 
-   * @param {int} user2 
-   * @returns 
+   *
+   * @param {int} user1
+   * @param {int} user2
+   * @returns
    */
   async removeFriend(user1, user2) {
     return this.ctx.model.Friend.destroy({
@@ -69,9 +69,9 @@ class LoginService extends Service {
 
   /**
    * get rows and count of users who follow userId
-   * @param {int} userId 
-   * @param {int} offset 
-   * @param {int} limit 
+   * @param {int} userId
+   * @param {int} offset
+   * @param {int} limit
    * @returns {count: int, rows: Friend[]}
    */
   async getFollowingIds(userId, offset, limit) {
@@ -87,9 +87,9 @@ class LoginService extends Service {
 
   /**
    * get rows and count of users who followed by userId
-   * @param {int} userId 
-   * @param {int} offset 
-   * @param {int} limit 
+   * @param {int} userId
+   * @param {int} offset
+   * @param {int} limit
    * @returns {count: int, rows: Friend[]}
    */
   async getFollowerIds(userId, offset, limit) {
@@ -105,9 +105,9 @@ class LoginService extends Service {
 
   /**
    * get rows and count of users who follow userId and also followed by userId
-   * @param {int} userId 
-   * @param {int} offset 
-   * @param {int} limit 
+   * @param {int} userId
+   * @param {int} offset
+   * @param {int} limit
    * @returns {count: int, rows: Friend[]}
    */
   async getFriendIds(userId, offset, limit) {
@@ -142,12 +142,12 @@ class LoginService extends Service {
 
   /**
    * get Friends sort by distance
-   * @param {int} userId 
-   * @param {float} latitude 
-   * @param {float} longitude 
-   * @param {int} offset 
-   * @param {int} limit 
-   * @returns 
+   * @param {int} userId
+   * @param {float} latitude
+   * @param {float} longitude
+   * @param {int} offset
+   * @param {int} limit
+   * @returns {count: int, Friend[]}
    */
   async getFriendsByDistance(userId, latitude = 0, longitude = 0, offset, limit) {
     const querySql = `SELECT id, 

@@ -6,7 +6,7 @@ const moment = require('moment');
 class UserService extends Service {
   /**
    * create new User
-   * @param {obj} userOpt 
+   * @param {obj} userOpt
    * @returns User
    */
   async createUser(userOpt) {
@@ -19,9 +19,9 @@ class UserService extends Service {
 
   /**
    * return User list and count
-   * @param {obj} query 
-   * @param {int} offset 
-   * @param {int} limit 
+   * @param {obj} query
+   * @param {int} offset
+   * @param {int} limit
    * @returns {count: int, rows: User[]}
    */
   async findUsers(query = {}, offset = 0, limit = 20) {
@@ -41,7 +41,7 @@ class UserService extends Service {
 
   /**
    * getUserById
-   * @param {int} id 
+   * @param {int} id
    * @returns User | null
    */
   async getUserById(id) {
@@ -57,8 +57,8 @@ class UserService extends Service {
 
   /**
    * updateUserById
-   * @param {int} id 
-   * @param {obj} userOpt 
+   * @param {int} id
+   * @param {obj} userOpt
    * @returns User
    */
   async updateUserById(id, userOpt) {
@@ -89,7 +89,7 @@ class UserService extends Service {
 
   /**
    * check if username has been used
-   * @param {string} name 
+   * @param {string} name
    * @returns bool
    */
   async checkUsername(name) {

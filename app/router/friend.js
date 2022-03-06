@@ -10,4 +10,4 @@ module.exports = (app) => {
   router.post('/friend/follower/:id', checkToken(), controller.friend.followNewUser);
   router.delete('/friend/follower/:id', checkToken(), controller.friend.removeFollower);
   router.get('/friend/:id/nearby', checkToken(), controller.friend.getNearbyFriends);
-}
+};

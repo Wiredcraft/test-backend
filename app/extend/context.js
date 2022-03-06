@@ -6,4 +6,4 @@ module.exports = {
   get swLog() {
     return CustomLogger(this);
   }
-}
+};

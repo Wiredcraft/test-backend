@@ -9,4 +9,4 @@ module.exports = (app) => {
   router.get('/user/:id', checkToken(), controller.user.getUserById);
   router.put('/user/:id', checkToken(), controller.user.updateUserById);
   router.delete('/user/:id', checkToken(), controller.user.deleteUserById);
-}
+};

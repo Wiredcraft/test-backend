@@ -20,4 +20,4 @@ module.exports = app => {
       return 'dob should be format YYYY-MM-DD';
     }
   });
-}
+};
