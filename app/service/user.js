@@ -62,6 +62,9 @@ class UserService extends Service {
    * @returns User
    */
   async updateUserById(id, userOpt) {
+    if (userOpt.pwd) {
+      userOpt.pwd = this.ctx.helper.md5Encrypto(userOpt.pwd);
+    }
     return this.ctx.model.User.update(userOpt, {
       where: {
         id

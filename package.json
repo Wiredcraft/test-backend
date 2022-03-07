@@ -7,7 +7,6 @@
     "declarations": true
   },
   "dependencies": {
-    "crypto-js": "^4.1.1",
     "egg": "^2.15.1",
     "egg-jwt": "^3.1.7",
     "egg-scripts": "^2.11.0",

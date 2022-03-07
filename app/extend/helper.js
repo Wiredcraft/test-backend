@@ -1,7 +1,8 @@
-const CryptoJS = require('crypto-js');
+const { createHash } = require('crypto');
+const hash = createHash('sha256');
 
 module.exports = {
   md5Encrypto(str) {
-    return CryptoJS.MD5(str).toString().toUpperCase();
+    return hash.update(str).digest('hex').toUpperCase();
   }
 };

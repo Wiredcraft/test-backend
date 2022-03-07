@@ -16,7 +16,7 @@ class FriendController extends Controller {
     }
     const followRelation = await ctx.service.friend.checkFollowRelation(userId, id);
     console.log('relation:', followRelation);
-    if (followRelation & (1 === 1)) {
+    if ((followRelation & 1) === 1) {
       throw new Error('you have already followed');
     }
     await ctx.service.friend.createFriend(userId, id);
@@ -31,7 +31,7 @@ class FriendController extends Controller {
     const id = +ctx.params.id;
 
     const followRelation = await ctx.service.friend.checkFollowRelation(userId, id);
-    if (followRelation & (1 !== 1)) {
+    if ((followRelation & 1) !== 1) {
       throw new Error('you did not follow before');
     }
     await ctx.service.friend.removeFriend(userId, id);
