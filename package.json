@@ -36,7 +36,7 @@
     "stop": "egg-scripts stop --title=egg-server-test-backend",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",
-    "test": "npm run lint -- --fix && npm run test-local",
+    "test": "egg-bin test",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
     "lint": "eslint .",

@@ -15,11 +15,10 @@ class LoginController extends Controller {
       throw new Error('name or password wrong');
     }
 
-    console.log('userInfo:', userInfo);
     const token = app.jwt.sign({
       id: userInfo.id,
       name: userInfo.name
-    });
+    }, 'wiredcraft', { expiresIn: '1d' });
     return ctx.body = {
       status: 'success',
       body: {
