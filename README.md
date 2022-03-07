@@ -8,7 +8,7 @@
 
 ## Online Test
 
-- ~~prod_url: http://wiredcraft.hwzy1.net/ ~~  (Need to check AliCloud's Port this morning)
+- prod_url: http://47.105.117.157:9090
 
 ## QuickStart
 
