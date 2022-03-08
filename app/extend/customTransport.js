@@ -11,14 +11,12 @@ class CustomTransport extends FileTransport {
 
   log(level, args, meta) {
     const prefixStr = this.buildFormat(level);
-    for (let i in args) {
-      if (args.hasOwnProperty(i)) {
-        if (parseInt(i, 10) === 0) {
-          args[i] = `${prefixStr}${args[i]}`;
-        }
-        if (parseInt(i, 10) === args.length - 1) {
-          args[i] += '\n';
-        }
+    for (let i = 0; i < args.length; i++) {
+      if (i === 0) {
+        args[i] = `${prefixStr}${args[i]}`;
+      }
+      if (i === args.length - 1) {
+        args[i] += '\n';
       }
     }
 
@@ -30,7 +28,8 @@ class CustomTransport extends FileTransport {
     const threadNameStr = `[${process.pid}]`;
     const methodStr = `[${this.ctx.request.method}]`;
     const urlStr = `[${this.ctx.request.url}]`;
-    return `${timeStr}${threadNameStr}${methodStr}${urlStr}`;
+    const levelStr = `[${level}]`
+    return `${timeStr}${threadNameStr}${methodStr}${urlStr}${levelStr}`;
   }
 
   setUserId(userId) {
