@@ -1,0 +1,29 @@
+{
+  "name": "backend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "NODE_ENV=dev node --max-old-space-size=4096 app.js",
+    "start": "node app.js",
+    "test": "mocha --recursive",
+    "coverage": "nyc npm run test"
+  },
+  "dependencies": {
+    "chai": "^4.3.6",
+    "chai-http": "^4.3.0",
+    "config": "^3.3.7",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "lodash": "^4.17.21",
+    "mocha": "^9.2.1",
+    "moment": "^2.29.1",
+    "mongoose": "^6.2.4",
+    "morgan": "~1.9.1",
+    "parameter": "^3.6.0",
+    "redis": "^4.0.4",
+    "uuid": "^8.3.2"
+  }
+}
