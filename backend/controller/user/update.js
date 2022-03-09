@@ -20,6 +20,12 @@ const update = async (req, res, next) => {
     params._id = params.id;
     delete params.id;
     
+    if (params.longitude && params.latitude) {
+      params.location = [params.longitude, params.latitude];
+      delete params.longitude;
+      delete params.latitude;
+    }
+    
     let result = await userService.update(params);
 
     return success(req, res, result);

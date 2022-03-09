@@ -7,5 +7,5 @@ module.exports = (app) => {
   app.put('/api/v1/user/:id', userController.update);
   app.delete('/api/v1/user/:id', userController.remove);
   app.put('/api/v1/user/location/:id', userController.updateLocation);
-  app.get('/api/v1/user/nearby/:id', userController.nearby);
+  app.get('/api/v1/user/nearby/:id', userController.getNearby);
 };

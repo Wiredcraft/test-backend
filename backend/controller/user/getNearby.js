@@ -16,7 +16,7 @@ const nearby = async (req, res, next) => {
     params._id = params.id;
     delete params.id;
 
-    let result = await userService.nearby(params);
+    let result = await userService.getNearby(params);
 
     return success(req, res, result);
   } catch (err) {

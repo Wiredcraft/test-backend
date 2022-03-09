@@ -13,6 +13,8 @@ const updateLocation = async (params) => {
   })
 
   if (params.isLogoff) {
+    params.location = [params.longitude, params.latitude];
+    
     await userDal.findOneAndUpdate(params);
   }
   return 'success';

@@ -22,6 +22,6 @@ const syslogSchema = new mongoose.Schema({
   timestamps: { createdAt: 'createAt'}
 })
 
-syslogSchema.index({createAt: 1});
+syslogSchema.index({ createAt: 1 });
 
 mongoose.model('syslog', syslogSchema);

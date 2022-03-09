@@ -6,9 +6,13 @@ const userSchema = new mongoose.Schema({
   dob: Date,
   address: String,
   description: String,
-  longitude: Number,
-  latitude: Number,       
+  location : {
+    type: [],
+    sparse: true
+  },     
   createdAt: Date   
 });
+
+userSchema.index({ location: "2dsphere" })
 
 mongoose.model('user', userSchema);

@@ -4,7 +4,7 @@ const
   update = require('./update'),
   remove = require('./remove'),
   updateLocation = require('./updateLocation'),
-  nearby = require('./nearby');
+  getNearby = require('./getNearby');
 
 module.exports = {
   getList,
@@ -12,5 +12,5 @@ module.exports = {
   update,
   remove,
   updateLocation,
-  nearby
+  getNearby
 };

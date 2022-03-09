@@ -1,10 +1,8 @@
 const
   config = require('config'),
-  { userDal } = require(config.mongoDalPath),
-  moment = require('moment');
+  { userDal } = require(config.mongoDalPath);
 
 const create = async (params) => {
-  params.createdAt = moment().format('YYYY-MM-DD');
   let data = await userDal.create(params);
   return data;
 }
