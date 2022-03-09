@@ -20,7 +20,7 @@ describe('Test userRoutes create', () => {
       superagent.post(`${testAddress}/api/v1/user`)
       .send(userRoutesCreateTestLib.testCreateSucceed)
       .end((e, res) => {
-        dataRet = res.body;
+        const dataRet = res.body;
         expect(e).to.eql(null);
         expect(typeof dataRet).to.eql('object');
         expect(dataRet).to.have.property('_id');

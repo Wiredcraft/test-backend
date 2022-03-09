@@ -79,6 +79,5 @@
  * @apiParam {Number} radius.
  * @apiParam {Enum} unit ['m', 'km', 'ft', 'mi'].
  *
- * @apiSuccess {Number} total Number of users exist in the database.
- * @apiSuccess {Array} data User List.
+ * @apiSuccess {Array} User List.
  */

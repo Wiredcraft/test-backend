@@ -17,7 +17,7 @@ describe('Test userRoutes remove', () => {
       })
     })
     it('testRemoveSucceed', (done) => {
-      let id = userRoutesRemoveTestLib.testRemoveSucceed.id;
+      const id = userRoutesRemoveTestLib.testRemoveSucceed.id;
       delete userRoutesRemoveTestLib.testRemoveSucceed.id;
       superagent.delete(`${testAddress}/api/v1/user/${id}`)
       .send()
@@ -27,7 +27,7 @@ describe('Test userRoutes remove', () => {
       })
     })
     it('testIllegalId', (done) => {
-      let id = userRoutesRemoveTestLib.testIllegalId.id;
+      const id = userRoutesRemoveTestLib.testIllegalId.id;
       delete userRoutesRemoveTestLib.testIllegalId.id;
       superagent.put(`${testAddress}/api/v1/user/${id}`)
       .send()

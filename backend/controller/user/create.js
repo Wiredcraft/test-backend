@@ -12,7 +12,7 @@ const create = async (req, res, next) => {
     address: {required: true, type: 'string'},
     description: {required: true, type: 'string'},
     longitude: {required: false, type: 'number'},
-    latitude: {required: false, type: 'number'},
+    latitude: {required: false, type: 'number'}
   };
 
   try {

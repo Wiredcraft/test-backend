@@ -17,12 +17,12 @@ describe('Test userRoutes update', () => {
       })
     })
     it('testUpdateSucceed', (done) => {
-      let id = userRoutesUpdateTestLib.testUpdateSucceed.id;
+      const id = userRoutesUpdateTestLib.testUpdateSucceed.id;
       delete userRoutesUpdateTestLib.testUpdateSucceed.id;
       superagent.put(`${testAddress}/api/v1/user/${id}`)
       .send(userRoutesUpdateTestLib.testUpdateSucceed)
       .end((e, res) => {
-        dataRet = res.body;
+        const dataRet = res.body;
         expect(e).to.eql(null);
         expect(typeof dataRet).to.eql('object');
         expect(dataRet).to.have.property('_id');
@@ -35,7 +35,7 @@ describe('Test userRoutes update', () => {
       })
     })
     it('testIllegalName', (done) => {
-      let id = userRoutesUpdateTestLib.testIllegalName.id;
+      const id = userRoutesUpdateTestLib.testIllegalName.id;
       delete userRoutesUpdateTestLib.testIllegalName.id;
       superagent.put(`${testAddress}/api/v1/user/${id}`)
       .send(userRoutesUpdateTestLib.testIllegalName)

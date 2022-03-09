@@ -9,7 +9,7 @@ const testAddress = 'http://127.0.0.1:8001';
 describe('Test userRoutes getList', () => {
   describe('#getList()', () => {
     it ('testMissingLimit', (done) => {
-      let param = routesLib.json2Param(userRoutesGetListTestLib.testMissingLimit);
+      const param = routesLib.json2Param(userRoutesGetListTestLib.testMissingLimit);
       superagent.get(`${testAddress}/api/v1/user${param}`)
       .send()
       .end((e, res) => {
@@ -19,11 +19,11 @@ describe('Test userRoutes getList', () => {
       })
     })
     it ('testResult', (done) => {
-      let param = routesLib.json2Param(userRoutesGetListTestLib.testResult);
+      const param = routesLib.json2Param(userRoutesGetListTestLib.testResult);
       superagent.get(`${testAddress}/api/v1/user${param}`)
       .send()
       .end((e, res) => {
-        dataRet = res.body;
+        const dataRet = res.body;
         expect(e).to.eql(null);
         expect(dataRet).to.have.property('total');
         expect(typeof dataRet.total).to.eql('number');
