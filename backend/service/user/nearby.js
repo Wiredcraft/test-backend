@@ -6,14 +6,8 @@ const
 const nearby = async (params) => {
   let cache = redis.getClient();
 
-  // we should use redis.georadiusbymember here but the function hasn't been
-  // included in node_moudles/@node-client. However, i'll solve this problem it as soon as possible
-  // let userIds = await cache.georadiusbymember(config.redis.GEOKey,{
-  //   member: params._id,
-  //   radius: params.radius
-  // });
-  
-  let userIds = [];
+  // in @node-redis/client v1.0.4 we can use geoSearch but redis must up to 6.0.2
+  let userIds = await cache.geoSearch(config.redis.GEOKey, params._id, {radius: params.radius, unit: params.unit});
 
   // splice the id which is equal to the id in my params
   let idIndex = userIds.indexOf(params._id);

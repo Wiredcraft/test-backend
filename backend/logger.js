@@ -1,11 +1,12 @@
 const
   config = require('config'),
-  { syslogDal } = require(config.mongoDalPath);
+  { syslogDal } = require(config.mongoDalPath),
+  os = require('os');
 
 class Logger {
   constructor () {
     this.connected = false;
-    this.ipAddr = '127.0.0.1';
+    this.ipAddr = this.getIpAddr();
   }
 
   setConnect (isconnect) {
@@ -43,6 +44,14 @@ class Logger {
 
   error (message, options) {
     this.write(0, message, options);
+  }
+
+  getIpAddr () {
+    let ipv4 = '127.0.0.1';
+    for (let addr of os.networkInterfaces()['Loopback Pseudo-Interface 1']) {
+      if (addr.family === 'IPv4') ipv4 = addr.address;
+    }
+    return ipv4;
   }
 }
 
