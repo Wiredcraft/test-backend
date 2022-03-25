@@ -1,0 +1,23 @@
+{
+  "name": "backend-test",
+  "author": {
+    "name": "Fawzi Bedidi",
+    "email": "fawzi.bedidi@outlook.com"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/app.ts"
+  },
+  "dependencies": {
+    "dayjs": "^1.10.6",
+    "joi": "^17.6.0",
+    "koa": "^2.13.4",
+    "mongodb": "^4.4.1"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.13.4",
+    "@types/node": "^17.0.16",
+    "ts-node": "^10.5.0",
+    "typescript": "^4.6.2"
+  }
+}
