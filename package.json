@@ -1,5 +1,6 @@
 {
   "name": "backend-test",
+  "version": "0.0.1",
   "author": {
     "name": "Fawzi Bedidi",
     "email": "fawzi.bedidi@outlook.com"
@@ -9,13 +10,17 @@
     "start": "ts-node src/bin/server.ts"
   },
   "dependencies": {
+    "@types/koa-router": "^7.4.4",
     "dayjs": "^1.10.6",
+    "glob": "^7.2.0",
     "joi": "^17.6.0",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
+    "koa-router": "^10.1.1",
     "mongodb": "^4.4.1"
   },
   "devDependencies": {
+    "@types/glob": "^7.2.0",
     "@types/koa": "^2.13.4",
     "@types/koa-bodyparser": "^4.3.7",
     "@types/node": "^17.0.16",
