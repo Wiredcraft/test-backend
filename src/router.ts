@@ -2,6 +2,7 @@ import Router from 'koa-router'
 import glob from 'glob'
 import path from 'path'
 import Koa from 'koa'
+import { isFunction } from "lodash"
 
 import { config } from './config'
 
@@ -16,10 +17,13 @@ router.get('/', (ctx: Koa.Context) => {
 })
 
 const api = new Router()
-glob.sync('./v1/**/router.ts', { cwd: './lib' }).forEach((routerPath) => {
+
+console.log(process.cwd())
+
+glob.sync('./v1/**/router.ts', { cwd: './src/lib' }).forEach((routerPath) => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const router = require(routerPath)
-    if (typeof router.router.routes === "function") return
+    const router = require(`./lib/${routerPath}`)
+    if (!isFunction(router.router.routes)) return
 
     const namespace = path
         .dirname(routerPath)
@@ -27,7 +31,7 @@ glob.sync('./v1/**/router.ts', { cwd: './lib' }).forEach((routerPath) => {
         .slice(2)
         .join(path.sep)
 
-    api.use(`/${namespace}`, router.router.routes())
+    api.use(`/v1/${namespace}`, router.router.routes())
 })
 
 router.use(api.routes())

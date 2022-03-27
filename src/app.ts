@@ -6,9 +6,6 @@ import { errorHandler } from './lib/middleware/errorHandler'
 
 export const app = new Koa()
 
-
-
-// app.use(KoaBody({multipart:true}))
 app.use(errorHandler)
 app.use(KoaBodyParser())
 
