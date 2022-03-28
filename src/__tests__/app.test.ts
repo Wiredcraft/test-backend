@@ -4,12 +4,6 @@ import {app} from "../app"
 const server = app.callback()
 const request: supertest.SuperTest<supertest.Test> = supertest(server)
 
-beforeAll(async () => {
-})
-
-afterAll(async () => {
-})
-
 describe('GET /ping', () => {
     it('should return OK', async () => {
         const res = await request.get('/ping').expect(200)

@@ -25,6 +25,8 @@ console.log(process.cwd())
 // to look at all the routes. Pretty handy as it allows to just create a folder `toto` with a router.ts to load all
 // its routes without extraneous configuration.
 glob.sync('./v1/**/router.ts', { cwd: './src/lib' }).forEach((routerPath) => {
+    // Disable @typescript-eslint/no-var-requires for code simplicity's sake
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const router = require(`./lib/${routerPath}`)
     if (!isFunction(router.router.routes)) return
 

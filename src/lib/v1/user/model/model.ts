@@ -6,7 +6,7 @@ import {UpdateResult} from "mongodb";
 export interface IUserModel extends Model<IUserDocument> {
   getUsers() : Promise<IUserDocument[]>
 
-  getUsersById(userId: string) : Promise<IUserDocument | undefined>
+   getUsersById(userId: string) : Promise<IUserDocument | undefined>
 
   patchUserById(userId: string, params: patchRouteParams): Promise<UpdateResult>
 
