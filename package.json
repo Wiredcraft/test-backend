@@ -8,6 +8,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint . --ext .ts",
+    "test": "jest --runInBand",
     "start": "ts-node src/bin/server.ts"
   },
   "dependencies": {
