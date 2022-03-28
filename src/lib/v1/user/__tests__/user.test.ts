@@ -20,7 +20,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
     await db.mongoose.connection.db.dropDatabase()
-    await db.mongoose.connection.close(true)
+    await db.mongoose.connection.close(true);
 })
 
 
