@@ -1,7 +1,7 @@
 interface UserModel {
     id?: string,
     name: string,
-    dateOfBirth: string,
+    dob: string,
     address: string,
     description: string,
 }

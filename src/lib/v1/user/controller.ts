@@ -9,8 +9,8 @@ import {
     validatorPostRoute,
     validatorUpdateRoute
 } from "./validator";
-import {ERRORS} from "../../../consts";
-import {UserModel} from "./model";
+import { ERRORS } from "../../../consts";
+import { IUserDocument, Users } from "./model/";
 
 
 /**
@@ -21,7 +21,7 @@ import {UserModel} from "./model";
 export const createUser = async (ctx: Koa.Context): Promise<void> => {
     const rawParams: createRouteParams = {
         name: ctx.request.body.name as string,
-        dateOfBirth: ctx.request.body.dateOfBirth as string,
+        dob: ctx.request.body.dob as string,
         address: ctx.request.body.address as string,
         description: ctx.request.body.description as string,
     }
@@ -32,8 +32,9 @@ export const createUser = async (ctx: Koa.Context): Promise<void> => {
         throw ERRORS.generic.validation.failed('', map(error.details, 'message'), '')
     }
 
-    value.id = "FAKE_ID"
-    ctx.body = value
+    const res = await Users.createUser(value)
+
+    ctx.body = res
 }
 
 
@@ -43,8 +44,9 @@ export const createUser = async (ctx: Koa.Context): Promise<void> => {
  * @param ctx
  */
 export const deleteUser = async (ctx: Koa.Context): Promise<void> => {
+    const res = await Users.deleteUserById(ctx.params.userId)
 
-    ctx.body = {}
+    ctx.body = res
 }
 
 
@@ -56,7 +58,7 @@ export const patchUser = async (ctx: Koa.Context): Promise<void> => {
     const rawParams: patchRouteParams = {
         userId: ctx.params.userId as string,
         name: ctx.request.body.name as string,
-        dateOfBirth: ctx.request.body.dateOfBirth as string,
+        dob: ctx.request.body.dob as string,
         address: ctx.request.body.address as string,
         description: ctx.request.body.description as string,
     }
@@ -64,12 +66,17 @@ export const patchUser = async (ctx: Koa.Context): Promise<void> => {
     const { error, value } = validatorPatchRoute(rawParams)
 
     if (error) {
-        throw ERRORS.generic.validation.failed('', map(error.details, 'message'), '')
+        throw ERRORS.generic.validation.failed('', map(error.details, 'message'))
     }
 
-    delete value.userId
-    ctx.body = value
+    const res = await Users.patchUserById(value.userId, value)
 
+    if (res.acknowledged) {
+        const retvalue = await Users.getUsersById(value.userId)
+        ctx.body = retvalue
+    } else {
+        throw ERRORS.generic.server.error('Could not patch user', [])
+    }
 }
 
 /**
@@ -80,7 +87,7 @@ export const updateUser = async (ctx: Koa.Context): Promise<void> => {
     const rawParams: updateRouteParams = {
         userId: ctx.params.userId as string,
         name: ctx.request.body.name as string,
-        dateOfBirth: ctx.request.body.dateOfBirth as string,
+        dob: ctx.request.body.dob as string,
         address: ctx.request.body.address as string,
         description: ctx.request.body.description as string,
     }
@@ -91,8 +98,15 @@ export const updateUser = async (ctx: Koa.Context): Promise<void> => {
         throw ERRORS.generic.validation.failed('', map(error.details, 'message'), '')
     }
 
-    delete value.userId
-    ctx.body = value
+    const res = await Users.updateUserById(value.userId, value)
+
+
+    if (res.acknowledged) {
+        const retvalue = await Users.getUsersById(value.userId)
+        ctx.body = retvalue
+    } else {
+        throw ERRORS.generic.server.error('Could not patch user', [])
+    }
 }
 
 /**
@@ -101,14 +115,12 @@ export const updateUser = async (ctx: Koa.Context): Promise<void> => {
  * @param ctx
  */
 export const getUser = async (ctx: Koa.Context): Promise<void> => {
-    const fakeUser: UserModel = {
-        name: "Test user",
-        dateOfBirth: "06-14-1994",
-        address: "3 Passage Catinat, Saint-Gratien, France",
-        description: "Fake user",
-    }
+    const user: IUserDocument | undefined = await Users.getUsersById(ctx.params.userId)
 
-    ctx.body = fakeUser
+    if (!user) {
+        throw ERRORS.generic.not.found('Could not find user for provided userId', ["user_not_found"])
+    }
+    ctx.body = user
 
 }
 
@@ -118,13 +130,7 @@ export const getUser = async (ctx: Koa.Context): Promise<void> => {
  * @param ctx
  */
 export const listUsers = async(ctx: Koa.Context): Promise<void> => {
-    const fakeUsers: UserModel[] = []
-    fakeUsers.push({
-        name: "Test user",
-        dateOfBirth: "06-14-1994",
-        address: "3 Passage Catinat, Saint-Gratien, France",
-        description: "Fake user",
-    })
+    const users: IUserDocument[] = await Users.getUsers()
 
-    ctx.body = fakeUsers
+    ctx.body = users
 }
