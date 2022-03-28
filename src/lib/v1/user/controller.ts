@@ -2,15 +2,17 @@ import Koa from 'koa';
 import { map } from 'lodash';
 
 import {
-  createRouteParams,
-  patchRouteParams,
-  updateRouteParams,
   validatorPatchRoute,
   validatorPostRoute,
   validatorUpdateRoute,
 } from './validator';
+import * as UserService from './service';
 import { ERRORS } from '../../../consts';
-import { IUserDocument, Users } from './model/';
+import {
+  createRouteParams,
+  patchRouteParams,
+  updateRouteParams,
+} from './types';
 
 
 /**
@@ -29,10 +31,10 @@ export const createUser = async (ctx: Koa.Context): Promise<void> => {
   const { error, value } = validatorPostRoute(rawParams);
 
   if (error) {
-    throw ERRORS.generic.validation.failed('', map(error.details, 'message'), '');
+    throw ERRORS.generic.validation.failed('', map(error.details, 'message'));
   }
 
-  const res = await Users.createUser(value);
+  const res = await UserService.createUser(value);
 
   ctx.body = res;
 };
@@ -44,7 +46,7 @@ export const createUser = async (ctx: Koa.Context): Promise<void> => {
  * @param ctx
  */
 export const deleteUser = async (ctx: Koa.Context): Promise<void> => {
-  const res = await Users.deleteUserById(ctx.params.userId);
+  const res = await UserService.deleteUserById(ctx.params.userId);
 
   ctx.body = res;
 };
@@ -69,14 +71,7 @@ export const patchUser = async (ctx: Koa.Context): Promise<void> => {
     throw ERRORS.generic.validation.failed('', map(error.details, 'message'));
   }
 
-  const res = await Users.patchUserById(value.userId, value);
-
-  if (res.acknowledged) {
-    const retvalue = await Users.getUsersById(value.userId);
-    ctx.body = retvalue;
-  } else {
-    throw ERRORS.generic.server.error('Could not patch user', []);
-  }
+  ctx.body = await UserService.patchUserById(value.userId, value);
 };
 
 /**
@@ -95,18 +90,10 @@ export const updateUser = async (ctx: Koa.Context): Promise<void> => {
   const { error, value } = validatorUpdateRoute(rawParams);
 
   if (error) {
-    throw ERRORS.generic.validation.failed('', map(error.details, 'message'), '');
+    throw ERRORS.generic.validation.failed('', map(error.details, 'message'));
   }
 
-  const res = await Users.updateUserById(value.userId, value);
-
-
-  if (res.acknowledged) {
-    const retvalue = await Users.getUsersById(value.userId);
-    ctx.body = retvalue;
-  } else {
-    throw ERRORS.generic.server.error('Could not patch user', []);
-  }
+  ctx.body = await UserService.updateUserById(value.userId, value);
 };
 
 /**
@@ -115,13 +102,7 @@ export const updateUser = async (ctx: Koa.Context): Promise<void> => {
  * @param ctx
  */
 export const getUser = async (ctx: Koa.Context): Promise<void> => {
-  const user: IUserDocument | undefined = await Users.getUsersById(ctx.params.userId);
-
-  if (!user) {
-    throw ERRORS.generic.not.found('Could not find user for provided userId', ['user_not_found']);
-  }
-  ctx.body = user;
-
+  ctx.body = await UserService.getUserById(ctx.params.userId);
 };
 
 /**
@@ -130,7 +111,5 @@ export const getUser = async (ctx: Koa.Context): Promise<void> => {
  * @param ctx
  */
 export const listUsers = async (ctx: Koa.Context): Promise<void> => {
-  const users: IUserDocument[] = await Users.getUsers();
-
-  ctx.body = users;
+  ctx.body = await UserService.listUsers();
 };
