@@ -7,19 +7,17 @@ export const mongoose = new Mongoose()
 
 const connectionOptions = {
     appname: config.appName,
-    dbName: 'airvisual',
+    dbName: 'test',
     autoIndex: false,
     connectTimeoutMS: 30000,
     keepAlive: true,
-    poolSize: 100,
     useNewUrlParser: true,
-    useFindAndModify: false, // https://mongoosejs.com/docs/deprecations.html#-findandmodify-
     useUnifiedTopology: true,
 }
 
 if (isTesting) connectionOptions.dbName = `tests_${Date.now()}_${_.random(10000)}`
 
-console.log('Connecting to DB at ', config.database.mongo.url)
+console.log('Connecting to DB at ', config.database.mongo.url, connectionOptions.dbName)
 mongoose
     .connect(config.database.mongo.url, connectionOptions).catch((ex) => {
     console.error('Error while establishing initial connection to mongodb', ex)
