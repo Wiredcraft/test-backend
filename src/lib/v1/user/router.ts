@@ -1,16 +1,16 @@
-import Router from 'koa-router'
+import Router from 'koa-router';
 
-import * as controller from "./controller"
+import * as controller from './controller';
 
-const router = new Router()
+const router = new Router();
 
-router.post('Create User', '/', controller.createUser)
-router.delete('Delete User', '/:userId', controller.deleteUser)
-router.patch('Patch User', '/:userId', controller.patchUser)
-router.put('Update User', '/:userId', controller.updateUser)
-router.get('Get User', '/:userId', controller.getUser)
-router.get('Get All users', '/', controller.listUsers)
+router.post('Create User', '/', controller.createUser);
+router.delete('Delete User', '/:userId', controller.deleteUser);
+router.patch('Patch User', '/:userId', controller.patchUser);
+router.put('Update User', '/:userId', controller.updateUser);
+router.get('Get User', '/:userId', controller.getUser);
+router.get('Get All users', '/', controller.listUsers);
 
-router.routes()
+router.routes();
 
-export { router }
+export { router };
