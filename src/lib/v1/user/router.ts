@@ -1,5 +1,7 @@
 import Router from 'koa-router'
+
 import * as controller from "./controller"
+
 const router = new Router()
 
 router.post('Create User', '/', controller.createUser)

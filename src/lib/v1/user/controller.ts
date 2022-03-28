@@ -3,16 +3,21 @@ import { map } from "lodash"
 
 import {
     createRouteParams,
-    deleteRouteParams, getRouteParams,
     patchRouteParams,
     updateRouteParams,
-    validatorDeleteRoute, validatorPatchRoute,
+    validatorPatchRoute,
     validatorPostRoute,
     validatorUpdateRoute
 } from "./validator";
 import {ERRORS} from "../../../consts";
 import {UserModel} from "./model";
 
+
+/**
+ * Create a user, return the user created with its new ID.
+ * TODO Token here
+ * @param ctx
+ */
 export const createUser = async (ctx: Koa.Context): Promise<void> => {
     const rawParams: createRouteParams = {
         name: ctx.request.body.name as string,
@@ -32,20 +37,21 @@ export const createUser = async (ctx: Koa.Context): Promise<void> => {
 }
 
 
+/**
+ * Delete a user by ID
+ * No need for a validator here, as not sending an ID would not land you here.
+ * @param ctx
+ */
 export const deleteUser = async (ctx: Koa.Context): Promise<void> => {
-    const rawParams: deleteRouteParams = {
-        userId: ctx.params.userId as string,
-    }
-
-    const { error, value } = validatorDeleteRoute(rawParams)
-
-    if (error) {
-        throw ERRORS.generic.validation.failed('', map(error.details, 'message'), '')
-    }
 
     ctx.body = {}
 }
 
+
+/**
+ * Patch a user by ID. replace only what is given.
+ * @param ctx
+ */
 export const patchUser = async (ctx: Koa.Context): Promise<void> => {
     const rawParams: patchRouteParams = {
         userId: ctx.params.userId as string,
@@ -66,6 +72,10 @@ export const patchUser = async (ctx: Koa.Context): Promise<void> => {
 
 }
 
+/**
+ * Update a user by ID. PUT method, takes a whole user to replace a user
+ * @param ctx
+ */
 export const updateUser = async (ctx: Koa.Context): Promise<void> => {
     const rawParams: updateRouteParams = {
         userId: ctx.params.userId as string,
@@ -85,17 +95,12 @@ export const updateUser = async (ctx: Koa.Context): Promise<void> => {
     ctx.body = value
 }
 
+/**
+ * Return a user by ID.
+ * No need for a validator here, as not sending an ID would not land you here.
+ * @param ctx
+ */
 export const getUser = async (ctx: Koa.Context): Promise<void> => {
-    const rawParams: getRouteParams = {
-        userId: ctx.params.userId as string,
-    }
-
-    const {error, value} = validatorDeleteRoute(rawParams)
-
-    if (error) {
-        throw ERRORS.generic.validation.failed('', map(error.details, 'message'), '')
-    }
-
     const fakeUser: UserModel = {
         name: "Test user",
         dateOfBirth: "06-14-1994",
@@ -107,6 +112,11 @@ export const getUser = async (ctx: Koa.Context): Promise<void> => {
 
 }
 
+/**
+ * Return a list of all user.
+ * TODO add pagination
+ * @param ctx
+ */
 export const listUsers = async(ctx: Koa.Context): Promise<void> => {
     const fakeUsers: UserModel[] = []
     fakeUsers.push({

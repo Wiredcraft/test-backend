@@ -1,5 +1,6 @@
 import generateError from "./lib/utils/error";
 
+// List of some generic errors. Specific errors should be created on routes level.
 export const ERRORS: { [key: string]: any } = {
     generic: {
         not: {
@@ -15,14 +16,6 @@ export const ERRORS: { [key: string]: any } = {
         server: {
             error: generateError(500, 'internal_server_error'),
             unavailable: generateError(503, 'server_unavailable'),
-        },
-        too: {
-            many: {
-                requests: generateError(
-                    429,
-                    'too_many_requests',
-                ),
-            },
         },
     },
 }

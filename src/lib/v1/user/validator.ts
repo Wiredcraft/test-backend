@@ -1,17 +1,5 @@
 import Joi from 'joi'
 
-export const validatorGetRoute = (params: getRouteParams): Joi.ValidationResult => {
-    return Joi.object({
-        userId : Joi.string().required()
-    }).validate(params)
-}
-
-export const validatorDeleteRoute = (params: deleteRouteParams): Joi.ValidationResult => {
-    return Joi.object({
-        userId : Joi.string().required()
-    }).validate(params)
-}
-
 export const validatorPatchRoute = (params: patchRouteParams): Joi.ValidationResult => {
     return Joi.object({
         userId : Joi.string().required(),
@@ -39,14 +27,6 @@ export const validatorUpdateRoute = (params: updateRouteParams): Joi.ValidationR
         address: Joi.string(),
         description: Joi.string()
     }).validate(params)
-}
-
-export interface getRouteParams {
-    userId: string
-}
-
-export interface deleteRouteParams {
-    userId: string
 }
 
 export interface patchRouteParams {
