@@ -1,3 +1,5 @@
+import { createRouteParams, patchRouteParams, updateRouteParams } from './types';
+
 import Joi from 'joi';
 
 export const validatorPatchRoute = (params: patchRouteParams): Joi.ValidationResult => {
@@ -29,26 +31,4 @@ export const validatorUpdateRoute = (params: updateRouteParams): Joi.ValidationR
   }).validate(params);
 };
 
-export interface patchRouteParams {
-  userId?: string
-  name?: string,
-  dob?: string,
-  address?: string,
-  description?: string,
-}
-
-export interface updateRouteParams {
-  userId?: string
-  name: string,
-  dob: string,
-  address: string,
-  description: string,
-}
-
-export interface createRouteParams {
-  name: string,
-  dob: string,
-  address: string,
-  description: string,
-}
 

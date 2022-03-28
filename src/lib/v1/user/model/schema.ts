@@ -1,6 +1,6 @@
 import * as db from '../../../utils/mongoDb';
 import { IUserDocument } from './document';
-import { createRouteParams, patchRouteParams, updateRouteParams } from '../validator';
+import { createRouteParams, patchRouteParams, updateRouteParams } from '../types';
 import { Users } from './index';
 import { UpdateResult } from 'mongodb';
 
