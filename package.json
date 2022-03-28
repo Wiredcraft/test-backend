@@ -9,7 +9,8 @@
     "build": "tsc",
     "lint": "eslint . --ext .ts",
     "test": "jest --runInBand",
-    "start": "ts-node src/bin/server.ts"
+    "start": "ts-node src/bin/server.ts",
+    "prepare": "husky install"
   },
   "dependencies": {
     "dayjs": "^1.10.6",
@@ -33,6 +34,7 @@
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
     "eslint": "^8.12.0",
+    "husky": "^7.0.4",
     "jest": "^27.5.1",
     "supertest": "^6.2.2",
     "ts-jest": "^27.1.4",
