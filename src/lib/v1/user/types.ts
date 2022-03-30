@@ -4,6 +4,14 @@ interface UserModel {
   dob: string,
   address: string,
   description: string,
+  createdAt: string
+}
+
+interface listRouteParams {
+  perPage: number,
+  page: number,
+  orderBy: string,
+  orderDir: "asc" | "desc"
 }
 
 
@@ -32,6 +40,7 @@ interface createRouteParams {
 
 export {
   UserModel,
+  listRouteParams,
   patchRouteParams,
   updateRouteParams,
   createRouteParams,

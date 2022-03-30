@@ -2,6 +2,7 @@ import Koa from 'koa';
 import { map } from 'lodash';
 
 import {
+  validatorListRoute,
   validatorPatchRoute,
   validatorPostRoute,
   validatorUpdateRoute,
@@ -9,7 +10,7 @@ import {
 import * as UserService from './service';
 import { ERRORS } from '../../../consts';
 import {
-  createRouteParams,
+  createRouteParams, listRouteParams,
   patchRouteParams,
   updateRouteParams,
 } from './types';
@@ -111,5 +112,18 @@ export const getUser = async (ctx: Koa.Context): Promise<void> => {
  * @param ctx
  */
 export const listUsers = async (ctx: Koa.Context): Promise<void> => {
-  ctx.body = await UserService.listUsers();
+  const rawParams: listRouteParams = {
+    perPage: Number.parseFloat(ctx.request.query.perPage as string),
+    page: Number.parseFloat(ctx.request.query.page as string),
+    orderDir: ctx.request.query.orderDir as "asc" | "desc",
+    orderBy: ctx.request.query.orderBy as string,
+  };
+
+  const { error, value } = validatorListRoute(rawParams);
+
+  if (error) {
+    throw ERRORS.generic.validation.failed('', map(error.details, 'message'));
+  }
+
+  ctx.body = await UserService.listUsers(value);
 };

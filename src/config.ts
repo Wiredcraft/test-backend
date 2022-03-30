@@ -11,6 +11,16 @@ export const config = {
       name: process.env.DATABASE_NAME || 'test',
     },
   },
+  pagination: {
+    userList: {
+      defaultPerPage: 10,
+      maxPerPage: 50,
+      order: {
+        field: "createdAt",
+        direction: "desc"
+      }
+    },
+  },
 } as const;
 
 export const isDevelopment = config.env === 'development';

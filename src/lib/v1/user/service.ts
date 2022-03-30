@@ -1,4 +1,4 @@
-import { createRouteParams, patchRouteParams, updateRouteParams } from './types';
+import { createRouteParams, listRouteParams, patchRouteParams, updateRouteParams } from './types';
 import { IUserDocument, Users } from './model';
 import { ERRORS } from '../../../consts';
 
@@ -37,17 +37,17 @@ export const updateUserById = async (userId: string, params: updateRouteParams):
     }
   }
   throw ERRORS.generic.server.error('Could not update user', []);
-}
+};
 
-export const getUserById = async(userId: string): Promise<IUserDocument | never> => {
+export const getUserById = async (userId: string): Promise<IUserDocument | never> => {
   const user: IUserDocument | undefined = await Users.getUsersById(userId);
 
   if (!user) {
     throw ERRORS.generic.not.found('Could not find user for provided userId', ['user_not_found']);
   }
-  return user
-}
+  return user;
+};
 
-export const listUsers = async():Promise<IUserDocument[]> => {
-  return Users.getUsers();
-}
+export const listUsers = async (params: listRouteParams): Promise<IUserDocument[]> => {
+  return Users.getUsers(params);
+};
