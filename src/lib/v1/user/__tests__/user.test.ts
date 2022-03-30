@@ -1,8 +1,8 @@
 import supertest from 'supertest';
 
 import { app } from '../../../../app';
-import { UserModel } from '../types';
-import { createRouteParams, patchRouteParams, updateRouteParams } from '../types';
+import { UserModel, createRouteParams, patchRouteParams, updateRouteParams } from '../types';
+import { config } from '../../../../config';
 import * as db from '../../../utils/mongoDb';
 import * as fixtures from './fixtures';
 
@@ -48,14 +48,14 @@ describe('/user routes', () => {
     expect(user.address).toBe(fixtures.users[0].address);
   });
 
-  it('should return 200 and all user profiles', async () => {
+  it('should return 200 and the default number of profiles per page', async () => {
     const res = await request
       .get(`/v1/user`)
       .send();
 
     expect(res.statusCode).toEqual(200);
     const body = JSON.parse(res.text) as UserModel[];
-    expect(body.length).toBe(fixtures.users.length);
+    expect(body.length).toBe(config.pagination.userList.defaultPerPage);
 
     for (let i = 0; i < fixtures.users.length; i++) {
       expect(body[i].name).toBe(fixtures.users[i].name);

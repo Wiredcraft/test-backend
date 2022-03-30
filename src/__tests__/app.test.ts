@@ -1,18 +1,8 @@
 import supertest from 'supertest';
 import { app } from '../app';
-import * as db from "../lib/utils/mongoDb"
 
 const server = app.callback();
 const request: supertest.SuperTest<supertest.Test> = supertest(server);
-
-
-beforeAll(async () => {
-  await db.waitForConnection();
-});
-
-afterAll(async () => {
-  await db.mongoose.connection.close(true)
-});
 
 describe('GET /ping', () => {
   it('should return OK', async () => {
