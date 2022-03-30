@@ -1,6 +1,7 @@
-import { createRouteParams, patchRouteParams, updateRouteParams } from './types';
-
 import Joi from 'joi';
+
+import { config } from '../../../config';
+import { createRouteParams, listRouteParams, patchRouteParams, updateRouteParams } from './types';
 
 export const validatorPatchRoute = (params: patchRouteParams): Joi.ValidationResult => {
   return Joi.object({
@@ -31,4 +32,18 @@ export const validatorUpdateRoute = (params: updateRouteParams): Joi.ValidationR
   }).validate(params);
 };
 
+
+export const validatorListRoute = (params: listRouteParams): Joi.ValidationResult => {
+  return Joi.object({
+    perPage: Joi.number()
+      .max(config.pagination.userList.maxPerPage)
+      .failover(config.pagination.userList.defaultPerPage),
+    page: Joi
+      .number()
+      .failover(1),
+    orderBy: Joi.string().default(config.pagination.userList.order.field).allow(...["dob", "name", "createdAt", "updatedAt"]),
+    orderDir: Joi.string().default(config.pagination.userList.order.direction).allow(...["asc", "desc"])
+
+  }).validate(params);
+};
 

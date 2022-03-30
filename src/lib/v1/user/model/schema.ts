@@ -1,6 +1,6 @@
 import * as db from '../../../utils/mongoDb';
 import { IUserDocument } from './document';
-import { createRouteParams, patchRouteParams, updateRouteParams } from '../types';
+import { createRouteParams, listRouteParams, patchRouteParams, updateRouteParams } from '../types';
 import { Users } from './index';
 import { UpdateResult } from 'mongodb';
 
@@ -21,6 +21,8 @@ export const Schema = new db.mongoose.Schema(
     address: {
       type: String,
     },
+    createdAt: Date,
+    updatedAt: Date,
   },
   {
     timestamps: true,
@@ -32,8 +34,13 @@ export const Schema = new db.mongoose.Schema(
   },
 );
 
-Schema.statics.getUsers = async function getUsers(): Promise<IUserDocument[]> {
-  return this.find({});
+Schema.statics.getUsers = async function getUsers(params: listRouteParams): Promise<IUserDocument[]> {
+  const sortParam: { [key in string]: 'asc' | 'desc' } = {};
+  sortParam[params.orderBy] = params.orderDir;
+  return this.find({})
+    .limit(params.perPage)
+    .skip(params.perPage * (params.page - 1))
+    .sort(sortParam).exec();
 };
 
 Schema.statics.getUsersById = async function getUsersById(userId: string): Promise<IUserDocument | undefined> {

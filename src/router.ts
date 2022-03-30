@@ -19,8 +19,6 @@ router.get('/', (ctx: Koa.Context) => {
 
 const api = new Router();
 
-console.log(process.cwd());
-
 // This relatively ugly code snippet looks through the v1 folder in /src/lib for all the router.ts files
 // to look at all the routes. Pretty handy as it allows to just create a folder `toto` with a router.ts to load all
 // its routes without extraneous configuration.
