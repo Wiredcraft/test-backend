@@ -1,5 +1,5 @@
 import Koa from 'koa';
-import { map } from 'lodash';
+import { map, pickBy, identity } from 'lodash';
 
 import {
   validatorListRoute,
@@ -73,6 +73,13 @@ export const patchUser = async (ctx: Koa.Context): Promise<void> => {
     throw ERRORS.generic.validation.failed('', map(error.details, 'message'));
   }
 
+  // This bit of code is to make sure at least one field other than id is provided.
+  // If a field is not provided it will be undefined here. so we filter out undefined
+  // values and make sure there is not just id in value.
+  const cleanedObject = pickBy(value, identity);
+  if (Object.keys(cleanedObject).length <= 1) {
+    throw ERRORS.generic.validation.failed('', ['Need to give at least one field']);
+  }
   const res = await UserService.patchUserById(value.userId, value);
 
   if (res) {
@@ -82,7 +89,7 @@ export const patchUser = async (ctx: Koa.Context): Promise<void> => {
       return;
     }
   }
-  throw ERRORS.generic.server.error('Could not update user', []);
+  throw ERRORS.generic.not.found('User not found', []);
 };
 
 /**
@@ -112,7 +119,7 @@ export const updateUser = async (ctx: Koa.Context): Promise<void> => {
       return;
     }
   }
-  throw ERRORS.generic.server.error('Could not update user', []);
+  throw ERRORS.generic.not.found('User not found', []);
 };
 
 /**
@@ -126,7 +133,6 @@ export const getUser = async (ctx: Koa.Context): Promise<void> => {
 
 /**
  * Return a list of all user.
- * TODO add pagination
  * @param ctx
  */
 export const listUsers = async (ctx: Koa.Context): Promise<void> => {
