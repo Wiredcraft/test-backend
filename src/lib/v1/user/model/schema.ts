@@ -60,11 +60,11 @@ Schema.statics.getUsers = async function getUsers(params: listRouteParams, proje
   return this.find({}, projection)
     .limit(params.perPage)
     .skip(params.perPage * (params.page - 1))
-    .sort(sortParam).exec();
+    .sort(sortParam).lean();
 };
 
 Schema.statics.getUserById = async function getUserById(userId: string, projection: typeof DEFAULT_USER_PROJECTION): Promise<IUserDocument | undefined> {
-  return this.findById(new Types.ObjectId(userId), projection);
+  return this.findOne({_id: new Types.ObjectId(userId)}, projection).lean();
 };
 
 Schema.statics.patchUserById = async function patchUserById(userId: string, params: patchRouteParams): Promise<UpdateResult> {
