@@ -1,6 +1,15 @@
 import supertest from 'supertest';
-import { app } from '../app';
 
+import { app } from '../app';
+import * as db from '../lib/utils/mongoDb';
+
+beforeAll(async () => {
+  await db.waitForConnection();
+});
+
+afterAll(async () => {
+  await db.mongoose.connection.close(true);
+});
 
 describe('GET /ping', () => {
   const server = app.callback();
@@ -8,7 +17,7 @@ describe('GET /ping', () => {
 
   it('should return OK', async () => {
     const res = await request.get('/ping')
-      .expect(200)
+      .expect(200);
 
     expect(res.body.status).toBe('OK');
   });

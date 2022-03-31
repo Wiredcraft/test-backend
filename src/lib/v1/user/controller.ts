@@ -1,5 +1,5 @@
 import Koa from 'koa';
-import { map } from 'lodash';
+import { map, pickBy, identity } from 'lodash';
 
 import {
   validatorListRoute,
@@ -14,11 +14,12 @@ import {
   patchRouteParams,
   updateRouteParams,
 } from './types';
+import { isTesting } from '../../../config';
+import { DEFAULT_USER_PROJECTION, Users } from './model';
 
 
 /**
  * Create a user, return the user created with its new ID.
- * TODO Token here
  * @param ctx
  */
 export const createUser = async (ctx: Koa.Context): Promise<void> => {
@@ -72,7 +73,23 @@ export const patchUser = async (ctx: Koa.Context): Promise<void> => {
     throw ERRORS.generic.validation.failed('', map(error.details, 'message'));
   }
 
-  ctx.body = await UserService.patchUserById(value.userId, value);
+  // This bit of code is to make sure at least one field other than id is provided.
+  // If a field is not provided it will be undefined here. so we filter out undefined
+  // values and make sure there is not just id in value.
+  const cleanedObject = pickBy(value, identity);
+  if (Object.keys(cleanedObject).length <= 1) {
+    throw ERRORS.generic.validation.failed('', ['Need to give at least one field']);
+  }
+  const res = await UserService.patchUserById(value.userId, value);
+
+  if (res) {
+    const returnValue = await Users.getUserById(value.userId, DEFAULT_USER_PROJECTION);
+    if (returnValue) {
+      ctx.body = returnValue;
+      return;
+    }
+  }
+  throw ERRORS.generic.not.found('User not found', []);
 };
 
 /**
@@ -94,7 +111,15 @@ export const updateUser = async (ctx: Koa.Context): Promise<void> => {
     throw ERRORS.generic.validation.failed('', map(error.details, 'message'));
   }
 
-  ctx.body = await UserService.updateUserById(value.userId, value);
+  const res = await UserService.updateUserById(value.userId, value);
+  if (res) {
+    const returnValue = await Users.getUserById(value.userId, DEFAULT_USER_PROJECTION);
+    if (returnValue) {
+      ctx.body = returnValue;
+      return;
+    }
+  }
+  throw ERRORS.generic.not.found('User not found', []);
 };
 
 /**
@@ -103,19 +128,18 @@ export const updateUser = async (ctx: Koa.Context): Promise<void> => {
  * @param ctx
  */
 export const getUser = async (ctx: Koa.Context): Promise<void> => {
-  ctx.body = await UserService.getUserById(ctx.params.userId);
+  ctx.body = await UserService.getUserById(ctx.params.userId, DEFAULT_USER_PROJECTION);
 };
 
 /**
  * Return a list of all user.
- * TODO add pagination
  * @param ctx
  */
 export const listUsers = async (ctx: Koa.Context): Promise<void> => {
   const rawParams: listRouteParams = {
     perPage: Number.parseFloat(ctx.request.query.perPage as string),
     page: Number.parseFloat(ctx.request.query.page as string),
-    orderDir: ctx.request.query.orderDir as "asc" | "desc",
+    orderDir: ctx.request.query.orderDir as 'asc' | 'desc',
     orderBy: ctx.request.query.orderBy as string,
   };
 
@@ -125,5 +149,16 @@ export const listUsers = async (ctx: Koa.Context): Promise<void> => {
     throw ERRORS.generic.validation.failed('', map(error.details, 'message'));
   }
 
-  ctx.body = await UserService.listUsers(value);
+  let projection = DEFAULT_USER_PROJECTION;
+
+  // If we are in testing mode keep createdAt so that we can test
+  // sorting by createdAt.
+  if (isTesting) {
+    projection = {
+      ...DEFAULT_USER_PROJECTION,
+      createdAt: 1,
+    };
+  }
+
+  ctx.body = await UserService.listUsers(value, projection);
 };

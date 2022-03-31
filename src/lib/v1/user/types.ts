@@ -1,19 +1,9 @@
-interface UserModel {
-  id?: string,
-  name: string,
-  dob: string,
-  address: string,
-  description: string,
-  createdAt: string
-}
-
 interface listRouteParams {
   perPage: number,
   page: number,
   orderBy: string,
   orderDir: "asc" | "desc"
 }
-
 
 interface patchRouteParams {
   userId?: string
@@ -39,7 +29,6 @@ interface createRouteParams {
 }
 
 export {
-  UserModel,
   listRouteParams,
   patchRouteParams,
   updateRouteParams,

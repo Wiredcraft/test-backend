@@ -1,13 +1,16 @@
 import { Model } from 'mongoose';
-import { IUserDocument } from './document';
+import { DEFAULT_USER_PROJECTION, IUserDocument } from './document';
 import { createRouteParams, patchRouteParams, updateRouteParams } from '../types';
 import { UpdateResult } from 'mongodb';
 import { listRouteParams } from '../types';
 
+/**
+ * This class holds the function declarations for the user collection
+ */
 export interface IUserModel extends Model<IUserDocument> {
-  getUsers(params: listRouteParams): Promise<IUserDocument[]>;
+  getUsers(params: listRouteParams, projection: typeof DEFAULT_USER_PROJECTION): Promise<IUserDocument[]>;
 
-  getUsersById(userId: string): Promise<IUserDocument | undefined>;
+  getUserById(userId: string, projection: typeof DEFAULT_USER_PROJECTION): Promise<IUserDocument | undefined>;
 
   patchUserById(userId: string, params: patchRouteParams): Promise<UpdateResult>;
 

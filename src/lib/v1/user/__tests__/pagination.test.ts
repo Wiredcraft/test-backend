@@ -1,11 +1,11 @@
 import * as db from '../../../utils/mongoDb';
 import * as fixtures from './fixtures';
-import { UserModel } from '../types';
 import { config } from '../../../../config';
 import { app } from '../../../../app';
 import supertest from 'supertest';
 import dayjs from 'dayjs';
 import { random } from 'lodash';
+import { IUserDocument } from '../model';
 
 
 jest.setTimeout(50000);
@@ -33,9 +33,9 @@ describe('Test that the pagination and data ordering', () => {
       .send();
 
     expect(res.statusCode).toEqual(200);
-    const body = JSON.parse(res.text) as UserModel[];
+    const body = JSON.parse(res.text) as IUserDocument[];
     expect(body.length).toBe(config.pagination.userList.defaultPerPage);
-    expect(body[0].id).toBe("USER_1");
+    expect(body[0].name).toBe("User 1");
     for (let i = 1; i < body.length; i++) {
       expect(dayjs(body[i - 1].createdAt).isAfter(body[i].createdAt))
     }
@@ -49,7 +49,7 @@ describe('Test that the pagination and data ordering', () => {
       });
 
     expect(res.statusCode).toEqual(200);
-    const body = JSON.parse(res.text) as UserModel[];
+    const body = JSON.parse(res.text) as IUserDocument[];
     let lengthExpected
 
     if (fixtures.users.length >= config.pagination.userList.defaultPerPage * 2) {
@@ -58,7 +58,7 @@ describe('Test that the pagination and data ordering', () => {
       lengthExpected = fixtures.users.length - config.pagination.userList.defaultPerPage
     }
     expect(body.length).toBe(lengthExpected);
-    expect(body[0].id === "USER_1").toBe(false);
+    expect(body[0].name === "User 1").toBe(false);
     for (let i = 1; i < body.length; i++) {
       expect(dayjs(body[i - 1].createdAt).isAfter(body[i].createdAt))
     }
@@ -73,7 +73,7 @@ describe('Test that the pagination and data ordering', () => {
       });
 
     expect(res.statusCode).toEqual(200);
-    const body = JSON.parse(res.text) as UserModel[];
+    const body = JSON.parse(res.text) as IUserDocument[];
 
     expect(body.length).toBe(config.pagination.userList.defaultPerPage);
     expect(body[0].name).toBe("ZUser 7");
@@ -89,10 +89,10 @@ describe('Test that the pagination and data ordering', () => {
       });
 
     expect(res.statusCode).toEqual(200);
-    const body = JSON.parse(res.text) as UserModel[];
+    const body = JSON.parse(res.text) as IUserDocument[];
 
     expect(body.length).toBe(perPage);
-    expect(body[0].id).toBe("USER_1");
+    expect(body[0].name).toBe("User 1");
   });
 
   it('Should return a defined number of users ordered by name in reverse alphabetic order', async () => {
@@ -106,10 +106,10 @@ describe('Test that the pagination and data ordering', () => {
       });
 
     expect(res.statusCode).toEqual(200);
-    const body = JSON.parse(res.text) as UserModel[];
+    const body = JSON.parse(res.text) as IUserDocument[];
 
     expect(body.length).toBe(perPage);
-    expect(body[0].id).toBe("USER_6");
+    expect(body[0].name).toBe("AUser 6");
   });
 
 });
