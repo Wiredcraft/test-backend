@@ -42,10 +42,24 @@ describe('/user routes', () => {
     expect(body.length).toBe(config.pagination.userList.defaultPerPage);
   });
 
-  it('should return 200 and create a user profile', async () => {
+  it('should return 422 when giving wrong parameters', async () => {
     const body: createRouteParams = {
       name: 'Fake User',
-      dob: '06-14-1994',
+      dob: 'This is not a date',
+      address: 'This is an address',
+      description: 'This is a description',
+    };
+    const res = await request
+      .post(`/v1/user`)
+      .send(body);
+
+    expect(res.statusCode).toEqual(422);
+  })
+
+    it('should return 200 and create a user profile', async () => {
+    const body: createRouteParams = {
+      name: 'Fake User',
+      dob: '1994-06-14T00:00:00.000Z',
       address: 'This is an address',
       description: 'This is a description',
     };
@@ -79,7 +93,7 @@ describe('/user routes', () => {
   it('should return 200 and update a user profile', async () => {
     const postBody: patchRouteParams = {
       name: 'User To Be Deleted',
-      dob: '06-14-1994',
+      dob: '1994-06-14T00:00:00.000Z',
       address: 'This is an address',
       description: 'This is a description',
     };
@@ -90,7 +104,7 @@ describe('/user routes', () => {
 
     const body: updateRouteParams = {
       name: 'Fake User',
-      dob: '06-14-1994',
+      dob: '1994-06-14T00:00:00.000Z',
       address: 'This is an address',
       description: 'This is a description',
     };
@@ -110,7 +124,7 @@ describe('/user routes', () => {
   it('should return 200 and patch a user profile by updating only one field', async () => {
     const postBody: patchRouteParams = {
       name: 'User To Be Deleted',
-      dob: '06-14-1994',
+      dob: '1994-06-14T00:00:00.000Z',
       address: 'This is an address',
       description: 'This is a description',
     };
@@ -138,7 +152,7 @@ describe('/user routes', () => {
 
     const body: patchRouteParams = {
       name: 'User To Be Deleted',
-      dob: '06-14-1994',
+      dob: '1994-06-14T00:00:00.000Z',
       address: 'This is an address',
       description: 'This is a description',
     };

@@ -7,7 +7,7 @@ export const validatorPatchRoute = (params: patchRouteParams): Joi.ValidationRes
   return Joi.object({
     userId: Joi.string().required(),
     name: Joi.string(),
-    dob: Joi.string(),
+    dob: Joi.string().isoDate(),
     address: Joi.string(),
     description: Joi.string(),
   }).validate(params);
@@ -16,7 +16,7 @@ export const validatorPatchRoute = (params: patchRouteParams): Joi.ValidationRes
 export const validatorPostRoute = (params: createRouteParams): Joi.ValidationResult => {
   return Joi.object({
     name: Joi.string().required(),
-    dob: Joi.string().required(),
+    dob: Joi.string().isoDate().required(),
     address: Joi.string().required(),
     description: Joi.string().required(),
   }).validate(params);
@@ -26,7 +26,7 @@ export const validatorUpdateRoute = (params: updateRouteParams): Joi.ValidationR
   return Joi.object({
     userId: Joi.string().required(),
     name: Joi.string().required(),
-    dob: Joi.string().required(),
+    dob: Joi.string().isoDate().required(),
     address: Joi.string().required(),
     description: Joi.string().required(),
   }).validate(params);
