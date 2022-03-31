@@ -10,6 +10,5 @@ RUN yarn install
 
 ADD . /usr/src/app
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD curl -fs http://localhost:$PORT/ping || exit 1
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
 EXPOSE 3000
