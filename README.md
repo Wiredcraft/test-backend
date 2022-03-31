@@ -1,73 +1,68 @@
 # Backend Developer (Node.js) test
 
-Make sure you read the whole document carefully and follow the guidelines in it.
+![Typescript-4.6.2](https://img.shields.io/badge/Typescript-4.6.2-blue) ![Node-17.4.0](https://img.shields.io/badge/NodeJS-17.4.0-green) ![Mongo-5.0.6](https://img.shields.io/badge/MongoDB-5.0.6-green)
 
-## Context
+## How to run
 
-Build a RESTful API that can `get/create/update/delete` user data from a persistence database
+There are a couple ways to run this project. First you can simply build and run on your machine this project like you 
+would any other NodeJS program, you can also run it via the Dockerfile or you can run the provided docker-compose to 
+run it with its own MongoDB.
 
-### User Model
+Explanations below!
 
+### Running Locally
+
+> A `yarn.lock` being provided in the repository using `yarn` as package manager is recommended, but feel free to use `npm`.
+
+Install the dependencies : 
+```bash
+yarn install
 ```
-{
-  "id": "xxx",                  // user ID 
-  "name": "test",               // user name
-  "dob": "",                    // date of birth
-  "address": "",                // user address
-  "description": "",            // user description
-  "createdAt": ""               // user created date
-}
+
+Start the program : 
+```bash
+yarn start
 ```
 
-## Requirements
+In order to run the project make sure you have a MongoDB to connect to. The config.js will look in the env 
+for a `MONGO_URL` and `DATABASE_NAME` to know where to connect, by default they will respectively be
+`mongodb://localhost:27017` and `test`. If these don't suit you, and you would want to connect to another URL you can
+change the start like so : 
+```bash
+MONGO_URL=mongodb://something-else:8000 DATABASE_NAME=ASexyDBName yarn start
+```
 
-### Functionality
+You can also create a `.env` file at the root of the project and set the variables you would like to change (check 
+`.env.example` for an example)
 
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper unit test.
-- Provide proper API document.
+### Running via docker
 
-### Tech stack
+A Dockerfile is provided in this project, to build it make sure you're at the root of the folder, then run the following
 
-- Use Node.js and any framework.
-- Use any DB. NoSQL DB is preferred.
+```bash
+  docker build -t api .
+```
 
-### Bonus
+The `api` is the name given to the docker image, you can change it as you'd like but if you intend on running mongoDB
+through the docker-compose remember to change it there as well.
 
-- Write clear documentation on how it's designed and how to run the code.
-- Write good in-code comments.
-- Write good commit messages.
-- An online demo is always welcome.
+#### With your own MongoDB
 
-### Advanced requirements
+If running the project with your own mongoDB make sure you create a .env folder with the `MONGO_URL` and `DATABASE_NAME` 
+matching your environment, then run the follwing
 
-*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
+```bash
+  docker run -p 3000:3000 --name some-name -d api:latest 
+```
+`api` is the name given to the docker image in the previous step, if you decided to change it do it here as well.
 
-- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
-- Provide a complete logging (when/how/etc.) strategy.
-- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
-- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
-  - given a user name
-  - return the nearby friends
+The `-p` flag will link the a port in the host to a port in the container. If you don't want to run on port `3000`
+change the first number to the port you'd rather be using.
 
+#### With dockerized MongoDB
 
-## What We Care About
+If you want to run with a dockerized mongodb you can run the `docker-compose.yml` provided in the directory. 
 
-Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
-
-Here's what you should aim for:
-
-- Good use of current Node.js & API design best practices.
-- Good testing approach.
-- Extensible code.
-
-## FAQ
-
-> Where should I send back the result when I'm done?
-
-Fork this repo and send us a pull request when you think it's ready for review. You don't have to finish everything prior and you can continue to work on it. We don't have a deadline for the task.
-
-> What if I have a question?
-
-Create a new issue in the repo and we will get back to you shortly.
+```bash 
+    docker compose up
+```
