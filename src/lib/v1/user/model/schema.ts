@@ -3,9 +3,20 @@ import { UpdateResult } from 'mongodb';
 
 import * as db from '../../../utils/mongoDb';
 import { DEFAULT_USER_PROJECTION, IUserDocument } from './document';
-import { createRouteParams, listRouteParams, patchRouteParams, updateRouteParams } from '../types';
+import {
+  createRouteParams,
+  listRouteParams,
+  patchRouteParams,
+  updateRouteParams,
+} from '../types';
 import { Users } from './index';
 
+
+// This is the schema for the users collection. In this file are the
+// implementations of the functions declared in the model.
+// If we need special treatment of the values returned by database
+// (eg: formatting of the address/dob, changing the name of fields) it could be
+// done here with some virtuals.
 export const Schema = new db.mongoose.Schema(
   {
     _id: {
@@ -23,10 +34,15 @@ export const Schema = new db.mongoose.Schema(
     address: {
       type: String,
     },
-    createdAt: Date,
-    updatedAt: Date,
+    createdAt: {
+      type: Date,
+    },
+    updatedAt: {
+      type: Date,
+    },
   },
   {
+    // timestamps fill createdAt and updatedAt for us.
     timestamps: true,
     collection: 'users',
     toJSON: {
@@ -37,24 +53,18 @@ export const Schema = new db.mongoose.Schema(
 );
 
 Schema.statics.getUsers = async function getUsers(params: listRouteParams, projection: typeof DEFAULT_USER_PROJECTION): Promise<IUserDocument[]> {
+  // Mongo takes the sorting parameters as {key: direction}
   const sortParam: { [key in string]: 'asc' | 'desc' } = {};
   sortParam[params.orderBy] = params.orderDir;
-  const query = this.find({}, projection)
+
+  return this.find({}, projection)
     .limit(params.perPage)
     .skip(params.perPage * (params.page - 1))
-    .sort(sortParam);
-
-  return query.exec();
+    .sort(sortParam).exec();
 };
 
 Schema.statics.getUserById = async function getUserById(userId: string, projection: typeof DEFAULT_USER_PROJECTION): Promise<IUserDocument | undefined> {
-  const query = this.findById(new Types.ObjectId(userId), projection);
-
-  console.log(query.getFilter());
-  console.log(query.getFilter()._id instanceof Types.ObjectId);
-  const resultat = await query.exec();
-
-  return resultat;
+  return this.findById(new Types.ObjectId(userId), projection);
 };
 
 Schema.statics.patchUserById = async function patchUserById(userId: string, params: patchRouteParams): Promise<UpdateResult> {

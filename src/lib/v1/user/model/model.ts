@@ -4,6 +4,9 @@ import { createRouteParams, patchRouteParams, updateRouteParams } from '../types
 import { UpdateResult } from 'mongodb';
 import { listRouteParams } from '../types';
 
+/**
+ * This class holds the function declarations for the user collection
+ */
 export interface IUserModel extends Model<IUserDocument> {
   getUsers(params: listRouteParams, projection: typeof DEFAULT_USER_PROJECTION): Promise<IUserDocument[]>;
 
