@@ -1,0 +1,25 @@
+version: '3.1'
+volumes:
+  mongo_data:
+services:
+  api:
+    restart: unless-stopped
+    image: api:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api:/user/src/app
+    links:
+      - mongo
+    tty: true
+    stdin_open: true
+    environment:
+      MONGO_URL: mongodb://mongo:27017
+
+  mongo:
+    restart: unless-stopped
+    image: mongo:5.0.6
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
