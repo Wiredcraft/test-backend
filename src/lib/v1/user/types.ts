@@ -14,7 +14,6 @@ interface listRouteParams {
   orderDir: "asc" | "desc"
 }
 
-
 interface patchRouteParams {
   userId?: string
   name?: string,

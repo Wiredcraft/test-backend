@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 import { UpdateResult } from 'mongodb';
 
 import * as db from '../../../utils/mongoDb';
-import { IUserDocument } from './document';
+import { DEFAULT_USER_PROJECTION, IUserDocument } from './document';
 import { createRouteParams, listRouteParams, patchRouteParams, updateRouteParams } from '../types';
 import { Users } from './index';
 
@@ -36,23 +36,25 @@ export const Schema = new db.mongoose.Schema(
   },
 );
 
-Schema.statics.getUsers = async function getUsers(params: listRouteParams): Promise<IUserDocument[]> {
+Schema.statics.getUsers = async function getUsers(params: listRouteParams, projection: typeof DEFAULT_USER_PROJECTION): Promise<IUserDocument[]> {
   const sortParam: { [key in string]: 'asc' | 'desc' } = {};
   sortParam[params.orderBy] = params.orderDir;
-  return this.find({}, {})
+  const query = this.find({}, projection)
     .limit(params.perPage)
     .skip(params.perPage * (params.page - 1))
-    .sort(sortParam).exec();
+    .sort(sortParam);
+
+  return query.exec();
 };
 
-Schema.statics.getUsersById = async function getUsersById(userId: string): Promise<IUserDocument | undefined> {
-  const query = this.findById(new Types.ObjectId(userId));
+Schema.statics.getUserById = async function getUserById(userId: string, projection: typeof DEFAULT_USER_PROJECTION): Promise<IUserDocument | undefined> {
+  const query = this.findById(new Types.ObjectId(userId), projection);
 
-  console.log(query.getFilter())
-  console.log(query.getFilter()._id instanceof Types.ObjectId)
-  const resultat =  await query.exec()
+  console.log(query.getFilter());
+  console.log(query.getFilter()._id instanceof Types.ObjectId);
+  const resultat = await query.exec();
 
-  return resultat
+  return resultat;
 };
 
 Schema.statics.patchUserById = async function patchUserById(userId: string, params: patchRouteParams): Promise<UpdateResult> {

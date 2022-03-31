@@ -1,5 +1,5 @@
 import { createRouteParams, listRouteParams, patchRouteParams, updateRouteParams } from './types';
-import { IUserDocument, Users } from './model';
+import { DEFAULT_USER_PROJECTION, IUserDocument, Users } from './model';
 import { ERRORS } from '../../../consts';
 
 export const createUser = async (params: createRouteParams): Promise<IUserDocument> => {
@@ -14,33 +14,20 @@ export const deleteUserById = async (userId: string): Promise<boolean> => {
   return res;
 };
 
-export const patchUserById = async (userId: string, params: patchRouteParams): Promise<IUserDocument | never> => {
+export const patchUserById = async (userId: string, params: patchRouteParams): Promise<boolean> => {
   const res = await Users.patchUserById(userId, params);
 
-  if (res.acknowledged) {
-    const returnValue = await Users.getUsersById(userId);
-    if (returnValue) {
-      return returnValue;
-    }
-  }
-  throw ERRORS.generic.server.error('Could not patch user', []);
+  return res === null ? false : res.acknowledged;
 };
 
-export const updateUserById = async (userId: string, params: updateRouteParams): Promise<IUserDocument | never> => {
+export const updateUserById = async (userId: string, params: updateRouteParams): Promise<boolean> => {
   const res = await Users.updateUserById(userId, params);
 
-
-  if (res.acknowledged) {
-    const returnValue = await Users.getUsersById(userId);
-    if (returnValue) {
-      return returnValue;
-    }
-  }
-  throw ERRORS.generic.server.error('Could not update user', []);
+  return res === null ? false : res.acknowledged;
 };
 
-export const getUserById = async (userId: string): Promise<IUserDocument | never> => {
-  const user: IUserDocument | undefined = await Users.getUsersById(userId);
+export const getUserById = async (userId: string, projection: typeof DEFAULT_USER_PROJECTION): Promise<IUserDocument | never> => {
+  const user: IUserDocument | undefined = await Users.getUserById(userId, projection);
 
   if (!user) {
     throw ERRORS.generic.not.found('Could not find user for provided userId', ['user_not_found']);
@@ -48,6 +35,9 @@ export const getUserById = async (userId: string): Promise<IUserDocument | never
   return user;
 };
 
-export const listUsers = async (params: listRouteParams): Promise<IUserDocument[]> => {
-  return Users.getUsers(params);
+export const listUsers = async (params: listRouteParams, projection: typeof DEFAULT_USER_PROJECTION): Promise<IUserDocument[]> => {
+  const res = await Users.getUsers(params, projection);
+
+  return res
 };
+
