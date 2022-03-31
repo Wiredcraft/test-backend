@@ -1,6 +1,5 @@
 [
   {
-    "id": "USER_1",
     "name": "User 1",
     "address": "This is an address 1",
     "description": "This is a description 1",
@@ -8,7 +7,6 @@
     "createdAt": "2023-01-27T14:55:53.994Z"
   },
   {
-    "id": "USER_2",
     "name": "User 2",
     "address": "This is an address 2",
     "description": "This is a description 2",
@@ -16,7 +14,6 @@
     "createdAt": "2022-01-27T14:55:53.994Z"
   },
   {
-    "id": "USER_3",
     "name": "User 3",
     "address": "This is an address 3",
     "description": "This is a description 3",
@@ -24,7 +21,6 @@
     "createdAt": "2022-01-23T14:55:53.994Z"
   },
   {
-    "id": "USER_4",
     "name": "User 4",
     "address": "This is an address 4",
     "description": "This is a description 4",
@@ -32,7 +28,6 @@
     "createdAt": "2022-02-27T14:55:53.994Z"
   },
   {
-    "id": "USER_5",
     "name": "User 5",
     "address": "This is an address 5",
     "description": "This is a description 5",
@@ -40,7 +35,6 @@
     "createdAt": "2021-11-27T14:55:53.994Z"
   },
   {
-    "id": "USER_6",
     "name": "AUser 6",
     "address": "This is an address 6",
     "description": "This is a description 6. This user is named AUser to be the first user in alphabetical order",
@@ -48,7 +42,6 @@
     "createdAt": "2022-01-27T14:56:53.994Z"
   },
   {
-    "id": "USER_7",
     "name": "ZUser 7",
     "address": "This is an address 7",
     "description": "This is a description 7. This user is named Zuser to be first in reversed alphabetical order",
@@ -56,7 +49,6 @@
     "createdAt": "2021-01-22T14:55:53.994Z"
   },
   {
-    "id": "USER_8",
     "name": "User 8",
     "address": "This is an address 8",
     "description": "This is a description 8",
@@ -64,7 +56,6 @@
     "createdAt": "2022-03-17T14:55:53.994Z"
   },
   {
-    "id": "USER_9",
     "name": "User 9",
     "address": "This is an address 9",
     "description": "This is a description 9",
@@ -72,7 +63,6 @@
     "createdAt": "2022-01-22T14:55:13.994Z"
   },
   {
-    "id": "USER_10",
     "name": "User 10",
     "address": "This is an address 10",
     "description": "This is a description 10",
@@ -80,7 +70,6 @@
     "createdAt": "2022-01-17T14:55:53.994Z"
   },
   {
-    "id": "USER_11",
     "name": "User 11",
     "address": "This is an address 11",
     "description": "This is a description 11",
@@ -88,7 +77,6 @@
     "createdAt": "2022-02-28T14:55:53.994Z"
   },
   {
-    "id": "USER_12",
     "name": "User 12",
     "address": "This is an address 12",
     "description": "This is a description 12",

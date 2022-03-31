@@ -1,5 +1,5 @@
 interface UserModel {
-  id?: string,
+  _id?: string,
   name: string,
   dob: string,
   address: string,

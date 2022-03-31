@@ -8,8 +8,6 @@ import * as fixtures from './fixtures';
 
 jest.setTimeout(50000);
 
-
-
 describe('/user routes', () => {
   const server = app.callback();
   const request: supertest.SuperTest<supertest.Test> = supertest(server);
@@ -28,24 +26,10 @@ describe('/user routes', () => {
 
   it('should return 404 when getting a user that does not exist', async () => {
     const res = await request
-      .get(`/v1/user/THIS_USER_DOES_NOT_EXIST`)
+      .get(`/v1/user/000000000000000000000000`)
       .send();
 
     expect(res.statusCode).toEqual(404);
-  });
-
-  it('should return 200 and the user profile', async () => {
-    const res = await request
-      .get(`/v1/user/${fixtures.users[0].id}`)
-      .send();
-
-    expect(res.statusCode).toEqual(200);
-    const user = JSON.parse(res.text) as UserModel;
-
-    expect(user.name).toBe(fixtures.users[0].name);
-    expect(user.dob).toBe(fixtures.users[0].dob);
-    expect(user.description).toBe(fixtures.users[0].description);
-    expect(user.address).toBe(fixtures.users[0].address);
   });
 
   it('should return 200 and the default number of profiles per page', async () => {
@@ -74,15 +58,15 @@ describe('/user routes', () => {
     // Check response value
     let response = JSON.parse(res.text) as UserModel;
     expect(response.dob).toBe(body.dob);
-    expect(response.id).toBeDefined();
+    expect(response._id).toBeDefined();
     expect(response.name).toBe(body.name);
     expect(response.address).toBe(body.address);
     expect(response.description).toBe(body.description);
 
-    const id = response.id;
+    const _id = response._id;
     // Check that we can the GET endpoint returns it correctly
     res = await request
-      .get(`/v1/user/${id}`)
+      .get(`/v1/user/${_id}`)
       .send();
 
     response = JSON.parse(res.text) as UserModel;
@@ -111,7 +95,7 @@ describe('/user routes', () => {
       description: 'This is a description',
     };
     res = await request
-      .put(`/v1/user/${response.id}`)
+      .put(`/v1/user/${response._id}`)
       .send(body);
 
     expect(res.statusCode).toEqual(200);
@@ -139,7 +123,7 @@ describe('/user routes', () => {
       address: 'This is another address',
     };
     res = await request
-      .patch(`/v1/user/${response.id}`)
+      .patch(`/v1/user/${response._id}`)
       .send(body);
 
     expect(res.statusCode).toEqual(200);
@@ -165,13 +149,13 @@ describe('/user routes', () => {
 
 
     res = await request
-      .del(`/v1/user/${response.id}`)
+      .del(`/v1/user/${response._id}`)
       .send();
 
     expect(res.statusCode).toEqual(200);
 
     res = await request
-      .get(`/v1/user/${response.id}`)
+      .get(`/v1/user/${response._id}`)
       .send();
 
     expect(res.statusCode).toEqual(404);
