@@ -6,25 +6,25 @@ import { config } from '../../../../config';
 import * as db from '../../../utils/mongoDb';
 import * as fixtures from './fixtures';
 
-const server = app.callback();
-const request: supertest.SuperTest<supertest.Test> = supertest(server);
-
 jest.setTimeout(50000);
 
-beforeAll(async () => {
-  await db.waitForConnection();
-  await db.mongoose.connection.db.dropDatabase();
-
-  await db.mongoose.connection.db.collection('users').insertMany(fixtures.users);
-});
-
-afterAll(async () => {
-  await db.mongoose.connection.db.dropDatabase();
-  await db.mongoose.connection.close(true);
-});
 
 
 describe('/user routes', () => {
+  const server = app.callback();
+  const request: supertest.SuperTest<supertest.Test> = supertest(server);
+
+  beforeAll(async () => {
+    await db.waitForConnection();
+    await db.mongoose.connection.db.dropDatabase();
+
+    await db.mongoose.connection.db.collection('users').insertMany(fixtures.users);
+  });
+
+  afterAll(async () => {
+    await db.mongoose.connection.db.dropDatabase();
+    await db.mongoose.connection.close(true);
+  });
 
   it('should return 404 when getting a user that does not exist', async () => {
     const res = await request
@@ -56,13 +56,6 @@ describe('/user routes', () => {
     expect(res.statusCode).toEqual(200);
     const body = JSON.parse(res.text) as UserModel[];
     expect(body.length).toBe(config.pagination.userList.defaultPerPage);
-
-    for (let i = 0; i < fixtures.users.length; i++) {
-      expect(body[i].name).toBe(fixtures.users[i].name);
-      expect(body[i].dob).toBe(fixtures.users[i].dob);
-      expect(body[i].description).toBe(fixtures.users[i].description);
-      expect(body[i].address).toBe(fixtures.users[i].address);
-    }
   });
 
   it('should return 200 and create a user profile', async () => {

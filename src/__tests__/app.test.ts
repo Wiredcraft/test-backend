@@ -1,10 +1,11 @@
 import supertest from 'supertest';
 import { app } from '../app';
 
-const server = app.callback();
-const request: supertest.SuperTest<supertest.Test> = supertest(server);
 
 describe('GET /ping', () => {
+  const server = app.callback();
+  const request: supertest.SuperTest<supertest.Test> = supertest(server);
+
   it('should return OK', async () => {
     const res = await request.get('/ping')
       .expect(200)
@@ -14,6 +15,9 @@ describe('GET /ping', () => {
 });
 
 describe('GET a non existing path', () => {
+  const server = app.callback();
+  const request: supertest.SuperTest<supertest.Test> = supertest(server);
+
   it('should return a 404 error', async () => {
     const res = await request.get('/IDONOTEXISTS').expect(404);
 
