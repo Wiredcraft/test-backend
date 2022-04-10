@@ -1,0 +1,8 @@
+{
+  "mongodb": {
+    "url": "mongodb://admin:{yourMongoPwd}@{yourHost}:27017/{yourDBName}?authSource=admin",
+    "name": "mongodb",
+    "connector": "mongodb",
+    "allowExtendedOperators": true
+  }
+}
