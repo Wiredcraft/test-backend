@@ -1,0 +1,24 @@
+version: '3'
+services:
+  db:
+    container_name: backend_db
+    image: mongo:4.0-xenial
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root123
+      MONGO_INITDB_DATABASE: test
+    ports:
+      - 3717:27017
+    volumes:
+      - db:/data/db
+    networks:
+      - backend
+    command:
+      - '--oplogSize=1024'
+
+
+networks:
+  backend:
+
+volumes:
+  db:
