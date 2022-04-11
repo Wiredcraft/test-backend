@@ -93,7 +93,7 @@ describe('/user routes', () => {
   });
 
   it('should return 200 and update a user profile', async () => {
-    const postBody: patchRouteParams = {
+    const postBody: createRouteParams = {
       name: 'User To Be Deleted',
       dob: '1994-06-14T00:00:00.000Z',
       address: 'This is an address',
@@ -105,6 +105,7 @@ describe('/user routes', () => {
     let response = JSON.parse(res.text) as IUserDocument;
 
     const body: updateRouteParams = {
+      userId: response._id.toString(),
       name: 'Fake User',
       dob: '1994-06-14T00:00:00.000Z',
       address: 'This is an address',
@@ -124,7 +125,7 @@ describe('/user routes', () => {
 
 
   it('should return 200 and patch a user profile by updating only one field', async () => {
-    const postBody: patchRouteParams = {
+    const postBody: createRouteParams = {
       name: 'User To Be Deleted',
       dob: '1994-06-14T00:00:00.000Z',
       address: 'This is an address',
@@ -152,12 +153,13 @@ describe('/user routes', () => {
 
   it('should return 200 and delete a user profile', async () => {
 
-    const body: patchRouteParams = {
+    const body: createRouteParams = {
       name: 'User To Be Deleted',
       dob: '1994-06-14T00:00:00.000Z',
       address: 'This is an address',
       description: 'This is a description',
     };
+
     let res = await request
       .post(`/v1/user`)
       .send(body);
