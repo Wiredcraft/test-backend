@@ -15,6 +15,7 @@ exports.updateById = async (id, name, dob, address, description) => {
     const noUserForIdMsg = `No user found for input id: ${id}.`;
     const noInforChangedMsg =
       "The input information are the same as in DB, no change.";
+    let result = {};
 
     //check if no need update db.
     if (
@@ -23,7 +24,9 @@ exports.updateById = async (id, name, dob, address, description) => {
       typeof address === "undefined" &&
       typeof description === "undefined"
     ) {
-      return noInforMsg;
+      result.statusCode = 400;
+      result.message = noInforMsg;
+      return result;
     }
 
     let inputLength = 0;
@@ -33,12 +36,16 @@ exports.updateById = async (id, name, dob, address, description) => {
     if (typeof description !== "undefined")
       inputLength += description.trim().length;
     if (inputLength == 0) {
-      return noInforMsg;
+      result.statusCode = 400;
+      result.message = noInforMsg;
+      return result;
     }
 
     let user = await loopback.findModel(objectType).findById(id);
     if (!user) {
-      return noUserForIdMsg;
+      result.statusCode = 404;
+      result.message = noUserForIdMsg;
+      return result;
     }
     let updateValues = {};
     if (user.name != name) {
@@ -54,7 +61,9 @@ exports.updateById = async (id, name, dob, address, description) => {
       updateValues.description = description;
     }
     if (JSON.stringify(updateValues) === "{}") {
-      return noInforChangedMsg;
+      result.statusCode = 400;
+      result.message = noInforChangedMsg;
+      return result;
     }
     //End check if no need update db.
     return await user.updateAttributes(updateValues);
@@ -65,7 +74,11 @@ exports.updateById = async (id, name, dob, address, description) => {
 
 exports.getById = async (id) => {
   try {
-    return await loopback.findModel(objectType).findById(id);
+    let result = await loopback.findModel(objectType).findById(id);
+    if (!result) {
+      result = { statusCode: 404, message: "Not Found" };
+    }
+    return result;
   } catch (err) {
     return Promise.reject(err);
   }

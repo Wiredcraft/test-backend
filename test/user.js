@@ -94,6 +94,7 @@ describe("Unit tests for user: create, query, update, delete.", function () {
   });
 
   it(`Case 03-1: find user by id, non existed id.`, (done) => {
+    const msg = "Not Found";
     request(app)
       .get(`/api/user/${nonexistedId}`)
       .send()
@@ -101,7 +102,8 @@ describe("Unit tests for user: create, query, update, delete.", function () {
       .expect((res) => {
         expect(res.error).to.be.false;
         const result = res.body;
-        expect(result).to.be.null;
+        expect(result.statusCode).to.be.equal(404);
+        expect(result.message).to.be.equal(msg);
       })
       .end(done);
   });
@@ -144,7 +146,8 @@ describe("Unit tests for user: create, query, update, delete.", function () {
       .expect((res) => {
         expect(res.error).to.be.false;
         const result = res.body;
-        expect(result).to.be.equal(noInforMsg);
+        expect(result.statusCode).to.be.equal(400);
+        expect(result.message).to.be.equal(noInforMsg);
       })
       .end(done);
   });
@@ -162,8 +165,8 @@ describe("Unit tests for user: create, query, update, delete.", function () {
       .expect((res) => {
         expect(res.error).to.be.false;
         const result = res.body;
-        console.log("result: ", JSON.stringify(result));
-        expect(result).to.be.equal(noInforMsg);
+        expect(result.statusCode).to.be.equal(400);
+        expect(result.message).to.be.equal(noInforMsg);
       })
       .end(done);
   });
@@ -179,7 +182,8 @@ describe("Unit tests for user: create, query, update, delete.", function () {
       .expect((res) => {
         expect(res.error).to.be.false;
         const result = res.body;
-        expect(result).to.be.equal(noInforMsg);
+        expect(result.statusCode).to.be.equal(400);
+        expect(result.message).to.be.equal(noInforMsg);
       })
       .end(done);
   });
@@ -198,7 +202,8 @@ describe("Unit tests for user: create, query, update, delete.", function () {
       .expect((res) => {
         expect(res.error).to.be.false;
         const result = res.body;
-        expect(result).to.be.equal(noUserForIdMsg);
+        expect(result.statusCode).to.be.equal(404);
+        expect(result.message).to.be.equal(noUserForIdMsg);
       })
       .end(done);
   });
@@ -218,7 +223,8 @@ describe("Unit tests for user: create, query, update, delete.", function () {
       .expect((res) => {
         expect(res.error).to.be.false;
         const result = res.body;
-        expect(result).to.be.equal(noInforChangedMsg);
+        expect(result.statusCode).to.be.equal(400);
+        expect(result.message).to.be.equal(noInforChangedMsg);
       })
       .end(done);
   });
@@ -236,7 +242,8 @@ describe("Unit tests for user: create, query, update, delete.", function () {
       .expect((res) => {
         expect(res.error).to.be.false;
         const result = res.body;
-        expect(result).to.be.equal(noInforChangedMsg);
+        expect(result.statusCode).to.be.equal(400);
+        expect(result.message).to.be.equal(noInforChangedMsg);
       })
       .end(done);
   });
