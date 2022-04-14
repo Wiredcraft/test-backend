@@ -138,7 +138,8 @@ describe("Unit tests for user: create, query, update, delete.", function () {
 
   it(`Case 04-1: update user by id, no input informaction except id.`, (done) => {
     let formData = {};
-    const noInforMsg = "No information input, no change.";
+    // const noInforMsg = "No information input, no change.";
+    const noInforChangedMsg = "No need to update DB.";
     request(app)
       .patch(`/api/user/${id}`)
       .send(formData)
@@ -147,7 +148,7 @@ describe("Unit tests for user: create, query, update, delete.", function () {
         expect(res.error).to.be.false;
         const result = res.body;
         expect(result.statusCode).to.be.equal(400);
-        expect(result.message).to.be.equal(noInforMsg);
+        expect(result.message).to.be.equal(noInforChangedMsg);
       })
       .end(done);
   });
@@ -157,7 +158,8 @@ describe("Unit tests for user: create, query, update, delete.", function () {
     formData.name = " ";
     formData.address = " ";
     formData.description = " ";
-    const noInforMsg = "No information input, no change.";
+    // const noInforMsg = "No information input, no change.";
+    const noInforChangedMsg = "No need to update DB.";
     request(app)
       .patch(`/api/user/${id}`)
       .send(formData)
@@ -166,7 +168,7 @@ describe("Unit tests for user: create, query, update, delete.", function () {
         expect(res.error).to.be.false;
         const result = res.body;
         expect(result.statusCode).to.be.equal(400);
-        expect(result.message).to.be.equal(noInforMsg);
+        expect(result.message).to.be.equal(noInforChangedMsg);
       })
       .end(done);
   });
@@ -174,7 +176,8 @@ describe("Unit tests for user: create, query, update, delete.", function () {
   it(`Case 04-3: update user by id, input empty informaction except id.`, (done) => {
     let formData = {};
     formData.name = "     ";
-    const noInforMsg = "No information input, no change.";
+    // const noInforMsg = "No information input, no change.";
+    const noInforChangedMsg = "No need to update DB.";
     request(app)
       .patch(`/api/user/${id}`)
       .send(formData)
@@ -183,7 +186,7 @@ describe("Unit tests for user: create, query, update, delete.", function () {
         expect(res.error).to.be.false;
         const result = res.body;
         expect(result.statusCode).to.be.equal(400);
-        expect(result.message).to.be.equal(noInforMsg);
+        expect(result.message).to.be.equal(noInforChangedMsg);
       })
       .end(done);
   });
@@ -214,8 +217,7 @@ describe("Unit tests for user: create, query, update, delete.", function () {
     formData.dob = newDob;
     formData.address = newAddr;
     formData.description = newDesc;
-    const noInforChangedMsg =
-      "The input information are the same as in DB, no change.";
+    const noInforChangedMsg = "No need to update DB.";
     request(app)
       .patch(`/api/user/${id}`)
       .send(formData)
@@ -233,8 +235,7 @@ describe("Unit tests for user: create, query, update, delete.", function () {
     let formData = {};
     formData.dob = newDob;
     formData.address = newAddr;
-    const noInforChangedMsg =
-      "The input information are the same as in DB, no change.";
+    const noInforChangedMsg = "No need to update DB.";
     request(app)
       .patch(`/api/user/${id}`)
       .send(formData)

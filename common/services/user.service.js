@@ -11,35 +11,9 @@ exports.updateById = async (id, name, dob, address, description) => {
     logger.debug(
       `In User.updateById, input id: ${id}, name: ${name}, dob: ${dob}, address: ${address}, description: ${description}.`
     );
-    const noInforMsg = "No information input, no change.";
     const noUserForIdMsg = `No user found for input id: ${id}.`;
-    const noInforChangedMsg =
-      "The input information are the same as in DB, no change.";
+    const noInforChangedMsg = "No need to update DB.";
     let result = {};
-
-    //check if no need update db.
-    if (
-      typeof name === "undefined" &&
-      typeof dob === "undefined" &&
-      typeof address === "undefined" &&
-      typeof description === "undefined"
-    ) {
-      result.statusCode = 400;
-      result.message = noInforMsg;
-      return result;
-    }
-
-    let inputLength = 0;
-    if (typeof name !== "undefined") inputLength += name.trim().length;
-    if (typeof dob !== "undefined") inputLength += dob.toString().trim().length;
-    if (typeof address !== "undefined") inputLength += address.trim().length;
-    if (typeof description !== "undefined")
-      inputLength += description.trim().length;
-    if (inputLength == 0) {
-      result.statusCode = 400;
-      result.message = noInforMsg;
-      return result;
-    }
 
     let user = await loopback.findModel(objectType).findById(id);
     if (!user) {
@@ -47,28 +21,42 @@ exports.updateById = async (id, name, dob, address, description) => {
       result.message = noUserForIdMsg;
       return result;
     }
-    let updateValues = {};
-    if (user.name != name) {
-      updateValues.name = name;
-    }
-    if (!moment(user.dob).isSame(dob, "day")) {
-      updateValues.dob = dob;
-    }
-    if (user.address != address) {
-      updateValues.address = address;
-    }
-    if (user.description != description) {
-      updateValues.description = description;
-    }
-    if (JSON.stringify(updateValues) === "{}") {
+
+    //check if no need update db.
+    let inputValues = {};
+    if (
+      typeof name !== "undefined" &&
+      name.trim().length > 0 &&
+      user.name != name
+    )
+      inputValues.name = name;
+    if (
+      typeof dob !== "undefined" &&
+      dob.toString().trim().length > 0 &&
+      !moment(user.dob).isSame(dob, "day")
+    )
+      inputValues.dob = dob;
+    if (
+      typeof address !== "undefined" &&
+      address.trim().length > 0 &&
+      user.address != address
+    )
+      inputValues.address = address;
+    if (
+      typeof description !== "undefined" &&
+      description.trim().length > 0 &&
+      user.description != description
+    )
+      inputValues.description = description;
+    if (JSON.stringify(inputValues) === "{}") {
       result.statusCode = 400;
       result.message = noInforChangedMsg;
       return result;
     }
     //End check if no need update db.
-    return await user.updateAttributes(updateValues);
+    return await user.updateAttributes(inputValues);
   } catch (err) {
-    return Promise.reject(err);
+    logger.error(err);
   }
 };
 
@@ -92,7 +80,7 @@ exports.getAll = async () => {
     result.data = users;
     return result;
   } catch (err) {
-    return Promise.reject(err);
+    logger.error(err);
   }
 };
 
@@ -108,7 +96,7 @@ exports.createUser = async (name, dob, address, description) => {
     userObj.description = description;
     return await loopback.findModel(objectType).create(userObj);
   } catch (err) {
-    return Promise.reject(err);
+    logger.error(err);
   }
 };
 
@@ -119,6 +107,6 @@ exports.deleteById = async (id) => {
     // let user = await loopback.findModel(objectType).findById(id);
     return await loopback.findModel(objectType).destroyById(id);
   } catch (err) {
-    return Promise.reject(err);
+    logger.error(err);
   }
 };

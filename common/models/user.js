@@ -1,12 +1,13 @@
 "use strict";
 const UserService = require("../services/user.service");
+const logger = require("../utils/logger.js");
 
 module.exports = function (user) {
   user.updateById = async (id, name, dob, address, description) => {
     try {
       return await UserService.updateById(id, name, dob, address, description);
     } catch (err) {
-      return Promise.reject(err);
+      logger.error(err);
     }
   };
   user.remoteMethod("updateById", {
@@ -44,7 +45,7 @@ module.exports = function (user) {
     try {
       return await UserService.getById(id);
     } catch (err) {
-      return Promise.reject(err);
+      logger.error(err);
     }
   };
   user.remoteMethod("getById", {
@@ -66,7 +67,7 @@ module.exports = function (user) {
     try {
       return await UserService.getAll();
     } catch (err) {
-      return Promise.reject(err);
+      logger.error(err);
     }
   };
   user.remoteMethod("getAll", {
@@ -80,7 +81,7 @@ module.exports = function (user) {
     try {
       return await UserService.createUser(name, dob, address, description);
     } catch (err) {
-      return Promise.reject(err);
+      logger.error(err);
     }
   };
   user.remoteMethod("createUser", {
@@ -114,7 +115,7 @@ module.exports = function (user) {
       try {
         return await UserService.deleteById(id);
       } catch (err) {
-        return Promise.reject(err);
+        logger.error(err);
       }
     };
   });
