@@ -1,0 +1,297 @@
+#https://github.com/Surnet/swagger-jsdoc/blob/HEAD/docs/GETTING-STARTED.md
+#https://github.com/kalinchernev/demo-open-api-security-swagger-jsdoc/blob/master/components.yaml
+
+tags:
+- name: User
+  description: "Everything(CRUD) about User."
+
+paths:
+  /user:
+    get:
+      tags:
+      - "User"
+      summary: "Find users"
+      description: "Returns a single user or user list in one page."
+      operationId: "getUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: "User ID"
+        type: "string"
+      - name: "name"
+        in: "query"
+        description: "User Name"
+        type: "string"
+      - name: "page"
+        in: "query"
+        description: "Page Number"
+        type: "integer"
+        default: 1
+        minimum: 1
+        format: "int32"
+      - name: "limit"
+        in: "query"
+        description: "Page Size"
+        type: "integer"
+        default: 1
+        minimum: 1
+        format: "int32"
+      responses:
+        200:
+          description: "Find user successfully"
+          schema:
+            $ref: "#/definitions/GetUserResponse"
+        400:
+          description: "Invalid input"
+          schema:
+            $ref: '#/definitions/ErrorDetail'
+        401:
+          description: "Unauthorized. Provide more authentication info in http header by HTTP basic authentication."
+          schema:
+            $ref: '#/definitions/ErrorDetail'
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: '#/definitions/ErrorDetail'
+
+    post:
+      tags:
+      - "User"
+      summary: "Create user"
+      description: "Create a new user"
+      operationId: "createUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User data"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        200:
+          description: "Create user successfully"
+          schema:
+            $ref: "#/definitions/CreateUserResponse"
+        400:
+          description: "Invalid input"
+          schema:
+            $ref: '#/definitions/ErrorDetail'
+        401:
+          description: "Unauthorized. Provide more authentication info in http header by HTTP basic authentication."
+          schema:
+            $ref: '#/definitions/ErrorDetail'
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: '#/definitions/ErrorDetail'
+
+    patch:
+      tags:
+      - "User"
+      summary: "Update user"
+      description: ""
+      operationId: "updateUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "id"
+        description: "User ID"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Fields of user to be updated"
+        required: true
+        schema:
+          $ref: "#/definitions/UserWithoutID"
+      responses:
+        200:
+          description: "Update user successfully"
+          schema:
+            $ref: "#/definitions/UpdateUserResponse"
+        400:
+          description: "Invalid input"
+          schema:
+            $ref: '#/definitions/ErrorDetail'
+        401:
+          description: "Unauthorized. Provide more authentication info in http header by HTTP basic authentication."
+          schema:
+            $ref: '#/definitions/ErrorDetail'
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: '#/definitions/ErrorDetail'
+
+    delete:
+      tags:
+      - "User"
+      summary: "Delete user"
+      description: "Delete a user"
+      operationId: "deleteUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "id"
+        description: "User ID"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Delete user successfully"
+          schema:
+            $ref: "#/definitions/DeleteUserResponse"
+        400:
+          description: "Invalid input"
+          schema:
+            $ref: '#/definitions/ErrorDetail'
+        401:
+          description: "Unauthorized. Provide more authentication info in http header by HTTP basic authentication."
+          schema:
+            $ref: '#/definitions/ErrorDetail'
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: '#/definitions/ErrorDetail'
+
+
+definitions:
+
+  GetUserResponse:
+    type: "object"
+    properties:
+      docs:
+        type: "array"
+        description: "The matched user documents"
+        items:
+          $ref: "#/definitions/UserDocument"
+      total:
+        type: "integer"
+        description: "The total number of matched documents"
+
+  CreateUserResponse:
+    type: "object"
+    properties:
+      docs:
+        type: "array"
+        description: "The document for created user"
+        items:
+          $ref: "#/definitions/UserDocument"
+
+  UpdateUserResponse:
+    type: "object"
+    properties:
+      acknowledged:
+        type: "boolean"
+        description: "Acknowledge flag"
+      modifiedCount:
+        type: "integer"
+        description: "The number of updated documents"
+      upsertedId:
+        type: "integer"
+        description:
+      upsertedCount:
+        type: "integer"
+        description:
+      matchedCount:
+        type: "integer"
+        description: "The number of matched documents"
+
+  DeleteUserResponse:
+    type: "object"
+    properties:
+      acknowledged:
+        type: "boolean"
+        description: "Acknowledge flag"
+      deletedCount:
+        type: "integer"
+        description: "The number of deleted documents"
+
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        description: "User ID"
+      name:
+        type: "string"
+        description: "User name"
+      dob:
+        type: "string"
+        description: "User birthday"
+      address:
+        type: "string"
+        description: "User address"
+      description:
+        type: "string"
+        description: "Description of this user"
+
+  UserWithoutID:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "User name"
+      dob:
+        type: "string"
+        description: "User birthday"
+      address:
+        type: "string"
+        description: "User address"
+      description:
+        type: "string"
+        description: "Description of this user"
+
+  UserDocument:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        description: "User ID"
+      name:
+        type: "string"
+        description: "User name"
+      dob:
+        type: "string"
+        description: "User birthday"
+      address:
+        type: "string"
+        description: "User address"
+      description:
+        type: "string"
+        description: "Description of this user"
+      _id:
+        type: "string"
+        description: "Document id"
+      createdAt:
+        type: "string"
+        description: "Document created time"
+      updatedAt:
+        type: "string"
+        description: "Latest updated time of this document"
+      __v:
+        type: "integer"
+        description: "Version key of this document"
+
+  ErrorDetail:
+    type: "object"
+    properties:
+      errors:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            status:
+              type: "integer"
+              description: "http status code"
+            title:
+              type: "string"
+              description: "http error name"
+            detail:
+              type: "string"
+              description: "http error message"
