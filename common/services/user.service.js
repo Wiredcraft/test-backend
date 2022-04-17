@@ -68,7 +68,7 @@ exports.getById = async (id) => {
     }
     return result;
   } catch (err) {
-    return Promise.reject(err);
+    logger.error(err);
   }
 };
 
