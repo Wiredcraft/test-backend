@@ -2,7 +2,11 @@ import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { WinstonModule } from 'nest-winston';
-import * as winston from 'winston';
+import { AccessInterceptor } from './access.interception';
+import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { HttpExceptionFilter } from './exception.filter';
+import { ValidationPipe } from '@nestjs/common';
+
 @Module({
   imports: [
     MongooseModule.forRoot(
@@ -14,6 +18,19 @@ import * as winston from 'winston';
     UserModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: AccessInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe
+    }
+  ],
 })
 export class AppModule {}

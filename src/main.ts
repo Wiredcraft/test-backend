@@ -1,14 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
 import { useLogger } from './util/logger';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { setGlobalApplicationContext } from './util/deps';
 
+// @TODO action 1: Should use config form file and NODE_ENV to switch.
+// @TODO action 2: Should generate api client from the generated swagger JSON Schema with swagger cli and code template.
 async function bootstrap() {
   const logger = useLogger('System');
   const app = await NestFactory.create(AppModule, { logger: logger });
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const config = new DocumentBuilder()
     .setTitle('API DOCUMENT')

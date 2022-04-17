@@ -1,16 +1,12 @@
+import { NotFoundException } from '@nestjs/common'
 import { Model, FilterQuery, Types } from 'mongoose';
 import { omit } from 'lodash';
 
-class HttpException extends Error {
-  statusCode: number;
-
-  constructor(message: string, statusCode: number) {
-    super(message);
-
-    this.statusCode = statusCode;
-  }
-}
-
+/**
+ * @description Base service with common methods and default strategy
+ * @todo should limit query filtering to only allow certain fields
+ * @todo may need to support native populate and custom way to populate
+ */
 export abstract class BaseService<T extends { _id: string | Types.ObjectId }> {
   private defaultOmitFields = ['__v'];
   protected abstract readonly model: Model<T>;
@@ -34,7 +30,7 @@ export abstract class BaseService<T extends { _id: string | Types.ObjectId }> {
   async getOneOrFailed(filter: FilterQuery<T>) {
     const data = await this.getOne(filter);
 
-    if (!data) throw new HttpException('Not found', 404);
+    if (!data) throw new NotFoundException('Not found');
 
     return data;
   }
@@ -52,8 +48,7 @@ export abstract class BaseService<T extends { _id: string | Types.ObjectId }> {
 
   async updateById(id: string | Types.ObjectId, data: Partial<T>) {
     const result = await this.model.findByIdAndUpdate(id, data, { new: true });
-
-    if (!result) throw new HttpException('Not found', 404);
+    if (!result) throw new NotFoundException('Not found');
 
     return omit(
       result.toJSON(),
@@ -68,8 +63,8 @@ export abstract class BaseService<T extends { _id: string | Types.ObjectId }> {
       { new: true },
     );
 
-    if (!result) throw new HttpException('Not found', 404);
+    if (!result) throw new NotFoundException('Not found');
 
-    return true;
+    return {};
   }
 }

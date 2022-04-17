@@ -11,7 +11,6 @@ import { useLogger } from '../util/logger';
 import { runWithDeps } from '../util/deps';
 import { Observable, lastValueFrom } from 'rxjs';
 import { isBoolean } from 'class-validator';
-import { isPromise } from 'util/types';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -19,12 +18,12 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super();
   }
 
-  async validate(userName: string, password: string): Promise<any> {
+  async validate(username: string, password: string): Promise<any> {
     try {
-      const user = await this.service.validateUser({ userName, password });
+      const user = await this.service.validateUser({ username, password });
       return user;
     } catch (e) {
-      throw new UnauthorizedException(e);
+      throw new UnauthorizedException(e.message, 'Unauthorized');
     }
   }
 }

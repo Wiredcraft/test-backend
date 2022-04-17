@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
   Request,
+  HttpCode,
 } from '@nestjs/common';
 import { stripUndefined } from '../util/object';
 import {
@@ -17,9 +18,12 @@ import {
   UpdateUserDto,
   LoginDto,
   LoginResult,
+  UnauthorizedDto,
+  ForbiddenDto,
+  NotFoundDto
 } from './user.dto';
 import { UserService } from './user.service';
-import { ApiOkResponse, ApiBody, ApiParam, ApiHeaders } from '@nestjs/swagger';
+import { ApiOkResponse, ApiBody, ApiParam, ApiHeaders, ApiNotFoundResponse, ApiUnauthorizedResponse, ApiForbiddenResponse } from '@nestjs/swagger';
 import { User } from './user.schema';
 import { LocalGuard } from './auth.strategy';
 
@@ -28,6 +32,7 @@ export class UserController {
   constructor(protected readonly service: UserService) {}
   @ApiOkResponse({ type: User })
   @Get('')
+  @HttpCode(200)
   async getUsers(@Query() query: GetUsersDto) {
     const { take, skip, name } = query;
 
@@ -36,7 +41,9 @@ export class UserController {
 
   @ApiParam({ name: 'id', type: String })
   @ApiOkResponse({ type: User })
+  @ApiNotFoundResponse({ type: NotFoundDto })
   @Get('/:id')
+  @HttpCode(200)
   async getUserById(@Param('id') id: string) {
     return this.service.getOneOrFailed({ _id: id });
   }
@@ -46,7 +53,10 @@ export class UserController {
   @ApiOkResponse({ type: User })
   @UseGuards(LocalGuard)
   @ApiHeaders([{ name: 'Authorization', required: true }])
+  @ApiNotFoundResponse({ type: NotFoundDto })
+  @ApiForbiddenResponse({ type: ForbiddenDto })
   @Put('/:id')
+  @HttpCode(200)
   async updateUser(
     @Param('id') id: string,
     @Body() updateUserBody: UpdateUserDto,
@@ -57,7 +67,10 @@ export class UserController {
   @ApiParam({ name: 'id', type: String })
   @Delete('/:id')
   @UseGuards(LocalGuard)
+  @ApiNotFoundResponse({ type: NotFoundDto })
+  @ApiForbiddenResponse({ type: ForbiddenDto })
   @ApiHeaders([{ name: 'Authorization', required: true }])
+  @HttpCode(200)
   async DeleteUser(@Param('id') id: string) {
     return this.service.deleteById(id);
   }
@@ -74,7 +87,9 @@ export class UserController {
   })
   @ApiOkResponse({ type: LoginResult })
   @UseGuards(LocalGuard)
+  @ApiUnauthorizedResponse({ type: UnauthorizedDto })
   @Post('/login')
+  @HttpCode(200)
   async login(@Request() req) {
     return this.service.login(req.user);
   }

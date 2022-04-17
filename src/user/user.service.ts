@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, UnauthorizedException, ForbiddenException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BaseService } from '../base.service';
 import { User } from './user.schema';
@@ -20,31 +20,33 @@ export class UserService extends BaseService<User> {
     return await bcrypt.hash(password, salt);
   }
 
-  async register(data: { userName: string; password }) {
-    const has = await this.model.countDocuments({ userName: data.userName });
-    if (has) throw new HttpException('UserName conflict', 403);
+  async register(data: { username: string; password }) {
+    const has = await this.model.countDocuments({ username: data.username });
+    if (has) throw new ForbiddenException('Username conflict');
     const savePass = await this.encrypt(data.password);
 
-    return this.create({ userName: data.userName, password: savePass });
+    return this.create({ username: data.username, password: savePass });
   }
 
   async login(data: User) {
     return {
-      token: this.jwtService.sign({ userName: data.userName, id: data._id }),
+      token: this.jwtService.sign({ username: data.username, id: data._id }),
     };
   }
 
-  async validateUser(data: { userName: string; password: string }) {
-    const user = await this.model.findOne({ userName: data.userName });
+  async validateUser(data: { username: string; password: string }) {
+    const user = await this.model.findOne({ username: data.username });
     if (!user) throw new Error('User not found');
-    await bcrypt.compare(data.password, user.password);
-    const { password, ...result } = user;
+    const passed = await bcrypt.compare(data.password, user.password);
+
+    if (!passed) throw new UnauthorizedException('Invalid password');
+    const { password, ...result } = user.toJSON();
     return result;
   }
 
   async validateUserByToken(token: string) {
     const payload = this.jwtService.decode(token);
-    if (typeof payload === 'string') throw new Error('Invalid token');
+    if (typeof payload === 'string') throw new UnauthorizedException('Invalid token');
     const user = await this.model.findById(payload.id);
     return user
   }

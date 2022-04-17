@@ -36,7 +36,7 @@ export class GetUsersDto {
 export class RegisterUserDto {
   @ApiProperty({ description: '用户名' })
   @IsString()
-  userName: string;
+  username: string;
 
   @ApiProperty({ description: '密码' })
   @IsString()
@@ -46,7 +46,7 @@ export class RegisterUserDto {
 export class LoginDto {
   @ApiProperty({ description: '用户名' })
   @IsString()
-  userName: string;
+  username: string;
 
   @ApiProperty({ description: '密码' })
   @IsString()
@@ -98,3 +98,17 @@ export class LoginResult {
   @ApiProperty({ description: '用户令牌' })
   token: string;
 }
+
+export class ExceptionBaseDto {
+  @ApiProperty({ description: '状态码' })
+  statusCode: string
+
+  @ApiProperty({ description: '错误信息' })
+  message: string
+}
+
+export class NotFoundDto extends ExceptionBaseDto {}
+
+export class ForbiddenDto extends ExceptionBaseDto {}
+
+export class UnauthorizedDto extends ExceptionBaseDto {}

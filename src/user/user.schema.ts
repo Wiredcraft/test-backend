@@ -5,7 +5,7 @@ import { BaseSchema } from '../base.schema';
 export class User extends BaseSchema {
   @ApiProperty({ description: '用户名' })
   @Prop({ required: true, unique: true })
-  userName: string;
+  username: string;
 
   @ApiProperty({ description: '密码' })
   @Prop({ required: true })
