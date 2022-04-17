@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node server",
     "test": "mocha --exit --reporter spec",
-    "test-cover": "nyc -a --reporter=clover mocha --recursive",
+    "test-cover": "nyc -a --reporter=clover mocha --recursive --exit",
     "eslint": "eslint src/**/*.js ",
     "eslint-fix": "eslint src/**/*.js --fix "
   },
