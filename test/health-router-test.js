@@ -10,7 +10,7 @@ describe('Health Router Test', () => {
     it('Welcome', (done) => {
         chaiHttpAgent.get('/').end((err, res) => {
             chai.expect(res).to.have.status(200);
-            chai.expect(res.text, 'Welcome');
+            chai.expect(res.text).eq('Welcome');
             done();
         })
     });
@@ -18,9 +18,9 @@ describe('Health Router Test', () => {
 
   describe("GET /_health", function () {
     it('OK', (done) => {
-        chaiHttpAgent.get('/').end((err, res) => {
+        chaiHttpAgent.get('/_health').end((err, res) => {
             chai.expect(res).to.have.status(200);
-            chai.expect(res.text, 'OK');
+            chai.expect(res.text).eq('OK');
             done();
         })
     });
