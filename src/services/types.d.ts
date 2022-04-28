@@ -19,6 +19,7 @@ export namespace NPLoginLog {
     _id?: string,
     userId: string,// user is
     ip: string, // user login ip
+    userAgent: string, // user login devices or application info
     __v?: number,// 0
   }
 }

@@ -10,6 +10,8 @@ export default async (ctx: Context, next: Next) => {
   await next();
   const ms = new Date().getTime() - start;
   const { method, url, } = ctx.request;
-  console.log(`response ${method} ${url} ${get(ctx, ['response', 'body','code'])}: ${ms}ms ${moment().format('YYYY-MM-DD HH:mm:ss')} ${ctx.callerIp || ''}`);
+  const msg = `response ${method} ${url} ${get(ctx, ['response', 'body','code'])}: ${ms}ms ${moment().format('YYYY-MM-DD HH:mm:ss')} ${ctx.callerIp || ''}`;
+  ctx.logger.warn(`${msg} client:${ctx.headers['user-agent']}`);
+  console.log(msg);
   ctx.response.set('X-Response-Time', `${ms}ms`);
 };

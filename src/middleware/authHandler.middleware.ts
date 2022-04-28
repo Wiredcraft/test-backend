@@ -245,7 +245,7 @@ const localAuth = async (ctx: Context, next: Next) => {
         mountCurrentUser(ctx, authObj.user);
         // to save user login data
         try {
-          await saveLoginLogData({ userId: authObj.id, ip: ctx.callerIp });
+          await saveLoginLogData({ userId: authObj.id, ip: ctx.callerIp, userAgent: ctx.headers['user-agent'] || ''});
         } catch (error) {}
         // console.log('authObj===>>>', authObj);
         ctx.successResult(authObj);

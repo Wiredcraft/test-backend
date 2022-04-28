@@ -11,6 +11,10 @@ const infoFilter = format((info) => {
   return info.level === 'info' ? info : false;
 });
 
+const logFilter = format((info) => {
+  return info.level === 'warn' ? info : false;
+});
+
 const timeFromatOpt = { format: 'YYYY-MM-DD HH:mm:ss' };
 
 const logger = createLogger({
@@ -26,7 +30,14 @@ const logger = createLogger({
       filename: './logs/app-info.log',
       level: 'info',
       format: combine(infoFilter(), timestamp(timeFromatOpt), json()),
-    })],
+    }),
+    new transports.File({
+      filename: './logs/app-log.log',
+      level: 'warn',
+      format: combine(logFilter(), timestamp(timeFromatOpt), json()),
+    })
+  ],
+
 });
 
 export default logger;

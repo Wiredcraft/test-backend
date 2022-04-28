@@ -12,8 +12,8 @@ import { NPLoginLog } from './types';
  * @returns NPLoginLog.ILoginLog
  */
 export const saveLoginLogData = async (data: NPLoginLog.ILoginLog) => {
-  const { userId, ip } = data;
-  const login = new LoginLog({ userId, ip });
+  const { userId, ip, userAgent } = data;
+  const login = new LoginLog({ userId, ip, userAgent });
   const res = await login.save();
   return res;
 };
@@ -49,6 +49,7 @@ class ServerLoginLog extends BaseService {
         {
           "userId": "6269f7313c48c03e5c6e013d",
           "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X)",
           "createdAt": "2022-04-28T06:30:16.782Z",
           "updatedAt": "2022-04-28T06:30:16.782Z"
         }

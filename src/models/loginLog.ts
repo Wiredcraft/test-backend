@@ -5,8 +5,9 @@ const Schema = mongoose.Schema;
 // user schema
 const LoginLogSchema = new Schema({
   // id: { type: String }, // 'xxx',                  // user ID
-  userId: { type: String }, // 'test',               // 登录ip
-  ip: { type: String },                     // user login ip
+  userId: { type: String }, // 'test',               // login ip
+  ip: { type: String },
+  userAgent: { type: String }                     // user login devices or application info
   // createdAt: { type: Date, default: Date.now }, // '' // user created date
   // updatedAt: { type: Date, default: Date.now },
 }, {
