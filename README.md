@@ -30,13 +30,28 @@ Getting up and running is as easy as 1, 2, 3.
 
 ![avatar](./public/develop-brain-drawing.png)
 
+## Documentation
+
+The API document is under the `./doc/api` path. When running NPM RUN DEV, you can access EG: `http://127.0.0.1:7000/index.html` in the browser
+
 ## Testing
 
 Simply run `npm test` and all your tests in the `test/` directory will be run.
 
+## Test coverage
+
+![avatar](./public/kra-test-coverage.png)
+
 ## Log
 
 The log file is stored under the  `./logs` folder
+
+## Implement function
+
+1. User registration and login notification
+2. User login log to DB
+3. User options in to log files
+
 
 ## Mainly dependencies
 
