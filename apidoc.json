@@ -1,0 +1,8 @@
+{
+  "name": "kraAPI",
+  "title": "kra API",
+  "version": "v1.0.0",
+  "description": "koa rest admin API doc",
+  "url": "http://127.0.0.1:8000",
+  "sampleUrl" : "http://127.0.0.1:3030"
+}

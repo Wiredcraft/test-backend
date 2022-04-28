@@ -1,0 +1,35 @@
+{
+  "App": {
+    "host": "localhost",
+    "port": "7000",
+    "prefix": "/api",
+    "apiVersion": 1
+  },
+  "Database": {
+    "user": "dev01",
+    "password": "dev01.123",
+    "host": "127.0.0.1",
+    "dbname": "kra-test1",
+    "port": "28017"
+  },
+  "Authentication": {
+    "secret": "jakfjf834ndsanflOT93xA1ybkJEq",
+    "authStrategies": ["local", "jwt"],
+    "jwtOptions": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "issuer": "domain",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "usernameField": "name",
+      "passwordField": "password"
+    }
+  },
+  "Log": {
+    "logLevel":"info"
+  }
+}
