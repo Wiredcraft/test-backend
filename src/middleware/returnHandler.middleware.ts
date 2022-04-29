@@ -40,7 +40,7 @@ export  default async (ctx: Context, next: any) => {
       status,
       code
     };
-    console.log(ERRColor, 'returnError error:', info);
+    console.log(ERRColor, 'errorResult error:', info);
     ctx.logger.error(info);
     const returnBody: IResponseData = {
       code,

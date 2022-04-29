@@ -13,12 +13,14 @@ const UserSchema = new Schema({
   isDeleted: { type: String, default: 'N' }, //              // user is deleted
   createdAt: { type: Date, default: Date.now }, // '' // user created date
   updatedAt: { type: Date, default: Date.now },
+}, {
+  timestamps: { currentTime: () => new Date }
 });
 
-UserSchema.pre('save', function(next) {
-  // this.id = new mongoose.Types.ObjectId().toHexString();
-  this.updatedAt = new Date();
-  next();
-});
+// UserSchema.pre('save', function(next) {
+//   // this.id = new mongoose.Types.ObjectId().toHexString();
+//   this.updatedAt = new Date();
+//   next();
+// });
 
 export default mongoose.model('User', UserSchema);

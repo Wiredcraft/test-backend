@@ -20,7 +20,7 @@ export const saveLoginLogData = async (data: NPLoginLog.ILoginLog) => {
 
 class ServerLoginLog extends BaseService {
   /**
-  * @api {get} /api/v1/serverLoginLog find User list by pagenation
+  * @api {get} /api/v1/serverLoginLog find User login log list by pagenation
   * @apiDescription api description
   * @apiName /api/v1/serverLoginLog restful:find
   * @apiGroup LoginLog

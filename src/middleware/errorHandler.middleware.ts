@@ -56,7 +56,7 @@ const returnError = (ctx: Context, err: any) => {
     status,
     code
   };
-  console.log(ERRColor, 'returnError error1:', info);
+  console.log(ERRColor, 'returnError error:', info);
 
   // to save not allowed request data
   if ([404, 405].includes(code)) {

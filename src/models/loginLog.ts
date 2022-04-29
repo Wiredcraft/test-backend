@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 
 // user schema
 const LoginLogSchema = new Schema({
-  // id: { type: String }, // 'xxx',                  // user ID
   userId: { type: String }, // 'test',               // login ip
   ip: { type: String },
   userAgent: { type: String }                     // user login devices or application info

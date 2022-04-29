@@ -40,7 +40,7 @@ const getAuthObj = async (user: any, jwtOptions: NPAuthentication.IAuthConfigDat
   const uid = user._id;
   user.id = uid;
   delete user._id;
-  delete user.isDeteleted;
+  delete user.isDeleted;
   // jwt sign token
   const token = jwToken.sign({
     aud,
@@ -60,7 +60,7 @@ const getAuthObj = async (user: any, jwtOptions: NPAuthentication.IAuthConfigDat
  * @returns {NPUsers.IUser | null}
  */
 const getUserByName = async (ctx: Context, name: string) => {
-  const userData = await User.findOne({ name, isDeteleted: 'N' });
+  const userData = await User.findOne({ name, isDeleted: 'N' });
   return userData;
 };
 
@@ -76,7 +76,7 @@ const getUserByToken = async (token: string, secret: string) => {
     // JWT verification passes
     if (decodeRes && decodeRes.sub) {
       // the user is effective
-      let user = await User.findOne({ id: decodeRes.sub, isDeteleted: 'N' });
+      let user = await User.findOne({ id: decodeRes.sub, isDeleted: 'N' });
       if (user) {
         user = user.toJSON();
         user.id = user._id;
@@ -84,7 +84,12 @@ const getUserByToken = async (token: string, secret: string) => {
       }
     }
   } catch (error) {
-    console.log('getUserByToken error:', error);
+    const message = (error as Error).message;
+    if (message === 'jwt expired') {
+      console.log(`getUserByToken error: ${message}, expiredAt: `, moment((error as any).expiredAt).format('YYYY-MM-DD HH:mm:ss.SSS'));
+    } else {
+      console.log('getUserByToken error:', error);
+    }
   }
 };
 /**

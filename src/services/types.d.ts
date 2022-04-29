@@ -7,7 +7,7 @@ export namespace NPUsers {
     dob: string,// 1998-05-10T00:00:00.000Z,
     address?: string,// 'shanghai',
     description?: string,// 'good man2',
-    isDeteleted?: string,// 'Y' | 'N
+    isDeleted?: string,// 'Y' | 'N
     createdAt?: string,// 2022-04-26T06:00:37.649Z,
     updatedAt?: string,// 2022-04-26T06:00:37.650Z,
     __v?: number,// 0
