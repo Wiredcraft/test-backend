@@ -10,13 +10,8 @@ const LoginLogSchema = new Schema({
   // createdAt: { type: Date, default: Date.now }, // '' // user created date
   // updatedAt: { type: Date, default: Date.now },
 }, {
-  timestamps: true
+  timestamps: { currentTime: () => new Date }
 });
 
-// LoginLogSchema.pre('save', function(next) {
-//   // this.id = new mongoose.Types.ObjectId().toHexString();
-//   this.updatedAt = new Date();
-//   next();
-// });
 
 export default mongoose.model('LoginLog', LoginLogSchema);
