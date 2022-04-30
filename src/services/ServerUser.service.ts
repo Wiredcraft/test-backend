@@ -184,10 +184,10 @@ class ServerUser extends BaseService {
       if (res && res.id && res.isDeleted === 'N') {
         ctx.successResult(res);
       } else {
-        ctx.errorResult( MHttpError.ERROR_NOT_FOUND());
+        ctx.errorResult(MHttpError.ERROR_NOT_FOUND());
       }
     } catch (error) {
-      ctx.errorResult( MHttpError.ERROR_NOT_FOUND());
+      ctx.errorResult(MHttpError.ERROR_NOT_FOUND());
     }
   }
 
@@ -415,7 +415,7 @@ class ServerUser extends BaseService {
     if (!jwtAuthRes || !jwtAuthRes.id) {
       return;
     }
-    const { name, address, description, pageSize, pageIndex } = params;
+    const { name, address, description, isDeleted = 'N', pageSize, pageIndex } = params;
     const queryObj: any = {};
     name && (queryObj.name = name);
     // add vague query by address or description
@@ -425,7 +425,7 @@ class ServerUser extends BaseService {
     if (vagueQuery.length) {
       queryObj['$or'] = vagueQuery;
     }
-
+    queryObj.isDeleted = isDeleted;
     // get pagenation params,
     // tozap: export pagenation operation function
     const mLimit = pageSize || 10;

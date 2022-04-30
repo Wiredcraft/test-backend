@@ -1,15 +1,15 @@
 {
   "App": {
     "host": "localhost",
-    "port": "7000",
+    "port": "3030",
     "prefix": "/api",
     "apiVersion": 1
   },
   "Database": {
-    "user": "dev01",
-    "password": "dev01.123",
+    "user": "root",
+    "password": "dev.123",
     "host": "127.0.0.1",
-    "dbname": "kra-test1",
+    "dbname": "kra-test4",
     "port": "28017"
   },
   "Authentication": {

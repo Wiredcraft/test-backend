@@ -4,6 +4,8 @@ import { IAddressInfo } from './types';
 
 const { PORT, APP_HOST, APP_PORT } = process.env;
 
+// get app host
+const host = APP_HOST || app.context.config.get('App.host') || '127.0.0.1';
 // get app port
 const port = PORT || APP_PORT || app.context.config.get('App.port') || 3031;
 
@@ -23,7 +25,7 @@ const onError = (error: any) => {
 
 // create server
 export default app.listen(port, () => {
-  const sp = `${APP_HOST}:${port}`;
+  const sp = `${host}:${port}`;
   console.log(`server is running on http://${sp}`);
   // tell the user document path
   if (process.env.NODE_ENV === 'development') {
