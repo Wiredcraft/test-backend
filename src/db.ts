@@ -5,12 +5,15 @@ import config from './common/config';
 // import database config, priority use of the local environment
 const user = process.env['DB_USER'] || config.get('Database.user');
 const password = process.env['DB_PASSWORD'] || config.get('Database.password');
-const host = process.env['DB_HOST'] || config.get('Database.host');
+let dbHost = process.env['DB_HOST'] || config.get('Database.host');
 const dbname = process.env['DB_NAME'] || config.get('Database.dbname');
-const port = process.env['DB_PORT'] || config.get('Database.port');
+const dbPort = process.env['DB_PORT'] || config.get('Database.port');
 
-const dbUrl = `mongodb://${host}:${port}/${dbname}`;
-
+if (process.env.DOCKER_MODE) {
+  dbHost = 'backend';
+}
+const dbUrl = `mongodb://${dbHost}:${dbPort}/${dbname}`;
+console.log('dbUrl=====>>', dbUrl);
 const options = {
   auth: {
     username: user,

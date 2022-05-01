@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+
+  mongo:
+    image: mongo # image name
+    restart: always
+    ports:
+      - 28017:27017 # external port: container port
+    container_name: mongodb # container name
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root # mongo init root username
+      MONGO_INITDB_ROOT_PASSWORD: dev.123 # mongo init root password
+
+# use this order to create mongodb container
+# docker-compose up -d
