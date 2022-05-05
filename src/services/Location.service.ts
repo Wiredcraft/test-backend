@@ -18,7 +18,7 @@ class ServerLocation extends BaseService {
   * @api {post} /api/v1/serverLocation create user location
   * @apiDescription api description
   * @apiName /api/v1/serverLocation restful:create
-  * @apiGroup User
+  * @apiGroup Location
   * @apiVersion v1.0.0
   * @apiHeader {String} authorization user request token
   *
@@ -102,7 +102,7 @@ class ServerLocation extends BaseService {
   * @api {get} /api/v1/serverLocation find User location data list by pagenation
   * @apiDescription api description
   * @apiName /api/v1/serverLocation restful:find
-  * @apiGroup LoginLog
+  * @apiGroup Location
   * @apiVersion v1.0.0
   * @apiHeader {String} authorization user request token
   *
