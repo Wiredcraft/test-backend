@@ -108,12 +108,9 @@ $RECYCLE.BIN/
 *.lnk
 
 # Others
-lib/
+# lib/
 data/
 
-# Others
-lib/
-data/
 
 #yarn error
 yarn-error.log
