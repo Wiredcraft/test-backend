@@ -86,7 +86,7 @@ class ServerFollower extends BaseService {
       return;
     }
     const { starUserId, fansUserId } = data;
-    if (starUserId === fansUserId) {
+    if (starUserId === fansUserId || jwtAuthRes.id === starUserId) {
       ctx.errorResult(MHttpError.ERROR_PARAMS_ERROR());
       return;
     }
