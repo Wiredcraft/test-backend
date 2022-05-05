@@ -96,3 +96,28 @@ export const getCallerIp = function (req: any): string {
   ip === '1' && (ip = '127.0.0.1');
   return ip;
 };
+
+/**
+ * get pagenation args
+ * @param {pageSize?: number, pageIndex?: number},
+ *  limit?: number, skip?: number} params，
+ * Combine 1: pageSize,pageIndex; Combine 2: limit, skip
+ * @returns { limit: number, skip: number }
+ */
+export const getPagenation = (params: any): { limit: number, skip: number } => {
+  const { pageSize, pageIndex, limit: _limit, skip: _skip } = params;
+  const limit = Number(pageSize) || Number(_limit) || 10;
+  const mPageIndex = pageIndex > 0 ? pageIndex - 1 : 0;
+  const skip = (mPageIndex || 0) * limit || _skip || 0;
+  return { limit, skip };
+};
+
+/**
+ *  verify location
+ * @param {number[]} loc [lng, lat]
+ * @returns boolean
+ */
+export const  verifyLngLat = (loc: number[]): boolean => {
+  const [lng, lat] = loc;
+  return (lng >= -180 && lng <= 180) && (lat >= -90 && lat <= 90);
+};

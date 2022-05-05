@@ -23,3 +23,18 @@ export namespace NPLoginLog {
     __v?: number,// 0
   }
 }
+
+export namespace NPFollower {
+  interface IFollower {
+     starUserId: string,                      // start user ID
+     fansUserId: string, // 'test',            // funs user ID
+     isFollowing: string,
+  }
+}
+
+export namespace NPLocation {
+  interface ILocation {
+    userId: string;
+    loc: any
+  }
+}
