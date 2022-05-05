@@ -97,7 +97,7 @@ class ServerLoginLog extends BaseService {
 }
 
 export default (): ServerLoginLog => {
-  // init ServerUser
-  const serverUser = new ServerLoginLog(LoginLog, 'ServerLoginLog', getServiceMainUrl('serverLoginLog'));
-  return serverUser;
+  // init serverLoginLog
+  const serverLoginLog = new ServerLoginLog(LoginLog, 'ServerLoginLog', getServiceMainUrl('serverLoginLog'));
+  return serverLoginLog;
 };

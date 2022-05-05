@@ -1,4 +1,4 @@
-import KoaRouter from '@koa/router';
+
 import { Context, Next } from 'koa';
 import BaseService from '../lib/BaseService';
 import { Id, NullableId } from '../lib/types';
@@ -426,22 +426,23 @@ class ServerUser extends BaseService {
       queryObj['$or'] = vagueQuery;
     }
     queryObj.isDeleted = isDeleted;
-    // get pagenation params,
-    // tozap: export pagenation operation function
-    const mLimit = pageSize || 10;
-    const mPageIndex = pageIndex > 0 ? pageIndex - 1 : 0;
-    const mSkip = (mPageIndex || 0) * mLimit;
-    // get total
-    const total = await User.count(queryObj);
-    // get data
-    const data = await User.find(queryObj, { password: 0, __v: 0 }, { sort: { createdAt: -1 }, limit: mLimit, skip: mSkip });
-    const res = {
-      total,
-      limit: mLimit,
-      skip: mSkip,
-      data
-    };
-    ctx.successResult(res);
+    await ctx.returnTotal(User, queryObj, params);
+    // // get pagenation params,
+    // // tozap: export pagenation operation function
+    // const mLimit = pageSize || 10;
+    // const mPageIndex = pageIndex > 0 ? pageIndex - 1 : 0;
+    // const mSkip = (mPageIndex || 0) * mLimit;
+    // // get total
+    // const total = await User.count(queryObj);
+    // // get data
+    // const data = await User.find(queryObj, { password: 0, __v: 0 }, { sort: { createdAt: -1 }, limit: mLimit, skip: mSkip });
+    // const res = {
+    //   total,
+    //   limit: mLimit,
+    //   skip: mSkip,
+    //   data
+    // };
+    // ctx.successResult(res);
   }
 
   /**
