@@ -109,6 +109,9 @@ The log file is stored under the  `./logs` folder
 1. User registration and login notification
 2. User login log to DB
 3. User options in to log files
+4. MongoDB init configuration
+5. follower user
+6. nearby user
 
 
 ## Mainly dependencies
