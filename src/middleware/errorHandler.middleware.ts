@@ -17,10 +17,11 @@ export const myErrorHandler = async (ctx: Context, next: Next) => {
     }
   } catch (error) {
     const errorStr = JSON.stringify(error, null, ' ');
+    console.log(ERRColor, 'myErrorHandler error:', error);
     if (errorStr.length < 5) {
       console.log(ERRColor, 'myErrorHandler error:', error);
     }
-    console.log(ERRColor, 'myErrorHandler error:', errorStr);
+    console.log(ERRColor, 'myErrorHandler error1:', errorStr);
     // parts of mongose error handler
     if ((error as any).name === 'CastError' && (error as any).message.includes('Cast to ObjectId failed') ) {
       (error as any)._code = MHttpStatus.ERROR_PARAMS_ERROR_CODE;

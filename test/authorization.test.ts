@@ -126,5 +126,5 @@ test('9. success to longin if typing test01:123456, strategy error, return succe
       strategy: 'jwt'
     });
   // console.log('success:', res.body);
-  expect(res.body.code).toBe(200);
+  expect(res.body.code).toBe(404);
 });

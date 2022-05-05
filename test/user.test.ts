@@ -124,21 +124,7 @@ test(`1. success to get user by id name: ${name}, return user data list success 
   expect(res.body.code).toBe(200);
 });
 
-test('2. fail to create user if typing same name test01, return `name already exists`', async () => {
-  const res = await request(server)
-    .post(serverUrl)
-    .set('authorization', token)
-    .send({
-      name: 'test01',
-      password: '123456',
-      dob: '1998-05-12',
-      address: 'shanghai',
-      description: 'good man',
-    });
-  expect(res.body.code).toBe(10002);
-});
-
-test(`3. create user if typing ${name}:123456, returns create success user data`, async () => {
+test(`2. create user if typing ${name}:123456, returns create success user data`, async () => {
   const res = await request(server)
     .post(serverUrl)
     .set('authorization', token)
@@ -153,6 +139,20 @@ test(`3. create user if typing ${name}:123456, returns create success user data`
     id = res.body.data._id.toString();
   }
   expect(res.body.code).toBe(200);
+});
+
+test(`3. fail to create user if typing same name ${name}, return \'name already exists\'`, async () => {
+  const res = await request(server)
+    .post(serverUrl)
+    .set('authorization', token)
+    .send({
+      name,
+      password: '123456',
+      dob: '1998-05-12',
+      address: 'shanghai',
+      description: 'good man01',
+    });
+  expect(res.body.code).toBe(10002);
 });
 
 test('4. fail to create user if typing same name test02 and no password, return `arg `password` is required`', async () => {

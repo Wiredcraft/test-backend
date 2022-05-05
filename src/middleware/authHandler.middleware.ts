@@ -97,7 +97,7 @@ const getUserByToken = async (token: string, secret: string) => {
  * @param {Context} ctx koa Context
  * @param {Next} next
  */
-export const jwtAuth = async (ctx: Context, next: Next) => {
+export const jwtAuth = async (ctx: Context, next: Next, returnUser = false) => {
   const body = get(ctx, ['request', 'body']);
   const { authorization } = body || {};
   const mAuthorization = ctx.headers.authorization || authorization;
@@ -110,12 +110,13 @@ export const jwtAuth = async (ctx: Context, next: Next) => {
     const user = await getUserByToken(mAuthorization, authenticationSecret);
     if (user && user.id) {
       mountCurrentUser(ctx, user);
-      ctx.successResult(user);
+      if (returnUser) {
+        ctx.successResult(user);
+      }
       await next();
       return user;
-    } else {
-      ctx.errorResult(MHttpError.ERROR_UNAUTHORIZED('jwt unauthorized'));
     }
+    ctx.errorResult(MHttpError.ERROR_UNAUTHORIZED('jwt unauthorized'));
   }
 };
 
