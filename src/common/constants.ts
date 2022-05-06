@@ -78,16 +78,17 @@ const {
   ERROR_OPERATE_FIAL_CODE, ERROR_OPERATE_FIAL_MSG,
 } = MHttpStatus;
 
-const ERROR_BAD_REQUEST = (msg?: string, funName?: string, errorMsg?: string): CustomError => new CustomError(msg || 'ERROR_BAD_REQUEST', ERROR_BAD_REQUEST_CODE, `${funName || ''} ${errorMsg || ERROR_BAD_REQUEST_MSG}`);
-const ERROR_UNAUTHORIZED = (msg?: string, funName?: string, errorMsg?: string): CustomError => new CustomError(msg || 'ERROR_UNAUTHORIZED', ERROR_UNAUTHORIZED_CODE, `${funName || ''} ${errorMsg || ERROR_UNAUTHORIZED_MSG}`);
-const ERROR_NOT_FOUND = (msg?: string, funName?: string, errorMsg?: string): CustomError => new CustomError(msg || 'ERROR_NOT_FOUND', ERROR_NOT_FOUND_CODE, `${funName || ''} ${errorMsg || ERROR_NOT_FOUND_MSG}`);
-const ERROR_METHOD_NOT_ALLOWED = (msg?: string, funName?: string, errorMsg?: string): CustomError => new CustomError(msg || 'ERROR_METHOD_NOT_ALLOWED', ERROR_METHOD_NOT_ALLOWED_CODE, `${funName || ''} ${errorMsg || ERROR_METHOD_NOT_ALLOWED_MSG}`);
-const ERROR_PARAMS_ERROR = (msg?: string, funName?: string, errorMsg?: string): CustomError => new CustomError(msg || 'ERROR_PARAMS_ERROR', ERROR_PARAMS_ERROR_CODE, `${funName || ''} ${errorMsg || ERROR_PARAMS_ERROR_MSG}`);
-const ERROR_SERVER_ERROR = (msg?: string, funName?: string): CustomError => new CustomError(msg || 'ERROR_SERVER_ERROR', ERROR_SERVER_ERROR_CODE, `${funName || ''} ${ERROR_SERVER_ERROR_MSG}`);
-const ERROR_NOTIMPLEMENTED = (msg?: string, funName?: string): CustomError => new CustomError(msg || 'ERROR_NOTIMPLEMENTED', ERROR_NOTIMPLEMENTED_CODE, `${funName || ''} ${ERROR_NOTIMPLEMENTED_MSG}`);
-const ERROR_UNKNOW_ERROR = (msg?: string, funName?: string): CustomError => new CustomError(msg || 'ERROR_UNKNOW_ERROR', ERROR_UNKNOW_ERROR_CODE, `${funName || ''} ${ERROR_UNKNOW_ERROR_MSG}`);
-const ERROR_DATA_ALREADY_EXISTS = (msg?: string, funName?: string): CustomError => new CustomError(msg || 'ERROR_DATA_ALREADY_EXISTS', ERROR_DATA_ALREADY_EXISTS_CODE, `${funName || ''} ${ERROR_DATA_ALREADY_EXISTS_MSG}`);
-const ERROR_OPERATE_FIAL = (msg?: string, funName?: string): CustomError => new CustomError(msg || 'ERROR_OPERATE_FIAL', ERROR_OPERATE_FIAL_CODE, `${funName || ''} ${ERROR_OPERATE_FIAL_MSG}`);
+// name: string | Error, code: number, message: string, errorCode: number, errorMsg?: string | Error
+const ERROR_BAD_REQUEST = (msg?: string, funName?: string, errorMsg?: string): CustomError => new CustomError(msg || 'ERROR_BAD_REQUEST', ERROR_BAD_REQUEST_CODE, ERROR_BAD_REQUEST_MSG, ERROR_BAD_REQUEST_CODE, msg || `${funName || ''} ${errorMsg || ERROR_BAD_REQUEST_MSG}`);
+const ERROR_UNAUTHORIZED = (msg?: string, funName?: string, errorMsg?: string): CustomError => new CustomError(msg || 'ERROR_UNAUTHORIZED', ERROR_UNAUTHORIZED_CODE, ERROR_UNAUTHORIZED_MSG, ERROR_UNAUTHORIZED_CODE, msg ||  `${funName || ''} ${errorMsg || ERROR_UNAUTHORIZED_MSG}`);
+const ERROR_NOT_FOUND = (msg?: string, funName?: string, errorMsg?: string): CustomError => new CustomError(msg || 'ERROR_NOT_FOUND', ERROR_NOT_FOUND_CODE, ERROR_NOT_FOUND_MSG, ERROR_NOT_FOUND_CODE, msg || `${funName || ''} ${errorMsg || ERROR_NOT_FOUND_MSG}`);
+const ERROR_METHOD_NOT_ALLOWED = (msg?: string, funName?: string, errorMsg?: string): CustomError => new CustomError(msg || 'ERROR_METHOD_NOT_ALLOWED', ERROR_METHOD_NOT_ALLOWED_CODE, ERROR_METHOD_NOT_ALLOWED_MSG, ERROR_METHOD_NOT_ALLOWED_CODE, msg || `${funName || ''} ${errorMsg || ERROR_METHOD_NOT_ALLOWED_MSG}`);
+const ERROR_PARAMS_ERROR = (msg?: string, funName?: string, errorMsg?: string): CustomError => new CustomError(msg || 'ERROR_PARAMS_ERROR', ERROR_PARAMS_ERROR_CODE, ERROR_PARAMS_ERROR_MSG, ERROR_PARAMS_ERROR_CODE, msg || `${funName || ''} ${errorMsg || ERROR_PARAMS_ERROR_MSG}`);
+const ERROR_SERVER_ERROR = (msg?: string, funName?: string): CustomError => new CustomError(msg || 'ERROR_SERVER_ERROR', ERROR_SERVER_ERROR_CODE, `${funName || ''} ${ERROR_SERVER_ERROR_MSG}`, ERROR_SERVER_ERROR_CODE, msg || `${funName || ''} ${ERROR_SERVER_ERROR_MSG}`);
+const ERROR_NOTIMPLEMENTED = (msg?: string, funName?: string): CustomError => new CustomError(msg || 'ERROR_NOTIMPLEMENTED', ERROR_NOTIMPLEMENTED_CODE, `${funName || ''} ${ERROR_NOTIMPLEMENTED_MSG}`, ERROR_NOTIMPLEMENTED_CODE, msg || `${funName || ''} ${ERROR_NOTIMPLEMENTED_MSG}`);
+const ERROR_UNKNOW_ERROR = (msg?: string, funName?: string): CustomError => new CustomError(msg || 'ERROR_UNKNOW_ERROR', ERROR_SERVER_ERROR_CODE, `${funName || ''} ${ERROR_SERVER_ERROR_MSG}`, ERROR_UNKNOW_ERROR_CODE, msg || `${funName || ''} ${ERROR_UNKNOW_ERROR_MSG}`);
+const ERROR_DATA_ALREADY_EXISTS = (msg?: string, funName?: string): CustomError => new CustomError(msg || 'ERROR_DATA_ALREADY_EXISTS', ERROR_PARAMS_ERROR_CODE, `${funName || ''} ${ERROR_PARAMS_ERROR_MSG}`, ERROR_DATA_ALREADY_EXISTS_CODE, msg || `${funName || ''} ${ERROR_DATA_ALREADY_EXISTS_MSG}`);
+const ERROR_OPERATE_FIAL = (msg?: string, funName?: string): CustomError => new CustomError(msg || 'ERROR_OPERATE_FIAL', ERROR_SERVER_ERROR_CODE, ERROR_SERVER_ERROR_MSG, ERROR_OPERATE_FIAL_CODE, msg || `${funName || ''} ${ERROR_OPERATE_FIAL_MSG}`);
 
 
 export const MHttpError = {

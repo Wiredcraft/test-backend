@@ -21,9 +21,9 @@ const checkArg = (data: any, key: string, type = 1) => {
 
   if ((type === 1 && (value === null || value === undefined || value === ''))
     || (type === 2 && (value === null || value === undefined))) {
-    const error = MHttpError.ERROR_PARAMS_ERROR(`arg \`${key}\` is required`, data[key]);
+    const error = MHttpError.ERROR_PARAMS_ERROR(`arg \`${key}\` is required`);
     // pick some data to response
-    return lo.pick(error, ['code', 'message', 'data']);
+    return lo.pick(error, ['code', 'message', 'errorCode', 'errorMsg', 'timestamp']);
   }
 };
 
@@ -34,10 +34,10 @@ const checkArg = (data: any, key: string, type = 1) => {
  * @param key2 required and nullable
  * @returns Error | undined
  */
-export const  verifyData = (data: any, key: string | string[], key2?: string | string[]) => {
+export const verifyData = (data: any, key: string | string[], key2?: string | string[]) => {
   if (!data || Object.keys(data).length === 0) {
     const error = MHttpError.ERROR_PARAMS_ERROR('the \`data\` is required');
-    return lo.pick(error, ['code', 'message', 'name', 'data']);
+    return lo.pick(error, ['code', 'message', 'errorCode', 'errorMsg', 'timestamp']);
   }
   if (key && Object.keys(key).length > 0) {
     if (lo.isString(key)) {

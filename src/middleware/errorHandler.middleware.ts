@@ -13,7 +13,12 @@ export const myErrorHandler = async (ctx: Context, next: Next) => {
   try {
     await next();
     if (ctx.status !== 200) {
-      returnError(ctx, ctx.status);
+      const { code, message }  = (ctx.body || {}) as any;
+      const err = {
+        code: code || ctx.status,
+        message: ctx.message || message
+      };
+      returnError(ctx, err);
     }
   } catch (error) {
     const errorStr = JSON.stringify(error, null, ' ');
@@ -45,25 +50,31 @@ const returnError = (ctx: Context, err: any) => {
   err = omit(err, ['status', 'className', 'level', 'statusCode', 'expose']);
   delete ctx['__serviceName'];
   delete ctx['__serviceMethod'];
-  const code = err.code || status;
+  // const code = err.code || status;
+  const { code = status, message, errorCode, errorMsg, } = err;
   const info = {
     serviceName: __serviceName,
     serviceMethod: __serviceMethod,
     url,
     method,
     status,
-    code
+    code,
+    message,
+    errorCode,
+    errorMsg,
   };
-  console.log(ERRColor, 'returnError error:', info);
-  // to save not allowed request data
+
+  ctx.status = code;
   if ([404, 405].includes(code)) {
     ctx.logger.error(info);
     ctx.body = omit(code && (MHttpError as any)[`${code}`](__serviceName, __serviceMethod), ['className', 'level']);
+    return;
   } else if (MHttpCodes.includes(code)) {
     ctx.body = err;
-  } else if (!__serviceName || !__serviceMethod){
-    ctx.body = MHttpError.ERROR_NOT_FOUND(__serviceName, __serviceMethod);
   } else {
-    ctx.body = MHttpError.ERROR_UNKNOW_ERROR(__serviceName, __serviceMethod);
+    ctx.status = 500;
+    ctx.body = omit(MHttpError.ERROR_UNKNOW_ERROR(__serviceName, __serviceMethod), ['className', 'level']);
+    return;
   }
+  ctx.body = err;
 };

@@ -58,16 +58,22 @@ class ServerFollower extends BaseService {
   * {
       "code": 405,
       "message": " method is not allowed",
+      "errorCode": 405,
+      "errorMsg": "method is not allowed",
       "timestamp": "2022-04-25 20:51:44"
     }
     {
       "code": 406,
-      "message": "arg `starUserId` is required",
+      "message": "params is error",
+      "errorCode": 406,
+      "errorMsg": "arg `starUserId` is required",
       "timestamp": "2022-04-26 20:51:44"
     }
     {
       "code": 406,
-      "message": "arg `fansUserId` is required",
+      "message": "params is error",
+      "errorCode": 406,
+      "errorMsg": "arg `fansUserId` is required",
       "timestamp": "2022-04-26 20:51:44"
     }
   *
@@ -188,10 +194,15 @@ class ServerFollower extends BaseService {
   * {
     "code": 401,
     "message": " unauthorized",
+    "errorCode": 401,
+    "errorMsg": "jwt unauthorized",
     "timestamp": "2022-04-27 19:28:29"
   }{
     "code": 404,
-    "message": " not found"
+    "message": "not found",
+    "errorCode": 404,
+    "errorMsg": " not found",
+    "timestamp": "2022-04-27 20:32:07"
   }
   *
   */
@@ -332,16 +343,23 @@ class ServerFollower extends BaseService {
   * {
     "code": 401,
     "message": " unauthorized",
+    "errorCode": 401,
+    "errorMsg": "jwt unauthorized",
     "timestamp": "2022-04-27 09:28:29"
   }
   {
     "code": 405,
     "message": " method is not allowed",
+    "errorCode": 405,
+    "errorMsg": "method is not allowed",
     "timestamp": "2022-04-25 20:51:44"
   }
   {
     "code": 406,
-    "message": " params is error"
+    "message": " params is error",
+    "errorCode": 406,
+    "errorMsg": "params is error",
+    "timestamp": "2022-04-25 20:51:44"
   }
   *
   */

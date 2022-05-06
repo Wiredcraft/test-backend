@@ -63,7 +63,9 @@ class ServerLoginLog extends BaseService {
   * @apiErrorExample {json} Error-Response:
   * {
     "code": 401,
-    "message": " unauthorized",
+    "message": "unauthorized",
+    "errorCode": 401,
+    "errorMsg": "jwt unauthorized",
     "timestamp": "2022-04-27 19:28:29"
   }
   *

@@ -56,22 +56,30 @@ class ServerUser extends BaseService {
   * @apiErrorExample {json} Error-Response:
   * {
       "code": 405,
-      "message": " method is not allowed",
+      "message": "method is not allowed",
+      "errorCode": 405,
+      "errorMsg": "method is not allowed",
       "timestamp": "2022-04-25 20:51:44"
     }
     {
       "code": 406,
-      "message": "arg `name` is required",
+      "message": "params is error",
+      "errorCode": 406,
+      "errorMsg": "arg `name` is required",
       "timestamp": "2022-04-26 20:51:44"
     }
     {
       "code": 500,
       "message": " server error",
+      "errorCode": 500,
+      "errorMsg": " server error",
       "timestamp": "2022-04-26 18:06:48"
     }
     {
-      "code": 10002,
-      "message": "name already exists",
+      "code": 406,
+      "message": "params is error",
+      "errorCode": 10002,
+      "errorMsg": " name already exists",
       "timestamp": "2022-04-26 18:53:40"
     }
   *
@@ -95,7 +103,8 @@ class ServerUser extends BaseService {
     const nameSaved = await User.findOne({ name });
     // limit user creat by name
     if (nameSaved) {
-      ctx.errorResult(MHttpError.ERROR_DATA_ALREADY_EXISTS('name already exists'));
+      throw MHttpError.ERROR_DATA_ALREADY_EXISTS('name already exists');
+      // ctx.errorResult(MHttpError.ERROR_DATA_ALREADY_EXISTS('name already exists'));
     } else {
       let mHashPwd = '';
       if (password) {
@@ -162,12 +171,16 @@ class ServerUser extends BaseService {
   * @apiErrorExample {json} Error-Response:
   * {
     "code": 404,
-    "message": " not found",
+    "message": "not found",
+    "errorCode": 404,
+    "errorMsg": " not found",
     "timestamp": "2022-04-26 23:49:23"
   }
   {
     "code": 405,
-    "message": " method is not allowed",
+    "message": "method is not allowed",
+    "errorCode": 405,
+    "errorMsg": " method is not allowed",
     "timestamp": "2022-04-25 20:51:44"
   }
   *
@@ -238,16 +251,23 @@ class ServerUser extends BaseService {
   * @apiErrorExample {json} Error-Response:
   {
     "code": 405,
-    "message": " method is not allowed",
+    "message": "method is not allowed",
+    "errorCode": 405,
+    "errorMsg": " method is not allowed",
     "timestamp": "2022-04-25 20:51:44"
   }
   {
     "code": 406,
-    "message": " params is error"
+    "message": "params is error"
+    "errorCode": 406,
+    "errorMsg": " params is error",
+    "timestamp": "2022-04-25 21:14:52"
   }
   {
-    "code": 10002,
+    "code": 406,
     "message": "name already exists",
+    "errorCode": 10002,
+    "errorMsg": " name already exists",
     "timestamp": "2022-04-25 21:14:52"
   }
   *
@@ -296,17 +316,24 @@ class ServerUser extends BaseService {
   * @apiErrorExample {json} Error-Response:
   * {
     "code": 401,
-    "message": " unauthorized",
+    "message": "unauthorized",
+    "errorCode": 401,
+    "errorMsg": "jwt unauthorized",
     "timestamp": "2022-04-27 09:28:29"
   }
   {
     "code": 405,
-    "message": " method is not allowed",
+    "message": "method is not allowed",
+    "errorCode": 405,
+    "errorMsg": " method is not allowed",
     "timestamp": "2022-04-25 20:51:44"
   }
   {
     "code": 406,
-    "message": " params is error"
+    "message": "params is error",
+    "errorCode": 406,
+    "errorMsg": " params is error",
+    "timestamp": "2022-04-25 20:52:44"
   }
   *
   */
@@ -397,16 +424,16 @@ class ServerUser extends BaseService {
   * {
     "code": 401,
     "message": " unauthorized",
+    "errorCode": 401,
+    "errorMsg": "jwt unauthorized",
     "timestamp": "2022-04-27 09:28:29"
   }
   {
     "code": 405,
     "message": " method is not allowed",
+    "errorCode": 405,
+    "errorMsg": "method is not allowed",
     "timestamp": "2022-04-25 20:51:44"
-  }
-  {
-    "code": 406,
-    "message": " params is error"
   }
   *
   */
@@ -493,15 +520,22 @@ class ServerUser extends BaseService {
   {
     "code": 405,
     "message": " method is not allowed",
+    "errorCode": 405,
+    "errorMsg": "method is not allowed",
     "timestamp": "2022-04-25 20:51:44"
   }
   {
     "code": 406,
-    "message": " params is error"
+    "message": " params is error",
+    "errorCode": 405,
+    "errorMsg": "do not have any verify data",
+    "timestamp": "2022-04-25 21:14:52"
   }
   {
-    "code": 10002,
-    "message": "name already exists",
+    "code": 406,
+    "message": "params is error",
+    "errorCode": 10002,
+    "errorMsg": "name already exists",
     "timestamp": "2022-04-25 21:14:52"
   }
   *

@@ -52,11 +52,11 @@ app.use(koaStatic(path.join(__dirname, '../public')));
 // error handler
 koaOnError(app);
 
-// my error handler
-app.use(myErrorHandler);
-
 // return handler
 app.use(returnHandler);
+
+// my error handler
+app.use(myErrorHandler);
 
 // expand myMongoose to context
 app.context.myMongoose = myMongoose;

@@ -60,12 +60,16 @@ class ServerLocation extends BaseService {
   * @apiErrorExample {json} Error-Response:
   * {
       "code": 405,
-      "message": " method is not allowed",
+      "message": "method is not allowed",
+      "errorCode": 405,
+      "errorMsg": " method is not allowed",
       "timestamp": "2022-04-25 20:51:44"
     }
     {
       "code": 406,
-      "message": "arg `userId` is required",
+      "message": "params is error",
+      "errorCode": 406,
+      "errorMsg": "arg `userId` is required",
       "timestamp": "2022-05-02 20:51:44"
     }
   *
@@ -166,11 +170,15 @@ class ServerLocation extends BaseService {
   * {
     "code": 401,
     "message": " unauthorized",
+    "errorCode": 401,
+    "errorMsg": "unauthorized",
     "timestamp": "2022-04-27 19:28:29"
   }
   {
     "code": 406,
-    "message": "the `data` is required",
+    "message": "params is error",
+    "errorCode": 406,
+    "errorMsg": "the `data` is required",
     "timestamp": "2022-05-05 04:46:18"
   }
   *
