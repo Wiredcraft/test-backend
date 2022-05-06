@@ -1,7 +1,7 @@
 import { Context } from 'koa';
 import moment from 'moment';
 import mongoose from 'mongoose';
-import { ERRColor, MHttpStatus } from '../common/constants';
+import { MHttpStatus } from '../common/constants';
 import { IPageNationArgs, IResponseData, IResultData, ITotalResultData } from '../types';
 import { getPagenation } from '../utils/utils';
 
@@ -76,14 +76,15 @@ export  default async (ctx: Context, next: any) => {
       status,
       code
     };
-    console.log(ERRColor, 'errorResult error:', info);
+    // console.log(ERRColor, 'errorResult error:', info);
     ctx.logger.error(info);
     const returnBody: IResponseData = {
       code,
       message,
       timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
     };
-    ctx.body = returnBody;
+    ctx.status = code;
+    ctx.throw(returnBody);
   };
 
   await next();

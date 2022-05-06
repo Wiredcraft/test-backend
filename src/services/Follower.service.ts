@@ -14,10 +14,10 @@ import { NPFollower } from './types';
 
 class ServerFollower extends BaseService {
   /**
-  * @api {post} /api/v1/serverUser create User
+  * @api {post} /api/v1/serverFollower create User Follower
   * @apiDescription api description
-  * @apiName /api/v1/serverUser restful:create
-  * @apiGroup User
+  * @apiName /api/v1/serverFollower restful:create
+  * @apiGroup Follower
   * @apiVersion v1.0.0
   * @apiHeader {String} authorization user request token
   *
@@ -126,7 +126,7 @@ class ServerFollower extends BaseService {
   * @api {get} /api/v1/serverFollower find User follower data list by pagenation
   * @apiDescription api description
   * @apiName /api/v1/serverFollower restful:find
-  * @apiGroup LoginLog
+  * @apiGroup Follower
   * @apiVersion v1.0.0
   * @apiHeader {String} authorization user request token
   *
@@ -295,7 +295,7 @@ class ServerFollower extends BaseService {
   * @api {delete} /api/v1/serverFollower/:id delete User follower by id, tag delete
   * @apiDescription api description
   * @apiName /api/v1/serverFollower restful:remove
-  * @apiGroup User
+  * @apiGroup Follower
   * @apiVersion v1.0.0
   * @apiHeader {String} authorization user request token
   *

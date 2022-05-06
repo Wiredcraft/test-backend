@@ -17,11 +17,9 @@ export const myErrorHandler = async (ctx: Context, next: Next) => {
     }
   } catch (error) {
     const errorStr = JSON.stringify(error, null, ' ');
-    console.log(ERRColor, 'myErrorHandler error:', error);
     if (errorStr.length < 5) {
       console.log(ERRColor, 'myErrorHandler error:', error);
     }
-    console.log(ERRColor, 'myErrorHandler error1:', errorStr);
     // parts of mongose error handler
     if ((error as any).name === 'CastError' && (error as any).message.includes('Cast to ObjectId failed') ) {
       (error as any)._code = MHttpStatus.ERROR_PARAMS_ERROR_CODE;
@@ -43,9 +41,8 @@ export const myErrorHandler = async (ctx: Context, next: Next) => {
 const returnError = (ctx: Context, err: any) => {
   const { url, method, __serviceName, __serviceMethod } = ctx;
   const status = ctx.status;
-  if (get(err, 'className')) {
-    err = omit(err, ['className', 'level']);
-  }
+  // omit some fields
+  err = omit(err, ['status', 'className', 'level', 'statusCode', 'expose']);
   delete ctx['__serviceName'];
   delete ctx['__serviceMethod'];
   const code = err.code || status;
@@ -58,7 +55,6 @@ const returnError = (ctx: Context, err: any) => {
     code
   };
   console.log(ERRColor, 'returnError error:', info);
-
   // to save not allowed request data
   if ([404, 405].includes(code)) {
     ctx.logger.error(info);
