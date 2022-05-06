@@ -43,6 +43,8 @@ app.use(async (ctx, next) => {
 if (process.env.NODE_ENV === 'development') {
   app.context.__isDev = true;
   app.use(koaStatic(path.join(__dirname, '../doc/api')));
+} else if (process.env.NODE_ENV === 'test') {
+  app.context.__isTest = true;
 }
 
 // load static resources

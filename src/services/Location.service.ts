@@ -1,7 +1,6 @@
 import { Context, Next } from 'koa';
 import { uniqWith } from 'lodash';
 import { MHttpError } from '../common/constants';
-import mongoose from '../db';
 
 import BaseService from '../lib/BaseService';
 import { jwtAuth } from '../middleware/authHandler.middleware';
@@ -186,7 +185,6 @@ class ServerLocation extends BaseService {
 
   async find(ctx: Context, next: Next, params?: any): Promise<any> {
     const jwtAuthRes = await jwtAuth(ctx, next);
-    console.log('jwtAuthRes',jwtAuthRes);
     if (!jwtAuthRes || !jwtAuthRes.id) {
       return;
     }

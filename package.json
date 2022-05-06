@@ -6,12 +6,12 @@
   "author": "Leo",
   "license": "MIT",
   "scripts": {
-    "test": "npm run lint && npm run compile && npm run jest",
+    "test": "set NODE_ENV=test & npm run lint && npm run compile && npm run jest",
     "lint": "eslint src/. test/. --config .eslintrc.json --ext .ts --fix",
     "dev": "ts-node-dev --no-notify src/",
     "start": "npm run compile && node lib/",
-    "jest": "jest --forceExit",
-    "jest-coverage": "jest --forceExit --coverage",
+    "jest": "set NODE_ENV=test & jest --forceExit",
+    "jest-coverage": "set NODE_ENV=test & jest --forceExit --coverage",
     "lint-staged": "lint-staged",
     "compile": "shx rm -rf lib/ && tsc",
     "doc": "apidoc ./src/services/*.service.ts ./src/middleware/statisticsTime.middleware.ts -o ./doc/api"

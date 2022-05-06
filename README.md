@@ -98,7 +98,7 @@ Simply run `npm test` and all your tests in the `test/` directory will be run.
 
 ## Test coverage
 
-![avatar](./public/kra-test-coverage.png)
+![avatar](./public/kra-test-coverage.jpg)
 
 ## Log
 

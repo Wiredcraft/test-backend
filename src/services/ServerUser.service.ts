@@ -85,8 +85,8 @@ class ServerUser extends BaseService {
   *
   */
   async create(ctx: Context, next: Next, data: NPUsers.IUser): Promise<any> {
-    // dev enviment to create admin
-    if (!ctx.__isDev || data.name !== 'admin') {
+    // dev/test enviment to create admin
+    if ((!ctx.__isDev && !ctx.__isTest) || data.name !== 'admin') {
       const jwtAuthRes = await jwtAuth(ctx, next);
       if (!jwtAuthRes || !jwtAuthRes.id) {
         return;
@@ -438,11 +438,13 @@ class ServerUser extends BaseService {
   *
   */
   async find(ctx: Context, next: Next, params?: any): Promise<any> {
-    const jwtAuthRes = await jwtAuth(ctx, next);
-    if (!jwtAuthRes || !jwtAuthRes.id) {
-      return;
+    const { name, address, description, isDeleted = 'N' } = params;
+    if ((!ctx.__isDev && !ctx.__isTest) || name !== 'admin') {
+      const jwtAuthRes = await jwtAuth(ctx, next);
+      if (!jwtAuthRes || !jwtAuthRes.id) {
+        return;
+      }
     }
-    const { name, address, description, isDeleted = 'N', pageSize, pageIndex } = params;
     const queryObj: any = {};
     name && (queryObj.name = name);
     // add vague query by address or description

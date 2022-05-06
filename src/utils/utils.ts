@@ -1,4 +1,5 @@
 import lo from 'lodash';
+import { v4 as uuid } from 'uuid';
 import { MHttpError } from '../common/constants';
 
 /**
@@ -120,4 +121,22 @@ export const getPagenation = (params: any): { limit: number, skip: number } => {
 export const  verifyLngLat = (loc: number[]): boolean => {
   const [lng, lat] = loc;
   return (lng >= -180 && lng <= 180) && (lat >= -90 && lat <= 90);
+};
+
+
+const getRandomSubStr = (len = 6) => {
+  return uuid().slice(0, len);
+};
+
+/**
+ * get range string
+ * @param {number} len
+ * @returns
+ */
+export const getRandomStr = (len = 6) => {
+  let str = getRandomSubStr(len);
+  while(str.length < len) {
+    str += getRandomSubStr(len);
+  }
+  return str.slice(-len);
 };
