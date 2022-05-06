@@ -177,41 +177,58 @@ const mountCurrentUser = (ctx: Context, user: any) => {
   * {
       "code": 401,
       "message": " unauthorized",
+      "errorCode": 401,
+      "errorMsg": "unauthorized",
       "timestamp": "2022-04-27 09:28:29"
     }
     {
       "code": 401,
-      "message": "no strategy",
+      "message": "unauthorized",
+      "errorCode": 401,
+      "errorMsg": "no strategy",
       "timestamp": "2022-04-27 09:53:15"
     }
     {
       "code": 401,
-      "message": "loc is not supported!",
+      "message": "unauthorized",
+      "errorCode": 401,
+      "errorMsg": "loc is not supported!,
       "timestamp": "2022-04-27 09:58:38"
     }
 
     {
       "code": 401,
-      "message": "not user",
+      "message": "unauthorized",
+      "errorCode": 401,
+      "errorMsg": "not user",
       "timestamp": "2022-04-27 10:17:45"
     }
     {
       "code": 404,
-      "message": " not found"
+      "message": " not found",
+      "errorCode": 404,
+      "errorMsg": "not found",
+      "timestamp": "2022-04-25 20:51:44"
     }
     {
       "code": 405,
       "message": " method is not allowed",
+      "errorCode": 405,
+      "errorMsg": "method is not allowed",
       "timestamp": "2022-04-25 20:51:44"
     }
     {
       "code": 406,
-      "message": "arg `name` is required",
+      "message": "params is error",
+      "errorCode": 406,
+      "errorMsg": "arg `name` is required",
       "timestamp": "2022-04-26 20:51:44"
     }
     {
       "code": 500,
       "message": " server error",
+      "errorCode": 500,
+      "errorMsg": "server error",
       "timestamp": "2022-04-26 18:06:48"
     }
   *
