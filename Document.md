@@ -51,4 +51,4 @@ CREATE TABLE `user_friends` (
 you can use swagger to make a quickly api test about the service. enjoy it.
 
 here is the swagger website:
-https://user.v2j.tech/swagger-ui/index.html
+https://wiredcraft.v2j.tech/swagger-ui/index.html
