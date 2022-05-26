@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * <p>
- * users follow table 服务类
+ * users follow table service
  * </p>
  *
  * @author jarvis.jia

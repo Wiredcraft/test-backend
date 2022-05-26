@@ -22,29 +22,9 @@ public class MvcConfig implements WebMvcConfigurer {
     private AuthenticationInterceptor authenticationInterceptor;
 
 
-//    @Bean
-//    public LoggerInterceptor setBean1(){
-//        return new LoggerInterceptor();
-//    }
-//
-//    @Bean
-//    public AuthenticationInterceptor setBean2(){
-//        System.out.println("注入了handler");
-//        return new AuthenticationInterceptor();
-//    }
-
-//    @Bean
-//    public AuthenticationInterceptor authenticationInterceptor(){
-//        return new AuthenticationInterceptor();
-//    }
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loggerInterceptor).addPathPatterns("/**");
         registry.addInterceptor(authenticationInterceptor).addPathPatterns("/**");
-
-
-//        registry.addInterceptor(new LoggerInterceptor()).addPathPatterns("/**");
-        //registry.addInterceptor(setBean2()).addPathPatterns("/**");
     }
 }

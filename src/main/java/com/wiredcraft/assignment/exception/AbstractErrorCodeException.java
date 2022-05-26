@@ -16,20 +16,20 @@ import lombok.EqualsAndHashCode;
 public abstract class AbstractErrorCodeException extends RuntimeException {
     private static final long serialVersionUID = -1773948201086307346L;
     /**
-     * 异常信息对象,包含
+     * error code
      */
     public ErrorCode errorCode;
 
     /**
-     * @param errorCode 异常的代码
+     * @param errorCode
      */
     public AbstractErrorCodeException(ErrorCode errorCode) {
         this.errorCode = errorCode;
     }
 
     /**
-     * @param errorCode  异常的代码
-     * @param cause 原始错误信息，异常链的上层。
+     * @param errorCode
+     * @param cause
      */
     public AbstractErrorCodeException(ErrorCode errorCode, Throwable cause) {
         super(cause);

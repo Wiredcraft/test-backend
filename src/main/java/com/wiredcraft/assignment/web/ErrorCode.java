@@ -3,11 +3,8 @@ package com.wiredcraft.assignment.web;
 import java.io.Serializable;
 
 /**
- * @author: xxxx
- * @createDate: 2018/9/4
- * @company: (C) Copyright xxxxx
- * @since: JDK 1.8
- * @Description:
+ * @author jarvis.jia
+ * @date 2022/5/23
  */
 public class ErrorCode implements Serializable {
     private String errorCode;

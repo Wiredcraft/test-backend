@@ -3,9 +3,11 @@ package com.wiredcraft.assignment.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wiredcraft.assignment.entity.UserFriends;
 import com.wiredcraft.assignment.enums.FollowEnum;
+import com.wiredcraft.assignment.exception.BusinessException;
 import com.wiredcraft.assignment.mapper.UserFriendsMapper;
 import com.wiredcraft.assignment.service.IUserFriendsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wiredcraft.assignment.web.ErrorCodeConfig;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ import java.util.List;
 
 /**
  * <p>
- * users follow table 服务实现类
+ * users follow table service
  * </p>
  *
  * @author jarvis.jia
@@ -23,6 +25,12 @@ import java.util.List;
 @Service
 public class UserFriendsServiceImpl extends ServiceImpl<UserFriendsMapper, UserFriends> implements IUserFriendsService {
 
+    /**
+     * get user's follower/following list
+     * @param userId userId
+     * @param followEnum follow enum. ex: FollowEnum.FOLLOW: follower. FollowEnum.FOLLOWING: following
+     * @return follower/following list
+     */
     @Override
     public List<UserFriends> getFollowList(Long userId, FollowEnum followEnum) {
         QueryWrapper<UserFriends> queryWrapper = new QueryWrapper<>();
@@ -35,8 +43,17 @@ public class UserFriendsServiceImpl extends ServiceImpl<UserFriendsMapper, UserF
         return this.list(queryWrapper);
     }
 
+    /**
+     * follow other users
+     * @param userId
+     * @param followId
+     * @param state follow state. 1: valid  0:not valid
+     */
     @Override
     public void follow(Long userId, Long followId, Integer state) {
+        if(userId == followId){
+            throw new BusinessException(ErrorCodeConfig.ERR_USER_CAN_NOT_FOLLOW_THEMSELVES);
+        }
         Date now = new Date();
         QueryWrapper<UserFriends> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid", userId)

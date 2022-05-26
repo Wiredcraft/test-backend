@@ -5,7 +5,7 @@
     <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
     <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
 
-    <!-- 控制台输出 -->
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}</pattern>
@@ -13,7 +13,7 @@
     </appender>
 
 
-    <!-- 输出日志到文件 -->
+
     <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>./log/admin.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -26,7 +26,7 @@
         </encoder>
     </appender>
 
-    <!-- 访问日志 -->
+
     <appender name="FILE_ACCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>./log/admin-access.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -44,7 +44,7 @@
         </encoder>
     </appender>
 
-    <!-- 输出日志到文件:成功 -->
+
     <appender name="FILE_SUCCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>./log/admin-success.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -62,7 +62,7 @@
         </encoder>
     </appender>
 
-    <!-- 输出日志到文件:失败 -->
+
     <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>./log/admin-error.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -87,7 +87,7 @@
         <appender-ref ref="FILE_ERROR"/>
     </logger>
 
-    <!-- 设置root输出级别 -->
+
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE_INFO"/>

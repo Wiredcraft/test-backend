@@ -5,20 +5,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 
 /**
- * @author: xxxx
- * @createDate: 2018/9/4
- * @company: (C) Copyright xxxxx
- * @since: JDK 1.8
- * @Description:
+ * @author jarvis.jia
+ * @date 2022/5/23
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> implements Serializable {
     private static final long serialVersionUID = 3515351531087772426L;
-
-    /**
-     * 返回数据对象
-     */
-//    private Map<String, Object> data;
 
     private T data;
 
@@ -63,22 +55,22 @@ public class ApiResponse<T> implements Serializable {
     }
 
     /**
-     * 错误码
+     * code
      */
     private String code;
 
     /**
-     * 错误原因
+     * msg
      */
     private String msg;
 
     /**
-     * 错误原因详细描述
+     * desc
      */
     private String desc;
 
     /**
-     * 处理时间
+     * handle time
      */
     private Long time;
 
@@ -88,9 +80,6 @@ public class ApiResponse<T> implements Serializable {
     }
 
 
-    /**
-     * 构造函数
-     */
     public ApiResponse() {
         time = System.currentTimeMillis()/1000;
     }

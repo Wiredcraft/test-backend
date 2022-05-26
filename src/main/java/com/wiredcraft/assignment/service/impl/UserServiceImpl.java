@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- * users information table 服务实现类
+ * users information table service
  * </p>
  *
  * @author jarvis.jia
@@ -49,6 +49,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     private UserMapper userMapper;
 
+    /**
+     *
+     * @return user information list
+     */
     @Override
     public List<UserInfoResp> getUserList() {
         QueryWrapper<User> query = new QueryWrapper();
@@ -63,6 +67,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return resp;
     }
 
+    /**
+     * get user information by user id
+     * @param userId
+     * @return user info
+     */
+    @Override
+    public UserInfoResp getUserInfo(Long userId) {
+        UserInfoResp userInfoResp = new UserInfoResp();
+        User user = this.getById(userId);
+        BeanUtil.copyProperties(user, userInfoResp, CopyOptions.create().setIgnoreNullValue(true));
+        return userInfoResp;
+    }
+
+    /**
+     * set user state is deleted in db.
+     * @param userId
+     */
     @Override
     public void deleteByUserId(Long userId) {
         UpdateWrapper<User> updateWrapper = new UpdateWrapper();
@@ -72,6 +93,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         this.update(null, updateWrapper);
     }
 
+    /**
+     * update user information(name, dob, address and so on)
+     * @param userId
+     * @param user: include the informations which is needed to be updated
+     */
     @Override
     public void updateUserInfo(Long userId, User user) {
         User userInfo = this.getById(userId);
@@ -83,6 +109,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         this.updateById(userInfo);
     }
 
+    /**
+     * get user information by user's name
+     * @param username
+     * @return
+     */
     @Override
     public User findByName(String username) {
         QueryWrapper<User> query = new QueryWrapper();
@@ -90,6 +121,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return this.getOne(query);
     }
 
+    /**
+     * user login request
+     * @param request
+     * @return user information and token when login successful
+     */
     @Override
     public UserLoginResp login(UserLoginReq request) {
         User user = this.findByName(request.getName());
@@ -108,8 +144,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return resp;
     }
 
+    /**
+     * create user
+     * @param request
+     * @return user info which can be created successfully
+     */
     @Override
-    public void createUser(UserCreateReq request) {
+    public User createUser(UserCreateReq request) {
         User user = this.findByName(request.getName());
         if(user != null){
             throw new BusinessException(ErrorCodeConfig.ERR_USER_HAS_EXIST);
@@ -120,8 +161,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setCreatedAt(new Date());
         user.setPassword(SecureUtil.md5(request.getPassword()));
         this.save(user);
+        return user;
     }
 
+    /**
+     * get user's follower/following list. user's information fields are limited to serveral fields
+     * @param userId
+     * @param followEnum
+     * @return
+     */
     @Override
     public List<UserInfoResp> getFollowList(Long userId, FollowEnum followEnum) {
         List<UserInfoResp> respList = new ArrayList<>();
@@ -143,7 +191,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
 
-
+    /**
+     * get user nearby friends list around him by distance and userId
+     * @param userId
+     * @param distance
+     * @return
+     */
     @Override
     public List<UserInfoResp> getNearByFriends(Long userId, Double distance) {
         User user = this.getById(userId);

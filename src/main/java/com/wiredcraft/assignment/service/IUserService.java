@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * <p>
- * users information table 服务类
+ * users information table service
  * </p>
  *
  * @author jarvis.jia
@@ -21,6 +21,8 @@ import java.util.List;
 public interface IUserService extends IService<User> {
 
     List<UserInfoResp> getUserList();
+
+    UserInfoResp getUserInfo(Long userId);
 
     void deleteByUserId(Long userId);
 
@@ -32,7 +34,7 @@ public interface IUserService extends IService<User> {
 
     UserLoginResp login(UserLoginReq request);
 
-    void createUser(UserCreateReq request);
+    User createUser(UserCreateReq request);
 
     List<UserInfoResp> getFollowList(Long userId, FollowEnum followEnum);
 

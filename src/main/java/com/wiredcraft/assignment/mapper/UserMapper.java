@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * <p>
- * users information table Mapper 接口
+ * users information table Mapper
  * </p>
  *
  * @author jarvis.jia

@@ -57,7 +57,7 @@ public class UserController {
     @GetMapping("/users/{userId}")
     public ApiResponse getUserInfo(@ApiParam(name = "userId", value = "ex: 1", required = true)  @PathVariable Long userId) {
         ApiResponse apiResponse = ApiResponse.buildSuccess();
-        apiResponse.setData(userService.getById(userId));
+        apiResponse.setData(userService.getUserInfo(userId));
         return apiResponse;
     }
 

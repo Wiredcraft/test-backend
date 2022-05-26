@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
- * users follow table Mapper 接口
+ * users follow table Mapper
  * </p>
  *
  * @author jarvis.jia

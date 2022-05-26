@@ -15,11 +15,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import javax.validation.ConstraintViolationException;
 
 /**
- * @author: xxxx
- * @createDate: 2018/9/4
- * @company: (C) Copyright xxxxx
- * @since: JDK 1.8
- * @Description:
+ * @author: jarvis.jia
+ * @date 2022/5/24
  */
 @ControllerAdvice
 @Slf4j
