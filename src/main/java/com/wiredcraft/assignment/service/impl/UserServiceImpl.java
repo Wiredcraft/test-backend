@@ -150,11 +150,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         Rectangle rectangle = CoordinateUtils.getRectangle(distance, user.getLongitude(), user.getLatitude());
         Map<String, Object> condition = new HashMap<>();
         condition.put("userId", userId);
-        condition.put("minX", rectangle.getMinX());
-        condition.put("maxX", rectangle.getMaxX());
-        condition.put("minY", rectangle.getMinY());
-        condition.put("maxY", rectangle.getMaxY());
+        condition.put("minlng", rectangle.getMinX());
+        condition.put("maxlng", rectangle.getMaxX());
+        condition.put("minlat", rectangle.getMinY());
+        condition.put("maxlat", rectangle.getMaxY());
         List<UserInfoResp> friends = userMapper.getUserNearByList(condition);
+
         friends = friends.stream()
                 .filter(item -> CoordinateUtils.getDistance(item.getLongitude(), item.getLatitude(), user.getLongitude(), user.getLatitude()) <= distance)
                 .collect(Collectors.toList());

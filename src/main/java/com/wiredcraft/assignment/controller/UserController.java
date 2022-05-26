@@ -90,7 +90,7 @@ public class UserController {
 
     @ApiOperation(value="get the user's followers information")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "token", value = "token", dataType = "String", required = true),
+            @ApiImplicitParam(paramType = "header", name = "token", value = "token", dataTypeClass = String.class, dataType = "String", required = true),
     })
     @UserLoginToken
     @GetMapping("/users/followers")
@@ -103,7 +103,7 @@ public class UserController {
 
     @ApiOperation(value="get the user's following information")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "token", value = "token", dataType = "String", required = true),
+            @ApiImplicitParam(paramType = "header", name = "token", value = "token", dataTypeClass = String.class, dataType = "String", required = true),
     })
     @UserLoginToken
     @GetMapping("/users/following")
@@ -116,7 +116,7 @@ public class UserController {
 
     @ApiOperation(value="follow someone")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "token", value = "token", dataType = "String", required = true),
+            @ApiImplicitParam(paramType = "header", name = "token", value = "token", dataTypeClass = String.class, dataType = "String", required = true),
     })
     @UserLoginToken
     @PostMapping("/users/{followId}/follow")
@@ -129,7 +129,7 @@ public class UserController {
 
     @ApiOperation(value="unfollow someone")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "token", value = "token", dataType = "String", required = true),
+            @ApiImplicitParam(paramType = "header", name = "token", value = "token", dataTypeClass = String.class, dataType = "String", required = true),
     })
     @UserLoginToken
     @DeleteMapping("/users/{followId}/follow")
@@ -142,7 +142,7 @@ public class UserController {
 
     @ApiOperation(value="get the user's nearby friends")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "token", value = "token", dataType = "String", required = true),
+            @ApiImplicitParam(paramType = "header", name = "token", value = "token", dataTypeClass = String.class, dataType = "String", required = true),
     })
     @UserLoginToken
     @GetMapping("/users/nearby")

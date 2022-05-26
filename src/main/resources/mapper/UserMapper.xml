@@ -3,12 +3,13 @@
 <mapper namespace="com.wiredcraft.assignment.mapper.UserMapper">
 
     <select id="getUserNearByList" resultType="com.wiredcraft.assignment.dto.resp.UserInfoResp" parameterType="java.util.HashMap">
-        select user.id, user.name, user.dob, user.address, user.description, user.create_at
-        from user
-        join user_friends on user_friends.uid=user.id
-        where  user.id=${userId}
-            and (user.longitude BETWEEN ${minlng} AND ${maxlng})
-            and (user.latitude BETWEEN ${minlat} AND ${maxlat})
+        select user.id, user.name, user.dob, user.address, user.description, user.created_at, user.longitude, user.latitude
+        from user_friends
+        join user on user_friends.follower_id=user.id
+        where  user_friends.uid=#{userId,jdbcType=BIGINT}
+            and (user.longitude BETWEEN #{minlng,jdbcType=DECIMAL} AND #{maxlng,jdbcType=DECIMAL})
+            and (user.latitude BETWEEN #{minlat,jdbcType=DECIMAL} AND #{maxlat,jdbcType=DECIMAL})
+            and user_friends.state=1
 
 
     </select>
