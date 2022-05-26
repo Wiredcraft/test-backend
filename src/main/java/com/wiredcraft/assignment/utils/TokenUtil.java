@@ -45,18 +45,29 @@ public class TokenUtil {
     }
 
 
+    public Long getUserByToken(String token){
+        String userId;
+        try {
+            userId = JWT.decode(token).getAudience().get(0);
+        } catch (JWTDecodeException j) {
+            throw new BusinessException(ErrorCodeConfig.ERR_NEED_AUTH);
+        }
+        return Long.parseLong(userId);
+    }
+
+
     public void verifyToken(String token) throws Exception {
         if (token == null) {
             throw new BusinessException(ErrorCodeConfig.ERR_NO_TOKEN);
         }
-        String userId;
         Date expiresAt;
         try {
-            userId = JWT.decode(token).getAudience().get(0);
             expiresAt = JWT.decode(token).getExpiresAt();
         } catch (JWTDecodeException j) {
             throw new BusinessException(ErrorCodeConfig.ERR_NEED_AUTH);
         }
+
+        Long userId = getUserByToken(token);
         User user = userService.getById(userId);
         if (user == null) {
             throw new BusinessException(ErrorCodeConfig.ERR_USER_NOT_EXIST);

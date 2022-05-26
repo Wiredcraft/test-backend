@@ -2,4 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wiredcraft.assignment.mapper.UserMapper">
 
+    <select id="getUserNearByList" resultType="com.wiredcraft.assignment.dto.resp.UserInfoResp" parameterType="java.util.HashMap">
+        select user.id, user.name, user.dob, user.address, user.description, user.create_at
+        from user
+        join user_friends on user_friends.uid=user.id
+        where  user.id=${userId}
+            and (user.longitude BETWEEN ${minlng} AND ${maxlng})
+            and (user.latitude BETWEEN ${minlat} AND ${maxlat})
+
+
+    </select>
+
 </mapper>

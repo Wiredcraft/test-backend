@@ -42,16 +42,20 @@ public class UserInfoResp {
      */
     private String description;
 
+    /**
+     * longitude
+     */
+    private Double longitude;
+
+    /**
+     * latitude
+     */
+    private Double latitude;
+
 
     /**
      * create time
      */
     private Date createdAt;
-
-    /**
-     * user jwt token
-     */
-    private String token;
-
 
 }

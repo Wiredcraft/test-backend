@@ -11,15 +11,15 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * users information table
+ * users follow table
  * </p>
  *
  * @author jarvis.jia
- * @since 2022-05-24
+ * @since 2022-05-26
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class User implements Serializable {
+public class UserFriends implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,44 +27,19 @@ public class User implements Serializable {
     private Long id;
 
     /**
-     * user name
+     * uid
      */
-    private String name;
+    private Long uid;
 
     /**
-     * user password
+     * follower id
      */
-    private String password;
+    private Long followerId;
 
     /**
-     * date of birth
+     * follow state. 1:valid 0:not valid
      */
-    private String dob;
-
-    /**
-     * user address
-     */
-    private String address;
-
-    /**
-     * user address
-     */
-    private String description;
-
-    /**
-     * longitude
-     */
-    private Double longitude;
-
-    /**
-     * latitude
-     */
-    private Double latitude;
-
-    /**
-     * user state. 1.deleted  0:not deleted
-     */
-    private Integer deleted;
+    private Integer state;
 
     /**
      * create time
@@ -72,7 +47,7 @@ public class User implements Serializable {
     private Date createdAt;
 
     /**
-     * update time
+     * create time
      */
     private Date updateAt;
 
