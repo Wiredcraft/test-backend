@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +34,7 @@ import java.util.Date;
  * @author jarvis.jia
  * @since 2022-05-24
  */
+@Slf4j
 @RestController
 @Validated
 @RequestMapping("/api")
