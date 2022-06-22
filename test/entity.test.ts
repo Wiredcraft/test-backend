@@ -11,12 +11,12 @@ describe('Entity', () => {
         {
           target: user,
           value: undefined,
-          property: 'id',
+          property: 'email',
           children: [],
           constraints: {
-            isDefined: 'id should not be null or undefined',
-            isLength: 'id must be longer than or equal to 3 characters',
-            isString: 'id must be a string'
+            isDefined: 'email should not be null or undefined',
+            isLength: 'email must be longer than or equal to 3 characters',
+            isString: 'email must be a string'
           }
         },
         {
@@ -46,7 +46,7 @@ describe('Entity', () => {
 
     it('validate the complete info', async () => {
       const user = new User();
-      user.id = 'lellansin@gmail.com';
+      user.email = 'lellansin@gmail.com';
       user.name = 'Lellansin';
       user.password = '123456';
       user.address = 'Hangzhou of China';
@@ -58,7 +58,7 @@ describe('Entity', () => {
 
     it('validate the short password', async () => {
       const user = new User();
-      user.id = 'lellansin@gmail.com';
+      user.email = 'lellansin@gmail.com';
       user.name = 'Lellansin';
       user.password = '123';
       const res = await validate(user);
@@ -77,7 +77,7 @@ describe('Entity', () => {
 
     it('validate the incorrect type of name', async () => {
       const user = new User();
-      user.id = 'lellansin@gmail.com';
+      user.email = 'lellansin@gmail.com';
       user.name = { $ne: null } as any;
       user.password = '123456';
       const res = await validate(user);

@@ -15,7 +15,7 @@ export class MongoDB {
       database: 'test-backend',
       entities: [User],
       synchronize: true,
-      logging: false,
+      logging: true,
       useUnifiedTopology: true
     });
   }

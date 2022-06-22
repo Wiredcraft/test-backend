@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 import {
   IsDate,
   IsDefined as IsRequired,
@@ -10,13 +10,17 @@ import {
 
 @Entity()
 export class User {
+  @IsOptional()
+  @ObjectIdColumn()
+  _id: ObjectID; // user id
+
   @IsRequired()
   @IsString()
   @Length(3, 254)
-  @PrimaryColumn({
+  @Column({
     length: 254
   })
-  id: string; // user id (defined email here)
+  email: string; // user email
 
   @IsRequired()
   @IsString()
@@ -29,7 +33,7 @@ export class User {
   @IsOptional()
   @IsDate()
   @Column()
-  dob: Date; // date of birth
+  dob: Date = new Date(); // date of birth
 
   @IsRequired()
   @IsString()
@@ -45,7 +49,7 @@ export class User {
   @Column({
     length: 128
   })
-  address: string; // user address
+  address: string = ''; // user address
 
   @IsOptional()
   @IsString()
@@ -53,7 +57,7 @@ export class User {
   @Column({
     length: 128
   })
-  description: string; // user description
+  description: string = ''; // user description
 
   @IsDate()
   @Column()
