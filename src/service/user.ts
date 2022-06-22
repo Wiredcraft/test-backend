@@ -1,11 +1,11 @@
 import { MongoDB } from '../db/mongo';
 import { User as UserModel } from '../model/user';
-import { User as UserEntity } from '../entity/user';
+import { User } from '../entity/user';
 import { ERROR } from '../config/constant';
 import { encodeWithSalt } from '../util/crypto';
 import assert from 'assert';
 
-export class User {
+export class UserService {
   model: UserModel;
 
   constructor(db: MongoDB) {
@@ -28,7 +28,7 @@ export class User {
     return user;
   }
 
-  async signUp(user: UserEntity) {
+  async signUp(user: User) {
     // 1. Check if email is registered
     const noOne = await this.model.getOneByEmail(user.email);
     assert(!noOne, ERROR.SERVICE_USER_SIGNUP_EMAIL_CONFLICT);
@@ -40,7 +40,7 @@ export class User {
     return this.model.create(user);
   }
 
-  private encodePassword(user: UserEntity, password?: string): string {
+  private encodePassword(user: User, password?: string): string {
     // new user with raw password
     if (!password) {
       password = user.password;

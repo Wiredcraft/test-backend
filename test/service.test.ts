@@ -1,6 +1,6 @@
 import { MongoDB } from '../src/db/mongo';
 import { strictEqual as equal, strict as assert } from 'assert';
-import { User as UserService } from '../src/service/user';
+import { UserService } from '../src/service/user';
 import { User } from '../src/entity/user';
 
 const name = 'Lellansin';
