@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+import { Follow } from '../entity/follower';
 import { User } from '../entity/user';
 
 export class MongoDB {
@@ -13,7 +14,7 @@ export class MongoDB {
       username: 'root',
       password: '',
       database: 'test-backend',
-      entities: [User],
+      entities: [User, Follow],
       synchronize: true,
       logging: true,
       useUnifiedTopology: true
@@ -23,6 +24,7 @@ export class MongoDB {
   private async getDataSource() {
     if (!this.inited) {
       await this.dataSource.initialize();
+      this.inited = true;
     }
     return this.dataSource;
   }
@@ -30,6 +32,11 @@ export class MongoDB {
   async getUser() {
     const ds = await this.getDataSource();
     return ds.getRepository(User);
+  }
+
+  async getFollower() {
+    const ds = await this.getDataSource();
+    return ds.getRepository(Follow);
   }
 
   close() {
