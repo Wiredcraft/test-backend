@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { MongoDB } from '../db/mongo';
 import { User as entity } from '../entity/user';
+import { ERROR } from '../config/constant';
 // @ts-ignore
 import { ObjectId } from 'mongodb';
 
@@ -42,16 +43,13 @@ export class User {
     if (!(id instanceof ObjectId)) {
       id = ObjectId(id);
     }
-    assert(typeof id === 'object', 'User#getById(): id should be a ObjectId');
+    assert(typeof id === 'object', ERROR.MODEL_USER_GETONEBYID_PARAMS);
     const results = await this.get({ where: { _id: id }, take: 1 });
     return results[0];
   }
 
   async getOneByEmail(email: string): Promise<entity | undefined> {
-    assert(
-      typeof email === 'string',
-      'User#getOneByEmail(): email should be a string'
-    );
+    assert(typeof email === 'string', ERROR.MODEL_USER_GETONEBYEMAIL_PARAMS);
     const results = await this.get({ where: { email }, take: 1 });
     return results[0];
   }

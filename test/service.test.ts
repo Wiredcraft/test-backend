@@ -30,7 +30,7 @@ describe('Service', () => {
       try {
         await service.signUp(user);
       } catch (err) {
-        assert.match(String(err), /email '[^']+' has been register/);
+        assert.match(String(err), /Registered email conflict/);
         return;
       }
       assert(false, 'should not come here');
@@ -40,7 +40,7 @@ describe('Service', () => {
       try {
         await service.signIn(email, 'wrong password');
       } catch (err) {
-        equal(err, 'invalid password');
+        assert.match(String(err), /invalid password/);
         return;
       }
       assert(false, 'should not come here');

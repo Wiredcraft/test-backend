@@ -1,6 +1,7 @@
 import { MongoDB } from '../db/mongo';
 import { User as UserModel } from '../model/user';
 import { User as UserEntity } from '../entity/user';
+import { ERROR } from '../config/constant';
 import { encodeWithSalt } from '../util/crypto';
 import assert from 'assert';
 
@@ -14,26 +15,23 @@ export class User {
   async signIn(email: string, password: string) {
     // 1. Find user
     const user = await this.model.getOneByEmail(email);
-    if (!user) {
-      return Promise.reject(`email ${email} not found`);
-    }
+    assert(!!user, ERROR.SERVICE_USER_SIGNIN_NOTFOUND_EMAIL);
 
     // 2. Verify password
     if (user.password !== this.encodePassword(user, password)) {
       // TODO count+1 for count > 2 block the sign in
-      return Promise.reject('invalid password');
+      return Promise.reject(ERROR.SERVICE_USER_SIGNIN_PASSWORD);
     }
 
     // TODO Record user's Geo data
 
-    // Success
     return user;
   }
 
   async signUp(user: UserEntity) {
     // 1. Check if email is registered
     const noOne = await this.model.getOneByEmail(user.email);
-    assert(!noOne, `email '${user.email}' has been register`);
+    assert(!noOne, ERROR.SERVICE_USER_SIGNUP_EMAIL_CONFLICT);
 
     // 2. Encode password
     user.password = this.encodePassword(user);
