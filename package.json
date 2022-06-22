@@ -8,7 +8,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' 'test/**/*.ts' --write",
+    "test": "mocha --require ts-node/register test/**/*.test.ts"
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,15 @@
   },
   "homepage": "https://github.com/Lellansin/test-backend#readme",
   "devDependencies": {
+    "@types/mocha": "^9.1.1",
     "@types/node": "^18.0.0",
+    "mocha": "^10.0.0",
+    "prettier": "^2.7.1",
+    "ts-node": "^10.8.1",
     "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "mongodb": "^3.7.3",
+    "typeorm": "^0.3.6"
   }
 }
