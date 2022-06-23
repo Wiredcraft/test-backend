@@ -82,7 +82,7 @@ describe('Service', () => {
       await userService.signUp(user2);
     });
 
-    it('should follow & unfollow new user', async () => {
+    it('should follow new user', async () => {
       const userModel = new UserModel(db);
       const fromOne = await userModel.getOneByEmail(fromUserEmail);
       assert(fromOne);
@@ -103,6 +103,34 @@ describe('Service', () => {
 
       const toOneUpdated = await userModel.getOneByEmail(toUserEmail);
       equal(toOneUpdated?.followerNum, 1, 'number not match');
+    });
+
+    it('should get followers & followings', async () => {
+      const userModel = new UserModel(db);
+      const toOne = await userModel.getOneByEmail(toUserEmail);
+      assert(toOne);
+
+      const list = await service.getFollowers(toOne, 0);
+      equal(list.length, 1);
+      const [fromOne] = list;
+
+      const list2 = await service.getFollowing(fromOne, 0);
+      equal(list2.length, 1);
+
+      const [one] = list2;
+      equal(String(one._id), String(toOne._id));
+    });
+
+    it('should unfollow the user', async () => {
+      const userModel = new UserModel(db);
+      const fromOne = await userModel.getOneByEmail(fromUserEmail);
+      assert(fromOne);
+
+      const toOne = await userModel.getOneByEmail(toUserEmail);
+      assert(toOne);
+
+      const { _id: fromId } = fromOne,
+        { _id: toId } = toOne;
 
       await service.unfollow(fromId, toId);
 

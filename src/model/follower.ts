@@ -1,10 +1,6 @@
-import assert from 'assert';
 import { ObjectID, Repository } from 'typeorm';
 import { MongoDB } from '../db/mongo';
 import { Follow as Entity } from '../entity/follower';
-import { ERROR } from '../config/constant';
-// @ts-ignore
-import { ObjectId } from 'mongodb';
 
 export enum FollowType {
   FOLLOW,
@@ -51,23 +47,25 @@ export class FollowModel {
   /**
    * Get someone's followers
    * @param toId get one's followers by the toId
+   * @param page page offset
+   * @param limit max number 1 page
    * @returns followers' relationship list
    */
-  async getFollowers(toId: ObjectID) {
+  async getFollowers(toId: ObjectID, page = 0, limit = 10) {
     const repo = await this.getRepo();
-    // TODO pagination
-    return repo.find({ where: { toId } });
+    return repo.find({ where: { toId }, skip: page, take: limit });
   }
 
   /**
    * Get someone's following
    * @param fromId get one's following by the fromId
+   * @param page page offset
+   * @param limit max number 1 page
    * @returns following's relationship list
    */
-  async getFollowing(fromId: ObjectID) {
+  async getFollowing(fromId: ObjectID, page = 0, limit = 10) {
     const repo = await this.getRepo();
-    // TODO pagination
-    return repo.find({ where: { fromId } });
+    return repo.find({ where: { fromId }, skip: page, take: limit });
   }
 
   private async getRepo() {

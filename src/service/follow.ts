@@ -8,6 +8,8 @@ import { CacheService } from './cache';
 // @ts-ignore
 import { ObjectId } from 'mongodb';
 import { ERROR } from '../config/constant';
+import { User } from '../entity/user';
+import { Follow } from '../entity/follower';
 
 export class FollowService {
   userModel: UserModel;
@@ -67,5 +69,30 @@ export class FollowService {
       this.userModel.updateFollowNum(fromId, FollowType.UNFOLLOW),
       this.userModel.updateFollowNum(toId, FollowType.UNFOLLOWED)
     ]);
+  }
+
+  async getFollowers(user: User, page: number, limit = 10) {
+    const relationships = await this.followModel.getFollowers(
+      user._id,
+      page,
+      limit
+    );
+    return this.getUserList(relationships.map(({ fromId }) => fromId));
+  }
+
+  async getFollowing(user: User, page: number, limit = 10) {
+    const relationships = await this.followModel.getFollowing(
+      user._id,
+      page,
+      limit
+    );
+    return this.getUserList(relationships.map(({ toId }) => toId));
+  }
+
+  private async getUserList(ids: ObjectID[]) {
+    return this.userModel.get({
+      select: ['_id', 'name', 'description'],
+      where: { _id: { $in: ids } as any }
+    });
   }
 }
