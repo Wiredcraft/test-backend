@@ -3,9 +3,10 @@ import { strictEqual as equal, strict as assert } from 'assert';
 import { UserService } from '../src/service/user';
 import { User } from '../src/entity/user';
 import { UserModel } from '../src/model/user';
+import { FollowService } from '../src/service/follow';
 
 const name = 'Lellansin';
-const email = 'test@domain';
+const email = 'lellansin@gmail.com';
 
 describe('Service', () => {
   const db = new MongoDB();
@@ -53,45 +54,68 @@ describe('Service', () => {
       equal(user.name, name);
     });
 
-    const newUser2Follow = 'test2@domain';
+    after(async () => {
+      await service.userModel.delete({ email });
+    });
+  });
+
+  describe('Follow', () => {
+    const service = new FollowService(db);
+
+    const fromUserEmail = 'test1@domain';
+    const toUserEmail = 'test2@domain';
+
+    before(async () => {
+      const userService = new UserService(db);
+      const user1 = new User();
+      user1.email = fromUserEmail;
+      user1.name = 'Alan';
+      user1.password = 'password';
+      user1.description = 'nice to meet you';
+      await userService.signUp(user1);
+
+      const user2 = new User();
+      user2.email = toUserEmail;
+      user2.name = 'Bob';
+      user2.password = '123456';
+      user2.description = 'nice to be followed';
+      await userService.signUp(user2);
+    });
 
     it('should follow & unfollow new user', async () => {
-      const user = new User();
-      user.email = newUser2Follow;
-      user.name = 'Alan';
-      user.password = password;
-      user.description = 'nice to be followed';
-      const { _id: toId } = await service.signUp(user);
-
       const userModel = new UserModel(db);
-      const fromOne = await userModel.getOneByEmail(email);
+      const fromOne = await userModel.getOneByEmail(fromUserEmail);
       assert(fromOne);
 
-      const { _id: fromId } = fromOne;
+      const toOne = await userModel.getOneByEmail(toUserEmail);
+      assert(toOne);
+
+      const { _id: fromId } = fromOne,
+        { _id: toId } = toOne;
 
       await service.follow(fromId, toId);
 
       const err = await service.follow(fromId, toId).catch((err: Error) => err);
       assert.match(String(err), /Duplicated follow action/);
 
-      const fromOneUpdated = await userModel.getOneByEmail(email);
+      const fromOneUpdated = await userModel.getOneByEmail(fromUserEmail);
       equal(fromOneUpdated?.followingNum, 1, 'number not match');
 
-      const toOneUpdated = await userModel.getOneByEmail(newUser2Follow);
+      const toOneUpdated = await userModel.getOneByEmail(toUserEmail);
       equal(toOneUpdated?.followerNum, 1, 'number not match');
 
       await service.unfollow(fromId, toId);
 
-      const fromOneUpdated2 = await userModel.getOneByEmail(email);
+      const fromOneUpdated2 = await userModel.getOneByEmail(fromUserEmail);
       equal(fromOneUpdated2?.followingNum, 0, 'number not match');
 
-      const toOneUpdated2 = await userModel.getOneByEmail(newUser2Follow);
+      const toOneUpdated2 = await userModel.getOneByEmail(toUserEmail);
       equal(toOneUpdated2?.followerNum, 0, 'number not match');
     });
 
     after(async () => {
-      await service.userModel.delete({ email });
-      await service.userModel.delete({ email: newUser2Follow });
+      await service.userModel.delete({ email: fromUserEmail });
+      await service.userModel.delete({ email: toUserEmail });
     });
   });
 

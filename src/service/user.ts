@@ -8,9 +8,6 @@ import { User } from '../entity/user';
 import { ERROR } from '../config/constant';
 import { encodeWithSalt } from '../util/crypto';
 
-// @ts-ignore
-import { ObjectId } from 'mongodb';
-
 export class UserService {
   userModel: UserModel;
   followModel: FollowModel;
@@ -58,56 +55,6 @@ export class UserService {
 
     // 3. Data access
     return this.userModel.save(user);
-  }
-
-  /**
-   * Follow a user
-   * @param fromId whom follow
-   * @param toUserId whom to be followed
-   */
-  async follow(fromId: ObjectID, toUserId: string | ObjectId) {
-    const toId = ObjectId(toUserId);
-
-    // 1. Check if is followed
-    const noFollowed = await this.followModel.isFollowed(fromId, toId);
-    assert(!noFollowed, ERROR.SERVICE_USER_FOLLOW_DUPLICATED);
-
-    // 2. Lock to avoid repeat
-    const lockKey = `Follow-${fromId}-${toId}`;
-    assert(await this.cache.lock(lockKey), ERROR.COMMON_CACHE_LOCK_LOCKED);
-
-    // 3. Insert relationship
-    await this.followModel.follow(fromId, toId);
-
-    // 4. Count follow number
-    await Promise.all([
-      this.cache.unlock(lockKey),
-      this.userModel.updateFollowNum(fromId, FollowType.FOLLOW),
-      this.userModel.updateFollowNum(toId, FollowType.FOLLOWED)
-      // Also can be cahced on Redis here
-    ]);
-  }
-
-  /**
-   * Follow a user
-   * @param fromId whom unfollow
-   * @param toUserId whom to be unfollowed
-   */
-  async unfollow(fromId: ObjectID, toUserId: string | ObjectID) {
-    const toId = ObjectId(toUserId);
-
-    const result = await this.followModel.unfollow(fromId, toId);
-    // If no affected
-    if (!result?.affected) {
-      // do nothing
-      return;
-    }
-    // Else there is affected
-    await Promise.all([
-      // update count
-      this.userModel.updateFollowNum(fromId, FollowType.UNFOLLOW),
-      this.userModel.updateFollowNum(toId, FollowType.UNFOLLOWED)
-    ]);
   }
 
   private encodePassword(user: User, password?: string): string {
