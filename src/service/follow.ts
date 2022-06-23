@@ -9,12 +9,11 @@ import { CacheService } from './cache';
 import { ObjectId } from 'mongodb';
 import { ERROR } from '../config/constant';
 import { User } from '../entity/user';
-import { Follow } from '../entity/follower';
 
 export class FollowService {
-  userModel: UserModel;
-  followModel: FollowModel;
-  cache = new CacheService();
+  private userModel: UserModel;
+  private followModel: FollowModel;
+  private cache = new CacheService();
 
   constructor(db: MongoDB) {
     this.userModel = new UserModel(db);
@@ -71,6 +70,14 @@ export class FollowService {
     ]);
   }
 
+  /**
+   * Get user's followers
+   *
+   * @param user whose followers to be found
+   * @param page page from 0
+   * @param limit how many followers will be found in 1 page
+   * @returns User[]
+   */
   async getFollowers(user: User, page: number, limit = 10) {
     const relationships = await this.followModel.getFollowers(
       user._id,
@@ -80,6 +87,14 @@ export class FollowService {
     return this.getUserList(relationships.map(({ fromId }) => fromId));
   }
 
+  /**
+   * Get user's following
+   *
+   * @param user whose following to be found
+   * @param page page from 0
+   * @param limit how many following will be found in 1 page
+   * @returns User[]
+   */
   async getFollowing(user: User, page: number, limit = 10) {
     const relationships = await this.followModel.getFollowing(
       user._id,

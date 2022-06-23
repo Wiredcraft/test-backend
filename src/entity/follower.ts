@@ -6,12 +6,21 @@ export class Follow {
   @ObjectIdColumn()
   _id: ObjectID;
 
+  /*
+   * follower id
+   */
   @ObjectIdColumn({ primary: false, name: 'fromId' })
-  fromId: ObjectID; // follower id
+  fromId: ObjectID;
 
+  /*
+   * followed id
+   */
   @ObjectIdColumn({ primary: false, name: 'toId' })
-  toId: ObjectID; // followed id
+  toId: ObjectID;
 
+  /*
+   * user created date
+   */
   @Column()
-  createdAt: Date = new Date(); // user created date
+  createdAt: Date = new Date();
 }

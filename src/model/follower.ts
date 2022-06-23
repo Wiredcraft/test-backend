@@ -10,19 +10,32 @@ export enum FollowType {
 }
 
 export class FollowModel {
-  repo: Repository<Entity>;
+  private repo: Repository<Entity>;
   private db: MongoDB;
 
   constructor(db: MongoDB) {
     this.db = db;
   }
 
+  /**
+   * Check if there is a follow relationship
+   *
+   * @param fromId whom follow
+   * @param toId whom is followed
+   * @returns boolean
+   */
   async isFollowed(fromId: ObjectID, toId: ObjectID) {
     const repo = await this.getRepo();
     const result = await repo.findOne({ where: { fromId, toId } });
     return !!result;
   }
 
+  /**
+   * Build a follow relationship
+   *
+   * @param fromId whom follow
+   * @param toId whom to be followed
+   */
   async follow(fromId: ObjectID, toId: ObjectID) {
     // Can't follow itself
     if (String(fromId) === String(toId)) {
@@ -35,6 +48,12 @@ export class FollowModel {
     return repo.save(entity);
   }
 
+  /**
+   * Break a follow relationship
+   *
+   * @param fromId whom follow
+   * @param toId whom to be unfollowed
+   */
   async unfollow(fromId: ObjectID, toId: ObjectID) {
     // Can't unfollow itself
     if (String(fromId) === String(toId)) {
@@ -46,6 +65,7 @@ export class FollowModel {
 
   /**
    * Get someone's followers
+   *
    * @param toId get one's followers by the toId
    * @param page page offset
    * @param limit max number 1 page

@@ -10,72 +10,92 @@ import {
 
 @Entity()
 export class User {
+  /**
+   * user id
+   */
   @IsOptional()
   @ObjectIdColumn()
-  _id: ObjectID; // user id
+  _id: ObjectID;
 
+  /**
+   * user email
+   */
   @IsRequired()
   @IsString()
   @Length(3, 254)
   @Column({
     length: 254
   })
-  email: string; // user email
+  email: string;
 
+  /**
+   * user name
+   */
   @IsRequired()
   @IsString()
   @Length(8, 100)
   @Column({
     length: 100
   })
-  name: string; // user name
+  name: string;
 
+  /**
+   * date of birth
+   */
   @IsOptional()
   @IsDate()
   @Column()
-  dob: Date = new Date(); // date of birth
+  dob: Date = new Date();
 
+  /**
+   *  password
+   */
   @IsRequired()
   @IsString()
   @Length(6, 32)
   @Column({
     length: 32
   })
-  password: string; // password
-
-  @IsOptional()
-  @IsString()
-  @Length(0, 100)
-  @Column({
-    length: 128
-  })
-  address: string = ''; // user address
-
-  @IsOptional()
-  @IsString()
-  @Length(0, 100)
-  @Column({
-    length: 128
-  })
-  description: string = ''; // user description
-
-  @IsDate()
-  @Column()
-  createdAt: Date = new Date(); // user created date
+  password: string;
 
   /**
-   * Followers
-   *
-   * Default save 1st page (top 10 followers) data on current document.
+   * user address
+   */
+  @IsOptional()
+  @IsString()
+  @Length(0, 100)
+  @Column({
+    length: 128
+  })
+  address: string = '';
+
+  /**
+   * user description
+   */
+  @IsOptional()
+  @IsString()
+  @Length(0, 100)
+  @Column({
+    length: 128
+  })
+  description: string = '';
+
+  /**
+   * user created date
+   */
+  @IsDate()
+  @Column()
+  createdAt: Date = new Date();
+
+  /**
+   * followers number
    */
   @IsOptional()
   @Column()
   followerNum = 0;
 
   /**
-   * Following
-   *
-   * Default save 1st page (top 10 following) data on current document.
+   * following number
    */
   @IsOptional()
   @Column()

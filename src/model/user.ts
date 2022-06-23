@@ -14,33 +14,64 @@ import { ObjectId } from 'mongodb';
 import { FollowType } from './follower';
 
 export class UserModel {
-  repo: Repository<Entity>;
-  db: MongoDB;
+  private repo: Repository<Entity>;
+  private db: MongoDB;
 
   constructor(db: MongoDB) {
     this.db = db;
   }
 
+  /**
+   * Get users
+   *
+   * @param condition query condition to be match
+   * @returns User[]
+   */
   async get(condition: FindManyOptions<Entity>) {
     const repo = await this.getRepo();
     return repo.find(condition);
   }
 
+  /**
+   * Save user data
+   *
+   * @param user User data to be saved
+   * @returns
+   */
   async save(user: Entity) {
     const repo = await this.getRepo();
     return repo.save(user);
   }
 
+  /**
+   * Update user data
+   *
+   * @param condition query condition to be match
+   * @param user user data to be updated
+   * @returns
+   */
   async update(condition: FindOptionsWhere<Entity>, user: Entity) {
     const repo = await this.getRepo();
     return repo.update(condition, user);
   }
 
+  /**
+   * Delete user
+   *
+   * @param condition query condition to be match
+   * @returns DeleteResult
+   */
   async delete(condition: FindOptionsWhere<Entity>) {
     const repo = await this.getRepo();
     return repo.delete(condition);
   }
 
+  /**
+   * Get user by ID
+   *
+   * @param id user id
+   * @returns User | null
+   */
   async getOneById(id: string | ObjectID): Promise<Entity | null> {
     if (!(id instanceof ObjectId)) {
       id = ObjectId(id);
@@ -50,6 +81,12 @@ export class UserModel {
     return results[0] ?? null;
   }
 
+  /**
+   * Get user by email
+   *
+   * @param email user email
+   * @returns User
+   */
   async getOneByEmail(email: string): Promise<Entity | null> {
     assert(typeof email === 'string', ERROR.MODEL_USER_GETONEBYEMAIL_PARAMS);
     const results = await this.get({ where: { email }, take: 1 });

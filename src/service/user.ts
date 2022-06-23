@@ -1,21 +1,15 @@
 import assert from 'assert';
-import { ObjectID } from 'typeorm';
 import { MongoDB } from '../db/mongo';
 import { UserModel } from '../model/user';
-import { FollowModel, FollowType } from '../model/follower';
-import { CacheService } from './cache';
 import { User } from '../entity/user';
 import { ERROR } from '../config/constant';
 import { encodeWithSalt } from '../util/crypto';
 
 export class UserService {
-  userModel: UserModel;
-  followModel: FollowModel;
-  cache = new CacheService();
+  private userModel: UserModel;
 
   constructor(db: MongoDB) {
     this.userModel = new UserModel(db);
-    this.followModel = new FollowModel(db);
   }
 
   /**

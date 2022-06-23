@@ -109,8 +109,9 @@ describe('Model', () => {
       assert(!followed);
     });
 
-    after(() => {
-      return model.repo.delete({});
+    after(async () => {
+      const repo = await db.getFollower();
+      return repo.delete({});
     });
   });
 

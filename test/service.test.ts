@@ -55,7 +55,7 @@ describe('Service', () => {
     });
 
     after(async () => {
-      await service.userModel.delete({ email });
+      await new UserModel(db).delete({ email });
     });
   });
 
@@ -142,8 +142,8 @@ describe('Service', () => {
     });
 
     after(async () => {
-      await service.userModel.delete({ email: fromUserEmail });
-      await service.userModel.delete({ email: toUserEmail });
+      await new UserModel(db).delete({ email: fromUserEmail });
+      await new UserModel(db).delete({ email: toUserEmail });
     });
   });
 
