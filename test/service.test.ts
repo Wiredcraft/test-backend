@@ -4,7 +4,6 @@ import { AccountService } from '../src/service/account';
 import { User } from '../src/entity/user';
 import { UserModel } from '../src/model/user';
 import { RelationService } from '../src/service/relation';
-import { FindOperator, LessThan } from 'typeorm';
 import { UserService } from '../src/service/user';
 
 const name = 'Lellansin';
@@ -66,6 +65,7 @@ describe('Service', () => {
     const model = new UserModel(db);
 
     let closeUser: User;
+    let centerUser: User;
     let farUser: User;
 
     before(async () => {
@@ -77,6 +77,14 @@ describe('Service', () => {
       user.location = [0, 0];
       closeUser = await model.save(user);
 
+      const user1 = new User();
+      user1.email = 'test@user1';
+      user1.name = name;
+      user1.password = '123456';
+      user1.description = 'nice to meet you';
+      user1.location = [3, 3];
+      centerUser = await model.save(user1);
+
       const user2 = new User();
       user2.email = 'test@user';
       user2.name = name;
@@ -87,16 +95,17 @@ describe('Service', () => {
     });
 
     it('should get nearby user list', async () => {
-      const result = await service.getNearbyList([3, 3], 0);
-      equal(result.length, 2);
+      const result = await service.getNearbyList(centerUser, 0);
+      equal(result.length, 3); // 3 users including center user itself
 
-      const [one, two] = result;
+      const [_, one, two] = result;
       equal(String(one._id), String(closeUser._id));
       equal(String(two._id), String(farUser._id));
     });
 
     after(async () => {
       await model.delete({ _id: closeUser._id });
+      await model.delete({ _id: centerUser._id });
       await model.delete({ _id: farUser._id });
     });
   });
