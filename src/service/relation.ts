@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { ObjectID } from 'typeorm';
 import { MongoDB } from '../db/mongo';
-import { FollowModel, FollowType } from '../model/follower';
+import { RelationModel, FollowType } from '../model/relation';
 import { UserModel } from '../model/user';
 import { CacheService } from './cache';
 
@@ -10,14 +10,14 @@ import { ObjectId } from 'mongodb';
 import { ERROR } from '../config/constant';
 import { User } from '../entity/user';
 
-export class FollowService {
+export class RelationService {
   private userModel: UserModel;
-  private followModel: FollowModel;
+  private model: RelationModel;
   private cache = new CacheService();
 
   constructor(db: MongoDB) {
     this.userModel = new UserModel(db);
-    this.followModel = new FollowModel(db);
+    this.model = new RelationModel(db);
   }
 
   /**
@@ -29,7 +29,7 @@ export class FollowService {
     const toId = ObjectId(toUserId);
 
     // 1. Check if is followed
-    const noFollowed = await this.followModel.isFollowed(fromId, toId);
+    const noFollowed = await this.model.isFollowed(fromId, toId);
     assert(!noFollowed, ERROR.SERVICE_USER_FOLLOW_DUPLICATED);
 
     // 2. Lock to avoid repeat
@@ -37,7 +37,7 @@ export class FollowService {
     assert(await this.cache.lock(lockKey), ERROR.COMMON_CACHE_LOCK_LOCKED);
 
     // 3. Insert relationship
-    await this.followModel.follow(fromId, toId);
+    await this.model.follow(fromId, toId);
 
     // 4. Count follow number
     await Promise.all([
@@ -56,7 +56,7 @@ export class FollowService {
   async unfollow(fromId: ObjectID, toUserId: string | ObjectID) {
     const toId = ObjectId(toUserId);
 
-    const result = await this.followModel.unfollow(fromId, toId);
+    const result = await this.model.unfollow(fromId, toId);
     // If no affected
     if (!result?.affected) {
       // do nothing
@@ -79,11 +79,7 @@ export class FollowService {
    * @returns User[]
    */
   async getFollowers(user: User, page: number, limit = 10) {
-    const relationships = await this.followModel.getFollowers(
-      user._id,
-      page,
-      limit
-    );
+    const relationships = await this.model.getFollowers(user._id, page, limit);
     return this.getUserList(relationships.map(({ fromId }) => fromId));
   }
 
@@ -96,11 +92,7 @@ export class FollowService {
    * @returns User[]
    */
   async getFollowing(user: User, page: number, limit = 10) {
-    const relationships = await this.followModel.getFollowing(
-      user._id,
-      page,
-      limit
-    );
+    const relationships = await this.model.getFollowing(user._id, page, limit);
     return this.getUserList(relationships.map(({ toId }) => toId));
   }
 

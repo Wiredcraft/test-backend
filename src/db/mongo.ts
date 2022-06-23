@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Follow } from '../entity/follower';
+import { Relation } from '../entity/relation';
 import { User } from '../entity/user';
 
 export class MongoDB {
@@ -13,7 +13,7 @@ export class MongoDB {
       username: 'root',
       password: '',
       database: 'test-backend',
-      entities: [User, Follow],
+      entities: [User, Relation],
       synchronize: true,
       logging: true,
       useUnifiedTopology: true
@@ -34,7 +34,7 @@ export class MongoDB {
 
   async getFollower() {
     const ds = await this.getDataSource();
-    return ds.getRepository(Follow);
+    return ds.getRepository(Relation);
   }
 
   close() {

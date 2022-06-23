@@ -1,6 +1,6 @@
 import { ObjectID, Repository } from 'typeorm';
 import { MongoDB } from '../db/mongo';
-import { Follow as Entity } from '../entity/follower';
+import { Relation as Entity } from '../entity/relation';
 
 export enum FollowType {
   FOLLOW,
@@ -9,7 +9,7 @@ export enum FollowType {
   UNFOLLOWED
 }
 
-export class FollowModel {
+export class RelationModel {
   private repo: Repository<Entity>;
   private db: MongoDB;
 

@@ -1,9 +1,9 @@
 import { MongoDB } from '../src/db/mongo';
 import { strictEqual as equal, strict as assert } from 'assert';
-import { UserService } from '../src/service/user';
+import { AccountService } from '../src/service/account';
 import { User } from '../src/entity/user';
 import { UserModel } from '../src/model/user';
-import { FollowService } from '../src/service/follow';
+import { RelationService } from '../src/service/relation';
 
 const name = 'Lellansin';
 const email = 'lellansin@gmail.com';
@@ -11,8 +11,8 @@ const email = 'lellansin@gmail.com';
 describe('Service', () => {
   const db = new MongoDB();
 
-  describe('User', () => {
-    const service = new UserService(db);
+  describe('Account', () => {
+    const service = new AccountService(db);
     const password = '123456';
 
     it('sign up a user', async () => {
@@ -59,27 +59,27 @@ describe('Service', () => {
     });
   });
 
-  describe('Follow', () => {
-    const service = new FollowService(db);
+  describe('Relation', () => {
+    const service = new RelationService(db);
 
     const fromUserEmail = 'test1@domain';
     const toUserEmail = 'test2@domain';
 
     before(async () => {
-      const userService = new UserService(db);
+      const accountService = new AccountService(db);
       const user1 = new User();
       user1.email = fromUserEmail;
       user1.name = 'Alan';
       user1.password = 'password';
       user1.description = 'nice to meet you';
-      await userService.signUp(user1);
+      await accountService.signUp(user1);
 
       const user2 = new User();
       user2.email = toUserEmail;
       user2.name = 'Bob';
       user2.password = '123456';
       user2.description = 'nice to be followed';
-      await userService.signUp(user2);
+      await accountService.signUp(user2);
     });
 
     it('should follow new user', async () => {

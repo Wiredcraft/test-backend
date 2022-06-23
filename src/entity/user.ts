@@ -100,4 +100,13 @@ export class User {
   @IsOptional()
   @Column()
   followingNum = 0;
+
+  /**
+   * Location
+   *
+   * Saving the [longitude, latitude] data while user permit
+   */
+  @IsOptional()
+  @Column()
+  location: [number, number];
 }

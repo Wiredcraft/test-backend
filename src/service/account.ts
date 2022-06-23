@@ -5,7 +5,7 @@ import { User } from '../entity/user';
 import { ERROR } from '../config/constant';
 import { encodeWithSalt } from '../util/crypto';
 
-export class UserService {
+export class AccountService {
   private userModel: UserModel;
 
   constructor(db: MongoDB) {

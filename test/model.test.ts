@@ -3,7 +3,7 @@ import { MongoDB } from '../src/db/mongo';
 import { strictEqual as equal, strict as assert } from 'assert';
 import { ObjectID } from 'typeorm';
 import { UserModel } from '../src/model/user';
-import { FollowModel, FollowType } from '../src/model/follower';
+import { RelationModel, FollowType } from '../src/model/relation';
 
 const { ObjectId } = require('mongodb');
 const name = 'Lellansin';
@@ -25,7 +25,7 @@ describe('Model', () => {
       userCreatedId = result._id;
     });
 
-    it('get the user created', async () => {
+    it('get the user created by email & id', async () => {
       const user1 = await model.getOneByEmail(email);
       assert(user1, 'user not found');
       equal(user1.email, email);
@@ -38,10 +38,14 @@ describe('Model', () => {
     });
 
     it('update the user created', async () => {
+      const email = 'lellansin@qq.com';
       const user = new User();
-      user.email = 'lellansin@qq.com';
+      user.email = email;
       const { affected } = await model.update({ _id: userCreatedId }, user);
       equal(affected, 1);
+
+      const user2 = await model.getOneById(String(userCreatedId));
+      equal(user2?.email, email);
     });
 
     it('should update the user follow num', async () => {
@@ -58,8 +62,8 @@ describe('Model', () => {
     });
   });
 
-  describe('Follow', () => {
-    const model = new FollowModel(db);
+  describe('Relation', () => {
+    const model = new RelationModel(db);
 
     // 10 followers
     const fromIds = Array(10)

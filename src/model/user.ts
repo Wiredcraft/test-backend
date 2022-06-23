@@ -11,7 +11,7 @@ import { User as Entity } from '../entity/user';
 import { ERROR } from '../config/constant';
 // @ts-ignore
 import { ObjectId } from 'mongodb';
-import { FollowType } from './follower';
+import { FollowType } from './relation';
 
 export class UserModel {
   private repo: Repository<Entity>;

@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 
 @Entity()
-export class Follow {
+export class Relation {
   @ObjectIdColumn()
   _id: ObjectID;
 
