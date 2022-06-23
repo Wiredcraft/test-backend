@@ -73,7 +73,7 @@ export class RelationModel {
    */
   async getFollowers(toId: ObjectID, page = 0, limit = 10) {
     const repo = await this.getRepo();
-    return repo.find({ where: { toId }, skip: page, take: limit });
+    return repo.find({ where: { toId }, skip: page * limit, take: limit });
   }
 
   /**
@@ -85,7 +85,7 @@ export class RelationModel {
    */
   async getFollowing(fromId: ObjectID, page = 0, limit = 10) {
     const repo = await this.getRepo();
-    return repo.find({ where: { fromId }, skip: page, take: limit });
+    return repo.find({ where: { fromId }, skip: page * limit, take: limit });
   }
 
   private async getRepo() {

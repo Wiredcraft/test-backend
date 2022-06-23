@@ -119,7 +119,10 @@ export class UserModel {
     const collection = mongo.db('test-backend').collection('user');
 
     let count = -1;
-    let updateRes: any = {};
+    let updateRes: {
+      modifiedCount: number;
+      message: object;
+    };
     switch (type) {
       // follow +1
       case FollowType.FOLLOW:

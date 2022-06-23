@@ -30,7 +30,7 @@ export class RelationService {
 
     // 1. Check if is followed
     const noFollowed = await this.model.isFollowed(fromId, toId);
-    assert(!noFollowed, ERROR.SERVICE_USER_FOLLOW_DUPLICATED);
+    assert(!noFollowed, ERROR.SERVICE_RELATION_FOLLOW_DUPLICATED);
 
     // 2. Lock to avoid repeat
     const lockKey = `Follow-${fromId}-${toId}`;
