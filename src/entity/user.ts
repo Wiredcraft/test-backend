@@ -62,4 +62,22 @@ export class User {
   @IsDate()
   @Column()
   createdAt: Date = new Date(); // user created date
+
+  /**
+   * Followers
+   *
+   * Default save 1st page (top 10 followers) data on current document.
+   */
+  @IsOptional()
+  @Column()
+  followerNum = 0;
+
+  /**
+   * Following
+   *
+   * Default save 1st page (top 10 following) data on current document.
+   */
+  @IsOptional()
+  @Column()
+  followingNum = 0;
 }

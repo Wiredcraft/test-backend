@@ -1,9 +1,9 @@
-import { User as UserModel } from '../src/model/user';
 import { User } from '../src/entity/user';
 import { MongoDB } from '../src/db/mongo';
 import { strictEqual as equal, strict as assert } from 'assert';
 import { ObjectID } from 'typeorm';
-import { FollowerModel } from '../src/model/follower';
+import { UserModel } from '../src/model/user';
+import { FollowModel, FollowType } from '../src/model/follower';
 
 const { ObjectId } = require('mongodb');
 const name = 'Lellansin';
@@ -21,7 +21,7 @@ describe('Model', () => {
       user.email = email;
       user.name = name;
       user.password = '123456';
-      const result = await model.create(user);
+      const result = await model.save(user);
       userCreatedId = result._id;
     });
 
@@ -44,6 +44,14 @@ describe('Model', () => {
       equal(affected, 1);
     });
 
+    it('should update the user follow num', async () => {
+      const result = await model.updateFollowNum(
+        userCreatedId,
+        FollowType.FOLLOW
+      );
+      equal(result.affected, 1);
+    });
+
     it('delete the created user', async () => {
       const { affected } = await model.delete({ _id: userCreatedId });
       equal(affected, 1);
@@ -51,7 +59,7 @@ describe('Model', () => {
   });
 
   describe('Follow', () => {
-    const model = new FollowerModel(db);
+    const model = new FollowModel(db);
 
     // 10 followers
     const fromIds = Array(10)
@@ -79,11 +87,26 @@ describe('Model', () => {
       assert(Array.isArray(following));
       assert(following.length);
 
-      // get 1st followed one's followers
+      // get followed one's followers
       const [one] = following;
       const followers = await model.getFollowing(one.toId);
       assert(Array.isArray(followers));
       assert(followers.length);
+    });
+
+    it('should unfollow', async () => {
+      const [fromId] = fromIds;
+      const following = await model.getFollowing(fromId);
+      const { toId } = following[0];
+
+      const flag = await model.isFollowed(fromId, toId);
+      assert(flag);
+
+      const result = await model.unfollow(fromId, toId);
+      assert(result?.affected);
+
+      const followed = await model.isFollowed(fromId, toId);
+      assert(!followed);
     });
 
     after(() => {

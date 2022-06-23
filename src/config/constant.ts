@@ -42,5 +42,17 @@ export const ERROR = {
       statusCode: 409,
       message: 'Registered email conflict'
     });
+  },
+  get SERVICE_USER_FOLLOW_DUPLICATED() {
+    return new CodeError({
+      statusCode: 409,
+      message: 'Duplicated follow action'
+    });
+  },
+  get COMMON_CACHE_LOCK_LOCKED() {
+    return new CodeError({
+      statusCode: 423,
+      message: 'Too much request, please try again later'
+    });
   }
 };

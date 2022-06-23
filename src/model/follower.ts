@@ -6,9 +6,16 @@ import { ERROR } from '../config/constant';
 // @ts-ignore
 import { ObjectId } from 'mongodb';
 
-export class FollowerModel {
+export enum FollowType {
+  FOLLOW,
+  FOLLOWED,
+  UNFOLLOW,
+  UNFOLLOWED
+}
+
+export class FollowModel {
   repo: Repository<Entity>;
-  db: MongoDB;
+  private db: MongoDB;
 
   constructor(db: MongoDB) {
     this.db = db;
@@ -22,7 +29,7 @@ export class FollowerModel {
 
   async follow(fromId: ObjectID, toId: ObjectID) {
     // Can't follow itself
-    if (fromId === toId) {
+    if (String(fromId) === String(toId)) {
       return null;
     }
     const repo = await this.getRepo();
@@ -30,6 +37,15 @@ export class FollowerModel {
     entity.fromId = fromId;
     entity.toId = toId;
     return repo.save(entity);
+  }
+
+  async unfollow(fromId: ObjectID, toId: ObjectID) {
+    // Can't unfollow itself
+    if (String(fromId) === String(toId)) {
+      return null;
+    }
+    const repo = await this.getRepo();
+    return repo.delete({ fromId, toId });
   }
 
   /**
@@ -44,7 +60,7 @@ export class FollowerModel {
   }
 
   /**
-   * Get someone's following list
+   * Get someone's following
    * @param fromId get one's following by the fromId
    * @returns following's relationship list
    */

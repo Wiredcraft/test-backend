@@ -3,7 +3,6 @@ import { Follow } from '../entity/follower';
 import { User } from '../entity/user';
 
 export class MongoDB {
-  inited = false;
   dataSource: DataSource;
 
   constructor() {
@@ -22,9 +21,8 @@ export class MongoDB {
   }
 
   private async getDataSource() {
-    if (!this.inited) {
+    if (!this.dataSource.isInitialized) {
       await this.dataSource.initialize();
-      this.inited = true;
     }
     return this.dataSource;
   }
