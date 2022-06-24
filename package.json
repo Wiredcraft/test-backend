@@ -23,15 +23,22 @@
   },
   "homepage": "https://github.com/Lellansin/test-backend#readme",
   "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/koa": "^2.13.4",
+    "@types/koa__router": "^8.0.11",
     "@types/mocha": "^9.1.1",
     "@types/node": "^18.0.0",
     "class-validator": "^0.13.2",
     "mocha": "^10.0.0",
     "prettier": "^2.7.1",
     "ts-node": "^10.8.1",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "why-is-node-running": "^2.2.2"
   },
   "dependencies": {
+    "@koa/router": "^10.1.1",
+    "glob": "^8.0.3",
+    "koa": "^2.13.4",
     "mongodb": "^3.7.3",
     "typeorm": "^0.3.6"
   }

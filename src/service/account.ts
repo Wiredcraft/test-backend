@@ -4,13 +4,12 @@ import { UserModel } from '../model/user';
 import { User } from '../entity/user';
 import { ERROR } from '../config/constant';
 import { encodeWithSalt } from '../util/crypto';
+import { Inject, Provide } from '../util/container';
 
+@Provide()
 export class AccountService {
+  @Inject()
   private userModel: UserModel;
-
-  constructor(db: MongoDB) {
-    this.userModel = new UserModel(db);
-  }
 
   /**
    * Sign in with email & password

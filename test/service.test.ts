@@ -5,15 +5,16 @@ import { User } from '../src/entity/user';
 import { UserModel } from '../src/model/user';
 import { RelationService } from '../src/service/relation';
 import { UserService } from '../src/service/user';
+import { getInstance } from '../src/util/container';
 
 const name = 'Lellansin';
 const email = 'lellansin@gmail.com';
 
 describe('Service', () => {
-  const db = new MongoDB();
+  const db = getInstance<MongoDB>('db');
 
   describe('Account', () => {
-    const service = new AccountService(db);
+    const service = getInstance<AccountService>('accountService');
     const password = '123456';
 
     it('sign up a user', async () => {
@@ -56,13 +57,14 @@ describe('Service', () => {
     });
 
     after(async () => {
-      await new UserModel(db).delete({ email });
+      const model = getInstance<UserModel>('userModel');
+      await model.delete({ email });
     });
   });
 
   describe('User', () => {
-    const service = new UserService(db);
-    const model = new UserModel(db);
+    const service = getInstance<UserService>('userService');
+    const model = getInstance<UserModel>('userModel');
 
     let closeUser: User;
     let centerUser: User;
@@ -111,13 +113,13 @@ describe('Service', () => {
   });
 
   describe('Relation', () => {
-    const service = new RelationService(db);
+    const service = getInstance<RelationService>('relationService');
 
     const fromUserEmail = 'test1@domain';
     const toUserEmail = 'test2@domain';
 
     before(async () => {
-      const accountService = new AccountService(db);
+      const accountService = getInstance<AccountService>('accountService');
       const user1 = new User();
       user1.email = fromUserEmail;
       user1.name = 'Alan';
@@ -134,7 +136,7 @@ describe('Service', () => {
     });
 
     it('should follow new user', async () => {
-      const userModel = new UserModel(db);
+      const userModel = getInstance<UserModel>('userModel');
       const fromOne = await userModel.getOneByEmail(fromUserEmail);
       assert(fromOne);
 
@@ -157,7 +159,7 @@ describe('Service', () => {
     });
 
     it('should get followers & followings', async () => {
-      const userModel = new UserModel(db);
+      const userModel = getInstance<UserModel>('userModel');
       const toOne = await userModel.getOneByEmail(toUserEmail);
       assert(toOne);
 
@@ -173,7 +175,7 @@ describe('Service', () => {
     });
 
     it('should unfollow the user', async () => {
-      const userModel = new UserModel(db);
+      const userModel = getInstance<UserModel>('userModel');
       const fromOne = await userModel.getOneByEmail(fromUserEmail);
       assert(fromOne);
 
@@ -193,8 +195,9 @@ describe('Service', () => {
     });
 
     after(async () => {
-      await new UserModel(db).delete({ email: fromUserEmail });
-      await new UserModel(db).delete({ email: toUserEmail });
+      const userModel = getInstance<UserModel>('userModel');
+      await userModel.delete({ email: fromUserEmail });
+      await userModel.delete({ email: toUserEmail });
     });
   });
 

@@ -1,6 +1,7 @@
 import { ObjectID, Repository } from 'typeorm';
 import { MongoDB } from '../db/mongo';
 import { Relation as Entity } from '../entity/relation';
+import { Inject, Provide } from '../util/container';
 
 export enum FollowType {
   FOLLOW,
@@ -9,13 +10,12 @@ export enum FollowType {
   UNFOLLOWED
 }
 
+@Provide()
 export class RelationModel {
   private repo: Repository<Entity>;
-  private db: MongoDB;
 
-  constructor(db: MongoDB) {
-    this.db = db;
-  }
+  @Inject()
+  private db: MongoDB;
 
   /**
    * Check if there is a follow relationship

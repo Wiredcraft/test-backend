@@ -1,8 +1,9 @@
 import { MongoDB } from '../src/db/mongo';
 import { strict } from 'assert/strict';
+import { getInstance } from '../src/util/container';
 
 describe('DB', () => {
-  const db = new MongoDB();
+  const db = getInstance<MongoDB>('db');
 
   describe('User', () => {
     it('findAll', async () => {

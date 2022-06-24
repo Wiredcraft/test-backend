@@ -1,19 +1,20 @@
+import { ObjectID } from 'typeorm';
+import { strictEqual as equal, strict as assert } from 'assert';
 import { User } from '../src/entity/user';
 import { MongoDB } from '../src/db/mongo';
-import { strictEqual as equal, strict as assert } from 'assert';
-import { ObjectID } from 'typeorm';
 import { UserModel } from '../src/model/user';
 import { RelationModel, FollowType } from '../src/model/relation';
+import { getInstance } from '../src/util/container';
 
 const { ObjectId } = require('mongodb');
 const name = 'Lellansin';
 const email = 'lellansin@gmail.com';
 
 describe('Model', () => {
-  const db = new MongoDB();
+  const db = getInstance<MongoDB>('db');
 
   describe('User', () => {
-    const model = new UserModel(db);
+    const model = getInstance<UserModel>('userModel');
     let userCreatedId: ObjectID;
 
     it('create a user', async () => {
@@ -63,7 +64,7 @@ describe('Model', () => {
   });
 
   describe('Relation', () => {
-    const model = new RelationModel(db);
+    const model = getInstance<RelationModel>('relationModel');
 
     // 10 followers
     const fromIds = Array(10)

@@ -9,16 +9,17 @@ import { CacheService } from './cache';
 import { ObjectId } from 'mongodb';
 import { ERROR } from '../config/constant';
 import { User } from '../entity/user';
+import { Inject, Provide } from '../util/container';
 
+@Provide()
 export class RelationService {
+  @Inject()
   private userModel: UserModel;
-  private model: RelationModel;
-  private cache = new CacheService();
 
-  constructor(db: MongoDB) {
-    this.userModel = new UserModel(db);
-    this.model = new RelationModel(db);
-  }
+  @Inject('relationModel')
+  private model: RelationModel;
+
+  private cache = new CacheService();
 
   /**
    * Follow a user

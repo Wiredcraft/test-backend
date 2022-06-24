@@ -3,13 +3,12 @@ import { MongoDB } from '../db/mongo';
 import { User } from '../entity/user';
 import { ERROR } from '../config/constant';
 import { UserModel } from '../model/user';
+import { Inject, Provide } from '../util/container';
 
+@Provide()
 export class UserService {
+  @Inject('userModel')
   private model: UserModel;
-
-  constructor(db: MongoDB) {
-    this.model = new UserModel(db);
-  }
 
   /**
    * From given user return the nearby users

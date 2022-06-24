@@ -12,14 +12,14 @@ import { ERROR } from '../config/constant';
 // @ts-ignore
 import { ObjectId } from 'mongodb';
 import { FollowType } from './relation';
+import { Inject, Provide } from '../util/container';
 
+@Provide()
 export class UserModel {
   private repo: Repository<Entity>;
-  private db: MongoDB;
 
-  constructor(db: MongoDB) {
-    this.db = db;
-  }
+  @Inject()
+  private db: MongoDB;
 
   /**
    * Get users

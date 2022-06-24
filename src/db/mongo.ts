@@ -1,23 +1,33 @@
-import { DataSource } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { Entities } from '../entity';
 import { Relation } from '../entity/relation';
 import { User } from '../entity/user';
+import {
+  Config,
+  ContainerClassScope,
+  Init,
+  Provide,
+  Scope
+} from '../util/container';
 
+@Provide('db')
+@Scope(ContainerClassScope.Singleton)
 export class MongoDB {
   dataSource: DataSource;
 
-  constructor() {
-    this.dataSource = new DataSource({
-      type: 'mongodb',
-      host: 'localhost',
-      port: 27017,
-      username: 'root',
-      password: '',
-      database: 'test-backend',
-      entities: [User, Relation],
-      synchronize: true,
-      logging: true,
-      useUnifiedTopology: true
-    });
+  @Config('mongo')
+  config: DataSourceOptions;
+
+  @Init()
+  init() {
+    this.dataSource = new DataSource(
+      Object.assign(this.config, {
+        // default config
+        entities: Entities,
+        synchronize: true,
+        useUnifiedTopology: true
+      })
+    );
   }
 
   private async getDataSource() {
