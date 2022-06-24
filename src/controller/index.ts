@@ -1,4 +1,9 @@
 import { AccountController } from './account';
+import { HomeController } from './home';
 import { UserController } from './user';
 
-export const ControllerClasses = [AccountController, UserController];
+export const ControllerClasses = [
+  HomeController,
+  AccountController,
+  UserController
+];

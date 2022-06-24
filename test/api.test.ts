@@ -20,6 +20,12 @@ describe('APIs', () => {
     request = supertest(server);
   });
 
+  describe('Home', () => {
+    it('[GET] /', () => {
+      return request.get('/').expect(200);
+    });
+  });
+
   describe('Account', () => {
     const password = '123456';
 
