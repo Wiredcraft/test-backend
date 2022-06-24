@@ -4,14 +4,14 @@ import { CodeError } from '../config/constant';
 import { Config, Provide } from '../util/container';
 import { Middleware } from '../util/web';
 
-export interface AuthConfig {
+export interface LoginRedirectConfig {
   signInPage: string;
 }
 
 @Provide()
-export class Auth {
-  @Config('auth')
-  config: AuthConfig;
+export class LoginRedirect {
+  @Config('loginRedirect')
+  config: LoginRedirectConfig;
 
   @Middleware()
   init(): Koa.Middleware {

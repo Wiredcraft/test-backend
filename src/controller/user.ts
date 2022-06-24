@@ -6,7 +6,7 @@ import { Controller, Delete, Get, Guard, Patch } from '../util/web';
 import { ERROR } from '../config/constant';
 import { UserService } from '../service/user';
 import { User } from '../entity/user';
-import { Auth } from '../middleware/auth';
+import { LoginRedirect } from '../middleware/loginRedirect';
 
 @Provide()
 @Controller('/user')
@@ -81,7 +81,7 @@ export class UserController {
    * patch user by id
    * @param ctx
    */
-  @Guard(Auth)
+  @Guard(LoginRedirect)
   @Patch('/:id')
   async update(ctx: Context) {
     // 1. Check permission
@@ -120,7 +120,7 @@ export class UserController {
    * delete user by id
    * @param ctx
    */
-  @Guard(Auth)
+  @Guard(LoginRedirect)
   @Delete('/:id')
   async delete(ctx: Context) {
     // 1. Check permission

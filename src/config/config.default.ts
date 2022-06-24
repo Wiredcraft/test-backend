@@ -1,7 +1,7 @@
 import type { DataSourceOptions } from 'typeorm';
 import type { opts as SessionOpts } from 'koa-session';
 import { Options as BodyParserOpts } from 'koa-bodyparser';
-import type { AuthConfig } from '../middleware/auth';
+import type { LoginRedirectConfig } from '../middleware/loginRedirect';
 
 export const mongo: DataSourceOptions = {
   type: 'mongodb',
@@ -21,6 +21,6 @@ export const session: Partial<SessionOpts> = {
   secure: false /** (boolean) secure cookie*/
 };
 
-export const auth: AuthConfig = {
+export const loginRedirect: LoginRedirectConfig = {
   signInPage: '/signin'
 };
