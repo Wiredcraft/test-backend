@@ -13,6 +13,11 @@ export class AccountController {
   @Inject()
   accountService: AccountService;
 
+  /**
+   * POST /account/signup
+   *
+   * @param ctx
+   */
   @Post('/signup')
   async signUp(ctx: Context) {
     // TODO send validate code, and check it
@@ -25,20 +30,27 @@ export class AccountController {
     // 2. Sign up
     const newUser = await this.accountService.signUp(userData);
 
-    ctx.body = newUser.toJson();
+    ctx.body = newUser.toJSON();
   }
 
+  /**
+   * POST /account/signin
+   *
+   * @param ctx
+   */
   @Post('/signin')
   async signIn(ctx: Context) {
+    // 1. Validate data
     const { email, password } = ctx.request.body;
     assert(typeof email === 'string', ERROR.ParameterError('email'));
     assert(typeof password === 'string', ERROR.ParameterError('password'));
 
+    // 2. Sign in
     const user = await this.accountService.signIn(email, password);
-    const userData = user.toJson();
-    assert(ctx.session);
+    ctx.body = user.toJSON();
 
-    ctx.session.user = userData;
-    ctx.body = userData;
+    // 3. Save login state in session
+    assert(ctx.session);
+    ctx.session.user = user.toJSON({ withPassword: true, withLocation: true });
   }
 }

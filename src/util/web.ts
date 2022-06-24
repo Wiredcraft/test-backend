@@ -64,6 +64,15 @@ export function Controller(prefix: string) {
  * @param path
  * @returns
  */
+export function Get(path: string) {
+  return webMethodDecorator(path, ['GET']);
+}
+
+/**
+ *
+ * @param path
+ * @returns
+ */
 export function Post(path: string) {
   return webMethodDecorator(path, ['POST']);
 }
@@ -73,8 +82,26 @@ export function Post(path: string) {
  * @param path
  * @returns
  */
-export function Get(path: string) {
-  return webMethodDecorator(path, ['GET']);
+export function Put(path: string) {
+  return webMethodDecorator(path, ['PUT']);
+}
+
+/**
+ *
+ * @param path
+ * @returns
+ */
+export function Patch(path: string) {
+  return webMethodDecorator(path, ['PATCH']);
+}
+
+/**
+ *
+ * @param path
+ * @returns
+ */
+export function Delete(path: string) {
+  return webMethodDecorator(path, ['DELETE']);
 }
 
 function webMethodDecorator(path: string, method: string[]) {

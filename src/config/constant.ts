@@ -84,5 +84,11 @@ export const ERROR = {
       statusCode: 423,
       message: 'Too much request, please try again later'
     });
+  },
+  get COMMON_NO_PERMISSION() {
+    return new CodeError({
+      statusCode: 403,
+      message: 'No permission'
+    });
   }
 };

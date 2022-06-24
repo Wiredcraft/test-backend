@@ -10,8 +10,10 @@ import {
 
 @Entity()
 export class User {
-  static fromJSON(json: any) {
+  static fromJSON(json: any): User {
     // check email
+    // TODO format dob
+    // TODO format location
 
     const user: any = new User();
     for (const key in json) {
@@ -120,12 +122,17 @@ export class User {
   @Column()
   location: [number, number];
 
-  toJson() {
+  toJSON({
+    withPassword,
+    withLocation
+  }: { withPassword?: boolean; withLocation?: boolean } = {}) {
     return {
       id: this._id,
       name: this.name,
       email: this.email,
+      password: withPassword ? this.password : undefined,
       address: this.address,
+      location: withLocation ? this.location : undefined,
       description: this.description,
       dob: this.dob,
       followerNum: this.followerNum,
