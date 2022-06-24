@@ -7,12 +7,25 @@ import { getInstanceByClass } from './container';
 
 const debug = debuglog('WebLoading');
 
-export const CONTROLLER_KEY = Symbol();
-export const METHOD_KEY = Symbol();
+const MIDDLEWARE_KEY = Symbol();
+const CONTROLLER_KEY = Symbol();
+const METHOD_KEY = Symbol();
 
 export function loadMiddlewares(app: Koa, middlewares: any[]) {
-  for (const middleware of middlewares) {
-    app.use(middleware);
+  for (const MiddlewareClass of middlewares) {
+    const clsName = MiddlewareClass.name;
+    debug(`Load middleware ${clsName}`);
+
+    const middleware = getInstanceByClass(MiddlewareClass);
+    const metadata = Reflect.getMetadata(MIDDLEWARE_KEY, middleware);
+    assert(
+      metadata?.propertyName,
+      `Middleware not found within ${clsName}, please use @Middleware() to specify`
+    );
+
+    const { propertyName } = metadata;
+    const fn = middleware[propertyName].call(middleware, app);
+    app.use(fn);
   }
 }
 
@@ -20,7 +33,7 @@ export function loadControllers(app: Koa, classes: any[]) {
   const router = new Router();
 
   for (const ControllerClass of classes) {
-    // Load metadata from @Controller
+    // Load metadata from class (set by @Controller)
     const clsName = ControllerClass.name;
     const data = Reflect.getMetadata(CONTROLLER_KEY, ControllerClass);
     assert(
@@ -34,7 +47,7 @@ export function loadControllers(app: Koa, classes: any[]) {
     const list = Reflect.getMetadata(METHOD_KEY, controller) ?? [];
     for (const { path, method, key } of list) {
       const entirePath = data.prefix + path;
-      debug(`load controller [${method}] ${entirePath} ${clsName}#${key}`);
+      debug(`Load controller [${method}] ${entirePath} ${clsName}#${key}`);
 
       // Register router
       router.register(entirePath, method, controller[key].bind(controller));
@@ -45,6 +58,18 @@ export function loadControllers(app: Koa, classes: any[]) {
 }
 
 /**
+ * Mark as middleware
+ *
+ * @returns
+ */
+export function Middleware() {
+  return (targetCls: any, propertyName: string) => {
+    Reflect.defineMetadata(MIDDLEWARE_KEY, { propertyName }, targetCls);
+  };
+}
+
+/**
+ * Mark as controller
  *
  * @param prefix
  * @returns

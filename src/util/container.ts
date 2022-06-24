@@ -134,6 +134,13 @@ export function Init() {
   };
 }
 
+/**
+ * Config Inject mark
+ *
+ * Property will be filled by the configs[key]
+ * @param configKey
+ * @returns decorator for property
+ */
 export function Config(configKey: ConfigKey) {
   return (object: any, propertyName: string) => {
     const list: ContainerConfig[] =
