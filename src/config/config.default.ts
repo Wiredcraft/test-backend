@@ -1,6 +1,7 @@
 import type { DataSourceOptions } from 'typeorm';
-
-export const keys = ['some secret hurr'];
+import type { opts as SessionOpts } from 'koa-session';
+import { Options as BodyParserOpts } from 'koa-bodyparser';
+import type { AuthConfig } from '../middleware/auth';
 
 export const mongo: DataSourceOptions = {
   type: 'mongodb',
@@ -11,9 +12,15 @@ export const mongo: DataSourceOptions = {
   database: 'test-backend'
 };
 
-export const bodyParser = {};
+export const bodyParser: BodyParserOpts = {};
 
-export const session = {
+export const keys = ['some secret hurr'];
+
+export const session: Partial<SessionOpts> = {
   maxAge: 86400000,
   secure: false /** (boolean) secure cookie*/
+};
+
+export const auth: AuthConfig = {
+  signInPage: '/signin'
 };

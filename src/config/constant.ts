@@ -3,14 +3,19 @@ import { ValidationError } from 'class-validator';
 interface CodeErrorOpts {
   statusCode: number;
   message: string;
+  location?: string;
 }
 
-class CodeError extends Error {
+export class CodeError extends Error {
   statusCode: number;
+  location?: string;
 
-  constructor({ statusCode, message }: CodeErrorOpts) {
+  constructor({ statusCode, message, location }: CodeErrorOpts) {
     super(message);
     this.statusCode = statusCode;
+    if (location) {
+      this.location = location;
+    }
   }
 }
 

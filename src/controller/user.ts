@@ -2,10 +2,11 @@ import assert from 'assert';
 import { Context } from 'koa';
 import { validate } from 'class-validator';
 import { Inject, Provide } from '../util/container';
-import { Controller, Delete, Get, Patch } from '../util/web';
+import { Controller, Delete, Get, Guard, Patch } from '../util/web';
 import { ERROR } from '../config/constant';
 import { UserService } from '../service/user';
 import { User } from '../entity/user';
+import { Auth } from '../middleware/auth';
 
 @Provide()
 @Controller('/user')
@@ -80,10 +81,9 @@ export class UserController {
    * patch user by id
    * @param ctx
    */
+  @Guard(Auth)
   @Patch('/:id')
   async update(ctx: Context) {
-    // TODO check authorization
-
     // 1. Check permission
     const { id } = ctx.params;
     const user = ctx.session?.user;
@@ -120,10 +120,9 @@ export class UserController {
    * delete user by id
    * @param ctx
    */
+  @Guard(Auth)
   @Delete('/:id')
   async delete(ctx: Context) {
-    // TODO check authorization, and redirect
-
     // 1. Check permission
     const { id } = ctx.params;
     const user = ctx.session?.user;

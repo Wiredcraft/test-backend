@@ -47,6 +47,13 @@ describe('APIs', () => {
         });
     });
 
+    it('[POST] /account/signin with email not found', async () => {
+      return request
+        .post('/account/signin')
+        .send({ email: 'not-found@email', password })
+        .expect(404);
+    });
+
     after(async () => {
       const model = getInstance<UserModel>('userModel');
       await model.delete({ email });
@@ -144,8 +151,17 @@ describe('APIs', () => {
         .expect(201);
     });
 
+    it('[PATCH] /user/:id without signin should got 302', async () => {
+      const { id, email, password } = persons[0];
+      const newName = 'New Name';
+
+      // Patch data with session
+      return request.patch(`/user/${id}`).send({ name: newName }).expect(302);
+    });
+
     it('[DELETE] /user/:id', async () => {
       const { id, email, password } = persons[0];
+
       // Sign in first
       const response = await request
         .post('/account/signin')
@@ -159,6 +175,13 @@ describe('APIs', () => {
         .set('Cookie', cookies)
         .send()
         .expect(201);
+    });
+
+    it('[DELETE] /user/:id without signin should got 302', async () => {
+      const { id, email, password } = persons[0];
+
+      // Delete
+      return request.delete(`/user/${id}`).send().expect(302);
     });
 
     after(async () => {

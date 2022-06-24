@@ -9,12 +9,12 @@ const debug = debuglog('WebLoading');
 
 type ConfigKey = keyof typeof Configs;
 
-interface ContainerConfig {
+interface ConfigMeta {
   propertyName: string;
   configKey: ConfigKey;
 }
 
-interface ContainerInjectItem {
+interface InjectMeta {
   propertyName: string;
   injectKey: string;
 }
@@ -84,7 +84,7 @@ export function getInstance<T = any>(key: string): T {
   /**
    * 3. Load config for current instance
    */
-  const configList: ContainerConfig[] =
+  const configList: ConfigMeta[] =
     Reflect.getMetadata(CONFIG_KEY, instance) ?? [];
   for (const { propertyName, configKey } of configList) {
     instance[propertyName] = Configs[configKey];
@@ -101,7 +101,7 @@ export function getInstance<T = any>(key: string): T {
   /**
    * 5. Load injected instance to property
    */
-  const injectInstances: ContainerInjectItem[] =
+  const injectInstances: InjectMeta[] =
     Reflect.getMetadata(INJECT_KEY, instance) ?? [];
   for (const { propertyName, injectKey } of injectInstances) {
     instance[propertyName] = getInstance(injectKey);
@@ -143,8 +143,7 @@ export function Init() {
  */
 export function Config(configKey: ConfigKey) {
   return (object: any, propertyName: string) => {
-    const list: ContainerConfig[] =
-      Reflect.getMetadata(CONFIG_KEY, object) ?? [];
+    const list: ConfigMeta[] = Reflect.getMetadata(CONFIG_KEY, object) ?? [];
     list.push({ propertyName, configKey });
     Reflect.defineMetadata(CONFIG_KEY, list, object);
   };
@@ -172,7 +171,11 @@ export function Scope(scope: ContainerClassScope) {
 export function Provide(key?: string) {
   return (targetCls: any) => {
     const classKey = key ?? lowerFistLetter(targetCls.name);
-    debug('provide register', classKey);
+    assert(
+      !classStorage.has(classKey),
+      `Duplicated key "${classKey}" found in container`
+    );
+    debug('Container class register', classKey);
     classStorage.set(classKey, targetCls);
     class2KeyMap.set(targetCls, classKey);
   };
@@ -188,8 +191,7 @@ export function Provide(key?: string) {
 export function Inject(key?: string) {
   return (object: any, propertyName: string) => {
     const injectKey = key ?? lowerFistLetter(propertyName);
-    const list: ContainerInjectItem[] =
-      Reflect.getMetadata(INJECT_KEY, object) ?? [];
+    const list: InjectMeta[] = Reflect.getMetadata(INJECT_KEY, object) ?? [];
     list.push({ propertyName, injectKey });
     Reflect.defineMetadata(INJECT_KEY, list, object);
   };
