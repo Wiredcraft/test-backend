@@ -1,3 +1,5 @@
+import { ValidationError } from 'class-validator';
+
 interface CodeErrorOpts {
   statusCode: number;
   message: string;
@@ -13,16 +15,38 @@ class CodeError extends Error {
 }
 
 export const ERROR = {
+  ParameterError: (name: string) => {
+    return new CodeError({
+      statusCode: 400,
+      message: `invalid paramter: '${name}'`
+    });
+  },
+  ParameterValidationError: (errors: ValidationError[]) => {
+    let message = 'paramter validation failed:';
+    for (const err of errors) {
+      const constraints = err.constraints;
+      if (constraints === undefined) {
+        continue;
+      }
+      Object.keys(constraints).forEach((key) => {
+        message += ' ' + constraints[key] + '.';
+      });
+    }
+    return new CodeError({
+      statusCode: 400,
+      message
+    });
+  },
   get MODEL_USER_GETONEBYID_PARAMS() {
     return new CodeError({
       statusCode: 400,
-      message: 'User#getById(): id should be a ObjectId'
+      message: 'id should be a ObjectId'
     });
   },
   get MODEL_USER_GETONEBYEMAIL_PARAMS() {
     return new CodeError({
       statusCode: 400,
-      message: 'User#getOneByEmail(): email should be a string'
+      message: 'email should be a string'
     });
   },
   get SERVICE_ACCOUNT_SIGNIN_NOTFOUND_EMAIL() {

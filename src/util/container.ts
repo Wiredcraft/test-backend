@@ -1,6 +1,7 @@
+import 'reflect-metadata';
 import { join } from 'path';
 import { debuglog } from 'util';
-import { assert } from 'console';
+import assert from 'assert';
 import { sync as scanFiles } from 'glob';
 import * as Configs from '../config/config.default';
 
@@ -33,7 +34,8 @@ const INJECT_KEY = Symbol();
 const SCOPE_KEY = Symbol();
 
 let inited = false;
-const classStorage = new Map();
+const classStorage = new Map<string, any>();
+const class2KeyMap = new Map<any, string>();
 const singletonInstanceStorage = new Map();
 
 function ensureContainerInited() {
@@ -113,6 +115,13 @@ export function getInstance<T = any>(key: string): T {
   return instance;
 }
 
+export function getInstanceByClass(Cls: any) {
+  ensureContainerInited();
+  const key = class2KeyMap.get(Cls);
+  assert(key, `${key} not found in container`);
+  return getInstance(key);
+}
+
 /**
  * Initialize mark
  *
@@ -158,6 +167,7 @@ export function Provide(key?: string) {
     const classKey = key ?? lowerFistLetter(targetCls.name);
     debug('provide register', classKey);
     classStorage.set(classKey, targetCls);
+    class2KeyMap.set(targetCls, classKey);
   };
 }
 

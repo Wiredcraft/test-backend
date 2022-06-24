@@ -10,6 +10,16 @@ import {
 
 @Entity()
 export class User {
+  static fromJSON(json: any) {
+    // check email
+
+    const user: any = new User();
+    for (const key in json) {
+      user[key] = json[key];
+    }
+    return user;
+  }
+
   /**
    * user id
    */
@@ -109,4 +119,17 @@ export class User {
   @IsOptional()
   @Column()
   location: [number, number];
+
+  toJson() {
+    return {
+      id: this._id,
+      name: this.name,
+      email: this.email,
+      address: this.address,
+      description: this.description,
+      dob: this.dob,
+      followerNum: this.followerNum,
+      followingNum: this.followingNum
+    };
+  }
 }
