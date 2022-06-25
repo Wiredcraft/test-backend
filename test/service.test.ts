@@ -1,17 +1,23 @@
-import { MongoDB } from '../src/db/mongo';
+import { MongoDB, ObjectId } from '../src/db/mongo';
 import { strictEqual as equal, strict as assert } from 'assert';
+import sinon from 'sinon';
 import { AccountService } from '../src/service/account';
 import { User } from '../src/entity/user';
 import { UserModel } from '../src/model/user';
 import { RelationService } from '../src/service/relation';
 import { UserService } from '../src/service/user';
 import { getInstance } from '../src/util/container';
+import { AuthService } from '../src/service/auth';
+import { ClientMap } from './thridPartApp';
+import { stringify } from 'querystring';
+import { Redis } from '../src/db/redis';
 
 const name = 'Lellansin';
 const email = 'lellansin@gmail.com';
 
 describe('Service', () => {
   const db = getInstance<MongoDB>('db');
+  const redis = getInstance<Redis>('redis');
 
   describe('Account', () => {
     const service = getInstance<AccountService>('accountService');
@@ -201,7 +207,92 @@ describe('Service', () => {
     });
   });
 
+  describe('Auth', () => {
+    const service = getInstance<AuthService>('authService');
+
+    it('should getCallbackUrl & get data with RequestToken from callbackUrl', async () => {
+      // Prepare auth params
+      const uid = ObjectId();
+      const clientId = '12345';
+      const redirectUri = 'http://test';
+      const timestamp = Date.now();
+
+      // Specify the requestToken
+      const stub = sinon.stub(service, 'getRequestToken');
+      const token = 'myToken' + Math.random();
+      stub.returns(token);
+
+      // Generate callback URL
+      const url = await service.getCallbackUrl({
+        clientId,
+        id: String(uid),
+        redirectUri,
+        timestamp
+      });
+      equal(
+        url,
+        `${ClientMap[clientId].callback}?${stringify({
+          request_token: token,
+          redirect_uri: redirectUri
+        })}`
+      );
+
+      // Validate token from callback URL
+      const data = await service.getDataFromRequestToken(token);
+      equal(String(data.uid), String(uid));
+      equal(data.clientId, clientId);
+    });
+
+    it('should issue a new accessToken and get user data from it', async () => {
+      const userModel = getInstance<UserModel>('userModel');
+      const user = await userModel.save(
+        User.fromJSON({
+          email: 'anyway@domain',
+          name: 'anyway'
+        })
+      );
+
+      const uid = String(user._id);
+      const clientId = 'anyway';
+      const { accessToken } = await service.issueAccessToken(uid, clientId);
+
+      const user2 = await service.getUserFromAccessToken(accessToken);
+      assert(user2);
+
+      equal(String(user._id), String(user2._id));
+    });
+
+    it('should refresh a accessToken and get user data from it', async () => {
+      // Prepare user data
+      const userModel = getInstance<UserModel>('userModel');
+      const user = await userModel.save(
+        User.fromJSON({
+          email: 'anyway@domain',
+          name: 'anyway'
+        })
+      );
+
+      // Issue token with user data
+      const uid = String(user._id);
+      const clientId = 'anyway';
+      const oldOne = await service.issueAccessToken(uid, clientId);
+
+      // Refresh token
+      const { accessToken } = await service.refreshAccessToken(
+        oldOne.accessToken,
+        clientId
+      );
+
+      // Get user data from refreshed new token
+      const user2 = await service.getUserFromAccessToken(accessToken);
+      assert(user2);
+
+      equal(String(user._id), String(user2._id));
+    });
+  });
+
   after(() => {
     db.close();
+    redis.close();
   });
 });
