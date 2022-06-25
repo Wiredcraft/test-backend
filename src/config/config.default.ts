@@ -2,6 +2,7 @@ import type { DataSourceOptions } from 'typeorm';
 import type { opts as SessionOpts } from 'koa-session';
 import { Options as BodyParserOpts } from 'koa-bodyparser';
 import type { LoginRedirectConfig } from '../middleware/loginRedirect';
+import { AuthConfig } from '../service/auth';
 
 export const mongo: DataSourceOptions = {
   type: 'mongodb',
@@ -22,5 +23,10 @@ export const session: Partial<SessionOpts> = {
 };
 
 export const loginRedirect: LoginRedirectConfig = {
-  signInPage: '/signin'
+  signInPage: '/account/signin'
+};
+
+export const auth: AuthConfig = {
+  saltKey: 'nice',
+  tokenTTL: 1000 * 60 * 60 * 24 * 3 // 3 days
 };

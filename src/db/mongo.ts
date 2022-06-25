@@ -1,7 +1,7 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { Entities } from '../entity';
-import { Relation } from '../entity/relation';
 import { User } from '../entity/user';
+import { Relation } from '../entity/relation';
+import { Token } from '../entity/token';
 import {
   Config,
   ContainerClassScope,
@@ -9,6 +9,9 @@ import {
   Provide,
   Scope
 } from '../util/container';
+
+// @ts-ignore
+export { ObjectId } from 'mongodb';
 
 @Provide('db')
 @Scope(ContainerClassScope.Singleton)
@@ -23,7 +26,7 @@ export class MongoDB {
     this.dataSource = new DataSource(
       Object.assign(this.config, {
         // default config
-        entities: Entities,
+        entities: [User, Relation, Token],
         synchronize: true,
         useUnifiedTopology: true
       })
@@ -45,6 +48,11 @@ export class MongoDB {
   async getFollower() {
     const ds = await this.getDataSource();
     return ds.getRepository(Relation);
+  }
+
+  async getToken() {
+    const ds = await this.getDataSource();
+    return ds.getRepository(Token);
   }
 
   close() {

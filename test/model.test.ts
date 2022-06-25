@@ -1,12 +1,13 @@
 import { ObjectID } from 'typeorm';
 import { strictEqual as equal, strict as assert } from 'assert';
 import { User } from '../src/entity/user';
-import { MongoDB } from '../src/db/mongo';
+import { MongoDB, ObjectId } from '../src/db/mongo';
 import { UserModel } from '../src/model/user';
 import { RelationModel, FollowType } from '../src/model/relation';
 import { getInstance } from '../src/util/container';
+import { TokenModel } from '../src/model/token';
+import { Token } from '../src/entity/token';
 
-const { ObjectId } = require('mongodb');
 const name = 'Lellansin';
 const email = 'lellansin@gmail.com';
 
@@ -117,6 +118,63 @@ describe('Model', () => {
     after(async () => {
       const repo = await db.getFollower();
       return repo.delete({});
+    });
+  });
+
+  describe('Token', () => {
+    const model = getInstance<TokenModel>('tokenModel');
+    const uids: ObjectID[] = [];
+
+    it('should create a new token and get it, then disable it', async () => {
+      const uid = ObjectId();
+      uids.push(uid);
+      const clientId = '12345';
+      const token = new Token(uid, clientId);
+      const { _id } = await model.create(token);
+
+      // get by id
+      const entity1 = await model.getById(_id);
+      assert(entity1);
+      equal(entity1.clientId, clientId);
+
+      // get by uid
+      const entity2 = await model.getOneByUid(uid, clientId);
+      assert(entity2);
+      equal(String(entity2._id), String(_id));
+
+      // disable the token
+      const result = await model.disable(_id);
+      equal(result.affected, 1);
+
+      // should not found the token
+      const entity3 = await model.getById(_id);
+      equal(entity3, null);
+
+      // should not found the token
+      const entity4 = await model.getOneByUid(uid, clientId);
+      equal(entity4, null);
+    });
+
+    it('should get null while out of ttl', async () => {
+      const uid = ObjectId();
+      uids.push(uid);
+      const clientId = '';
+      const token = new Token(uid, clientId);
+      // out of ttl (4 days / ttl 3 days)
+      token.createdAt = new Date(Date.now() - 1000 * 60 * 60 * 24 * 4);
+      const createdToken = await model.create(token);
+      assert(createdToken);
+
+      const notFoundNull = await model.getById(createdToken._id);
+      equal(notFoundNull, null);
+
+      const notFoundNull2 = await model.getOneByUid(uid, clientId);
+      equal(notFoundNull2, null);
+    });
+
+    after(async () => {
+      const repo = await db.getToken();
+      await Promise.all(uids.map((uid) => repo.delete({ _id: uid })));
     });
   });
 
