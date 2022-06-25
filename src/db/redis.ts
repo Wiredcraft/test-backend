@@ -1,0 +1,37 @@
+import {
+  Config,
+  ContainerClassScope,
+  Init,
+  Provide,
+  Scope
+} from '../util/container';
+import IoRedis, { Redis as Client, RedisOptions } from 'ioredis';
+
+@Provide()
+@Scope(ContainerClassScope.Singleton)
+export class Redis {
+  private client: Client;
+
+  @Config('redis')
+  config: RedisOptions;
+
+  @Init()
+  init() {
+    this.client = new IoRedis(this.config);
+  }
+
+  get(key: string) {
+    return this.client.get(key);
+  }
+
+  set(key: string, value: string, ttl?: number) {
+    if (ttl) {
+      return this.client.setex(key, ttl, value);
+    }
+    return this.client.set(key, value);
+  }
+
+  close() {
+    this.client.disconnect();
+  }
+}

@@ -1,4 +1,5 @@
 import type { DataSourceOptions } from 'typeorm';
+import type { RedisOptions } from 'ioredis';
 import type { opts as SessionOpts } from 'koa-session';
 import { Options as BodyParserOpts } from 'koa-bodyparser';
 import type { LoginRedirectConfig } from '../middleware/loginRedirect';
@@ -11,6 +12,10 @@ export const mongo: DataSourceOptions = {
   username: 'root',
   password: '',
   database: 'test-backend'
+};
+
+export const redis: RedisOptions = {
+  port: 6379
 };
 
 export const bodyParser: BodyParserOpts = {};
