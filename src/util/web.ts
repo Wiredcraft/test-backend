@@ -162,9 +162,9 @@ export function Post(path: string) {
  * @param path
  * @returns
  */
-export function Put(path: string) {
-  return webMethodDecorator(path, ['PUT']);
-}
+// export function Put(path: string) {
+//   return webMethodDecorator(path, ['PUT']);
+// }
 
 /**
  *

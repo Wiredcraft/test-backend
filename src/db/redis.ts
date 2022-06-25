@@ -24,11 +24,8 @@ export class Redis {
     return this.client.get(key);
   }
 
-  set(key: string, value: string, ttl?: number) {
-    if (ttl) {
-      return this.client.setex(key, ttl, value);
-    }
-    return this.client.set(key, value);
+  set(key: string, value: string, ttl: number) {
+    return this.client.setex(key, ttl, value);
   }
 
   close() {

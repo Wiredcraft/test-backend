@@ -7,6 +7,7 @@ import { ERROR } from '../config/constant';
 import { UserService } from '../service/user';
 import { User } from '../entity/user';
 import { LoginRedirect } from '../middleware/loginRedirect';
+import { StatCostTime } from '../middleware/stat';
 
 @Provide()
 @Controller('/user')
@@ -23,8 +24,8 @@ export class UserController {
   @Get('/')
   async getList(ctx: Context) {
     // 1. Construct data
-    const page = Number(ctx.request.body.page) || 0;
-    const { search } = ctx.request.body;
+    const page = Number(ctx.query.page) || 0;
+    const { search } = ctx.query;
     const searchName = typeof search === 'string' ? search : '';
 
     // 2. Query
@@ -40,6 +41,7 @@ export class UserController {
    */
   @Get('/nearby')
   @Guard(LoginRedirect)
+  @Guard(StatCostTime)
   async getNearbyList(ctx: Context) {
     // 1. Construct data
     const page = Number(ctx.request.body.page) || 0;
@@ -71,8 +73,6 @@ export class UserController {
     const one = await this.userService.getById(id);
     if (one) {
       ctx.body = one.toJSON();
-    } else {
-      ctx.status = 404;
     }
   }
 
@@ -110,8 +110,6 @@ export class UserController {
     const result = await this.userService.update(tobeUpated);
     if (result.affected) {
       ctx.status = 201;
-    } else {
-      ctx.status = 404;
     }
   }
 
@@ -133,8 +131,6 @@ export class UserController {
     const results = await this.userService.delete(id);
     if (results.affected) {
       ctx.status = 201;
-    } else {
-      ctx.status = 404;
     }
   }
 }

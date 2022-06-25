@@ -25,6 +25,12 @@ export class Token {
   clientId: string;
 
   /*
+   * client id
+   */
+  @Column()
+  permissions: string[] = [];
+
+  /*
    * token created date
    */
   @Column()
@@ -36,12 +42,17 @@ export class Token {
   @Column()
   deletedAt: Date;
 
-  constructor(uid: string | ObjectID, clientId: string) {
+  constructor(
+    uid: string | ObjectID,
+    clientId: string,
+    permissions: string[] = []
+  ) {
     this.uid = ObjectId(uid);
     this.clientId = clientId;
+    this.permissions = permissions;
   }
 
   static from(token: Token) {
-    return new Token(token.uid, token.clientId);
+    return new Token(token.uid, token.clientId, token.permissions);
   }
 }

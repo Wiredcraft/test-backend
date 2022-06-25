@@ -11,7 +11,8 @@
     "dev": "NODE_DEBUG=*Container* NODE_ENV=production ts-node src",
     "test-thrid-part-app": "FROM_CLI=true ts-node test/thridPartApp.ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' 'test/**/*.ts' --write",
-    "test": "mocha --require ts-node/register test/**/*.test.ts"
+    "test": "mocha --require ts-node/register test/**/*.test.ts",
+    "cov": "node_modules/.bin/nyc --reporter=html --reporter=text npm run test"
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,7 @@
     "axios": "^0.27.2",
     "class-validator": "^0.13.2",
     "mocha": "^10.0.0",
+    "nyc": "^15.1.0",
     "prettier": "^2.7.1",
     "puppeteer": "^15.1.0",
     "sinon": "^14.0.0",

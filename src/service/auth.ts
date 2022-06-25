@@ -1,4 +1,4 @@
-import assert, { equal } from 'assert';
+import assert, { deepStrictEqual as deepEqual, equal } from 'assert';
 import { stringify } from 'querystring';
 import { ObjectID } from 'typeorm';
 import { ClientMap } from '../../test/thridPartyApp';
@@ -25,18 +25,18 @@ interface AuthorizationParams {
   redirectUri: string;
   clientId: string;
   timestamp: number;
-  permissions?: string[];
+  permissions: string[];
 }
 
 interface AuthCbClientCache {
   uid: string;
   clientId: string;
-  permissions?: string[];
+  permissions: string[];
 }
 
 interface AuthCbServerCache {
   clientId: string;
-  permissions?: string[];
+  permissions: string[];
 }
 
 @Provide()
@@ -108,7 +108,7 @@ export class AuthService {
    * @param token request token
    * @returns
    */
-  async getDataFromRequestToken(token: string) {
+  async getDataByRequestToken(token: string) {
     // Get cache from client's token
     const clientCache = await this.cacheService.get<AuthCbClientCache>(
       `auth-req-${token}`
@@ -129,7 +129,11 @@ export class AuthService {
       ERROR.SERVICE_AUTH_REQUESTTOKEN_UNEXPECTED_SOURCE
     );
 
-    return { uid: clientCache.uid, clientId: clientCache.clientId };
+    return {
+      uid: clientCache.uid,
+      clientId: clientCache.clientId,
+      permissions: clientCache.permissions
+    };
   }
 
   /**
@@ -140,7 +144,7 @@ export class AuthService {
    * @param clientId
    * @returns
    */
-  async issueAccessToken(uid: string, clientId: string) {
+  async issueAccessToken(uid: string, clientId: string, permissions: string[]) {
     // Check if token exists
     const checkedToken = await this.tokenModel.getOneByUid(uid, clientId);
     if (checkedToken) {
@@ -148,7 +152,9 @@ export class AuthService {
       return { accessToken: checkedToken._id };
     }
     // Create token
-    const token = await this.tokenModel.create(new Token(uid, clientId));
+    const token = await this.tokenModel.create(
+      new Token(uid, clientId, permissions)
+    );
     return { accessToken: token._id };
   }
 
@@ -159,13 +165,19 @@ export class AuthService {
    * @param clientId
    * @returns
    */
-  async refreshAccessToken(tid: string | ObjectID, clientId: string) {
+  async refreshAccessToken(
+    tid: string | ObjectID,
+    clientId: string,
+    permissions: string[]
+  ) {
     // Check if the old one exists
     const [oldToken] = await this.tokenModel.get({
       where: { _id: ObjectId(tid) },
       take: 1
     });
     assert(oldToken, ERROR.SERVICE_AUTH_ACCESSTOKEN_NOT_FOUND);
+    equal(oldToken.clientId, clientId);
+    deepEqual(oldToken.permissions, permissions);
 
     // Disable the old one
     const result = await this.tokenModel.disable(oldToken._id);
@@ -183,9 +195,7 @@ export class AuthService {
    * @param accessToken token id
    * @returns
    */
-  async getUserByAccessToken(
-    accessToken: string | ObjectID
-  ): Promise<User | null> {
+  async getUserByAccessToken(accessToken: string | ObjectID): Promise<User> {
     // Check if token valid
     const token = await this.tokenModel.getById(accessToken);
     assert(token, ERROR.SERVICE_AUTH_ACCESSTOKEN_NOT_FOUND);

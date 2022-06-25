@@ -11,6 +11,7 @@ import { AuthService } from '../src/service/auth';
 import { ClientMap } from './thridPartyApp';
 import { stringify } from 'querystring';
 import { Redis } from '../src/db/redis';
+import { CacheService } from '../src/service/cache';
 
 const name = 'Lellansin';
 const email = 'lellansin@gmail.com';
@@ -96,6 +97,7 @@ describe('Service', () => {
           name: name,
           password: '123456',
           description: 'nice to meet you',
+          address: 'Mars',
           location: [3, 3]
         })
       );
@@ -207,6 +209,9 @@ describe('Service', () => {
 
       const toOneUpdated2 = await userModel.getOneByEmail(toUserEmail);
       equal(toOneUpdated2?.followerNum, 0, 'number not match');
+
+      // unfollow again (no effect)
+      await service.unfollow(fromId, toId);
     });
 
     after(async () => {
@@ -236,7 +241,8 @@ describe('Service', () => {
         clientId,
         uid: String(uid),
         redirectUri,
-        timestamp
+        timestamp,
+        permissions: []
       });
       equal(
         url,
@@ -247,7 +253,7 @@ describe('Service', () => {
       );
 
       // Validate token from callback URL
-      const data = await service.getDataFromRequestToken(token);
+      const data = await service.getDataByRequestToken(token);
       equal(String(data.uid), String(uid));
       equal(data.clientId, clientId);
     });
@@ -263,7 +269,14 @@ describe('Service', () => {
 
       const uid = String(user._id);
       const clientId = 'anyway';
-      const { accessToken } = await service.issueAccessToken(uid, clientId);
+      const { accessToken } = await service.issueAccessToken(uid, clientId, []);
+      const { accessToken: repeatedAccessToken } =
+        await service.issueAccessToken(uid, clientId, []);
+      equal(
+        String(accessToken),
+        String(repeatedAccessToken),
+        'should got same one'
+      );
 
       const user2 = await service.getUserByAccessToken(accessToken);
       assert(user2);
@@ -284,12 +297,14 @@ describe('Service', () => {
       // Issue token with user data
       const uid = String(user._id);
       const clientId = 'anyway';
-      const oldOne = await service.issueAccessToken(uid, clientId);
+      const permissions = ['name'];
+      const oldOne = await service.issueAccessToken(uid, clientId, permissions);
 
       // Refresh token
       const { accessToken } = await service.refreshAccessToken(
         oldOne.accessToken,
-        clientId
+        clientId,
+        permissions
       );
 
       // Get user data from refreshed new token
@@ -297,6 +312,15 @@ describe('Service', () => {
       assert(user2);
 
       equal(String(user._id), String(user2._id));
+    });
+  });
+
+  describe('Cache', () => {
+    const service = getInstance<CacheService>('cacheService');
+
+    it('should get null', async () => {
+      const value = await service.get('not exists');
+      equal(value, null);
     });
   });
 

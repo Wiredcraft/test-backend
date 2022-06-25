@@ -16,6 +16,7 @@ export class OnError {
         if (err instanceof CodeError) {
           this.produceCodeError(ctx, err);
         } else {
+          /* istanbul ignore next */
           throw err;
         }
       }

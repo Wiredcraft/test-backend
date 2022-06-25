@@ -14,7 +14,7 @@ export class CacheService {
    * @param ttl seconds
    * @returns
    */
-  async set<T = any>(key: string, value: T, ttl?: number) {
+  async set<T = any>(key: string, value: T, ttl: number) {
     return this.redis.set(key, JSON.stringify(value), ttl);
   }
 

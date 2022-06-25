@@ -1,5 +1,4 @@
 import assert from 'assert';
-import { MongoDB } from '../db/mongo';
 import { UserModel } from '../model/user';
 import { User } from '../entity/user';
 import { ERROR } from '../config/constant';

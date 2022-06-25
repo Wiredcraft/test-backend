@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { ValidationError } from 'class-validator';
 
 interface CodeErrorOpts {
@@ -30,9 +31,7 @@ export const ERROR = {
     let message = 'paramter validation failed:';
     for (const err of errors) {
       const constraints = err.constraints;
-      if (constraints === undefined) {
-        continue;
-      }
+      assert(constraints);
       Object.keys(constraints).forEach((key) => {
         message += ' ' + constraints[key] + '.';
       });

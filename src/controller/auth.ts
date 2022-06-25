@@ -65,7 +65,11 @@
  *  1(B) means 1st step of currentServer within this flow (at B phase)
  *  5(D) means 5th step of currentServer within this flow (at D phase)
  */
-import { strict as assert, equal } from 'assert';
+import {
+  strict as assert,
+  strictEqual as equal,
+  deepStrictEqual as deepEqual
+} from 'assert';
 import Koa from 'koa';
 import { ClientMap } from '../../test/thridPartyApp';
 import { ERROR } from '../config/constant';
@@ -115,7 +119,7 @@ export class AuthController {
     //   items will be checked in POST /auth/authorizate
     ctx.body = await this.viewService.render('auth', {
       from: client.name,
-      user: ctx.session?.user,
+      user: ctx.session.user,
       clientId,
       redirectUri,
       timestamp
@@ -134,7 +138,8 @@ export class AuthController {
     assert(auth);
 
     // 3(C) Check if request valid
-    const { permissions, redirectUri, clientId, timestamp } = ctx.request.body;
+    const { permissions, redirectUri, clientId } = ctx.request.body;
+    const timestamp = Number(ctx.request.body.timestamp);
     equal(auth.redirectUri, redirectUri);
     equal(auth.clientId, clientId);
     equal(auth.timestamp, timestamp);
@@ -154,36 +159,31 @@ export class AuthController {
   }
 
   /**
-   * PATCH /auth/token
-   *
-   * AuthFlow: 6(D) Client request to refresh accessToken
-   */
-  @Patch('/token')
-  async refreshToken() {}
-
-  /**
    * POST /auth/token
    *
-   * AuthFlow: 7(D) Client request for accessToken
+   * AuthFlow: 6(D) Client request for accessToken
    */
   @Post('/token')
   async accessToken(ctx: Context) {
-    // 8(D) Check if token is good
+    // 7(D) Check if token is good
     const token = ctx.get(this.config.requestTokenKey);
     assert(token, ERROR.ParameterError(this.config.requestTokenKey));
-    const { uid, clientId } = await this.authService.getDataFromRequestToken(
-      token
+    const { uid, clientId, permissions } =
+      await this.authService.getDataByRequestToken(token);
+
+    // 8(D) Issue accessToken
+    const data = await this.authService.issueAccessToken(
+      uid,
+      clientId,
+      permissions
     );
 
-    // 9(D) Issue accessToken
-    const data = await this.authService.issueAccessToken(uid, clientId);
-
-    // 10(D) Response token to client
+    // 9(D) Response token to client
     ctx.body = data;
   }
 
   /**
-   * 11(E) Global middleware for AccessToken authentication
+   * 10(E) Global middleware for AccessToken authentication
    * @returns
    */
   @Middleware()
@@ -195,12 +195,30 @@ export class AuthController {
       if (session && !session.user && token.length && ctx.session) {
         // 12(E) Get user data by AccessToken
         const user = await this.authService.getUserByAccessToken(token);
-        session.user = user?.toJSON({
+        session.user = user.toJSON({
           withLocation: true,
           withPassword: true
         });
       }
       return next();
     };
+  }
+
+  /**
+   * PATCH /auth/token
+   */
+  @Patch('/token')
+  async refreshToken(ctx: Context) {
+    // Check parameters
+    const { accessToken, clientId, permissions } = ctx.request.body;
+    assert(typeof accessToken === 'string');
+    assert(typeof clientId === 'string');
+    assert(Array.isArray(permissions));
+
+    ctx.body = await this.authService.refreshAccessToken(
+      accessToken,
+      clientId,
+      permissions
+    );
   }
 }

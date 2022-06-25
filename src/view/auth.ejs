@@ -5,9 +5,10 @@
   <% if (user) { %>
     <!-- user signed in -->
     <div>
-      <hi>
+      <h1>Wellcome test-backend</h1>
+      <h2>
         Authorize "<%= from %>"
-      </hi>
+      </h2>
       <p>Dear <%= user.name %>, this authorizition will access your:</p>
       <form action="/auth/authorizate" method="post">
         <ul>

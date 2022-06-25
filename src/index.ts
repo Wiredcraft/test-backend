@@ -9,6 +9,7 @@ export const app = new Koa();
 loadMiddlewares(app, MiddlewareClasses);
 loadControllers(app, ControllerClasses);
 
+/* istanbul ignore next */
 if (process.env.NODE_ENV === 'production') {
   app.listen(3000, () => {
     console.log('started');

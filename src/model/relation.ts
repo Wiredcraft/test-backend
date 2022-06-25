@@ -55,10 +55,6 @@ export class RelationModel {
    * @param toId whom to be unfollowed
    */
   async unfollow(fromId: ObjectID, toId: ObjectID) {
-    // Can't unfollow itself
-    if (String(fromId) === String(toId)) {
-      return null;
-    }
     const repo = await this.getRepo();
     return repo.delete({ fromId, toId });
   }

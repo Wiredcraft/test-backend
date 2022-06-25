@@ -105,9 +105,9 @@ router.get('/test-backend/user/nearby', async (ctx) => {
     // AuthFlow: 4(A). redirect to test-backend
     ctx.redirect(
       authServerUrl +
-        '/auth/authorizate?' +
-        `&redirect_uri=${encodeURIComponent(href)}` +
-        `&client_id=${client.id}`
+      '/auth/authorizate?' +
+      `&redirect_uri=${encodeURIComponent(href)}` +
+      `&client_id=${client.id}`
     );
     return;
   }
@@ -119,8 +119,16 @@ router.get('/test-backend/user/nearby', async (ctx) => {
     }
   });
 
-  ctx.status = resp.status;
-  ctx.body = resp.data;
+  ctx.body = `
+    <!DOCTYPE html>
+    <html>
+    <body>
+      <h1>Wellcome ${client.name}</h1>
+      <h1>response status ${resp.status}</h1>
+      <pre>${JSON.stringify(resp.data)}</pre>
+    </body>
+    </html>
+  `;
 });
 
 /**
@@ -154,6 +162,11 @@ router.get('/test-backend/callback', async (ctx) => {
   // AuthFlow: 9(D) redirect to the beginning
   ctx.redirect(redirectUri);
 });
+
+// for test only
+router.get('/session', (ctx) => {
+  ctx.body = ctx.session?.toJSON();
+})
 
 thridPartyApp.keys = ['some secret'];
 thridPartyApp
