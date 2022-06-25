@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import assert from 'assert';
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 import {
   IsDate,
@@ -7,21 +8,11 @@ import {
   IsString,
   Length
 } from 'class-validator';
+import { validateEmail } from '../util/utils';
+import { ERROR } from '../config/constant';
 
 @Entity()
 export class User {
-  static fromJSON(json: any): User {
-    // check email
-    // TODO format dob
-    // TODO format location
-
-    const user: any = new User();
-    for (const key in json) {
-      user[key] = json[key];
-    }
-    return user;
-  }
-
   /**
    * user id
    */
@@ -120,7 +111,7 @@ export class User {
    */
   @IsOptional()
   @Column()
-  location: [number, number];
+  location: [number, number] = [0, 0];
 
   toJSON({
     withPassword,
@@ -138,5 +129,45 @@ export class User {
       followerNum: this.followerNum,
       followingNum: this.followingNum
     };
+  }
+
+  static fromJSON({
+    email,
+    name,
+    password,
+    dob,
+    address,
+    description,
+    location
+  }: {
+    email: string;
+    name: string;
+    password?: string;
+    dob?: Date | number;
+    address?: string;
+    description?: string;
+    location?: [number, number];
+  }): User {
+    // Check email valid
+    assert(validateEmail(email), ERROR.ENTITY_USER_EMAIL);
+
+    const user = new User();
+    user.email = email;
+    user.name = name;
+    if (password) user.password = password;
+
+    if (dob) {
+      user.dob = new Date(dob);
+    }
+    if (address) {
+      user.address = address;
+    }
+    if (description) {
+      user.description = description;
+    }
+    if (location) {
+      user.location = location;
+    }
+    return user;
   }
 }

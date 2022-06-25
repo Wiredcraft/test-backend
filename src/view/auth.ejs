@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+  <% if (user) { %>
+    <!-- user signed in -->
+    <div>
+      <hi>
+        Authorize "<%= from %>"
+      </hi>
+      <p>Dear <%= user.name %>, this authorizition will access your:</p>
+      <form action="/auth/authorizate" method="post">
+        <ul>
+          <li>Email <input type="checkbox" name="permissions" value="email" checked="email" /></li>
+          <li>Name <input type="checkbox" name="permissions" value="name" checked="email" /></li>
+          <li>Description <input type="checkbox" name="permissions" value="description" /></li>
+          <li>Address <input type="checkbox" name="permissions" value="address" /></li>
+          <li>Location <input type="checkbox" name="permissions" value="location" /></li>
+        </ul>
+        <input type="hidden" name="clientId" value="<%= clientId %>" />
+        <input type="hidden" name="redirectUri" value="<%= redirectUri %>" />
+        <input type="hidden" name="timestamp" value="<%= timestamp %>" />
+        <button name="Authorize">Authorize</button>
+      </form>
+
+      <script>
+      </script>
+    </div>
+  <% } else { %>
+    <!-- user not signed -->
+
+    <h1>Sign in with test-backend, to continue with "<%= from %>"</h1>
+
+    <p>
+      <a id="sign" href="javascript: void(0)" onclick="jump('signin')">Go to sign in page</a>
+    </p>
+    <script>
+      function jump(type) {
+        location.href = '/account/' + type + 
+          '?redirect_uri=' + encodeURIComponent(location.pathname) + // set current redirection
+          '&orgin_query=' + encodeURIComponent(location.search);     // encode last redirection
+      }
+    </script>
+  <% } %>
+</body>
+</html>

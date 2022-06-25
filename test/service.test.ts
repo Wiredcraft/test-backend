@@ -8,7 +8,7 @@ import { RelationService } from '../src/service/relation';
 import { UserService } from '../src/service/user';
 import { getInstance } from '../src/util/container';
 import { AuthService } from '../src/service/auth';
-import { ClientMap } from './thridPartApp';
+import { ClientMap } from './thridPartyApp';
 import { stringify } from 'querystring';
 import { Redis } from '../src/db/redis';
 
@@ -77,29 +77,38 @@ describe('Service', () => {
     let farUser: User;
 
     before(async () => {
-      const user = new User();
-      user.email = 'test@user';
-      user.name = name;
-      user.password = '123456';
-      user.description = 'nice to meet you';
-      user.location = [0, 0];
-      closeUser = await model.save(user);
+      // clear user data
+      await model.delete({});
 
-      const user1 = new User();
-      user1.email = 'test@user1';
-      user1.name = name;
-      user1.password = '123456';
-      user1.description = 'nice to meet you';
-      user1.location = [3, 3];
-      centerUser = await model.save(user1);
+      closeUser = await model.save(
+        User.fromJSON({
+          email: 'test@user.test',
+          name: name,
+          password: '123456',
+          description: 'nice to meet you',
+          location: [0, 0]
+        })
+      );
 
-      const user2 = new User();
-      user2.email = 'test@user';
-      user2.name = name;
-      user2.password = '123456';
-      user2.description = 'nice to meet you';
-      user2.location = [10, 10];
-      farUser = await model.save(user2);
+      centerUser = await model.save(
+        User.fromJSON({
+          email: 'test@user1.test',
+          name: name,
+          password: '123456',
+          description: 'nice to meet you',
+          location: [3, 3]
+        })
+      );
+
+      farUser = await model.save(
+        User.fromJSON({
+          email: 'test@user.test',
+          name: name,
+          password: '123456',
+          description: 'nice to meet you',
+          location: [10, 10]
+        })
+      );
     });
 
     it('should get nearby user list', async () => {
@@ -121,8 +130,8 @@ describe('Service', () => {
   describe('Relation', () => {
     const service = getInstance<RelationService>('relationService');
 
-    const fromUserEmail = 'test1@domain';
-    const toUserEmail = 'test2@domain';
+    const fromUserEmail = 'test1@domain.test';
+    const toUserEmail = 'test2@domain.test';
 
     before(async () => {
       const accountService = getInstance<AccountService>('accountService');
@@ -225,7 +234,7 @@ describe('Service', () => {
       // Generate callback URL
       const url = await service.getCallbackUrl({
         clientId,
-        id: String(uid),
+        uid: String(uid),
         redirectUri,
         timestamp
       });
@@ -247,7 +256,7 @@ describe('Service', () => {
       const userModel = getInstance<UserModel>('userModel');
       const user = await userModel.save(
         User.fromJSON({
-          email: 'anyway@domain',
+          email: 'anyway@domain.test',
           name: 'anyway'
         })
       );
@@ -256,7 +265,7 @@ describe('Service', () => {
       const clientId = 'anyway';
       const { accessToken } = await service.issueAccessToken(uid, clientId);
 
-      const user2 = await service.getUserFromAccessToken(accessToken);
+      const user2 = await service.getUserByAccessToken(accessToken);
       assert(user2);
 
       equal(String(user._id), String(user2._id));
@@ -267,7 +276,7 @@ describe('Service', () => {
       const userModel = getInstance<UserModel>('userModel');
       const user = await userModel.save(
         User.fromJSON({
-          email: 'anyway@domain',
+          email: 'anyway@domain.test',
           name: 'anyway'
         })
       );
@@ -284,7 +293,7 @@ describe('Service', () => {
       );
 
       // Get user data from refreshed new token
-      const user2 = await service.getUserFromAccessToken(accessToken);
+      const user2 = await service.getUserByAccessToken(accessToken);
       assert(user2);
 
       equal(String(user._id), String(user2._id));

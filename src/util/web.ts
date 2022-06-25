@@ -5,7 +5,7 @@ import Koa from 'koa';
 import Router from '@koa/router';
 import { getInstanceByClass } from './container';
 
-const debug = debuglog('WebLoading');
+const debug = debuglog('Container:WebLoad');
 
 const MIDDLEWARE_KEY = Symbol();
 const GUARD_KEY = Symbol();
@@ -185,7 +185,10 @@ export function Delete(path: string) {
 }
 
 function webMethodDecorator(path: string, method: string[]) {
-  assert(path.startsWith('/'), `path must start with '/'`);
+  assert(
+    path === '' || path.startsWith('/'),
+    `path must start with '/' or specify '' `
+  );
   return (object: any, propertyName: string) => {
     const list: MethodMeta[] = Reflect.getMetadata(METHOD_KEY, object) ?? [];
     list.push({ path, method, propertyName });

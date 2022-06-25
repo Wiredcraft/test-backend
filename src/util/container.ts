@@ -5,7 +5,7 @@ import assert from 'assert';
 import { sync as scanFiles } from 'glob';
 import * as Configs from '../config/config.default';
 
-const debug = debuglog('WebLoading');
+const debug = debuglog('Container:ClassLoad');
 
 type ConfigKey = keyof typeof Configs;
 

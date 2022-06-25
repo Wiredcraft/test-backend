@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h1>Wellcome test-backend</h1>
+  <h2>Sign in</h2>
+
+  <form action="/account/signin<%= querystring %>" method="post">
+    Email <input name="email" /><br />
+    Password <input name="password" type="password"><br />
+    <button>Sign in</button> 
+  </form>
+
+  <a id="signup" href="javascript: void(0)" onclick="jump('signup')">Sign up</a>
+
+  <script>
+    function jump(type) {
+      window.location = '/account/' + type + 
+        '?redirect_uri=' + encodeURIComponent(location.pathname) + // set current redirection
+        '&orgin_query=' + encodeURIComponent(location.search);     // encode last redirection
+    }
+  </script>
+</body>
+</html>

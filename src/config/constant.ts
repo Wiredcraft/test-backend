@@ -54,6 +54,18 @@ export const ERROR = {
       message: 'email should be a string'
     });
   },
+  get ENTITY_USER_EMAIL() {
+    return new CodeError({
+      statusCode: 400,
+      message: 'invalided email'
+    });
+  },
+  get MODEL_USER_GETONEBYID_USER_NOT_FOUND() {
+    return new CodeError({
+      statusCode: 404,
+      message: 'User not found'
+    });
+  },
   get SERVICE_ACCOUNT_SIGNIN_NOTFOUND_EMAIL() {
     return new CodeError({
       statusCode: 404,
@@ -84,6 +96,30 @@ export const ERROR = {
       message: 'No location found, please update location first'
     });
   },
+  get SERVICE_AUTH_COMMON_CLIENTID_NOT_FOUND() {
+    return new CodeError({
+      statusCode: 404,
+      message: 'Auth client id not found, please register client first'
+    });
+  },
+  get SERVICE_AUTH_REQUESTTOKEN_CACHE_NOT_FOUND() {
+    return new CodeError({
+      statusCode: 404,
+      message: 'RequestToken is invalid or out of date'
+    });
+  },
+  get SERVICE_AUTH_REQUESTTOKEN_UNEXPECTED_SOURCE() {
+    return new CodeError({
+      statusCode: 403,
+      message: 'Unexpected source of token'
+    });
+  },
+  get SERVICE_AUTH_ACCESSTOKEN_NOT_FOUND() {
+    return new CodeError({
+      statusCode: 404,
+      message: 'AccessToken is invalid or out of date'
+    });
+  },
   get COMMON_CACHE_LOCK_LOCKED() {
     return new CodeError({
       statusCode: 423,
@@ -94,6 +130,12 @@ export const ERROR = {
     return new CodeError({
       statusCode: 403,
       message: 'No permission'
+    });
+  },
+  get COMMON_INTERVAL_SERVER_ERROR() {
+    return new CodeError({
+      statusCode: 500,
+      message: 'Interval server error'
     });
   }
 };

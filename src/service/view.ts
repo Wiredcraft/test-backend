@@ -5,9 +5,9 @@ import { access } from 'fs/promises';
 
 @Provide()
 export class ViewService {
-  async render(tmpName: string, data?: Data) {
+  async render(tmpName: string, data: Data = {}) {
     const filePath = await this.getFilePath(tmpName);
-    return renderFile(filePath, data ?? {});
+    return renderFile(filePath, data);
   }
 
   private async getFilePath(tmpName: string) {

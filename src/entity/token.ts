@@ -40,4 +40,8 @@ export class Token {
     this.uid = ObjectId(uid);
     this.clientId = clientId;
   }
+
+  static from(token: Token) {
+    return new Token(token.uid, token.clientId);
+  }
 }

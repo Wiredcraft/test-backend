@@ -39,6 +39,7 @@ export class UserController {
    * @param ctx
    */
   @Get('/nearby')
+  @Guard(LoginRedirect)
   async getNearbyList(ctx: Context) {
     // 1. Construct data
     const page = Number(ctx.request.body.page) || 0;

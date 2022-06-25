@@ -1,11 +1,14 @@
 import { Server } from 'http';
 import supertest from 'supertest';
+import puppeteer from 'puppeteer';
 import { strict as assert, strictEqual as equal } from 'assert';
 import { app } from '../src';
 import { User } from '../src/entity/user';
 import { UserModel } from '../src/model/user';
 import { AccountService } from '../src/service/account';
 import { getInstance } from '../src/util/container';
+import { thridPartyApp } from './thridPartyApp';
+import { sleep } from '../src/util/utils';
 
 const name = 'lellansin';
 const email = 'lellansin@gmail.com';
@@ -16,7 +19,7 @@ describe('APIs', () => {
 
   before(() => {
     app.proxy = true;
-    server = app.listen();
+    server = app.listen(3000);
     request = supertest(server);
   });
 
@@ -40,7 +43,7 @@ describe('APIs', () => {
       return request
         .post('/account/signup')
         .send({ name, email, password })
-        .expect(200);
+        .expect(201);
     });
 
     it('[POST] /account/signin success', () => {
@@ -96,6 +99,10 @@ describe('APIs', () => {
     ];
 
     before(async () => {
+      // clear user
+      const userModel = getInstance<UserModel>('userModel');
+      await userModel.delete({});
+
       const service = getInstance<AccountService>('accountService');
       for (const one of persons) {
         await service.signUp(User.fromJSON(one));
@@ -195,6 +202,89 @@ describe('APIs', () => {
       for (const one of persons) {
         await userModel.delete({ email: one.email });
       }
+    });
+  });
+
+  describe('Auth', () => {
+    let appRequest: supertest.SuperTest<supertest.Test>;
+    let appServer: Server;
+    let browser: puppeteer.Browser;
+
+    (async () => {})();
+
+    before(async function () {
+      this.timeout(180000);
+
+      await new Promise((resolve) => {
+        appServer = thridPartyApp.listen(8080, () => {
+          resolve(null);
+        });
+      });
+      appRequest = supertest(appServer);
+      browser = await puppeteer.launch({
+        headless: false
+      });
+    });
+
+    it('should run a AuthFlow', async function () {
+      this.timeout(180000);
+      const name = 'lellansin';
+      const email =
+        (Math.random() * 10000000).toString().replace('.', '@') + '.test';
+      const password = '123456';
+
+      const page = await browser.newPage();
+
+      // A. user come to app
+      try {
+        await page.goto('http://localhost:8080/test-backend/user/nearby');
+        await sleep(2000);
+      } catch (err) {
+        // wait here to inspect Chrome
+        await sleep(1000000);
+      }
+      // B. last action will redirect page to auth server's authorization page
+      //    under authorization page we should ensure user signed
+      //    default situation is not signed, so we need to sign up/in
+      //    1. click <a> to go to sign in page
+      await page.click('#sign');
+      await sleep(2000);
+      //    2. click <a> to go to sign up page
+      await page.click('#signup');
+      await sleep(1000);
+      //    3. type register info
+      await page.type('input[name=email]', email);
+      await page.type('input[name=name]', name);
+      await page.type('input[name=password]', password);
+      await sleep(1000);
+      //    4. submit request
+      await page.click('button');
+      await sleep(1000);
+      //    5. after submit POST request,
+      //       this page will redirect to sign in page, to type
+      await page.type('input[name=email]', email);
+      await page.type('input[name=password]', password);
+      await sleep(1000);
+      //    6. submit request to sign in
+      await page.click('button');
+      await sleep(2000);
+      //    7. page redirect to auth
+      //       click button to Authorize
+      await page.click('button[name=Authorize]');
+      await sleep(1000);
+      //    8. redirect to app
+      const [data] = await page.evaluate(() =>
+        Array.from(document.querySelectorAll('pre')).map(
+          (elem) => elem.innerHTML
+        )
+      );
+      //       check if success
+      assert(data.length >= 2);
+    });
+
+    after(async () => {
+      appServer.close();
+      await browser.close();
     });
   });
 
