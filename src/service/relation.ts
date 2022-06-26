@@ -117,6 +117,7 @@ export class RelationService {
     return this.userModel.get({
       select: ['_id', 'name', 'description'],
       where: { _id: { $in: ids } as any }
+      // FindOperator $in not working
     });
   }
 }

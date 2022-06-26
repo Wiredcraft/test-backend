@@ -197,6 +197,12 @@ export class User {
     return user;
   }
 
+  /**
+   * For parse the document results of native mongodb client
+   *
+   * @param document
+   * @returns
+   */
   static fromDoc(document: any) {
     const user = new User();
     return Object.assign(user, document);

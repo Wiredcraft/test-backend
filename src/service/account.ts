@@ -34,11 +34,11 @@ export class AccountService {
 
     // 2. Verify password
     if (user.password !== this.encodePassword(user, password)) {
-      // TODO count+1 for count > 2 block the sign in
+      // Could count+1 for count > 2 block the sign in
       return Promise.reject(ERROR.SERVICE_ACCOUNT_SIGNIN_PASSWORD);
     }
 
-    // TODO Record user's Geo data
+    // Could record user's Geo data here
 
     return user;
   }

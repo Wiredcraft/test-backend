@@ -109,7 +109,7 @@ export class UserService {
       case NearbyType.FOLLOWERS:
         [toKey, fromKey] = [fromKey, toKey];
       case NearbyType.FOLLOWING:
-        const list = await this.model.aggregate<User>([
+        return this.model.aggregate<User>([
           {
             $geoNear: {
               near: user.location,
@@ -134,7 +134,6 @@ export class UserService {
           { $skip: page * limit },
           { $limit: limit }
         ]);
-        return (list ?? []).map((doc) => User.fromDoc(doc));
     }
   }
 }

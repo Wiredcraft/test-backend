@@ -18,7 +18,7 @@ import {
   UpdateResult
 } from 'typeorm';
 import { MongoDB, ObjectId } from '../db/mongo';
-import { User as Entity } from '../entity/user';
+import { User as Entity, User } from '../entity/user';
 import { ERROR } from '../config/constant';
 import { FollowType } from './relation';
 import { Inject, Provide } from '../util/container';
@@ -158,12 +158,13 @@ export class UserModel {
     return { affected, raw, generatedMaps: [] };
   }
 
-  async aggregate<T>(conditions: any[]): Promise<T[]> {
+  async aggregate<T>(
+    conditions: { [key: string]: object | number }[]
+  ): Promise<T[]> {
     const collection = await this.db.getNativeCollection('user');
     const cursor = await collection.aggregate(conditions);
     const list: T[] = await cursor.toArray();
-    // TODO transform docs to entities
-    return list;
+    return (list ?? []).map((doc) => User.fromDoc(doc));
   }
 
   private async getRepo() {
