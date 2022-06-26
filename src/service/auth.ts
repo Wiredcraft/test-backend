@@ -7,6 +7,7 @@
  *
  * - [UserModel](../modules/model_user.html)
  * - [TokenModel](../modules/model_token.html)
+ * - [ClientModel](../modules/model_client.html)
  * - [CacheService](../modules/service_cache.html)
  *
  * @module

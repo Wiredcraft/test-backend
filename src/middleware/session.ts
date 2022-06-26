@@ -3,11 +3,11 @@
  *
  * Using [koa-session](https://www.npmjs.com/package/koa-session) to handle session stuff.
  *
- * ## Scope
+ * ## Midlleware Scope
  *
  * Global Registered.
  *
- * ## Config
+ * ## Midlleware Config
  *
  * - @Config('keys')
  * - @Config('session')

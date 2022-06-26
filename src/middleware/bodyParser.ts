@@ -3,11 +3,11 @@
  *
  * Using [koa-bodyparser](https://www.npmjs.com/package/koa-bodyparser) to parse the request body.
  *
- * ## Scope
+ * ## Middleware Scope
  *
- * Global Registered.
+ * **Global Registered**.
  *
- * ## Config
+ * ## Middleware Config
  *
  * - @Config('bodyParser')
  * - Injected from `src/config/config.default`.

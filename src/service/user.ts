@@ -106,10 +106,15 @@ export class UserService {
             } as any // FindOperator not working
           }
         });
+      // For query nearby followers
       case NearbyType.FOLLOWERS:
+        // Opposite case
         [toKey, fromKey] = [fromKey, toKey];
+      // For query nearby following
       case NearbyType.FOLLOWING:
+        // Normal case
         return this.model.aggregate<User>([
+          // 1. sort all user in geo order from ${user.location}
           {
             $geoNear: {
               near: user.location,
@@ -117,20 +122,27 @@ export class UserService {
               maxDistance: 5000
             }
           },
+          // 2. query following relation (normal case)
           {
             $lookup: {
               from: 'relation',
+              // I. filter the someone's id that
               localField: '_id',
+              // II. match what the following's id (toId) of each relation
               foreignField: toKey,
+              // III. only if the relation's fromId equals ${user._id}
               pipeline: [{ $match: { [fromKey]: ObjectId(user._id) } }],
               as: 'relationship'
             }
           },
+          // 3. filter fromId = ${user._id} and toId = *
+          //    which means all the ${user}'s following
           {
             $match: {
               [`relationship.0.${fromKey}`]: ObjectId(user._id)
             }
           },
+          // 4. pagination
           { $skip: page * limit },
           { $limit: limit }
         ]);

@@ -3,11 +3,11 @@
  *
  * To check the thrown error, and response error info by [ErrorCode](../modules/config_constant.html).
  *
- * ## Scope
+ * ## Midlleware Scope
  *
  * Global Registered.
  *
- * ## Config
+ * ## Midlleware Config
  *
  * No config.
  *

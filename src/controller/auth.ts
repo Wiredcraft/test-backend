@@ -16,6 +16,7 @@
  * | POST   | /auth/authorizate | [Doc](../classes/controller_auth.AuthController.html#authorizate)
  * | POST   | /auth/token       | [Doc](../classes/controller_auth.AuthController.html#accessToken)
  * | PATCH  | /auth/token       | [Doc](../classes/controller_auth.AuthController.html#refreshToken)
+ * | POST   | /auth/client      | [Doc](../classes/controller_auth.AuthController.html#createClient)
  *
  * Check [index](./controller.html) for more controllers.
  *
