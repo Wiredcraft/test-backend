@@ -14,11 +14,12 @@
 import assert, { deepStrictEqual as deepEqual, equal } from 'assert';
 import { stringify } from 'querystring';
 import { ObjectID } from 'typeorm';
-import { ClientMap } from '../../test/thridPartyApp';
 import { ERROR } from '../config/constant';
 import { ObjectId } from '../db/mongo';
+import { Client } from '../entity/client';
 import { Token } from '../entity/token';
 import { User } from '../entity/user';
+import { ClientModel } from '../model/client';
 import { TokenModel } from '../model/token';
 import { UserModel } from '../model/user';
 import { Config, Inject, Provide } from '../util/container';
@@ -64,6 +65,9 @@ export class AuthService {
   private tokenModel: TokenModel;
 
   @Inject()
+  private clientModel: ClientModel;
+
+  @Inject()
   private cacheService: CacheService;
 
   /**
@@ -81,8 +85,7 @@ export class AuthService {
     redirectUri,
     permissions
   }: AuthorizationParams) {
-    // For test only, should be rewrite to rpc
-    const client = ClientMap[clientId];
+    const client = await this.getClient(clientId);
     assert(client, ERROR.SERVICE_AUTH_COMMON_CLIENTID_NOT_FOUND);
 
     // Generate request token
@@ -108,7 +111,7 @@ export class AuthService {
       )
     ]);
 
-    return `${client.callback}?${stringify({
+    return `${client.callbackUrl}?${stringify({
       request_token: token,
       redirect_uri: redirectUri
     })}`;
@@ -222,6 +225,19 @@ export class AuthService {
     assert(user, ERROR.MODEL_USER_GETONEBYID_USER_NOT_FOUND);
 
     return user;
+  }
+
+  async createClient(userId: string, name: string, callbackUrl: string) {
+    const client = Client.fromJSON({
+      name,
+      callbackUrl,
+      userId
+    });
+    return this.clientModel.create(client);
+  }
+
+  async getClient(clientId: string) {
+    return this.clientModel.getById(clientId);
   }
 
   getRequestToken(clientId: string, timestamp: number) {

@@ -93,7 +93,7 @@ export class RelationModel {
 
   private async getRepo() {
     if (!this.repo) {
-      this.repo = await this.db.getFollower();
+      this.repo = await this.db.getRepo(Entity);
     }
     return this.repo;
   }

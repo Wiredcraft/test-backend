@@ -7,6 +7,7 @@ import { RelationModel, FollowType } from '../src/model/relation';
 import { getInstance } from '../src/util/container';
 import { TokenModel } from '../src/model/token';
 import { Token } from '../src/entity/token';
+import { Relation } from '../src/entity/relation';
 
 const name = 'Lellansin';
 const email = 'lellansin@gmail.com';
@@ -116,7 +117,7 @@ describe('Model', () => {
     });
 
     after(async () => {
-      const repo = await db.getFollower();
+      const repo = await db.getRepo<Relation>(Relation);
       return repo.delete({});
     });
   });
@@ -173,7 +174,7 @@ describe('Model', () => {
     });
 
     after(async () => {
-      const repo = await db.getToken();
+      const repo = await db.getRepo<Token>(Token);
       await Promise.all(uids.map((uid) => repo.delete({ _id: uid })));
     });
   });

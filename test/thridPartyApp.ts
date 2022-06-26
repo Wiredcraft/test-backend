@@ -67,6 +67,7 @@
  */
 import Koa from 'koa';
 import session from 'koa-session';
+import bodyParser from 'koa-bodyparser';
 import Router from '@koa/router';
 import axios from 'axios';
 import { strict as assert } from 'assert';
@@ -80,9 +81,6 @@ const client = {
   id: '12345',
   name: 'Thrid-Party Application (Test)',
   callback: 'http://localhost:8080/test-backend/callback'
-};
-export const ClientMap: { [key: string]: typeof client } = {
-  '12345': client
 };
 
 const authServerUrl = 'http://localhost:3000';
@@ -167,9 +165,15 @@ router.get('/test-backend/callback', async (ctx) => {
 router.get('/session', (ctx) => {
   ctx.body = ctx.session?.toJSON();
 });
+router.put('/client', (ctx) => {
+  const data = ctx.request.body;
+  Object.assign(client, data);
+  ctx.status = 201;
+});
 
 thridPartyApp.keys = ['some secret'];
 thridPartyApp
+  .use(bodyParser())
   .use(session({ secure: false }, thridPartyApp))
   .use(router.routes())
   .use(router.allowedMethods());

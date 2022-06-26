@@ -17,11 +17,9 @@ import {
   Repository,
   UpdateResult
 } from 'typeorm';
-import { MongoDB } from '../db/mongo';
+import { MongoDB, ObjectId } from '../db/mongo';
 import { User as Entity } from '../entity/user';
 import { ERROR } from '../config/constant';
-// @ts-ignore
-import { ObjectId } from 'mongodb';
 import { FollowType } from './relation';
 import { Inject, Provide } from '../util/container';
 
@@ -84,9 +82,7 @@ export class UserModel {
    * @returns User | null
    */
   async getOneById(id: string | ObjectID): Promise<Entity | null> {
-    if (!(id instanceof ObjectId)) {
-      id = ObjectId(id);
-    }
+    id = ObjectId(id);
     assert(typeof id === 'object', ERROR.MODEL_USER_GETONEBYID_PARAMS);
     const results = await this.get({ where: { _id: id }, take: 1 });
     return results[0] ?? null;
@@ -172,7 +168,7 @@ export class UserModel {
 
   private async getRepo() {
     if (!this.repo) {
-      this.repo = await this.db.getUser();
+      this.repo = await this.db.getRepo(Entity);
     }
     return this.repo;
   }

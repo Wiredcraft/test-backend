@@ -282,7 +282,9 @@ describe('APIs', () => {
     let appServer: Server;
     let browser: puppeteer.Browser;
 
-    (async () => {})();
+    let clientId = '';
+    const clientName = 'Thrid Party App';
+    const callbackUrl = 'http://localhost:8080/test-backend/callback';
 
     before(async function () {
       this.timeout(180000);
@@ -299,6 +301,46 @@ describe('APIs', () => {
     });
 
     let authorizatedCookies: puppeteer.Protocol.Network.Cookie[] = [];
+
+    it('should get client', async () => {
+      const name = 'client robot';
+      const email = 'client@test.unit';
+      const password = '123456';
+      // Sign up new user
+      await request
+        .post('/account/signup')
+        .send({ name, email, password })
+        .expect(201);
+
+      // Sign in with the user
+      const response = await request
+        .post('/account/signin')
+        .send({ email, password })
+        .expect(200);
+      const cookies = response.headers['set-cookie'];
+
+      // Get client id from auth server
+      const resp = await authRequest
+        .post('/auth/client')
+        .send({
+          name: clientName,
+          callbackUrl
+        })
+        .set('Cookie', cookies)
+        .expect(200);
+      const { _id } = resp.body;
+      assert(_id, 'should get client id here');
+      clientId = _id;
+
+      // Save client id to thrid party app
+      return appRequest
+        .put('/client')
+        .send({
+          id: clientId,
+          name: clientName
+        })
+        .expect(201);
+    });
 
     it('should run a AuthFlow', async function () {
       this.timeout(180000);
@@ -386,7 +428,7 @@ describe('APIs', () => {
         .patch('/auth/token')
         .send({
           accessToken,
-          clientId: '12345',
+          clientId,
           permissions: ['email', 'name']
         })
         .expect(200);

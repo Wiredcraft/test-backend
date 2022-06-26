@@ -7,6 +7,7 @@
  *
  * - [UserModel](../modules/model_user.html)
  * - [RelationModel](../modules/model_relation.html)
+ * - [CacheService](../modules/service_cache.html)
  *
  * @module
  */

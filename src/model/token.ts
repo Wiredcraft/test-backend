@@ -14,9 +14,7 @@ import { MongoDB } from '../db/mongo';
 import { Token as Entity } from '../entity/token';
 import { AuthConfig } from '../service/auth';
 import { Config, Inject, Provide } from '../util/container';
-
-// @ts-ignore
-import { ObjectId } from 'mongodb';
+import { ObjectId } from '../db/mongo';
 
 export enum FollowType {
   FOLLOW,
@@ -126,7 +124,7 @@ export class TokenModel {
 
   private async getRepo() {
     if (!this.repo) {
-      this.repo = await this.db.getToken();
+      this.repo = await this.db.getRepo(Entity);
     }
     return this.repo;
   }

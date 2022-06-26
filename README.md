@@ -75,3 +75,66 @@ For example, if we get a Auth Controller, it will build instance tree liek:
       - Redis (Singleton)
   - ViewService
 ```
+
+## How to run
+
+### Before start
+
+This project requires `mongodb` and `redis`. We should config them first, and the
+config file located `src/config/config.default`:
+
+```typescript
+// src/config/config.default.ts
+
+export const mongo: DataSourceOptions = {
+  type: 'mongodb',
+  host: 'localhost',
+  port: 27017,
+  username: 'root',
+  password: '',
+  database: 'test-backend'
+};
+
+export const redis: RedisOptions = {
+  port: 6379
+};
+
+// ...
+```
+
+We can config the options above to connect to exist DB, or using docker:
+
+```
+docker run -p 27017:27017 -it mongo
+docker run -it -p 6379:6379 redis
+```
+
+If the MongoDB is good, we should create geographic index
+
+```shell
+$ mongo
+> use test-backend # database name configured in src/config/config.default
+> db.user.createIndex({ location: "2d" } )
+```
+
+### Run test-backend
+
+```shell
+# install dependencies
+npm install
+
+# run app
+npm run dev
+```
+
+### Run test with coverage
+
+```shell
+npm run cov
+```
+
+### Run thrid party app (for auth test)
+
+```shell
+npm run test-thrid-party-app
+```

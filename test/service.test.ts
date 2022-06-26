@@ -8,7 +8,6 @@ import { RelationService } from '../src/service/relation';
 import { NearbyType, UserService } from '../src/service/user';
 import { getInstance } from '../src/util/container';
 import { AuthService } from '../src/service/auth';
-import { ClientMap } from './thridPartyApp';
 import { stringify } from 'querystring';
 import { Redis } from '../src/db/redis';
 import { CacheService } from '../src/service/cache';
@@ -249,7 +248,12 @@ describe('Service', () => {
     it('should getCallbackUrl & get data with RequestToken from callbackUrl', async () => {
       // Prepare auth params
       const uid = ObjectId();
-      const clientId = '12345';
+      const client = await service.createClient(
+        uid,
+        'test client',
+        'http://xxx.xx/callback'
+      );
+      const clientId = String(client._id);
       const redirectUri = 'http://test';
       const timestamp = Date.now();
 
@@ -268,7 +272,7 @@ describe('Service', () => {
       });
       equal(
         url,
-        `${ClientMap[clientId].callback}?${stringify({
+        `${client.callbackUrl}?${stringify({
           request_token: token,
           redirect_uri: redirectUri
         })}`

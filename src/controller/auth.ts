@@ -116,13 +116,8 @@
  *
  * @module
  */
-import {
-  strict as assert,
-  strictEqual as equal,
-  deepStrictEqual as deepEqual
-} from 'assert';
+import { strict as assert, strictEqual as equal } from 'assert';
 import Koa from 'koa';
-import { ClientMap } from '../../test/thridPartyApp';
 import { ERROR } from '../config/constant';
 import { Context } from '../interface';
 import { LoginRedirect } from '../middleware/loginRedirect';
@@ -142,6 +137,50 @@ export class AuthController {
 
   @Config('auth')
   config: AuthConfig;
+
+  /**
+   * # POST /auth/client
+   *
+   * Thrid party app register client
+   *
+   * ## Parameters
+   *
+   * | Name        | Type     | Located | Required | Example             | Description
+   * |-------------|----------|---------|----------|---------------------|-----
+   * | name        | String   | Body    | Yes      | `Github` | encoded url
+   * | callbackUrl | String   | Body    | Yes      | `http://localhost:8080/test-backend/callback` |
+   *
+   * ## Returns
+   *
+   * StatusCode 200 with JSON formed [\<Client\>](../modules/entity_client.html)
+   *
+   * ## Error Codes
+   *
+   * | HttpStatusCode | ErrorCode | ErrorMessage | Description
+   * |----------------|-----------|--------------|-------------
+   * | 400            | 10000     | `invalid paramter: 'redirect_uri'` |
+   *
+   * Check [ErrorCode](../modules/constants.html) table for more.
+   *
+   * ## Class Method
+   */
+  @Post('/client')
+  @Guard(LoginRedirect)
+  async createClient(ctx: Context) {
+    const user = ctx.session.user;
+    assert(user);
+
+    // Check parameters
+    const { name, callbackUrl } = ctx.request.body;
+    assert(typeof name === 'string', ERROR.ParameterError('name'));
+    assert(
+      typeof callbackUrl === 'string',
+      ERROR.ParameterError('callbackUrl')
+    );
+
+    // Generate client and return
+    ctx.body = await this.authService.createClient(user.id, name, callbackUrl);
+  }
 
   /**
    * # GET /auth/authorizate
@@ -179,7 +218,7 @@ export class AuthController {
       typeof redirectUri === 'string',
       ERROR.ParameterError('redirect_uri')
     );
-    const client = ClientMap[clientId];
+    const client = await this.authService.getClient(clientId);
     assert(client, ERROR.SERVICE_AUTH_COMMON_CLIENTID_NOT_FOUND);
 
     // Save session for check later

@@ -18,6 +18,7 @@ import {
   Provide,
   Scope
 } from '../util/container';
+import { Client } from '../entity/client';
 
 // @ts-ignore
 export { ObjectId } from 'mongodb';
@@ -35,7 +36,7 @@ export class MongoDB {
     this.dataSource = new DataSource(
       Object.assign(this.config, {
         // default config
-        entities: [User, Relation, Token],
+        entities: [User, Relation, Token, Client],
         synchronize: true,
         useUnifiedTopology: true
       })
@@ -49,19 +50,9 @@ export class MongoDB {
     return this.dataSource;
   }
 
-  async getUser() {
+  async getRepo<T>(Class: any) {
     const ds = await this.getDataSource();
-    return ds.getRepository(User);
-  }
-
-  async getFollower() {
-    const ds = await this.getDataSource();
-    return ds.getRepository(Relation);
-  }
-
-  async getToken() {
-    const ds = await this.getDataSource();
-    return ds.getRepository(Token);
+    return ds.getRepository<T>(Class);
   }
 
   async getNativeCollection(collectionName: string) {
