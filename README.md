@@ -20,7 +20,7 @@
     - POST	/auth/authorizate	Doc
     - POST	/auth/token	Doc
     - PATCH	/auth/token	Doc
-- [ ] to link to each other
+- [x] to link to each other
   - Implements by
     - POST     /user/relation/follow
     - DELETE   /user/relation/follow

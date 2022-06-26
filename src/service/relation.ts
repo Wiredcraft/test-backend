@@ -17,10 +17,10 @@ import { UserModel } from '../model/user';
 import { CacheService } from './cache';
 
 // @ts-ignore
-import { ObjectId } from 'mongodb';
 import { ERROR } from '../config/constant';
 import { User } from '../entity/user';
 import { Inject, Provide } from '../util/container';
+import { ObjectId } from '../db/mongo';
 
 @Provide()
 export class RelationService {
@@ -34,11 +34,13 @@ export class RelationService {
 
   /**
    * Follow a user
-   * @param fromId whom follow
-   * @param toUserId whom to be followed
+   *
+   * @param uid whom follow
+   * @param toId whom to be followed
    */
-  async follow(fromId: ObjectID, toUserId: string | ObjectId) {
-    const toId = ObjectId(toUserId);
+  async follow(uid: string | ObjectID, toId: string | ObjectId) {
+    const fromId = ObjectId(uid);
+    toId = ObjectId(toId);
 
     // 1. Check if is followed
     const noFollowed = await this.model.isFollowed(fromId, toId);
@@ -49,7 +51,7 @@ export class RelationService {
     assert(await this.cache.lock(lockKey), ERROR.COMMON_CACHE_LOCK_LOCKED);
 
     // 3. Insert relationship
-    await this.model.follow(fromId, toId);
+    const relationship = await this.model.follow(fromId, toId);
 
     // 4. Count follow number
     await Promise.all([
@@ -58,28 +60,29 @@ export class RelationService {
       this.userModel.updateFollowNum(toId, FollowType.FOLLOWED)
       // Also can be cahced on Redis here
     ]);
+
+    return relationship;
   }
 
   /**
    * Unfollow a user
-   * @param fromId whom unfollow
+   * @param uid whom unfollow
    * @param toUserId whom to be unfollowed
    */
-  async unfollow(fromId: ObjectID, toUserId: string | ObjectID) {
+  async unfollow(uid: string | ObjectID, toUserId: string | ObjectID) {
+    const fromId = ObjectId(uid);
     const toId = ObjectId(toUserId);
 
     const result = await this.model.unfollow(fromId, toId);
-    // If no affected
-    if (!result?.affected) {
-      // do nothing
-      return;
+    // If affected
+    if (result.affected) {
+      // update follow count
+      await Promise.all([
+        this.userModel.updateFollowNum(fromId, FollowType.UNFOLLOW),
+        this.userModel.updateFollowNum(toId, FollowType.UNFOLLOWED)
+      ]);
     }
-    // Else there is affected
-    await Promise.all([
-      // update count
-      this.userModel.updateFollowNum(fromId, FollowType.UNFOLLOW),
-      this.userModel.updateFollowNum(toId, FollowType.UNFOLLOWED)
-    ]);
+    return result;
   }
 
   /**

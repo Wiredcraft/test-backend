@@ -48,10 +48,6 @@ export class RelationModel {
    * @param toId whom to be followed
    */
   async follow(fromId: ObjectID, toId: ObjectID) {
-    // Can't follow itself
-    if (String(fromId) === String(toId)) {
-      return null;
-    }
     const repo = await this.getRepo();
     const entity = new Entity();
     entity.fromId = fromId;

@@ -142,9 +142,30 @@ describe('APIs', () => {
         .send({ email, password })
         .expect(200);
       const cookies = response.headers['set-cookie'];
-      const { id } = response.body;
 
-      return request
+      await request
+        .post('/user/relation/follow')
+        .set('Cookie', cookies)
+        .send({ id: persons[0].id })
+        .expect(201);
+
+      await request
+        .get('/user/nearby')
+        .set('Cookie', cookies)
+        .query({ type: NearbyType.FOLLOWING })
+        .expect(200)
+        .then((response) => {
+          const list: any[] = response.body;
+          equal(list.length, 1, 'follow failed or get following list failed');
+        });
+
+      await request
+        .delete('/user/relation/follow')
+        .set('Cookie', cookies)
+        .send({ id: persons[0].id })
+        .expect(201);
+
+      await request
         .get('/user/nearby')
         .set('Cookie', cookies)
         .query({ type: NearbyType.FOLLOWING })
