@@ -4,14 +4,29 @@
 
 - [x] API for user CRUD
   - Implements by
-    - Auth
-    - User
-- [x] Complete user auth
+    - POST    /account/signin
+    - GET     /user/
+    - GET     /user/:id
+    - PATCH   /user/:id
+    - DELETE  /user/:id	Doc
+- [x] Logging strategy
   - Implements by
-    - Auth
-    - User
-- [x] to link to each other
-- [ ] check nearby friends
+    - POST    /account/signin
+    - POST    /account/signup
+    - Guard middleware
+- [x] User auth
+  - Implements by
+    - GET	/auth/authorizate	Doc
+    - POST	/auth/authorizate	Doc
+    - POST	/auth/token	Doc
+    - PATCH	/auth/token	Doc
+- [ ] to link to each other
+  - Implements by
+    - POST     /user/relation/follow
+    - DELETE   /user/relation/follow
+- [X] check nearby friends
+  - Implements by
+    - GET     /user/nearby
 
 ## Project Structure
 

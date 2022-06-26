@@ -64,9 +64,9 @@ export class MongoDB {
     return ds.getRepository(Token);
   }
 
-  getNativeCollection(collectionName: string) {
-    const mongo = (this.dataSource.driver as any).queryRunner
-      .databaseConnection;
+  async getNativeCollection(collectionName: string) {
+    const ds = await this.getDataSource();
+    const mongo = (ds.driver as any).queryRunner.databaseConnection;
     return mongo.db(this.config.database).collection(collectionName);
   }
 

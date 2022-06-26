@@ -21,7 +21,7 @@ import { ObjectId } from 'mongodb';
 
 export enum NearbyType {
   NO_RELATION,
-  FOLLOWED,
+  FOLLOWERS,
   FOLLOWING
 }
 
@@ -106,7 +106,7 @@ export class UserService {
             } as any // FindOperator not working
           }
         });
-      case NearbyType.FOLLOWED:
+      case NearbyType.FOLLOWERS:
         [toKey, fromKey] = [fromKey, toKey];
       case NearbyType.FOLLOWING:
         const list = await this.model.aggregate<User>([
@@ -134,7 +134,7 @@ export class UserService {
           { $skip: page * limit },
           { $limit: limit }
         ]);
-        return list ?? [];
+        return (list ?? []).map((doc) => User.fromDoc(doc));
     }
   }
 }

@@ -125,7 +125,7 @@ export class UserModel {
      * using native client workaround
      */
     // const repo = await this.getRepo();
-    const collection = this.db.getNativeCollection('user');
+    const collection = await this.db.getNativeCollection('user');
 
     let count = -1;
     let updateRes: {
@@ -163,7 +163,7 @@ export class UserModel {
   }
 
   async aggregate<T>(conditions: any[]): Promise<T[]> {
-    const collection = this.db.getNativeCollection('user');
+    const collection = await this.db.getNativeCollection('user');
     const cursor = await collection.aggregate(conditions);
     const list: T[] = await cursor.toArray();
     // TODO transform docs to entities

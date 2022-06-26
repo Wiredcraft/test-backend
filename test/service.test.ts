@@ -115,8 +115,14 @@ describe('Service', () => {
 
     it('should get nearby user list with relation', async () => {
       const relationService = getInstance<RelationService>('relationService');
-      console.log('build relation from', centerUser._id, farUser._id);
       await relationService.follow(centerUser._id, farUser._id);
+
+      const list = await service.getNearbyList(
+        centerUser,
+        NearbyType.FOLLOWERS,
+        0
+      );
+      equal(list.length, 0); // no followers
 
       const result = await service.getNearbyList(
         centerUser,

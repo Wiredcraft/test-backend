@@ -29,6 +29,7 @@ import {
 } from 'class-validator';
 import { validateEmail } from '../util/utils';
 import { ERROR } from '../config/constant';
+import { ObjectId } from '../db/mongo';
 
 @Entity()
 export class User {
@@ -151,6 +152,7 @@ export class User {
   }
 
   static fromJSON({
+    id,
     email,
     name,
     password,
@@ -159,6 +161,7 @@ export class User {
     description,
     location
   }: {
+    id?: string;
     email: string;
     name: string;
     password?: string;
@@ -173,8 +176,12 @@ export class User {
     const user = new User();
     user.email = email;
     user.name = name;
-    if (password) user.password = password;
-
+    if (id) {
+      user._id = ObjectId(id);
+    }
+    if (password) {
+      user.password = password;
+    }
     if (dob) {
       user.dob = new Date(dob);
     }
@@ -188,5 +195,10 @@ export class User {
       user.location = location;
     }
     return user;
+  }
+
+  static fromDoc(document: any) {
+    const user = new User();
+    return Object.assign(user, document);
   }
 }

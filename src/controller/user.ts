@@ -27,7 +27,7 @@ import { validate } from 'class-validator';
 import { Inject, Provide } from '../util/container';
 import { Controller, Delete, Get, Guard, Patch } from '../util/web';
 import { ERROR } from '../config/constant';
-import { UserService } from '../service/user';
+import { NearbyType, UserService } from '../service/user';
 import { User } from '../entity/user';
 import { LoginRedirect } from '../middleware/loginRedirect';
 import { StatCostTime } from '../middleware/stat';
@@ -86,6 +86,8 @@ export class UserController {
    * | Name         | Type   | Located | Required | Example             | Description
    * |--------------|--------|---------|----------|---------------------|-----
    * | page         | Number | Query   | No       | `2`                 | start from 0
+   * | type         | Number | Query   | No       | `0`                 | <ul><li>0 No relation</li><li>1 Followers</li><li>1 Following</li></ul>
+   * 
    *
    * ## Returns
    *
@@ -95,7 +97,7 @@ export class UserController {
    *
    * | HttpStatusCode | ErrorCode  | ErrorMessage | Description
    * |----------------|------------|--------------|-------------
-   * | 428            | 12200      | `'No location found, please update location first'` |
+   * | 428            | 12200      | `No location found, please update location first` |
    *
    * Check [ErrorCode](../modules/constants.html) table for more.
    *
@@ -106,7 +108,8 @@ export class UserController {
   @Guard(StatCostTime)
   async getNearbyList(ctx: Context) {
     // 1. Construct data
-    const page = Number(ctx.request.body.page) || 0;
+    const page = Number(ctx.query.page) || 0;
+    const type = Number(ctx.query.type) || NearbyType.NO_RELATION;
 
     // 2. Get signin user data
     const user = ctx.session.user;
@@ -114,6 +117,7 @@ export class UserController {
     // 2. Query neighbour from user's location
     const list = await this.userService.getNearbyList(
       User.fromJSON(user),
+      type,
       page
     );
     ctx.body = list.map((user) => user.toJSON());

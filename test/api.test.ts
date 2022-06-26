@@ -10,6 +10,7 @@ import { getInstance } from '../src/util/container';
 import { thridPartyApp } from './thridPartyApp';
 import { sleep } from '../src/util/utils';
 import * as Cookies from 'cookies';
+import { NearbyType } from '../src/service/user';
 
 const name = 'lellansin';
 const email = 'lellansin@gmail.com';
@@ -134,7 +135,31 @@ describe('APIs', () => {
         });
     });
 
-    it('[GET] /user/nearby', async () => {
+    it('[GET] /user/nearby with relation', async () => {
+      const { email, password } = persons[1];
+      const response = await request
+        .post('/account/signin')
+        .send({ email, password })
+        .expect(200);
+      const cookies = response.headers['set-cookie'];
+      const { id } = response.body;
+
+      return request
+        .get('/user/nearby')
+        .set('Cookie', cookies)
+        .query({ type: NearbyType.FOLLOWING })
+        .expect(200)
+        .then((response) => {
+          const list: any[] = response.body;
+          equal(
+            list.length,
+            0,
+            'return epmty list, for user not following others'
+          );
+        });
+    });
+
+    it('[GET] /user/nearby with no relation', async () => {
       const { email, password } = persons[1];
       const response = await request
         .post('/account/signin')
@@ -144,6 +169,7 @@ describe('APIs', () => {
       return request
         .get('/user/nearby')
         .set('Cookie', cookies)
+        .query({ type: 0 })
         .expect(200)
         .then((response) => {
           // Geo location [ one [3, 3], two [0, 0], three [10, 10] ]
@@ -311,6 +337,7 @@ describe('APIs', () => {
     });
 
     it('should refresh token', async () => {
+      // Get 3rd-party app's cookie after authorization
       const cookies: Cookies.Cookie[] = [];
       for (const cookie of authorizatedCookies) {
         // Cookies.Cookie.SetOption
@@ -322,6 +349,7 @@ describe('APIs', () => {
         );
       }
 
+      // From 3rd-party app test API get it's accessToken
       const resp = await appRequest
         .get('/session')
         .set(
@@ -332,11 +360,15 @@ describe('APIs', () => {
       const { accessToken } = resp.body;
       assert(accessToken);
 
-      const response = await authRequest.patch('/auth/token').send({
-        accessToken,
-        clientId: '12345',
-        permissions: ['email', 'name']
-      });
+      // Use the accessToken, manually refresh
+      await authRequest
+        .patch('/auth/token')
+        .send({
+          accessToken,
+          clientId: '12345',
+          permissions: ['email', 'name']
+        })
+        .expect(200);
     });
 
     after(async () => {
