@@ -364,7 +364,7 @@ describe('APIs', () => {
       //    default situation is not signed, so we need to sign up/in
       //    1. click <a> to go to sign in page
       await page.click('#sign');
-      await sleep(2000);
+      await sleep(1000);
       //    2. click <a> to go to sign up page
       await page.click('#signup');
       await sleep(1000);
@@ -373,7 +373,7 @@ describe('APIs', () => {
       await page.type('input[name=name]', name);
       await page.type('input[name=password]', password);
       await sleep(1000);
-      //    4. submit request
+      //    4. submit request to sign up new account
       await page.click('button');
       await sleep(1000);
       //    5. after submit POST request,
@@ -384,11 +384,13 @@ describe('APIs', () => {
       //    6. submit request to sign in
       await page.click('button');
       await sleep(2000);
-      //    7. page redirect to auth
-      //       click button to Authorize
+      // C. 7. redirect to auth page
+      //       the user click button to Authorize 3rd-party app to access its data
       await page.click('button[name=Authorize]');
+      // D.    thrid-party app callback
+      //       check in [test/thridPartyApp.ts#L135](https://github.com/Lellansin/test-backend/blob/master/test/thridPartyApp.ts#L135)
       await sleep(1000);
-      //    8. redirect to app
+      // E. 8. redirect to app
       const [data] = await page.evaluate(() =>
         Array.from(document.querySelectorAll('pre')).map(
           (elem) => elem.innerHTML

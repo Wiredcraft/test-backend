@@ -30,6 +30,9 @@
  *
  * ## Simple AuthFlow
  *
+ * Before this flow starts, thridPartyApp should have got the client id
+ * through [/POST /auth/client](../classes/controller_auth.AuthController.html#createClient).
+ *
  * ### Phase A
  *
  * ```

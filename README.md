@@ -163,6 +163,11 @@ For auth implement, recomend reading:
 - Document: [AuthFlow](https://lellansin.github.io/test-backend/modules/controller_auth.html#simple-authflow)
 - Code: [Auth APIs](https://github.com/Lellansin/test-backend/blob/master/src/controller/auth.ts), [3rd-party Test App](https://github.com/Lellansin/test-backend/blob/master/test/thridPartyApp.ts) and [e2e test](https://github.com/Lellansin/test-backend/blob/master/test/api.test.ts#L345)
 
+For nearby following implement, recomend reading:
+
+- [Relation Entity](https://github.com/Lellansin/test-backend/blob/master/src/entity/relation.ts)
+- [UserSerivce#getNearbyList](https://github.com/Lellansin/test-backend/blob/master/src/service/user.ts#L113)
+
 ## Last
 
-Thank for reading, look forward to partnering together.
+Thanks for reading, I'm looking forward to our collaboration.
