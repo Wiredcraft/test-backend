@@ -30,7 +30,8 @@ export class RelationService {
   @Inject('relationModel')
   private model: RelationModel;
 
-  private cache = new CacheService();
+  @Inject('cacheService')
+  private cache: CacheService;
 
   /**
    * Follow a user

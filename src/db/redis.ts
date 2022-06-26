@@ -37,6 +37,16 @@ export class Redis {
     return this.client.setex(key, ttl, value);
   }
 
+  increx(key: string, ttl: number) {
+    const promise = this.client.incr(key);
+    this.client.expire(key, ttl);
+    return promise;
+  }
+
+  unset(key: string) {
+    return this.client.del(key);
+  }
+
   close() {
     this.client.disconnect();
   }

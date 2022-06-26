@@ -44,10 +44,13 @@ export class CacheService {
   }
 
   async lock(key: string) {
-    return true;
+    // lock for one second
+    const increaseZeroRes = await this.redis.increx(key, 1);
+    return increaseZeroRes === 1;
   }
 
   async unlock(key: string) {
-    return true;
+    const code = await this.redis.unset(key);
+    return code === 1;
   }
 }
