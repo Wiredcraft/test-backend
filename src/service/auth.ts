@@ -1,3 +1,16 @@
+/**
+ * # Auth Service
+ *
+ * For auth (authentication/authorization/etc.)
+ *
+ * ## Injected Dependency
+ *
+ * - [UserModel](../modules/model_user.html)
+ * - [TokenModel](../modules/model_token.html)
+ * - [CacheService](../modules/service_cache.html)
+ *
+ * @module
+ */
 import assert, { deepStrictEqual as deepEqual, equal } from 'assert';
 import { stringify } from 'querystring';
 import { ObjectID } from 'typeorm';
@@ -176,8 +189,12 @@ export class AuthService {
       take: 1
     });
     assert(oldToken, ERROR.SERVICE_AUTH_ACCESSTOKEN_NOT_FOUND);
-    equal(oldToken.clientId, clientId);
-    deepEqual(oldToken.permissions, permissions);
+    equal(oldToken.clientId, clientId, ERROR.SERVICE_AUTH_ACESSTOKEN_INVALID);
+    deepEqual(
+      oldToken.permissions,
+      permissions,
+      ERROR.SERVICE_AUTH_ACESSTOKEN_INVALID
+    );
 
     // Disable the old one
     const result = await this.tokenModel.disable(oldToken._id);

@@ -78,25 +78,25 @@ describe('APIs', () => {
       location: [number, number];
       password?: string;
     }[] = [
-        {
-          email,
-          name,
-          password,
-          location: [3, 3]
-        },
-        {
-          email: 'test1@apis.test',
-          name: 'api test1',
-          password,
-          location: [0, 0]
-        },
-        {
-          email: 'test2@apis.test',
-          name: 'api test2',
-          password,
-          location: [10, 10]
-        }
-      ];
+      {
+        email,
+        name,
+        password,
+        location: [3, 3]
+      },
+      {
+        email: 'test1@apis.test',
+        name: 'api test1',
+        password,
+        location: [0, 0]
+      },
+      {
+        email: 'test2@apis.test',
+        name: 'api test2',
+        password,
+        location: [10, 10]
+      }
+    ];
 
     before(async () => {
       // clear user
@@ -126,13 +126,12 @@ describe('APIs', () => {
         .get('/user/')
         .expect(200)
         .then((response) => {
-
           const list: any[] = response.body;
           list.map((res, idx) => {
             assert(res.email === persons[idx].email);
             persons[idx].id = res.id;
           });
-        })
+        });
     });
 
     it('[GET] /user/nearby', async () => {
@@ -236,7 +235,7 @@ describe('APIs', () => {
     let appServer: Server;
     let browser: puppeteer.Browser;
 
-    (async () => { })();
+    (async () => {})();
 
     before(async function () {
       this.timeout(180000);
@@ -306,7 +305,7 @@ describe('APIs', () => {
           (elem) => elem.innerHTML
         )
       );
-      authorizatedCookies = await page.cookies()
+      authorizatedCookies = await page.cookies();
       //       check if success
       assert(data.length >= 2);
     });
@@ -315,14 +314,20 @@ describe('APIs', () => {
       const cookies: Cookies.Cookie[] = [];
       for (const cookie of authorizatedCookies) {
         // Cookies.Cookie.SetOption
-        cookies.push(new Cookies.Cookie(cookie.name, cookie.value, {
-          domain: cookie.domain,
-          httpOnly: cookie.httpOnly,
-        }));
+        cookies.push(
+          new Cookies.Cookie(cookie.name, cookie.value, {
+            domain: cookie.domain,
+            httpOnly: cookie.httpOnly
+          })
+        );
       }
 
-      const resp = await appRequest.get('/session')
-        .set('Cookie', cookies.map((cookie) => cookie.toString()))
+      const resp = await appRequest
+        .get('/session')
+        .set(
+          'Cookie',
+          cookies.map((cookie) => cookie.toString())
+        )
         .expect(200);
       const { accessToken } = resp.body;
       assert(accessToken);
@@ -331,8 +336,8 @@ describe('APIs', () => {
         accessToken,
         clientId: '12345',
         permissions: ['email', 'name']
-      })
-    })
+      });
+    });
 
     after(async () => {
       appServer.close();

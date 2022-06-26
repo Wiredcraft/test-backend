@@ -1,6 +1,17 @@
+/**
+ * # Relation Service
+ *
+ * For followers/following .
+ *
+ * ## Injected Dependency
+ *
+ * - [UserModel](../modules/model_user.html)
+ * - [RelationModel](../modules/model_relation.html)
+ *
+ * @module
+ */
 import assert from 'assert';
 import { ObjectID } from 'typeorm';
-import { MongoDB } from '../db/mongo';
 import { RelationModel, FollowType } from '../model/relation';
 import { UserModel } from '../model/user';
 import { CacheService } from './cache';

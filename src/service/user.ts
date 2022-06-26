@@ -1,3 +1,14 @@
+/**
+ * # User Service
+ *
+ * For user data's CRUD.
+ *
+ * ## Injected Dependency
+ *
+ * - [UserModel](../modules/model_user.html)
+ *
+ * @module
+ */
 import assert from 'assert';
 import { User } from '../entity/user';
 import { ERROR } from '../config/constant';

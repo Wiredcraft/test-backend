@@ -1,3 +1,17 @@
+/**
+ * # Token Entity
+ *
+ * | property    | Type       | Default     |
+ * |-------------|------------|-------------|
+ * | _id         | ObjectID   |
+ * | uid         | ObjectID   |
+ * | clientId    | String     |
+ * | permissions | String[]   |
+ * | createdAt   | Date       | new Date()
+ * | deletedAt   | Date       |
+ *
+ * @module
+ */
 import 'reflect-metadata';
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 

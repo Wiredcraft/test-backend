@@ -1,3 +1,24 @@
+/**
+ * # Middleware: Session
+ *
+ * Using [koa-session](https://www.npmjs.com/package/koa-session) to handle session stuff.
+ *
+ * ## Scope
+ *
+ * Global Registered.
+ *
+ * ## Config
+ *
+ * - @Config('keys')
+ * - @Config('session')
+ * - Injected from `src/config/config.default`.
+ *
+ *
+ * <br></br>
+ * Check [index](../modules/middleware.html) for more middleware.
+ *
+ * @module
+ */
 import Koa from 'koa';
 import session from 'koa-session';
 import { Config, Provide } from '../util/container';

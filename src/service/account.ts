@@ -1,3 +1,14 @@
+/**
+ * # Account Service
+ *
+ * For account sign in & sign up.
+ *
+ * ## Injected Dependency
+ *
+ * - [UserModel](../classes/model_user.UserModel.html)
+ *
+ * @module
+ */
 import assert from 'assert';
 import { UserModel } from '../model/user';
 import { User } from '../entity/user';

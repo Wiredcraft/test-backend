@@ -1,10 +1,37 @@
 /**
- * README
+ * # Auth Controller
  *
- * @description Auth serverside endpoints implements
+ * Auth serverside endpoints implements
  *
- * @H1 Simple AuthFlow
+ * ## Injected Dependency
  *
+ * - [AuthService](../modules/service_auth.html)
+ * - [ViewService](../modules/service_view.html)
+ *
+ * ## APIs
+ *
+ * | Method | Path             | Link
+ * |--------|------------------|--------------------------
+ * | GET    | /auth/authorizate | [Doc](../classes/controller_auth.AuthController.html#renderPage)
+ * | POST   | /auth/authorizate | [Doc](../classes/controller_auth.AuthController.html#authorizate)
+ * | POST   | /auth/token       | [Doc](../classes/controller_auth.AuthController.html#accessToken)
+ * | PATCH  | /auth/token       | [Doc](../classes/controller_auth.AuthController.html#refreshToken)
+ *
+ * Check [index](./controller.html) for more controllers.
+ *
+ * ## Middleware
+ *
+ * | Scope  | Name         | Link
+ * |--------|--------------|--------------------------
+ * | Global | authenticate | [method](../classes/controller_auth.AuthController.html#authenticate)
+ *
+ * Check [index](../modules/middleware.html) for more middleware.
+ *
+ * ## Simple AuthFlow
+ *
+ * ### Phase A
+ *
+ * ```
  * A. user come to thridPartyApp (for test)
  *    to see user's nearby list of test-backend (current project, alias currentServer)
  *    from user browser
@@ -12,6 +39,11 @@
  *        --> check accessToken
  *          --> no accessToken found (supposed to be first time in this flow)
  *          --> redirect to currentServer
+ * ```
+ *
+ * ### Phase B
+ *
+ * ```
  * B. come to currentServer's authorization page
  *      --> GET 'http://localhost:3000/auth/authorizate' @currentServer
  *        --> check if user sign in
@@ -19,6 +51,11 @@
  *            --> let user sign in
  *          --> if user online, continue
  *            --> let user check the permission, then submit request
+ * ```
+ *
+ * ### Phase C
+ *
+ * ```
  * C. user submit authorization to currentServer
  *      --> POST 'http://localhost:3000/auth/authorizate' @currentServer
  *        --> check bla bla
@@ -28,6 +65,11 @@
  *            --> generate request token
  *            --> from client info get callback url of thridPartyApp
  *            --> redirect callback
+ * ```
+ *
+ * ### Phase D
+ *
+ * ```
  * D. callback to thridPartyApp
  *      --> GET '/test-backend/callback' thridPartyApp
  *        --> check bla bla
@@ -42,6 +84,11 @@
  *                --> if good
  *                  --> generate and return accessToken
  *        --> save accessToken in session thridPartyApp
+ * ```
+ *
+ * ### Phase E
+ *
+ * ```
  * E. redirect to first step
  *      --> GET '/test-backend/user/nearby' thridPartyApp
  *        --> check accessToken
@@ -53,17 +100,21 @@
  *                --> save user info in session
  *            --> return results
  *          --> return results from resourceServer
+ *```
  *
- * @H1 Step Guide
+ * ## Comment Guide
  *
- * Number(Char)
+ * `AuthFlow: $Number($Char)`
  *
- * Number means step from @currentServer
- * Char   means phase of entire auth flow
+ * - $Number means step from @currentServer
+ * - $Char   means phase of entire auth flow
  *
- * @Examples
- *  1(B) means 1st step of currentServer within this flow (at B phase)
- *  5(D) means 5th step of currentServer within this flow (at D phase)
+ * ### Examples
+ *
+ * - 1(B) means 1st step of currentServer within this flow (at B phase).
+ * - 5(D) means 5th step of currentServer within this flow (at D phase).
+ *
+ * @module
  */
 import {
   strict as assert,
@@ -93,16 +144,41 @@ export class AuthController {
   config: AuthConfig;
 
   /**
-   * GET /auth/authorizate
+   * # GET /auth/authorizate
    *
-   * AuthFlow: 1(B) show authorization page, let user confirm to authorizate
+   * AuthFlow: 1([B](../modules/controller_auth.html#phase-b)) show authorization page, let user confirm to authorizate
+   *
+   * ## Parameters
+   *
+   * | Name         | Type   | Located | Required | Example             | Description
+   * |--------------|--------|---------|----------|---------------------|-----
+   * | redirect_uri | String | Query   | Yes      | `http%3A%2F%2Flocalhost%3A8080%2Ftest-backend%2Fuser%2Fnearby` | encoded url
+   * | client_id    | String | Query   | Yes      | `'12345'`
+   *
+   * ## Returns
+   *
+   * html page, rendered by [view/auth.ejs](https://github.com/Lellansin/test-backend/blob/master/src/view/auth.ejs).
+   *
+   * ## Error Codes
+   *
+   * | HttpStatusCode | ErrorCode | ErrorMessage | Description
+   * |----------------|-----------|--------------|-------------
+   * | 400            | 10000     | `invalid paramter: '${name}'` |
+   * | 400            | 12300     | `Auth client id not found, ...` |
+   *
+   * Check [ErrorCode](../modules/constants.html) table for more.
+   *
+   * ## Class Method
    */
   @Get('/authorizate')
   async renderPage(ctx: Context) {
     // Check parameters
     const { client_id: clientId, redirect_uri: redirectUri } = ctx.query;
-    assert(typeof clientId === 'string');
-    assert(typeof redirectUri === 'string');
+    assert(typeof clientId === 'string', ERROR.ParameterError('client_id'));
+    assert(
+      typeof redirectUri === 'string',
+      ERROR.ParameterError('redirect_uri')
+    );
     const client = ClientMap[clientId];
     assert(client, ERROR.SERVICE_AUTH_COMMON_CLIENTID_NOT_FOUND);
 
@@ -127,9 +203,32 @@ export class AuthController {
   }
 
   /**
-   * POST /auth/authorizate
+   * # POST /auth/authorizate
    *
-   * AuthFlow: 2(C) user submit authorization
+   * AuthFlow: 2([C](../modules/controller_auth.html#phase-c)) user submit authorization
+   *
+   * ## Parameters
+   *
+   * | Name        | Type     | Located | Required | Example             | Description
+   * |-------------|----------|---------|----------|---------------------|-----
+   * | redirectUri | String   | Body    | Yes      | `%2Faccount%2Fsignin...` | encoded url
+   * | clientId    | String   | Body    | Yes      | `12345` |
+   * | permissions | String[] | Body    | Yes      | `['email', 'name']`
+   *
+   * ## Returns
+   *
+   * StatusCode 302 with location header.
+   *
+   * ## Error Codes
+   *
+   * | HttpStatusCode | ErrorCode | ErrorMessage | Description
+   * |----------------|-----------|--------------|-------------
+   * | 400            | 10000     | `invalid paramter: 'redirect_uri'` |
+   * | 404            | 12300     | `Auth client id not found, ...` |
+   *
+   * Check [ErrorCode](../modules/constants.html) table for more.
+   *
+   * ## Class Method
    */
   @Post('/authorizate')
   @Guard(LoginRedirect)
@@ -140,9 +239,9 @@ export class AuthController {
     // 3(C) Check if request valid
     const { permissions, redirectUri, clientId } = ctx.request.body;
     const timestamp = Number(ctx.request.body.timestamp);
-    equal(auth.redirectUri, redirectUri);
-    equal(auth.clientId, clientId);
-    equal(auth.timestamp, timestamp);
+    equal(auth.redirectUri, redirectUri, ERROR.ParameterError('redirectUri'));
+    equal(auth.clientId, clientId, ERROR.ParameterError('clientId'));
+    equal(auth.timestamp, timestamp, ERROR.ParameterError('timestamp'));
 
     // 4(C) Generate callback with validation token
     const { id } = ctx.session.user;
@@ -159,9 +258,35 @@ export class AuthController {
   }
 
   /**
-   * POST /auth/token
+   * # POST /auth/token
    *
-   * AuthFlow: 6(D) Client request for accessToken
+   * AuthFlow: 6([D](../modules/controller_auth.html#phase-d)) Client request for accessToken
+
+   * ## Parameters
+   * 
+   * | Name                 | Type   | Located | Required | Example             | Description 
+   * |----------------------|--------|---------|----------|---------------------|-----
+   * | x-auth-request-token | String | Header  | Yes      | `'62b7514a7d1dbf71da4c5647'` 
+   * 
+   * ## Returns
+   * 
+   * ```typescript
+   * interface JsonBody {
+   *   accessToken: string;
+   * }
+   * ```
+   * 
+   * ## Error Codes
+   * 
+   * | HttpStatusCode | ErrorCode | ErrorMessage | Description 
+   * |----------------|-----------|--------------|-------------
+   * | 400            | 10000     | `invalid paramter: 'redirect_uri'` |
+   * | 404            | 12301     | `Auth client id not found, ...` |
+   * | 403            | 12302     | `Unexpected source of token` |
+   * 
+   * Check [ErrorCode](../modules/constants.html) table for more.
+   * 
+   * ## Class Method
    */
   @Post('/token')
   async accessToken(ctx: Context) {
@@ -205,15 +330,49 @@ export class AuthController {
   }
 
   /**
-   * PATCH /auth/token
+   * # PATCH /auth/token
+   *
+   * refresh AccessToken
+   *
+   * ## Parameters
+   *
+   * | Name        | Type     | Located | Required | Example             | Description
+   * |-------------|----------|---------|----------|---------------------|-----
+   * | redirectUri | String   | Body    | Yes      | `%2Faccount%2Fsignin...` | encoded url
+   * | clientId    | String   | Body    | Yes      | `12345` |
+   * | permissions | String[] | Body    | Yes      | `['email', 'name']`
+   *
+   * ## Returns
+   *
+   * ```typescript
+   * interface JsonBody {
+   *   accessToken: string;
+   * }
+   * ```
+   *
+   * ## Error Codes
+   *
+   * | HttpStatusCode | ErrorCode | ErrorMessage | Description
+   * |----------------|-----------|--------------|-------------
+   * | 400            | 10000     | `invalid paramter: 'redirect_uri'` |
+   * | 404            | 12303     | `AccessToken is invalid or out of date` |
+   * | 403            | 12302     | `AccessToken is invalid or out of date` |
+   * | 500            | 1002      | `Interval server error` | DB write failed
+   *
+   * Check [ErrorCode](../modules/constants.html) table for more.
+   *
+   * ## Class Method
    */
   @Patch('/token')
   async refreshToken(ctx: Context) {
     // Check parameters
     const { accessToken, clientId, permissions } = ctx.request.body;
-    assert(typeof accessToken === 'string');
-    assert(typeof clientId === 'string');
-    assert(Array.isArray(permissions));
+    assert(
+      typeof accessToken === 'string',
+      ERROR.ParameterError('accessToken')
+    );
+    assert(typeof clientId === 'string', ERROR.ParameterError('client_id'));
+    assert(Array.isArray(permissions), ERROR.ParameterError('permissions'));
 
     ctx.body = await this.authService.refreshAccessToken(
       accessToken,

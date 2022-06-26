@@ -1,3 +1,14 @@
+/**
+ * # Relation Model
+ *
+ * For data access of MongoDB with [\<Relation\>](../modules/entity_relation.html).
+ *
+ * ## Injected Dependency
+ *
+ * - [MongoDB](../modules/db_mongo.html)
+ *
+ * @module
+ */
 import { ObjectID, Repository } from 'typeorm';
 import { MongoDB } from '../db/mongo';
 import { Relation as Entity } from '../entity/relation';

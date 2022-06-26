@@ -1,3 +1,12 @@
+/**
+ * # Redis
+ *
+ * Connection holder with Redis.
+ *
+ * Configuration injected from `src/config/config.default`.
+ *
+ * @module
+ */
 import {
   Config,
   ContainerClassScope,

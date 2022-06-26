@@ -1,3 +1,22 @@
+/**
+ * # User Entity
+ *
+ * | property     | Type             | Default     |
+ * |--------------|------------------|-------------|
+ * | _id          | ObjectID         |
+ * | email        | String           |
+ * | name         | String           |
+ * | password     | String           |
+ * | dob          | Date             | new Date()
+ * | address      | String           | ''
+ * | description  | String           | ''
+ * | createdAt    | Date             | new Date()
+ * | followerNum  | Number           | 0
+ * | followingNum | Number           | 0
+ * | location     | [number, number] | [0, 0]
+ *
+ * @module
+ */
 import 'reflect-metadata';
 import assert from 'assert';
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';

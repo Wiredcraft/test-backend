@@ -1,3 +1,14 @@
+/**
+ * # Token Model
+ *
+ * For data access of MongoDB with [\<Token\>](../modules/entity_token.html).
+ *
+ * ## Injected Dependency
+ *
+ * - [MongoDB](../modules/db_mongo.html)
+ *
+ * @module
+ */
 import { FindManyOptions, ObjectID, Repository } from 'typeorm';
 import { MongoDB } from '../db/mongo';
 import { Token as Entity } from '../entity/token';

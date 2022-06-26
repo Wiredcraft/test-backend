@@ -1,9 +1,20 @@
+/**
+ * # Configuration File
+ *
+ * @public
+ */
 import type { DataSourceOptions } from 'typeorm';
 import type { RedisOptions } from 'ioredis';
 import type { opts as SessionOpts } from 'koa-session';
 import { Options as BodyParserOpts } from 'koa-bodyparser';
 import type { LoginRedirectConfig } from '../middleware/loginRedirect';
 import { AuthConfig } from '../service/auth';
+
+/**
+ * This works too, but is more verbose
+ * @enum
+ */
+export const port = 3000;
 
 export const mongo: DataSourceOptions = {
   type: 'mongodb',

@@ -1,3 +1,22 @@
+/**
+ * # Middleware: StatCostTime
+ *
+ * For test only.
+ *
+ * ## Scope
+ *
+ * For local.
+ *
+ * ## Config
+ *
+ * No config.
+ *
+ *
+ * <br></br>
+ * Check [index](../modules/middleware.html) for more middleware.
+ *
+ * @module
+ */
 import Koa from 'koa';
 import { Provide } from '../util/container';
 import { Middleware } from '../util/web';

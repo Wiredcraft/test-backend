@@ -1,3 +1,14 @@
+/**
+ * # User Model
+ *
+ * For data access of MongoDB with [\<User\>](../modules/entity_user.html).
+ *
+ * ## Injected Dependency
+ *
+ * - [MongoDB](../modules/db_mongo.html)
+ *
+ * @module
+ */
 import assert from 'assert';
 import {
   FindManyOptions,

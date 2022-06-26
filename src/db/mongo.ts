@@ -1,3 +1,12 @@
+/**
+ * # MongoDB
+ *
+ * Connection holder with MongodbDB.
+ *
+ * Configuration injected from `src/config/config.default`.
+ *
+ * @module
+ */
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { User } from '../entity/user';
 import { Relation } from '../entity/relation';

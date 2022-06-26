@@ -1,3 +1,22 @@
+/**
+ * # Middleware: OnError
+ *
+ * To check the thrown error, and response error info by [ErrorCode](../modules/config_constant.html).
+ *
+ * ## Scope
+ *
+ * Global Registered.
+ *
+ * ## Config
+ *
+ * No config.
+ *
+ *
+ * <br></br>
+ * Check [index](../modules/middleware.html) for more middleware.
+ *
+ * @module
+ */
 import Koa, { ParameterizedContext } from 'koa';
 import { CodeError } from '../config/constant';
 import { Provide } from '../util/container';

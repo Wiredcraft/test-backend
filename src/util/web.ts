@@ -1,3 +1,32 @@
+/**
+ * # Web Decorators
+ *
+ * ## Methods
+ *
+ * ### loadMiddlewares(app, classes)
+ *
+ * Load middlewares from classes which decorated by @Middleware
+ *
+ * ### loadControllers(app, classes)
+ *
+ * Load controllers from classes which decorated by @Controller and @Get/@Post/@Pacth/...
+ *
+ * ## List
+ *
+ * | Decorator           | Target      | Description
+ * |---------------------|-------------|-------------------------------------------------------
+ * | @Controller(prefix) | Class       | The controller declaration.
+ * | @Delete(path)       | ClassMember | GET `${prefix}${path}` the router register declaration.
+ * | @Get(path)          | ClassMember | POST `${prefix}${path}` the router register declaration.
+ * | @Post(path)         | ClassMember | POST `${prefix}${path}` the router register declaration.
+ * | @Patch(path)        | ClassMember | PATCH `${prefix}${path}` the router register declaration.
+ * | @Guard(class)       | ClassMember | Register `class` as local middleware for the router.
+ * | @Middleware()       | ClassMember | The middleware declaration.
+ *
+ * Check [container](../modules/util_container.html) for more decorators.
+ *
+ * @module
+ */
 import 'reflect-metadata';
 import assert from 'assert';
 import { debuglog } from 'util';
@@ -5,7 +34,7 @@ import Koa from 'koa';
 import Router from '@koa/router';
 import { getInstanceByClass } from './container';
 
-const debug = debuglog('Container:WebLoad');
+const debug = debuglog('App:Container:WebLoad');
 
 const MIDDLEWARE_KEY = Symbol();
 const GUARD_KEY = Symbol();

@@ -1,3 +1,14 @@
+/**
+ * # Cache Service
+ *
+ * For cache state.
+ *
+ * ## Injected Dependency
+ *
+ * - [Redis](../modules/db_redis.html)
+ *
+ * @module
+ */
 import { Redis } from '../db/redis';
 import { Inject, Provide } from '../util/container';
 

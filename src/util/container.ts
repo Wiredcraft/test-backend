@@ -1,3 +1,31 @@
+/**
+ * # Container Decorators
+ *
+ * ## Methods
+ *
+ * ### getInstance(key)
+ *
+ * From registered key, new instance of class which decorated by @Provide.
+ *
+ * ### getInstanceByClass(class)
+ *
+ * From registerd class, new instance of class which decorated by @Provide
+ *
+ *
+ * ## List
+ *
+ * | Decorator | Target      | Description
+ * |-----------|-------------|-----------|
+ * | @Provide  | Class       | Register the decorated class in the container
+ * | @Scope    | Class       | Mark the class scope (OnDemand/Singleton)
+ * | @Inject   | ClassMember | Assign new instance of registered class to the decorated member
+ * | @Config   | ClassMember | Assign config from `src/config.default` to the decorated member
+ * | @Init     | ClassMember | Mark the class function member as the automatically called initial function
+ *
+ * Check [web decorator](../modules/util_web.html) for more decorators.
+ *
+ * @module
+ */
 import 'reflect-metadata';
 import { join } from 'path';
 import { debuglog } from 'util';

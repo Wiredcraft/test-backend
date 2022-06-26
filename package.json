@@ -9,8 +9,9 @@
   "scripts": {
     "build": "tsc",
     "dev": "NODE_DEBUG=*Container* NODE_ENV=production ts-node src",
-    "test-thrid-part-app": "FROM_CLI=true ts-node test/thridPartApp.ts",
+    "test-thrid-party-app": "FROM_CLI=true ts-node test/thridPartyApp.ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' 'test/**/*.ts' --write",
+    "doc-watch": "npx typedoc --watch --includes src/**/*.ts",
     "test": "mocha --require ts-node/register test/**/*.test.ts",
     "cov": "node_modules/.bin/nyc --reporter=html --reporter=text npm run test"
   },
@@ -58,6 +59,7 @@
     "koa-bodyparser": "^4.3.0",
     "koa-session": "^6.2.0",
     "mongodb": "^3.7.3",
+    "typedoc": "^0.22.18",
     "typeorm": "^0.3.6"
   }
 }

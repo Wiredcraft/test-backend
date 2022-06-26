@@ -1,3 +1,16 @@
+/**
+ * # View Service
+ *
+ * Using [ejs](https://ejs.co/) to render view for page.
+ *
+ * Templates located at `src/view`.
+ *
+ * ## Injected Dependency
+ *
+ * No injected item found.
+ *
+ * @module
+ */
 import { join } from 'path';
 import { renderFile, Data } from 'ejs';
 import { Provide } from '../util/container';

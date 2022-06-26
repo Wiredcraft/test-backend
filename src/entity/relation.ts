@@ -1,3 +1,15 @@
+/**
+ * # Relation Entity
+ *
+ * | property    | Type       | Default     |
+ * |-------------|------------|-------------|
+ * | _id         | ObjectID   |
+ * | fromId      | ObjectID   |
+ * | toId        | ObjectID   |
+ * | createdAt   | Date       | new Date()
+ *
+ * @module
+ */
 import 'reflect-metadata';
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 
