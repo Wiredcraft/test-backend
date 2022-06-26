@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "NODE_DEBUG=*Container* NODE_ENV=production ts-node src",
+    "dev": "NODE_DEBUG=APP* NODE_ENV=production ts-node src",
     "test-thrid-party-app": "FROM_CLI=true ts-node test/thridPartyApp.ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' 'test/**/*.ts' --write",
     "doc-watch": "npx typedoc --watch --includes src/**/*.ts",

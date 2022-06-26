@@ -19,6 +19,12 @@ import { FindManyOptions, Like, ObjectID } from 'typeorm';
 // @ts-ignore
 import { ObjectId } from 'mongodb';
 
+export enum NearbyType {
+  NO_RELATION,
+  FOLLOWED,
+  FOLLOWING
+}
+
 @Provide()
 export class UserService {
   @Inject('userModel')
@@ -80,24 +86,55 @@ export class UserService {
    * @param limit how many user will be found in 1 page
    * @returns User[]
    */
-  async getNearbyList(user: User, page: number, limit = 10) {
+  async getNearbyList(user: User, type: NearbyType, page: number, limit = 10) {
     assert(
       Array.isArray(user.location),
       ERROR.SERVICE_USER_GETNEARBYLIST_LACK_LOCATION
     );
 
-    return this.model.get({
-      skip: page * limit,
-      take: limit,
-      where: {
-        location: {
-          $near: user.location,
-          $maxDistance: 5000
-        } as any
-
-        // FindOperator not working
-        // _id: Not(Equal(user._id))
-      }
-    });
+    let [fromKey, toKey] = ['fromId', 'toId'];
+    switch (type) {
+      // For no relation case
+      case NearbyType.NO_RELATION:
+        return this.model.get({
+          skip: page * limit,
+          take: limit,
+          where: {
+            location: {
+              $near: user.location,
+              $maxDistance: 5000
+            } as any // FindOperator not working
+          }
+        });
+      case NearbyType.FOLLOWED:
+        [toKey, fromKey] = [fromKey, toKey];
+      case NearbyType.FOLLOWING:
+        const list = await this.model.aggregate<User>([
+          {
+            $geoNear: {
+              near: user.location,
+              distanceField: 'distance',
+              maxDistance: 5000
+            }
+          },
+          {
+            $lookup: {
+              from: 'relation',
+              localField: '_id',
+              foreignField: toKey,
+              pipeline: [{ $match: { [fromKey]: ObjectId(user._id) } }],
+              as: 'relationship'
+            }
+          },
+          {
+            $match: {
+              [`relationship.0.${fromKey}`]: ObjectId(user._id)
+            }
+          },
+          { $skip: page * limit },
+          { $limit: limit }
+        ]);
+        return list ?? [];
+    }
   }
 }

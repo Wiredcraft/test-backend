@@ -5,7 +5,7 @@ import { AccountService } from '../src/service/account';
 import { User } from '../src/entity/user';
 import { UserModel } from '../src/model/user';
 import { RelationService } from '../src/service/relation';
-import { UserService } from '../src/service/user';
+import { NearbyType, UserService } from '../src/service/user';
 import { getInstance } from '../src/util/container';
 import { AuthService } from '../src/service/auth';
 import { ClientMap } from './thridPartyApp';
@@ -113,8 +113,24 @@ describe('Service', () => {
       );
     });
 
-    it('should get nearby user list', async () => {
-      const result = await service.getNearbyList(centerUser, 0);
+    it('should get nearby user list with relation', async () => {
+      const relationService = getInstance<RelationService>('relationService');
+      console.log('build relation from', centerUser._id, farUser._id);
+      await relationService.follow(centerUser._id, farUser._id);
+
+      const result = await service.getNearbyList(
+        centerUser,
+        NearbyType.FOLLOWING,
+        0
+      );
+      equal(result.length, 1); // only 1 user in following list
+
+      const [one] = result;
+      equal(String(one._id), String(farUser._id));
+    });
+
+    it('should get nearby user list with no relation', async () => {
+      const result = await service.getNearbyList(centerUser, 0, 0);
       equal(result.length, 3); // 3 users including center user itself
 
       const [_, one, two] = result;

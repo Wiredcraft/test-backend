@@ -33,7 +33,7 @@ import assert from 'assert';
 import { sync as scanFiles } from 'glob';
 import * as Configs from '../config/config.default';
 
-const debug = debuglog('Container:ClassLoad');
+const debug = debuglog('APP:Container:ClassLoad');
 
 type ConfigKey = keyof typeof Configs;
 

@@ -64,6 +64,12 @@ export class MongoDB {
     return ds.getRepository(Token);
   }
 
+  getNativeCollection(collectionName: string) {
+    const mongo = (this.dataSource.driver as any).queryRunner
+      .databaseConnection;
+    return mongo.db(this.config.database).collection(collectionName);
+  }
+
   close() {
     return this.dataSource.destroy();
   }

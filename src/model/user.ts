@@ -125,9 +125,7 @@ export class UserModel {
      * using native client workaround
      */
     // const repo = await this.getRepo();
-    const mongo = (this.db.dataSource.driver as any).queryRunner
-      .databaseConnection;
-    const collection = mongo.db('test-backend').collection('user');
+    const collection = this.db.getNativeCollection('user');
 
     let count = -1;
     let updateRes: {
@@ -162,6 +160,14 @@ export class UserModel {
     }
     const { modifiedCount: affected, message: raw } = updateRes;
     return { affected, raw, generatedMaps: [] };
+  }
+
+  async aggregate<T>(conditions: any[]): Promise<T[]> {
+    const collection = this.db.getNativeCollection('user');
+    const cursor = await collection.aggregate(conditions);
+    const list: T[] = await cursor.toArray();
+    // TODO transform docs to entities
+    return list;
   }
 
   private async getRepo() {
