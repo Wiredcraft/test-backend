@@ -28,8 +28,7 @@ public class MainController {
     @ResponseBody
     @Transactional
     public User getUser(@PathVariable int userId) {
-        User user = service.getUser(userId);
-        return user;
+        return service.getUser(userId);
     }
 
     @PostMapping("/create")
@@ -40,6 +39,7 @@ public class MainController {
         user.setName(body.get("name"));
         user.setAddress(body.get("address"));
         user.setDescription(body.get("description"));
+        user.setCreatedAt(new Date(System.currentTimeMillis()));
 
         // convert dob to Date
         String dob = body.get("dob");

@@ -13,6 +13,7 @@ import java.util.GregorianCalendar;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class UserServiceImplTests {
@@ -38,7 +39,19 @@ public class UserServiceImplTests {
         DEFAULT_USER.setAddress(DEFAULT_ADDRESS);
         DEFAULT_USER.setDescription(DEFAULT_DESCRIPTION);
         DEFAULT_USER.setDob(DEFAULT_DATE);
+    }
 
+    @Test
+    public void testGetUserSuccess() {
+        when(userDao.findById(1)).thenReturn(Optional.of(DEFAULT_USER));
+        service.getUser(1);
+        verify(userDao).findById(1);
+    }
+
+    @Test
+    public void testGetUserFail() {
+        when(userDao.findById(1)).thenReturn(Optional.empty());
+        assertThrows(RuntimeException.class, () -> service.getUser(1));
     }
 
     @Test
@@ -64,5 +77,24 @@ public class UserServiceImplTests {
         assertEquals(DEFAULT_ADDRESS, argument.getValue().getAddress());
         assertEquals(DEFAULT_DESCRIPTION, argument.getValue().getDescription());
         assertEquals(DEFAULT_DATE, argument.getValue().getDob());
+    }
+
+    @Test
+    public void testUpdateUserFail() {
+        when(userDao.findById(1)).thenReturn(Optional.empty());
+        assertThrows(RuntimeException.class, () -> service.updateUser(1, DEFAULT_USER));
+    }
+
+    @Test
+    public void testDeleteUserSuccess() {
+        when(userDao.findById(1)).thenReturn(Optional.of(DEFAULT_USER));
+        service.deleteUser(1);
+        verify(userDao).deleteById(1);
+    }
+
+    @Test
+    public void testDeleteUserFail() {
+        when(userDao.findById(1)).thenReturn(Optional.empty());
+        assertThrows(RuntimeException.class, () -> service.deleteUser(1));
     }
 }

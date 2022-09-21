@@ -5,11 +5,6 @@ import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -23,20 +18,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        // TODO createdAt
         userDao.save(user);
         return user;
     }
 
     @Override
-    public User getUser(int id) {
-        Optional<User> userOptional = userDao.findById(id);
+    public User getUser(int userId) {
+        Optional<User> userOptional = userDao.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new RuntimeException(String.format("userId %s not found", userId));
+        }
         return userOptional.get();
     }
 
     @Override
     public User updateUser(int userId, User newUser) {
         Optional<User> userOptional = userDao.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new RuntimeException(String.format("userId %s not found", userId));
+        }
         var user = userOptional.get();
         user.setName(newUser.getName());
         user.setAddress(newUser.getAddress());
@@ -48,6 +48,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(int userId) {
         Optional<User> userOptional = userDao.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new RuntimeException(String.format("userId %s not found", userId));
+        }
         userDao.deleteById(userId);
     }
 }

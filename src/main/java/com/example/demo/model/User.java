@@ -23,6 +23,9 @@ public class User {
     @Column(name="dob")
     private Date dob;
 
+    @Column(name="createdAt")
+    private Date createdAt;
+
     public Integer getId() {
         return id;
     }
@@ -61,5 +64,13 @@ public class User {
 
     public void setDob(Date dob) {
         this.dob = dob;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }
