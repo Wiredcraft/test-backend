@@ -1,7 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.7.3'
 	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
-	id 'java'
+	id 'application'
 }
 
 group = 'com.example'
@@ -18,6 +18,21 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'mysql:mysql-connector-java'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+ext {
+	javaMainClass = "com.example.demo.DemoApplication"
+}
+
+application {
+	mainClassName = javaMainClass
+}
+
+task runWithJavaExec(type: JavaExec) {
+	group = "Execution"
+	description = "Run the main class with JavaExecTask"
+	classpath = sourceSets.main.runtimeClasspath
+	main = javaMainClass
 }
 
 tasks.named('test') {

@@ -37,10 +37,12 @@ public class UserServiceImpl implements UserService {
         if (userOptional.isEmpty()) {
             throw new RuntimeException(String.format("userId %s not found", userId));
         }
+        // replace fields
         var user = userOptional.get();
         user.setName(newUser.getName());
         user.setAddress(newUser.getAddress());
         user.setDescription(newUser.getDescription());
+        user.setDob(newUser.getDob());
         userDao.save(user);
         return user;
     }
