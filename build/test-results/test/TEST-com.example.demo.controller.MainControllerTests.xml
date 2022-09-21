@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.demo.controller.MainControllerTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-09-21T08:59:07" hostname="Chengqings-MacBook-Pro-2.local" time="0.653">
+  <properties/>
+  <testcase name="testUpdateUserFail()" classname="com.example.demo.controller.MainControllerTests" time="0.653"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
