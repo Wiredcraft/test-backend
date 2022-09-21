@@ -4,8 +4,13 @@ import com.example.demo.model.User;
 import com.example.demo.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 @Controller
@@ -13,36 +18,63 @@ import java.util.Map;
 public class MainController {
 
     @Autowired
-    private UserServiceImpl service;
+    private final UserServiceImpl service;
 
-    @GetMapping("/get")
+    public MainController(UserServiceImpl service) {
+        this.service = service;
+    }
+
+    @GetMapping("/get/{userId}")
     @ResponseBody
-    public User getUser() {
-        return null;
+    @Transactional
+    public User getUser(@PathVariable int userId) {
+        User user = service.getUser(userId);
+        return user;
     }
 
     @PostMapping("/create")
     @ResponseBody
-    public User createUser(@RequestBody Map<String, String> body) {
+    @Transactional
+    public User createUser(@RequestBody Map<String, String> body) throws ParseException {
         User user = new User();
         user.setName(body.get("name"));
         user.setAddress(body.get("address"));
         user.setDescription(body.get("description"));
 
-        service.save(user);
-
-        return user;
+        // convert dob to Date
+        String dob = body.get("dob");
+        if (dob != null) {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = df.parse(body.get("dob"));
+            user.setDob(date);
+        }
+        return service.createUser(user);
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update/{userId}")
     @ResponseBody
-    public void updateUser() {
+    @Transactional
+    public User updateUser(@PathVariable int userId, @RequestBody Map<String, String> body) throws ParseException {
+        User user = new User();
+        user.setName(body.get("name"));
+        user.setAddress(body.get("address"));
+        user.setDescription(body.get("description"));
 
+        // convert dob to Date
+        String dob = body.get("dob");
+        if (dob != null) {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = df.parse(body.get("dob"));
+            user.setDob(date);
+        }
+
+        return service.updateUser(userId, user);
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete/{userId}")
     @ResponseBody
-    public void deleteUser() {
-
+    @Transactional
+    public void deleteUser(@PathVariable int userId) {
+        service.deleteUser(userId);
     }
 }

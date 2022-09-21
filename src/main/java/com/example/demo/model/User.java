@@ -1,7 +1,7 @@
 package com.example.demo.model;
 
-
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity // This tells Hibernate to make a table out of this class
 @Table(name="user")
@@ -20,8 +20,8 @@ public class User {
     @Column(name="description")
     private String description;
 
-    @Column(name="email")
-    private String email;
+    @Column(name="dob")
+    private Date dob;
 
     public Integer getId() {
         return id;
@@ -53,5 +53,13 @@ public class User {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Date getDob() {
+        return dob;
+    }
+
+    public void setDob(Date dob) {
+        this.dob = dob;
     }
 }

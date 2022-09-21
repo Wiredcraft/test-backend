@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.demo.service.impl.UserServiceImplTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-09-21T08:06:44" hostname="Chengqings-MacBook-Pro-2.local" time="0.866">
+  <properties/>
+  <testcase name="testUpdateUserSuccess()" classname="com.example.demo.service.impl.UserServiceImplTests" time="0.866"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,15 +1,18 @@
 package com.example.demo.dao;
 
 import com.example.demo.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface UserDao {
-    public List<User> findAll();
+@Repository
+public interface UserDao extends JpaRepository<User, Integer> {
+    // public List<User> findAll();
 
-    public User findById(int Id);
+    // public User findById(int Id);
 
-    public void save(User user);
+    // public User save(User user);
 
-    public void deleteById(int Id);
+    // public void deleteById(int Id);
 }
