@@ -1,0 +1,68 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.6'
+	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+	id 'org.asciidoctor.jvm.convert' version '3.3.2'
+	id 'java'
+}
+
+group = 'com.macrame.wiredcraft'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+configurations {
+	asciidoctorExt
+}
+ext {
+	snippetsDir = file('build/generated-snippets')
+}
+repositories {
+	mavenCentral()
+}
+asciidoctor {
+	inputs.dir snippetsDir
+	configurations 'asciidoctorExt'
+	sources {
+		include '**/index.adoc'
+	}
+	baseDirFollowsSourceFile()
+	dependsOn test
+}
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+
+	implementation 'org.mongodb:mongodb-driver-reactivestreams'
+    implementation 'org.projectlombok:lombok:1.18.24'
+
+	implementation 'org.bouncycastle:bcprov-jdk15to18:1.71'
+	implementation 'com.google.guava:guava:31.1-jre'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+
+
+	annotationProcessor(
+			"javax.annotation:javax.annotation-api",
+			"org.projectlombok:lombok"
+	)
+	//asciidoctor "org.springframework.restdocs:spring-restdocs-asciidoctor"
+	asciidoctorExt "org.springframework.restdocs:spring-restdocs-asciidoctor"
+	testImplementation("org.springframework.boot:spring-boot-starter-test"){
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation ("org.springframework.restdocs:spring-restdocs-restassured") {
+		exclude group: 'com.sun.xml.bind', module: 'jaxb-osgi'
+	}
+	testImplementation("org.testng:testng:7.7.0")
+	testImplementation ("org.testcontainers:mongodb:1.17.6")
+	testImplementation 'io.projectreactor:reactor-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+tasks.named('test') {
+	useTestNG()
+	outputs.dir snippetsDir
+}

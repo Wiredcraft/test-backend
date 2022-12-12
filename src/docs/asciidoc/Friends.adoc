@@ -1,0 +1,110 @@
+---
+=== **Friend API**
+
+
+==== *POST*
+
+===== HTTP request:
+
+include::{snippets}/friend/post/http-request.adoc[]
+
+===== Request body:
+
+include::{snippets}/friend/post/request-body.adoc[]
+
+===== Request fields:
+
+include::{snippets}/friend/post/request-fields.adoc[]
+
+===== HTTP response:
+
+include::{snippets}/friend/post/http-response.adoc[]
+
+===== Response body:
+
+include::{snippets}/friend/post/response-body.adoc[]
+
+===== Response fields:
+
+include::{snippets}/friend/post/response-fields.adoc[]
+
+
+==== *FOLLOWING*
+
+===== HTTP request:
+
+include::{snippets}/friend/following/http-request.adoc[]
+
+===== Request body:
+
+include::{snippets}/friend/following/request-body.adoc[]
+
+===== Request fields:
+
+include::{snippets}/friend/following/request-fields.adoc[]
+
+===== HTTP response:
+
+include::{snippets}/friend/following/http-response.adoc[]
+
+===== Response body:
+
+include::{snippets}/friend/following/response-body.adoc[]
+
+===== Response fields:
+
+include::{snippets}/friend/following/response-fields.adoc[]
+
+
+==== *FOLLOWER*
+
+===== HTTP request:
+
+include::{snippets}/friend/follower/http-request.adoc[]
+
+===== Request body:
+
+include::{snippets}/friend/follower/request-body.adoc[]
+
+===== Request fields:
+
+include::{snippets}/friend/follower/request-parameters.adoc[]
+
+===== HTTP response:
+
+include::{snippets}/friend/follower/http-response.adoc[]
+
+===== Response body:
+
+include::{snippets}/friend/follower/response-body.adoc[]
+
+===== Response fields:
+
+include::{snippets}/friend/follower/response-fields.adoc[]
+
+
+==== *DELETE*
+
+===== HTTP request:
+
+include::{snippets}/friend/delete/http-request.adoc[]
+
+===== Request body:
+
+include::{snippets}/friend/delete/request-body.adoc[]
+
+===== Request fields:
+
+include::{snippets}/friend/delete/path-parameters.adoc[]
+
+===== HTTP response:
+
+include::{snippets}/friend/delete/http-response.adoc[]
+
+===== Response body:
+
+include::{snippets}/friend/delete/response-body.adoc[]
+
+===== Response fields:
+
+include::{snippets}/friend/delete/response-fields.adoc[]

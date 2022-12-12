@@ -1,0 +1,55 @@
+spring:
+    data:
+        mongodb:
+            uri: mongodb://admin:123456@localhost:27017/wiredcraft
+    cache:
+        redis:
+            time-to-live:
+                expiration: 234
+    redis:
+        url: redis://localhost:6379
+    security:
+        user:
+            name: aaa
+            password: 123456
+        oauth2:
+            client:
+                registration:
+                    google:
+                        client-id: 337445034992-j8fjo4fh1u0sk9epsjhvk2cfq7c0vje1.apps.googleusercontent.com
+                        client-secret: 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
+                    github:
+                        client-id: replace-with-client-id
+                        client-secret: replace-with-client-secret
+                        scope: read:user,public_repo
+#                provider:
+#                    custom:
+#                        authorization-uri: http://localhost:8081/spring-security-oauth-server/oauth/authorize
+#                        token-uri: http://localhost:8081/spring-security-oauth-server/oauth/token
+#                        user-info-uri: http://localhost:8088/spring-security-oauth-resource/users/extra
+#                        user-name-attribute: user_name
+auth:
+    token:
+        expiration:
+            seconds: 86400
+    security:
+        public_key_file: /opt/data/static/files/public.pem
+        private_key_file: /opt/data/static/files/private.pem
+config:
+    id:
+        snowflake:
+            enabled: true
+    security:
+        rsa:
+            enabled: true
+authorization:
+    interceptor:
+        allowed-url:
+            - /api/**
+            - /public/api/**
+logging:
+    level:
+        com.macrame.wiredcraft.demo: TRACE
+        com.macrame.wiredcraft.demo.configuration: WARN
+        org.springframework.web: INFO
+        org.springframework.security: INFO

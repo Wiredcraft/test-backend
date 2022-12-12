@@ -30,15 +30,8 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 
 ### Tech stack
 
-- Use Java and any framework.
-- Use any DB.
-
-### Bonus
-
-- Write clear documentation on how it's designed and how to run the code.
-- Write good in-code comments.
-- Write good commit messages.
-- An online demo is always welcome.
+- Spring Boot.
+- MongoDB.
 
 ### Advanced requirements
 
@@ -52,22 +45,11 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
   - return the nearby friends
 
 
-## What We Care About
-
-Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
-
-Here's what you should aim for:
-
-- Good use of current Java & API design best practices.
-- Good testing approach.
-- Extensible code.
-
-## FAQ
-
-> Where should I send back the result when I'm done?
-
-Preferred way is to push it to github and give our team access to it.
-
-> What if I have a question?
-
-Feel free to make your own assumptions about the scope of this task but try to document those. You can also reach to us for questions.
+## How to run it
+>Don't forget to generate the RSA keys and change the credentials in `src/main/resources/application-development.yaml` if you want to run it locally
+- Start the application
+`gradle bootRun`
+- Run the units test
+  `gradle test`
+- Generate API documents
+  `gradle asciidoctor`

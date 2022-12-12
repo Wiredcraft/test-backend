@@ -1,0 +1,56 @@
+---
+=== **Authorization API**
+
+
+==== *Sign up*
+
+===== HTTP request:
+
+include::{snippets}/signup/post/http-request.adoc[]
+
+===== Request body:
+
+include::{snippets}/signup/post/request-body.adoc[]
+
+===== Request fields:
+
+include::{snippets}/signup/post/request-fields.adoc[]
+
+===== HTTP response:
+
+include::{snippets}/signup/post/http-response.adoc[]
+
+===== Response body:
+
+include::{snippets}/signup/post/response-body.adoc[]
+
+===== Response fields:
+
+include::{snippets}/signup/post/response-fields.adoc[]
+
+
+==== *Sign in*
+
+===== HTTP request:
+
+include::{snippets}/signin/post/http-request.adoc[]
+
+===== Request body:
+
+include::{snippets}/signin/post/request-body.adoc[]
+
+===== Request fields:
+
+include::{snippets}/signin/post/request-fields.adoc[]
+
+===== HTTP response:
+
+include::{snippets}/signin/post/http-response.adoc[]
+
+===== Response body:
+
+include::{snippets}/signin/post/response-body.adoc[]
+
+===== Response fields:
+
+include::{snippets}/signin/post/response-fields.adoc[]

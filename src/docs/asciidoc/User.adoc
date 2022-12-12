@@ -1,0 +1,137 @@
+---
+=== **User API**
+
+
+==== *POST*
+
+===== HTTP request:
+
+include::{snippets}/user/post/http-request.adoc[]
+
+===== Request body:
+
+include::{snippets}/user/post/request-body.adoc[]
+
+===== Request fields:
+
+include::{snippets}/user/post/request-fields.adoc[]
+
+===== HTTP response:
+
+include::{snippets}/user/post/http-response.adoc[]
+
+===== Response body:
+
+include::{snippets}/user/post/response-body.adoc[]
+
+===== Response fields:
+
+include::{snippets}/user/post/response-fields.adoc[]
+
+
+==== *PATCH*
+
+===== HTTP request:
+
+include::{snippets}/user/patch/http-request.adoc[]
+
+===== Request body:
+
+include::{snippets}/user/patch/request-body.adoc[]
+
+===== Request fields:
+
+include::{snippets}/user/patch/request-fields.adoc[]
+
+===== HTTP response:
+
+include::{snippets}/user/patch/http-response.adoc[]
+
+===== Response body:
+
+include::{snippets}/user/patch/response-body.adoc[]
+
+===== Response fields:
+
+include::{snippets}/user/patch/response-fields.adoc[]
+
+
+==== *GET*
+
+===== HTTP request:
+
+include::{snippets}/user/get/http-request.adoc[]
+
+===== Request body:
+
+include::{snippets}/user/get/request-body.adoc[]
+
+===== Request fields:
+
+include::{snippets}/user/get/request-parameters.adoc[]
+
+===== HTTP response:
+
+include::{snippets}/user/get/http-response.adoc[]
+
+===== Response body:
+
+include::{snippets}/user/get/response-body.adoc[]
+
+===== Response fields:
+
+include::{snippets}/user/get/response-fields.adoc[]
+
+
+==== *DELETE*
+
+===== HTTP request:
+
+include::{snippets}/user/delete/http-request.adoc[]
+
+===== Request body:
+
+include::{snippets}/user/delete/request-body.adoc[]
+
+===== Request fields:
+
+include::{snippets}/user/delete/path-parameters.adoc[]
+
+===== HTTP response:
+
+include::{snippets}/user/delete/http-response.adoc[]
+
+===== Response body:
+
+include::{snippets}/user/delete/response-body.adoc[]
+
+===== Response fields:
+
+include::{snippets}/user/delete/response-fields.adoc[]
+
+
+==== *LOAD*
+
+===== HTTP request:
+
+include::{snippets}/user/load/http-request.adoc[]
+
+===== Request body:
+
+include::{snippets}/user/load/request-body.adoc[]
+
+===== Request fields:
+
+include::{snippets}/user/load/path-parameters.adoc[]
+
+===== HTTP response:
+
+include::{snippets}/user/load/http-response.adoc[]
+
+===== Response body:
+
+include::{snippets}/user/load/response-body.adoc[]
+
+===== Response fields:
+
+include::{snippets}/user/load/response-fields.adoc[]

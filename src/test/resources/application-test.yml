@@ -1,0 +1,39 @@
+# logging
+logging:
+    level:
+        org.springframework: WARN
+        com.macrame.wiredcraft: DEBUG
+#Common properties
+# SRA key directory
+common:
+    id:
+        dataCenterId: 0
+        workId: ${random.int[1,30]}
+#database
+spring:
+    security:
+        user:
+            name: spring_admin
+            password: $2a$10$hmJ1fP2qqvwv5qs64IdSq.YQO21Epa0XTXtz3R07EJN7PMLZf0aRO
+        oauth2:
+            client:
+                registration:
+                    google:
+                        client-id: 337445034992-j8fjo4fh1u0sk9epsjhvk2cfq7c0vje1.apps.googleusercontent.com
+                        client-secret: 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
+auth:
+    token:
+        expiration:
+            seconds: 86400
+    security:
+        public_key_file: /opt/data/static/files/public.pem
+        private_key_file: /opt/data/static/files/private.pem
+    skip-verifying: true
+
+config:
+    security:
+        rsa:
+            enabled: true
+    id:
+        snowflake:
+            enabled: true
