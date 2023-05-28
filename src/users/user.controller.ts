@@ -8,37 +8,42 @@ import {
   Body,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { User } from ".prisma/client";
+import UserDto from "./dto/user.dto";
 
 @Controller("users")
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  async findAll(): Promise<User[]> {
-    return this.userService.findAll();
+  async findAll(): Promise<UserDto[]> {
+    const resp = await this.userService.findAll();
+    return resp;
   }
 
   @Get(":id")
-  async findById(@Param("id") id: string): Promise<User | null> {
-    return this.userService.findById(id);
+  async findById(@Param("id") id: string): Promise<UserDto | null> {
+    const resp = await this.userService.findById(id);
+    return resp;
   }
 
   @Post()
-  async create(@Body() user: Partial<User>): Promise<User> {
-    return this.userService.create(user);
+  async create(@Body() user: UserDto): Promise<UserDto> {
+    const resp = await this.userService.create(user);
+    return resp;
   }
 
   @Put(":id")
   async update(
     @Param("id") id: string,
-    @Body() user: Partial<User>
-  ): Promise<User | null> {
-    return this.userService.update(id, user);
+    @Body() user: UserDto
+  ): Promise<UserDto> {
+    const resp = await this.userService.update(id, user);
+    return resp;
   }
 
   @Delete(":id")
-  async delete(@Param("id") id: string): Promise<User | null> {
-    return this.userService.delete(id);
+  async delete(@Param("id") id: string): Promise<UserDto> {
+    const resp = await this.userService.delete(id);
+    return resp;
   }
 }

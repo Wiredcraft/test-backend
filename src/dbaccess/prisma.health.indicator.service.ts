@@ -18,6 +18,8 @@ export class PrismaHealthIndicatorService extends HealthIndicator {
       return this.getStatus(key, true);
     } catch (e) {
       throw new HealthCheckError("Prisma check failed", e);
+    } finally {
+      await this.prismaService.$disconnect();
     }
   }
 }
