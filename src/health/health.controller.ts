@@ -1,4 +1,5 @@
 import { Controller, Get } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import {
   DiskHealthIndicator,
   HealthCheck,
@@ -9,6 +10,7 @@ import {
 import { PrismaHealthIndicatorService } from "@wiredcraft/dbaccess/prisma.health.indicator.service";
 
 @Controller("health")
+@ApiTags("System Health Status")
 export class HealthController {
   constructor(
     private readonly http: HttpHealthIndicator,
