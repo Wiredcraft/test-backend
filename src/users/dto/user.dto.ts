@@ -9,6 +9,7 @@ import {
 } from "class-validator";
 
 export default class UserDto {
+  id: string;
   @ApiProperty({
     name: "name",
     description: "user name",
