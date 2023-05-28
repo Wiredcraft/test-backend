@@ -1,0 +1,46 @@
+{
+  "extends": ["./node_modules/mwts/"],
+  "plugins": ["unicorn", "import"],
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    "test",
+    "jest.config.js",
+    "typings"
+  ],
+  "env": {
+    "jest": true
+  },
+  "rules": {
+    "node/no-extraneous-import": [
+      "error",
+      {
+        "allowModules": ["typeorm", "ioredis", "@midwayjs/core"]
+      }
+    ],
+    "unicorn/filename-case": 2,
+    "import/order": [
+      1,
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "@/**",
+            "group": "external",
+            "position": "after"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["builtin"],
+        "newlines-between": "always"
+      }
+    ],
+    "no-console": [2, { "allow": ["warn", "error", "info"] } ]
+  }
+}

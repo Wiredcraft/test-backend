@@ -1,73 +1,123 @@
-# Backend Developer (Node.js) test
+# TEST Service
 
-Make sure you read the whole document carefully and follow the guidelines in it.
+## Project guide
+In this project, you'll see the following Midway based practice case (the upper layer uses egg.js)
+Midway is based on TypeScript development and combines OOP + Class + IoC. midway is similar to nestjs in its design concept
 
-## Context
+The capabilities supported by Test Service
+| ability       | Name                                   | progress  |
+| :------------- | -------------------------------------- | :---: |
+| **overview**   |                                        |       |
+|                | Controller                             |   ✓   |
+|                | Services and Refilling                 |   ✓   |
+|                | Request, response, and application     |   ✓   |
+|                | Web middleware                         |   ✓   |
+|                | start and deploy                       |   ✓   |
+| **Basic ability**   |                                   |       |
+|                | Dependency injection                   |   ✓   |
+|                | Operating environment                  |   ✓   |
+|                | Multi-environment configuration                                             |   ✓   |
+|                | Parameter checksum conversion          |   ✓   |
+|                | Life cycle                             |   ✓   |
+|                | Component                              |   ✓   |
+|                | Logger                                 |   ✓   |
+|                | Debug                                  |   ✓   |
+|                | Test                                   |   ✓   |
+| **enhance**       |                                     |       |
+|                | Cache (Redis)                          |   ✓   |
+|                | Database(TypeORM)                      |   ✓   |
+|                | MongoDB                                |   ✓   |
+|                | Swagger                                |   ✓   |
+| **Web**    |                                         |       |
+|                |      CORS                               |   ✓   |
+| **microservice**     |                                         |       |
+|                | RabbitMQ                               |   ✓   |
+| **Common ability**   |                                         |       |
+|                | Token Authentication                  |   ✓   |
+|                | Authentication middleware             |   ✓   |
+|                | Interface response statistics middleware|   ✓   |
+|                | Unified error handling                  |   ✓   |
+|                | SnowFlake                               |   ✓   |
+|                | Jaeger                                   |   ✓   |
 
-Build a RESTful API that can `get/create/update/delete` user data from a persistence database
 
-### User Model
 
+## Usage
+
+The following environmental support is required to run the project
+- Mongo
+- Redis
+- Jeager
+
+Installation dependency by docker
 ```
-{
-  "id": "xxx",                  // user ID 
-  "name": "test",               // user name
-  "dob": "",                    // date of birth
-  "address": "",                // user address
-  "description": "",            // user description
-  "createdAt": ""               // user created date
-}
+docker-compose up -d
+docker-compose down
 ```
 
-## Requirements
+### Development
 
-### Functionality
+```bash
+$ npm i
+$ npm run dev
+$ open http://localhost:7001/
+```
 
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper unit test.
-- Provide proper API document.
+### Deploy
+```
+$ npm start
+$ npm stop
+```
 
-### Tech stack
+### npm scripts
+* Use `npm run lint` to check code style.
+* Use `npm test` to run unit test
 
-- Use Node.js and any framework.
-- Use any DB. NoSQL DB is preferred.
+## Redis
+- Access using Redis as user login credentials
 
-### Bonus
+### Redis partition
 
-- Write clear documentation on how it's designed and how to run the code.
-- Write good in-code comments.
-- Write good commit messages.
-- An online demo is always welcome.
-
-### Advanced requirements
-
-*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
-
-- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
-- Provide a complete logging (when/how/etc.) strategy.
-- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
-- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
-  - given a user name
-  - return the nearby friends
+- `user:accessToken:${id}` Cache user Token information
+- `user:userinfo:${id}` Cache user basic information
 
 
-## What We Care About
+## Jaeger
 
-Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
+Jaeger [OpenTracing] (https://opentracing.io/docs/)
 
-Here's what you should aim for:
+This implementation is based on the ctx mechanism and combined with midway's dependency injection to realize non-intrusive spanContext delivery
+- Implements interface-level sampling by default
+- span can be manually managed if small particle size sampling is required
+  ```ts
+  ctx.tracerManager.startSpan('SpanName1')
+  await doSomethine()
+  ctx.tracerManager.finishSpan()
+  ```
 
-- Good use of current Node.js & API design best practices.
-- Good testing approach.
-- Extensible code.
+## Interface response statistics middleware
 
-## FAQ
+- Help troubleshoot online interface response problems
+- Monitors the real-time system status
 
-> Where should I send back the result when I'm done?
+Although the framework already has logging capabilities, there are many scenarios where we might need to look at the response state of each interface service
 
-Fork this repo and send us a pull request when you think it's ready for review. You don't have to finish everything prior and you can continue to work on it. We don't have a deadline for the task.
+Is it in normal service or is there a problem? With the help of monitoring, it can quickly help us locate logs and troubleshoot problems.
 
-> What if I have a question?
+For real-time statistical data, we will use the RTS technique here, using RabbitMQ and Redis
 
-Create a new issue in the repo and we will get back to you shortly.
+RabbitMQ is used to asynchronize statistical calculations so that normal service request processing is not affected
+
+(Consumer logic code, need to be written in a separate project, independent deployment)
+
+The general process is as follows
+
+![IMG_5365 HEIC](https://user-images.githubusercontent.com/10667077/101478900-55a4cb00-398c-11eb-97c3-4a41195c572d.JPG)
+
+
+## Unit testing
+The unit test framework is [Mocha](https://mochajs.org/).
+Support the case for `. Skip () ` `. Only () ` combination of optional * * * * and * * * * to achieve fast,
+Suitable for scenarios involving complex, coupled business projects
+
+
