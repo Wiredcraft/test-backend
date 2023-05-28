@@ -6,22 +6,26 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
+  
 }
 
 //Models
 model User {
   //"id": "xxx",                  // user ID 
-  id String @id @default(uuid())
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  
   //"name": "test",               // user name
   name String 
   // "dob": "",                    // date of birth
-  dob DateTime
+  dob DateTime @db.Date
   // "address": "",                // user address
   address String
   // "description": "",            // user description
-  description String @db.Text
+  description String
   // "createdAt": ""               // user created date
   createAt DateTime @default(now())
+  // "updateAt" //this is extra field that I think it is good to have
+  updateAt DateTime @updatedAt
 }
