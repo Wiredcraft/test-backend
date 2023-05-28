@@ -15,7 +15,7 @@ async function bootstrap() {
   app.useLogger(winstonLogger);
 
   //secure headers
-  app.use(helmet());
+  //app.use(helmet());
   //transform incoming data
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   //add global api prefix, e.g. /api/v1/users
@@ -39,6 +39,8 @@ async function bootstrap() {
     SwaggerModule.setup("api-docs", app, document);
   }
 
-  await app.listen(PORT);
+  await app.listen(PORT, () => {
+    winstonLogger.log(`Server listening on Port: ${PORT}`);
+  });
 }
 bootstrap();
