@@ -3,6 +3,6 @@
   "ext": "ts",
   "ignore": ["src/**/*.spec.ts", ".git", "node_modules/**/*"],
   "execMap": {
-    "ts": "node -r tsconfig-paths/register -r ts-node/register"
+    "ts": "node -r dotenv/config -r tsconfig-paths/register -r ts-node/register"
   }
 }
