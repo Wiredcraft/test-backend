@@ -44,4 +44,7 @@ export default class UserDto {
     description: "user description, max length: 300",
   })
   description: string;
+
+  createAt?: Date;
+  updateAt?: Date;
 }

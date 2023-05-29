@@ -19,7 +19,7 @@ async function bootstrap() {
   //transform incoming data
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   //add global api prefix, e.g. /api/v1/users
-  app.setGlobalPrefix(`api/${process.env.API_VERSION || "v1"}`, {
+  app.setGlobalPrefix(`api/`, {
     exclude: [
       { path: "health", method: RequestMethod.GET },
       { path: "/", method: RequestMethod.GET },

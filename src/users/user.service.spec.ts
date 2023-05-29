@@ -96,8 +96,11 @@ describe("UserService", () => {
       const updatedName = "updated User";
       const createdUser = await service.create(createUserDto());
       createdUser.name = updatedName;
-      const updatedUser = await service.update(createdUser.id, createdUser);
+      delete createdUser.createAt;
+      delete createdUser.updateAt;
 
+      const updatedUser = await service.update(createdUser.id, createdUser);
+      expect(updatedUser.updateAt).not.toStrictEqual(updatedUser.createAt);
       expect(updatedUser.name).toBe("updated User");
     });
     it("should update failed, duplicated email", async () => {

@@ -6,10 +6,12 @@ import {
   Delete,
   Param,
   Body,
+  UsePipes,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import UserDto from "./dto/user.dto";
 import { ApiTags } from "@nestjs/swagger";
+import { RequestStripPipe } from "@wiredcraft/pipes/request-strip.pipe";
 
 @Controller("users")
 @ApiTags("User APIs")
@@ -29,12 +31,14 @@ export class UserController {
   }
 
   @Post()
+  @UsePipes(new RequestStripPipe())
   async create(@Body() user: UserDto): Promise<UserDto> {
     const resp = await this.userService.create(user);
     return resp;
   }
 
   @Put(":id")
+  @UsePipes(new RequestStripPipe())
   async update(
     @Param("id") id: string,
     @Body() user: UserDto
