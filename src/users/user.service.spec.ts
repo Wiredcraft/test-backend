@@ -7,12 +7,14 @@ import UserDto from "./dto/user.dto";
 import { UserService } from "./user.service";
 import { ConflictException } from "@nestjs/common";
 
+//create random date for dob
 function randomDate(start = new Date(2012, 0, 1), end = new Date()) {
   return new Date(
     start.getTime() + Math.random() * (end.getTime() - start.getTime())
   );
 }
 
+//helper to compare two user
 function userEquals(u1: UserDto, u2: UserDto) {
   expect(u1.name).toBe(u2.name);
   expect(u1.email).toBe(u2.email);
@@ -20,6 +22,8 @@ function userEquals(u1: UserDto, u2: UserDto) {
   expect(u1.address).toBe(u2.address);
   expect(u1.description).toBe(u2.description);
 }
+
+//helper to create userDto
 function createUserDto() {
   const randomStr = crypto.randomUUID();
   return {
@@ -66,13 +70,7 @@ describe("UserService", () => {
   }, 1000 * 30);
   describe("create", () => {
     it("should create user success", async () => {
-      const newUser: UserDto = {
-        name: "mock user1",
-        dob: new Date("2022-01-01"),
-        email: "user1@wiredcard.com",
-        address: "my address",
-        description: "hi",
-      } as UserDto;
+      const newUser = createUserDto();
 
       const createdUser = await service.create(newUser);
       expect(createdUser.id).toBeDefined();
