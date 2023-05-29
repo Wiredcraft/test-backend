@@ -6,23 +6,38 @@ import { Repository, Like, In } from 'typeorm';
 
 import { Context } from '@/interface';
 
-import { UserModel } from '../model/user';
+import { User } from '../entity/user';
 import { QueryDTO, CreateDTO, UpdateDTO } from '../dto/user';
-import MyError from '../util/my-error';
+import { BaseService } from './base';
 
 @Provide()
-export class UserService {
+export class UserService extends BaseService<User>{
   @Inject()
   ctx: Context;
 
-  @InjectEntityModel(UserModel)
-  userModel: Repository<UserModel>;
+  @InjectEntityModel(User)
+  userModel: Repository<User>;
 
-  /**
-   * 分页查询用户列表
-   * @param {QueryDTO} params
-   */
-  async queryuser(params: QueryDTO) {}
+
+  async create(docs: Partial<User>): Promise<DocumentType<User>> {
+    const user = await super.create(docs);
+    return user.save();
+  }
+  
+   /*
+    * 根据登录名查找用户
+    * @param {String} username 登录名
+    * @param {Boolean} pass 启用密码
+    * @return {Promise[user]} 承载用户的 Promise 对象
+    */
+  async getUserByLoginName(loginName: string, pass: boolean): Promise<User> {
+    const query = { loginname: new RegExp('^' + loginName + '$', 'i') };
+    let projection = null;
+    if (pass) {
+        projection = '+pass';
+    }
+    return super.findOneAsync(query, projection);
+  }
 
   /**
    * 根据用户id获取数据

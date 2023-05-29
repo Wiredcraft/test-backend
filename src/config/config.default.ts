@@ -1,5 +1,5 @@
 import { EggAppInfo } from 'egg';
-import { ConnectionOptions } from 'typeorm';
+import { User } from '../app/entity/user';
 
 import { DefaultConfig } from './config.types';
 
@@ -17,17 +17,21 @@ export default (appInfo: EggAppInfo): DefaultConfig => {
   };
 
   // 数据库配置
-  config.orm = {
-    type: 'mongodb',
-    host: process.env.MYSQL_HOST || '127.0.0.1',
-    port: process.env.MYSQL_PORT || 27017,
-    username: process.env.MYSQL_USER || '',
-    password: process.env.MYSQL_PASSWORD || '',
-    database: process.env.MYSQL_DATABASE || undefined,
-    synchronize: false,
-    logging: true,
-    timezone: '+08:00',
-  } as ConnectionOptions;
+  config.mongoose = {
+    dataSource: {
+      default: {
+        uri: 'mongodb://localhost:27017/test',
+        options: {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          user: 'admin',
+          pass: '12345'
+        },
+        // 关联实体
+        entities: [ User ]
+      }
+    }
+  };
 
   // redis config
   config.redis = {

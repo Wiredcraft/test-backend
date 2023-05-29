@@ -1,13 +1,14 @@
 import { Provide, Plugin, Inject, Config } from '@midwayjs/decorator';
-import { InjectEntityModel } from '@midwayjs/orm';
+import { InjectEntityModel } from '@midwayjs/typegoose';
+import { ReturnModelType } from '@typegoose/typegoose';
 import { JwtComponent } from '@mw-components/jwt';
 import { Redis } from 'ioredis';
-import { Repository } from 'typeorm';
 
 import { Context } from '@/interface';
 
 import { JwtAuthMiddlewareConfig } from '../../config/config.types';
-import { UserModel } from '../model/user';
+import  { User, UserType } from '../entity/user';
+
 
 @Provide()
 export class AuthService {
@@ -20,8 +21,8 @@ export class AuthService {
   @Config('jwtAuth')
   private jwtAuthConfig: JwtAuthMiddlewareConfig;
 
-  @InjectEntityModel(UserModel)
-  private userModel: Repository<UserModel>;
+  @InjectEntityModel(User)
+  private userModel: ReturnModelType<typeof User>
 
   @Plugin()
   private redis: Redis;
@@ -31,7 +32,7 @@ export class AuthService {
    * @param {User} data 保存的数据
    * @returns {String} 生成的Token字符串
    */
-  async createUserToken(data: UserModel): Promise<string> {
+  async createUserToken(data: User): Promise<string> {
     const token: string = this.jwt.sign({ id: data.id.toString() }, '', {
       expiresIn: this.jwtAuthConfig.accessTokenExpiresIn,
     });
@@ -58,7 +59,7 @@ export class AuthService {
    * @param {String} username 登录名
    * @returns {UserModel | null} 承载用户的 Promise 对象
    */
-  async getUserByUserName(username: string): Promise<UserModel> {
+  async getUserByUserName(username: string): Promise<User> {
     const user = await this.userModel.findOne({
       where: {
         username,
@@ -72,11 +73,11 @@ export class AuthService {
    * @param {String} id
    * @returns {UserModel} 用户信息
    */
-  public async getUserById(id: string): Promise<UserModel> {
+  public async getUserById(id: string): Promise<User> {
     const userinfo = (await this.redis.get(
       `${this.jwtAuthConfig.redisScope}:userinfo:${id}`
     )) as string;
-    return JSON.parse(userinfo) as UserModel;
+    return JSON.parse(userinfo) as User;
   }
 
   /**
@@ -84,15 +85,13 @@ export class AuthService {
    * @param {UserModel} data 用户数据
    * @returns {OK | null} 缓存处理结果
    */
-  async cacheUser(data: UserModel): Promise<'OK' | null> {
-    const { id, username, name, createdAt, updatedAt } = data;
+  async cacheUser(data: UserType ): Promise<'OK' | null> {
+    const { id, username, name} = data;
 
     const userinfo = {
       id,
       username,
-      name,
-      createdAt,
-      updatedAt,
+      name
     };
 
     return this.redis.set(
@@ -120,7 +119,7 @@ export class AuthService {
   async localHandler(params: {
     username: string;
     password: string;
-  }): Promise<UserModel | null> {
+  }): Promise<User | null> {
     // 获取用户函数
     const getUser = (username: string) => {
       return this.getUserByUserName(username);

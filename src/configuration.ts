@@ -9,6 +9,8 @@ import { IMidwayLogger } from '@midwayjs/logger';
 import * as jaeger from '@mw-components/jaeger';
 import * as jwt from '@mw-components/jwt';
 import * as koid from '@mw-components/koid';
+import * as typegoose from '@midwayjs/typegoose';
+
 
 import { Application, NpmPkg } from '@/interface';
 
@@ -19,7 +21,7 @@ import { customLogger } from './app/util/custom-logger';
     jaeger,
     koid,
     jwt,
-    '@midwayjs/orm', // 加载 orm 组件
+    typegoose,
     // 加载swagger组件
     {
       component: swagger,
