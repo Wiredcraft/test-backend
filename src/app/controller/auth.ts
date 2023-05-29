@@ -11,8 +11,7 @@ import {
   ALL,
 } from '@midwayjs/decorator';
 import { CreateApiDoc } from '@midwayjs/swagger';
-
-import { Context } from '@/interface';
+import { Context } from '@midwayjs/web';
 
 import { AuthService } from '../service/auth';
 import { LoginDTO } from '../dto/auth';
@@ -20,8 +19,8 @@ import MyError from '../util/my-error';
 
 @Provide()
 @Controller('/auth', {
-  tagName: '',
-  description: ' ',
+  tagName: 'Authentication module',
+  description: 'Provide an excuse to login and out',
 })
 export class AuthController {
   @Inject('authService')
@@ -38,8 +37,6 @@ export class AuthController {
     .respond(200, 'success', 'json', {
       example: {
         token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9xxxx',
-        currentAuthority: 'admin',
-        status: 'ok',
         type: 'account',
       },
     })
@@ -47,22 +44,20 @@ export class AuthController {
   @Post('/login')
   @Validate()
   async login(ctx: Context, @Body(ALL) params: LoginDTO): Promise<void> {
-    const existAdmiUser = await this.service.localHandler(params);
+    const existUser = await this.service.localHandler(params);
 
-    assert.ok(existAdmiUser, new MyError('User does not exist', 400));
+    assert.ok(existUser, new MyError('User does not exist', 400));
 
-    const token = await this.service.createUserToken(existAdmiUser);
+    const token = await this.service.createUserToken(existUser);
 
     // 缓存管理员数据
-    await this.service.cacheUser(existAdmiUser);
+    await this.service.cacheUser(existUser);
 
     // TODO: 调用 rotateCsrfSecret 刷新管理员的 CSRF token
     // ctx.rotateCsrfSecret()
 
     ctx.helper.success({
       token,
-      currentAuthority: 'admin',
-      status: 'ok',
       type: 'account',
     });
   }
@@ -87,17 +82,19 @@ export class AuthController {
   }
 
   /**
-   * 获取当前管理员的信息
+   * 获取当前用户的信息
    */
   @CreateApiDoc()
-    .summary('获取当前管理员的信息')
-    .description('管理员相关的信息')
+    .summary('get current userinfo')
+    .description('current userinfo')
     .respond(200, 'success', 'json', {
       example: {
         id: '1',
-        username: 'admin',
-        name: 'Administrator',
-        avatar: 'http://x.y.z',
+        username: 'user1',
+        name: 'Alex',
+        dob: '1994.01.10',
+        address: ['-111', '111'],
+        description: 'my name is alex',
         createdAt: '2020-08-20T01:14:57.000Z',
         updatedAt: '2020-08-20T01:14:57.000Z',
       },

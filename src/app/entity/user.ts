@@ -1,16 +1,17 @@
-import { Ref, prop  } from '@typegoose/typegoose';
+import { Ref, prop } from '@typegoose/typegoose';
 import { Schema } from 'mongoose';
+
 import { BaseModel } from './base';
 
-export class User extends BaseModel{
-  @prop({required:true})
+export class User extends BaseModel {
+  @prop({ required: true })
   public name: string;
 
-  @prop({required:true})
+  @prop({ required: true })
   public dob: string;
 
   @prop({ ref: () => User })
-  public friends?: Ref<User>[]; 
+  public friends?: Ref<User>[];
 
   @prop({
     index: true,
@@ -19,14 +20,14 @@ export class User extends BaseModel{
   })
   public username: string;
 
-  @prop({required:true})
-  public password: string;
+  @prop({ required: true })
+  public password?: string;
 
   @prop({
     type: Object,
     index: '2dsphere',
   })
-  public location: { type: { type: string }; coordinates: number[] };
+  public address: { type: { type: string }; coordinates: number[] };
 }
 
 export type UserType = User;

@@ -1,65 +1,131 @@
 import * as assert from 'assert';
 
-import { Provide, Inject } from '@midwayjs/decorator';
+import { Provide, Inject, Config, Plugin } from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
-import { Repository, Like, In } from 'typeorm';
+import { ReturnModelType } from '@typegoose/typegoose';
+import { Context } from '@midwayjs/web';
+import { JwtComponent } from '@mw-components/jwt';
+import { Redis } from 'ioredis';
+import * as _ from 'lodash';
 
-import { Context } from '@/interface';
+import { JwtAuthMiddlewareConfig } from '@/config/config.types';
 
 import { User } from '../entity/user';
-import { QueryDTO, CreateDTO, UpdateDTO } from '../dto/user';
+import { CreateDTO, UpdateDTO } from '../dto/user';
+import MyError from '../util/my-error';
+
 import { BaseService } from './base';
 
 @Provide()
-export class UserService extends BaseService<User>{
+export class UserService extends BaseService<User> {
   @Inject()
   ctx: Context;
 
+  @Inject('jwt:jwtComponent')
+  jwt: JwtComponent;
+
+  @Config('jwtAuth')
+  private jwtAuthConfig: JwtAuthMiddlewareConfig;
+
+  @Plugin()
+  private redis: Redis;
+
   @InjectEntityModel(User)
-  userModel: Repository<User>;
+  userModel: ReturnModelType<typeof User>;
 
-
-  async create(docs: Partial<User>): Promise<DocumentType<User>> {
-    const user = await super.create(docs);
-    return user.save();
-  }
-  
-   /*
-    * 根据登录名查找用户
-    * @param {String} username 登录名
-    * @param {Boolean} pass 启用密码
-    * @return {Promise[user]} 承载用户的 Promise 对象
-    */
+  /*
+   * 根据登录名查找用户
+   * @param {String} username 登录名
+   * @param {Boolean} pass 启用密码
+   * @return {Promise[user]} 承载用户的 Promise 对象
+   */
   async getUserByLoginName(loginName: string, pass: boolean): Promise<User> {
     const query = { loginname: new RegExp('^' + loginName + '$', 'i') };
-    let projection = null;
-    if (pass) {
-        projection = '+pass';
-    }
-    return super.findOneAsync(query, projection);
+    const projection = null;
+
+    return;
   }
 
   /**
    * 根据用户id获取数据
    * @param id 用户id
    */
-  async getUserById(id: string) {}
+  async getUserById(id: string): Promise<User> {
+    const userInfo = await super.findById(id, null, { lean: true });
+
+    assert.ok(
+      !userInfo,
+      new MyError('The user does not exist. Please check the id', 400)
+    );
+
+    return userInfo;
+  }
 
   /**
    * 创建用户
    * @param {CreateDTO} params 创建参数
    */
-  async createUser(params: CreateDTO) {}
+  async createUser(params: CreateDTO): Promise<string> {
+    const { password } = params;
+    const passwordHash = this.ctx.helper.bhash(password);
+    params.password = passwordHash;
+    const { id } = await this.userModel.create(params as User); // an "as" assertion, to have types for all properties
+
+    // find data
+    const user = await this.userModel.findById(id).exec();
+    const token = await this.createUserToken(user);
+
+    await this.cacheAdminUser(user);
+
+    return token;
+  }
 
   /**
-   * 更新用户
+   * delete user
    * @param {UpdateDTO} params 更新参数
    */
-  async updateUser(params: UpdateDTO) {}
+  async deleteUser(id: string): Promise<User> {
+    return await super.delete({ id });
+  }
+
+  async createUserToken(data: User): Promise<string> {
+    const token: string = this.jwt.sign({ id: data.id }, '', {
+      expiresIn: this.jwtAuthConfig.accessTokenExpiresIn,
+    });
+    await this.redis.set(
+      `${this.jwtAuthConfig.redisScope}:accessToken:${data.id}`,
+      token,
+      'EX',
+      this.jwtAuthConfig.accessTokenExpiresIn
+    );
+    return token;
+  }
 
   /**
-   * 检查是否存在于数据库，自动抛错
-   * @param {string[]} ids 用户id
+   * 缓存用户信息
+   * @param {IUser} data 管理员数据
+   * @returns {OK | null} 缓存处理结果
    */
-  async checkUserExists(ids: string[]) {}
+  async cacheAdminUser(data: User): Promise<'OK' | null> {
+    const { id, username, name, dob } = data;
+
+    const userinfo = {
+      id,
+      username,
+      name,
+      dob,
+      type: 'user',
+    };
+
+    return this.redis.set(
+      `${this.jwtAuthConfig.redisScope}:userinfo:${userinfo.id}`,
+      JSON.stringify(userinfo),
+      'EX',
+      this.jwtAuthConfig.accessTokenExpiresIn
+    );
+  }
+
+  async updateUser(id: string, data: User): Promise<User> {
+    return await super.update(id, data);
+  }
 }
