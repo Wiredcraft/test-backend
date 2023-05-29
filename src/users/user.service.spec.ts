@@ -1,145 +1,142 @@
+const crypto = require("crypto");
 import { Test, TestingModule } from "@nestjs/testing";
-import { UserService } from "./user.service";
-import {
-  DBAccess,
-  DB_ACCESS_SERVICE,
-} from "@wiredcraft/dbaccess/dbaccess.service";
+import { DBAccessModule } from "@wiredcraft/dbaccess/dbaccess.module";
+import { PrismaService } from "@wiredcraft/dbaccess/prisma.service";
+import { createPrismaMockService } from "@wiredcraft/mocks/prisma.mock.service";
 import UserDto from "./dto/user.dto";
+import { UserService } from "./user.service";
+import { ConflictException } from "@nestjs/common";
 
+function randomDate(start = new Date(2012, 0, 1), end = new Date()) {
+  return new Date(
+    start.getTime() + Math.random() * (end.getTime() - start.getTime())
+  );
+}
+
+function userEquals(u1: UserDto, u2: UserDto) {
+  expect(u1.name).toBe(u2.name);
+  expect(u1.email).toBe(u2.email);
+  expect(u1.dob).toStrictEqual(u2.dob);
+  expect(u1.address).toBe(u2.address);
+  expect(u1.description).toBe(u2.description);
+}
+function createUserDto() {
+  const randomStr = crypto.randomUUID();
+  return {
+    name: randomStr,
+    dob: randomDate(),
+    email: `${randomStr}@wiredcard.com`,
+    address: `${randomStr} address`,
+    description: `hi this is ${randomStr}`,
+  } as UserDto;
+}
 describe("UserService", () => {
+  const dbName = "user_unit_test";
   let service: UserService;
-  let dbService: DBAccess;
-
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        UserService,
-        {
-          provide: DB_ACCESS_SERVICE,
-          useValue: {
-            findAll: jest.fn(),
-            findById: jest.fn(),
-            create: jest.fn(),
-            update: jest.fn(),
-            delete: jest.fn(),
-          },
+  let prisma: PrismaService;
+  let mongoReplSet;
+  beforeAll(async () => {
+    mongoReplSet = await createPrismaMockService(dbName);
+    await mongoReplSet.waitUntilRunning();
+    prisma = new PrismaService({
+      datasources: {
+        db: {
+          url: mongoReplSet.getUri(dbName),
         },
-      ],
-    }).compile();
+      },
+    });
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [DBAccessModule],
+      providers: [UserService],
+    })
+      .overrideProvider(PrismaService)
+      .useValue(prisma)
+      .compile();
 
     service = module.get<UserService>(UserService);
-    dbService = module.get<DBAccess>(DB_ACCESS_SERVICE);
+  }, 1000 * 30);
+  beforeEach(async () => {
+    await prisma.user.deleteMany();
+    await prisma.$disconnect();
+    await prisma.$connect();
   });
-
-  describe("findAll", () => {
-    it("should return an array of users", async () => {
-      const users: UserDto[] = [
-        {
-          name: "mock user",
-          dob: new Date("2022-01-01"),
-          address: "my address",
-          description: "hi",
-        } as UserDto,
-        {
-          name: "mock user2",
-          dob: new Date("2022-01-01"),
-          address: "my address",
-          description: "hi",
-        } as UserDto,
-      ];
-      jest.spyOn(dbService, "findAll").mockResolvedValue(users);
-
-      const result = await service.findAll();
-
-      expect(result).toEqual(users);
-      expect(dbService.findAll).toHaveBeenCalled();
-    });
-  });
-
-  describe("findById", () => {
-    it("should return a user by ID", async () => {
-      const userId = "1";
-      const user: UserDto = {
-        id: "1",
-        name: "mock user",
-        dob: new Date("2022-01-01"),
-        address: "my address",
-        description: "hi",
-      } as UserDto;
-      jest.spyOn(dbService, "findById").mockResolvedValue(user);
-
-      const result = await service.findById(userId);
-
-      expect(result).toEqual(user);
-      expect(dbService.findById).toHaveBeenCalledWith(userId);
-    });
-
-    it("should return null if user is not found", async () => {
-      const userId = "1";
-      jest.spyOn(dbService, "findById").mockResolvedValue(null);
-
-      const result = await service.findById(userId);
-
-      expect(result).toBeNull();
-      expect(dbService.findById).toHaveBeenCalledWith(userId);
-    });
-  });
-
+  afterAll(async () => {
+    await prisma.$disconnect();
+    await mongoReplSet.stop();
+  }, 1000 * 30);
   describe("create", () => {
-    it("should create a new user", async () => {
-      const userData: UserDto = {
-        id: "1",
-        name: "mock user",
+    it("should create user success", async () => {
+      const newUser: UserDto = {
+        name: "mock user1",
         dob: new Date("2022-01-01"),
+        email: "user1@wiredcard.com",
         address: "my address",
         description: "hi",
       } as UserDto;
-      const createdUser: UserDto = { id: "1", ...userData };
-      jest.spyOn(dbService, "create").mockResolvedValue(createdUser);
 
-      const result = await service.create(userData);
+      const createdUser = await service.create(newUser);
+      expect(createdUser.id).toBeDefined();
+      userEquals(newUser, createdUser);
+    });
+    it("should create user failed, duplicated email address", async () => {
+      const newUser = createUserDto();
 
-      expect(result).toEqual(createdUser);
-      expect(dbService.create).toHaveBeenCalledWith(userData);
+      const newUser2 = createUserDto();
+      newUser2.email = newUser.email;
+
+      await service.create(newUser);
+      try {
+        await service.create(newUser2);
+      } catch (error) {
+        expect(error).toBeInstanceOf(ConflictException);
+        expect(error.message).toBe("Email address is ready existed");
+      }
     });
   });
-
   describe("update", () => {
-    it("should update a user", async () => {
-      const userId = "1";
-      const userData: UserDto = {
-        id: "1",
-        name: "mock user",
-        dob: new Date("2022-01-01"),
-        address: "my address",
-        description: "hi",
-      } as UserDto;
-      const updatedUser: UserDto = { id: userId, ...userData };
-      jest.spyOn(dbService, "update").mockResolvedValue(updatedUser);
+    it("should update success", async () => {
+      const updatedName = "updated User";
+      const createdUser = await service.create(createUserDto());
+      createdUser.name = updatedName;
+      const updatedUser = await service.update(createdUser.id, createdUser);
 
-      const result = await service.update(userId, userData);
+      expect(updatedUser.name).toBe("updated User");
+    });
+    it("should update failed, duplicated email", async () => {
+      const createdUser1 = await service.create(createUserDto());
+      const createdUser2 = await service.create(createUserDto());
+      try {
+        //try to update with existed email address should fail
+        createdUser2.email = createdUser1.email;
+        await service.update(createdUser2.id, createdUser2);
+      } catch (error) {
+        expect(error).toBeInstanceOf(ConflictException);
+        expect(error.message).toBe("Email address is ready existed");
+      }
+    });
+  });
+  describe("findAll", () => {
+    it("should return empty array", async () => {
+      const users = await service.findAll();
+      expect(users).toHaveLength(0);
+    });
 
-      expect(result).toEqual(updatedUser);
-      expect(dbService.update).toHaveBeenCalledWith(userId, userData);
+    it("should return 3", async () => {
+      const total = 3;
+      for (let i = 1; i <= 3; i++) {
+        await service.create(createUserDto());
+      }
+      const users = await service.findAll();
+      expect(users).toHaveLength(3);
     });
   });
 
   describe("delete", () => {
-    it("should delete a user", async () => {
-      const userId = "1";
-      const deletedUser: UserDto = {
-        id: "1",
-        name: "mock user",
-        dob: new Date("2022-01-01"),
-        address: "my address",
-        description: "hi",
-      } as UserDto;
-      jest.spyOn(dbService, "delete").mockResolvedValue(deletedUser);
-
-      const result = await service.delete(userId);
-
-      expect(result).toEqual(deletedUser);
-      expect(dbService.delete).toHaveBeenCalledWith(userId);
+    it("should delete success", async () => {
+      const createdUser = await service.create(createUserDto());
+      await service.delete(createdUser.id);
+      const findUser = await service.findById(createdUser.id);
+      expect(findUser).toBeNull();
     });
   });
 });

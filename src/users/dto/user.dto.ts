@@ -1,15 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import {
-  IsDate,
-  IsISO8601,
-  IsNotEmpty,
-  IsString,
-  Length,
-} from "class-validator";
+import { IsDate, IsEmail, IsNotEmpty, IsString, Length } from "class-validator";
 
 export default class UserDto {
   id: string;
+
   @ApiProperty({
     name: "name",
     description: "user name",
@@ -19,11 +14,18 @@ export default class UserDto {
   name: string;
 
   @ApiProperty({
+    description: "email address to identify user",
+    required: true,
+  })
+  @IsEmail()
+  email: string;
+
+  @ApiProperty({
     name: "dob",
     default: "1999-01-01",
     description: "user date of birth, in yyyy-MM-DD format e.g. 1999-01-01",
   })
-  @IsDate()
+  @IsDate({ message: "dob must be in yyyy-MM-DD format. e.g. 1999-01-01" })
   @Type(() => Date)
   dob: Date;
 
@@ -32,13 +34,11 @@ export default class UserDto {
     description: "user address, max length: 100",
   })
   @IsString()
-  @IsNotEmpty()
-  @Length(1, 100)
+  @Length(0, 100)
   address: string;
 
   @IsString()
-  @IsNotEmpty()
-  @Length(1, 300)
+  @Length(0, 300)
   @ApiProperty({
     name: "description",
     description: "user description, max length: 300",

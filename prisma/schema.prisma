@@ -18,6 +18,8 @@ model User {
   
   //"name": "test",               // user name
   name String 
+  //email
+  email String @unique
   // "dob": "",                    // date of birth
   dob DateTime @db.Date
   // "address": "",                // user address

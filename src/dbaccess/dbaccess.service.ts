@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import UserDto from "@wiredcraft/users/dto/user.dto";
 import { PrismaService } from "./prisma.service";
 
@@ -15,7 +15,18 @@ export interface DBAccess {
 @Injectable()
 export class DBAccessService implements DBAccess {
   constructor(private readonly prisma: PrismaService) {}
+  async findUserByEmail(email: string) {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email },
+      select: { id: true, name: true, email: true },
+    });
+    return existingUser;
+  }
   async create(userData: UserDto): Promise<UserDto> {
+    const existingUser = await this.findUserByEmail(userData.email);
+    if (existingUser) {
+      throw new ConflictException("Email address is ready existed");
+    }
     return await this.prisma.user.create({ data: userData });
   }
 
@@ -25,7 +36,12 @@ export class DBAccessService implements DBAccess {
   async findById(id: string): Promise<UserDto> {
     return await this.prisma.user.findUnique({ where: { id } });
   }
-  update(id: string, userData: UserDto): Promise<UserDto> {
+  async update(id: string, userData: UserDto): Promise<UserDto> {
+    delete userData.id;
+    const existingUser = await this.findUserByEmail(userData.email);
+    if (existingUser && existingUser.id !== id) {
+      throw new ConflictException("Email address is ready existed");
+    }
     return this.prisma.user.update({ where: { id }, data: userData });
   }
   delete(id: string): Promise<UserDto> {
