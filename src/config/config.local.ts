@@ -1,6 +1,5 @@
 import { EggRedisOptions } from 'egg-redis';
 import { TracerConfig, defaultTracerConfig } from '@mw-components/jaeger';
-import { ConnectionOptions } from 'typeorm';
 import {
   JwtConfig,
   JwtMiddlewareConfig,
@@ -11,7 +10,7 @@ import { JwtAuthMiddlewareConfig } from './config.types';
 
 // jwt配置
 export const jwtConfig: JwtConfig = {
-  secret: '123456', // 默认密钥，生产环境一定要更改!
+  secret: '123456',
 };
 export const jwtMiddlewareConfig: JwtMiddlewareConfig = {
   ...initialJwtMiddlewareConfig,
@@ -19,6 +18,7 @@ export const jwtMiddlewareConfig: JwtMiddlewareConfig = {
 };
 jwtMiddlewareConfig.ignore = jwtMiddlewareConfig.ignore?.concat([
   '/auth/login',
+  '/user',
   '/ping',
   '/genid',
   '/genidHex',
@@ -29,18 +29,6 @@ export const jwtAuth: JwtAuthMiddlewareConfig = {
   ignore: jwtMiddlewareConfig.ignore,
   redisScope: 'user', // redis的作用域前缀
   accessTokenExpiresIn: 60 * 60 * 24 * 3, // 签名过期时间也可写
-};
-
-// db config
-export const orm: ConnectionOptions = {
-  type: 'mysql',
-  host: '127.0.0.1',
-  port: 3306,
-  username: 'root',
-  password: 'password',
-  database: 'shop_development',
-  synchronize: false,
-  logging: true,
 };
 
 // redis

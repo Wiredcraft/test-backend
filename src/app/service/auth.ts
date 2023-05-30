@@ -7,8 +7,7 @@ import { Redis } from 'ioredis';
 import { Context } from '@/interface';
 
 import { JwtAuthMiddlewareConfig } from '../../config/config.types';
-import  { User, UserType } from '../entity/user';
-
+import { User, UserType } from '../entity/user';
 
 @Provide()
 export class AuthService {
@@ -22,7 +21,7 @@ export class AuthService {
   private jwtAuthConfig: JwtAuthMiddlewareConfig;
 
   @InjectEntityModel(User)
-  private userModel: ReturnModelType<typeof User>
+  private userModel: ReturnModelType<typeof User>;
 
   @Plugin()
   private redis: Redis;
@@ -85,13 +84,13 @@ export class AuthService {
    * @param {UserModel} data 用户数据
    * @returns {OK | null} 缓存处理结果
    */
-  async cacheUser(data: UserType ): Promise<'OK' | null> {
-    const { id, username, name} = data;
+  async cacheUser(data: UserType): Promise<'OK' | null> {
+    const { id, username, name } = data;
 
     const userinfo = {
       id,
       username,
-      name
+      name,
     };
 
     return this.redis.set(

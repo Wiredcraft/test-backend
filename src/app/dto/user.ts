@@ -10,7 +10,7 @@ export class CreateDTO {
   username: string;
 
   @CreateApiPropertyDoc('name')
-  @Rule(RuleType.string().trim().min(5).max(255).required())
+  @Rule(RuleType.string().trim().min(3).max(255).required())
   name: string;
 
   @CreateApiPropertyDoc('password')
@@ -18,7 +18,7 @@ export class CreateDTO {
   password: string;
 
   @CreateApiPropertyDoc('date of birth')
-  @Rule(RuleType.date().required())
+  @Rule(RuleType.string().required())
   dob?: string;
 
   @CreateApiPropertyDoc('user description')
@@ -26,8 +26,11 @@ export class CreateDTO {
   description?: string;
 
   @CreateApiPropertyDoc('address')
-  @Rule(RuleType.array().items(RuleType.number()).min(2).max(2).required())
-  address?: number[];
+  @Rule(RuleType.any())
+  address?: {
+    type: 'Point';
+    coordinates: [number, number];
+  };
 }
 
 /**
@@ -51,6 +54,9 @@ export class UpdateDTO {
   description?: string;
 
   @CreateApiPropertyDoc('address')
-  @Rule(RuleType.array().items(RuleType.number()).min(2).max(2).required())
-  address?: number[];
+  @Rule(RuleType.any())
+  address?: {
+    type: 'Point';
+    coordinates: [number, number];
+  };
 }

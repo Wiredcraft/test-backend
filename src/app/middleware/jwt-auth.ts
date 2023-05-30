@@ -21,6 +21,10 @@ async function authMiddleware(
     ctx.currentUser = {};
   }
 
+  if (ctx.path === '/user' && ctx.method === 'POST') {
+    return next();
+  }
+
   if (ctx.jwtState.user) {
     const { user } = ctx.jwtState;
     const { jwtAuth } = ctx.app.config;

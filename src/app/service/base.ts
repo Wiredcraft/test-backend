@@ -110,7 +110,7 @@ export abstract class BaseService<T extends BaseModel> {
    * @memberof BaseService
    */
   protected static throwMongoError(err: MongoError): void {
-    throw new MyError(err.errmsg, 500);
+    throw new MyError(JSON.stringify(err), 500);
   }
 
   /**
@@ -219,6 +219,19 @@ export abstract class BaseService<T extends BaseModel> {
   }
 
   /**
+   * @description 创建一条数据
+   * @param {Partial<T>} docs
+   * @returns {Promise<DocumentType<T>>}
+   */
+  public async create(docs: Partial<T>): Promise<any> {
+    try {
+      return await this.model.create(docs);
+    } catch (e) {
+      BaseService.throwMongoError(e);
+    }
+  }
+
+  /**
    * @description 根据id获取单条数据
    * @param {(string)} id
    * @param {(Object | string)} [projection]
@@ -239,6 +252,47 @@ export abstract class BaseService<T extends BaseModel> {
     } = {}
   ): QueryItem<T> {
     return this.model.findById(BaseService.toObjectId(id), projection, options);
+  }
+
+  /**
+   * @description 获取单条数据
+   * @param {*} conditions
+   * @param {(Object | string)} [projection]
+   * @param {({
+   *     lean?: boolean;
+   *     populates?: ModelPopulateOptions[] | ModelPopulateOptions;
+   *     [key: string]: any;
+   *   })} [options]
+   * @returns {QueryItem<T>}
+   */
+  public findOne(
+    conditions: any,
+    projection?: object | string,
+    options: {
+      lean?: boolean;
+      populates?: PopulateOptions[] | PopulateOptions;
+      [key: string]: any;
+    } = {}
+  ): QueryItem<T> {
+    return this.model.findOne(conditions, projection || {}, options);
+  }
+
+  public findOneAsync(
+    conditions: any,
+    projection?: object | string,
+    options: {
+      lean?: boolean;
+      populates?: PopulateOptions[] | PopulateOptions;
+      [key: string]: any;
+    } = {}
+  ): Promise<T | null> {
+    try {
+      const { populates = null, ...option } = options;
+      const docsQuery = this.findOne(conditions, projection || {}, option);
+      return this.populates<T>(docsQuery, populates).exec();
+    } catch (e) {
+      BaseService.throwMongoError(e);
+    }
   }
 
   /**

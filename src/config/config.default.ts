@@ -1,5 +1,4 @@
 import { EggAppInfo } from 'egg';
-import { User } from '../app/entity/user';
 
 import { DefaultConfig } from './config.types';
 
@@ -8,6 +7,10 @@ export default (appInfo: EggAppInfo): DefaultConfig => {
 
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1602294995416_4568';
+
+  config.security = {
+    csrf: false,
+  };
 
   // add your config here
   config.middleware = ['jwtAuth'];
@@ -18,19 +21,16 @@ export default (appInfo: EggAppInfo): DefaultConfig => {
 
   // 数据库配置
   config.mongoose = {
-    dataSource: {
-      default: {
-        uri: 'mongodb://localhost:27017/test',
-        options: {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-          user: 'admin',
-          pass: '12345'
-        },
-        // 关联实体
-        entities: [ User ]
-      }
-    }
+    client: {
+      uri: 'mongodb://localhost:27017/test',
+      options: {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        user: 'admin',
+        pass: 'admin',
+      },
+      // 关联实体
+    },
   };
 
   // redis config

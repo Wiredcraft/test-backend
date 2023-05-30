@@ -5,12 +5,12 @@ import {
   Get,
   Provide,
   Inject,
-  Query,
   ALL,
   Patch,
   Validate,
   Body,
   Post,
+  Query,
   Del,
   Param,
 } from '@midwayjs/decorator';
@@ -47,6 +47,24 @@ export class UserController {
     ctx.helper.success(user);
   }
 
+  @Get('/search', {
+    summary: 'serach user by name',
+    description: 'serach user by name',
+  })
+  @Validate()
+  async search(
+    ctx: Context,
+    @Query(ALL)
+    param: {
+      name: string;
+    }
+  ) {
+    const { name } = param;
+    const user = await this.service.getUserByName(name);
+
+    ctx.helper.success(user);
+  }
+
   @Post('/', {
     summary: 'User registration',
     description: 'User registration',
@@ -57,7 +75,8 @@ export class UserController {
       const token = await this.service.createUser(body);
       ctx.helper.success({ token });
     } catch (error) {
-      ctx.helper.error(2001, '');
+      ctx.logger.info(error);
+      ctx.helper.error(2001, error);
     }
   }
 
@@ -80,7 +99,7 @@ export class UserController {
       new MyError('The user does not exist. Please check the id', 400)
     );
 
-    ctx.helper.success(result);
+    ctx.helper.success(user);
   }
 
   @Patch('/:id', {
@@ -100,36 +119,36 @@ export class UserController {
     ctx.helper.success(null, null, 200);
   }
 
-  @Get('/:id/followers', {
-    summary: 'get a list of user followers',
-    description: '',
-  })
-  @Validate()
-  async userFans(ctx: Context, @Body(ALL) params: UpdateDTO) {
-    // const { roles, permissions } = params;
-    await this.service.updateUser(params);
-    ctx.helper.success(null, null, 204);
-  }
+  // @Get('/:id/followers', {
+  //   summary: 'get a list of user followers',
+  //   description: '',
+  // })
+  // @Validate()
+  // async userFans(ctx: Context, @Body(ALL) params: UpdateDTO) {
+  //   // const { roles, permissions } = params;
+  //   await this.service.updateUser(params);
+  //   ctx.helper.success(null, null, 204);
+  // }
 
-  @Get('/:id/following', {
-    summary: 'get a list of user following',
-    description: '',
-  })
-  @Validate()
-  async userfollowing(ctx: Context, @Body(ALL) params: UpdateDTO) {
-    // const { roles, permissions } = params;
-    await this.service.updateUser(params);
-    ctx.helper.success(null, null, 204);
-  }
+  // @Get('/:id/following', {
+  //   summary: 'get a list of user following',
+  //   description: '',
+  // })
+  // @Validate()
+  // async userfollowing(ctx: Context, @Body(ALL) params: UpdateDTO) {
+  //   // const { roles, permissions } = params;
+  //   await this.service.updateUser(params);
+  //   ctx.helper.success(null, null, 204);
+  // }
 
-  @Post('/:id/follow', {
-    summary: '',
-    description: '',
-  })
-  @Validate()
-  async follow(ctx: Context, @Body(ALL) params: UpdateDTO) {
-    // const { roles, permissions } = params;
-    await this.service.updateUser(params);
-    ctx.helper.success(null, null, 204);
-  }
+  // @Post('/:id/follow', {
+  //   summary: '',
+  //   description: '',
+  // })
+  // @Validate()
+  // async follow(ctx: Context, @Body(ALL) params: UpdateDTO) {
+  //   // const { roles, permissions } = params;
+  //   await this.service.updateUser(params);
+  //   ctx.helper.success(null, null, 204);
+  // }
 }

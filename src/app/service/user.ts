@@ -1,17 +1,18 @@
 import * as assert from 'assert';
 
 import { Provide, Inject, Config, Plugin } from '@midwayjs/decorator';
-import { InjectEntityModel } from '@midwayjs/orm';
 import { ReturnModelType } from '@typegoose/typegoose';
+import { InjectEntityModel } from '@midwayjs/typegoose';
 import { Context } from '@midwayjs/web';
 import { JwtComponent } from '@mw-components/jwt';
 import { Redis } from 'ioredis';
+// eslint-disable-next-line node/no-extraneous-import
 import * as _ from 'lodash';
 
 import { JwtAuthMiddlewareConfig } from '@/config/config.types';
 
 import { User } from '../entity/user';
-import { CreateDTO, UpdateDTO } from '../dto/user';
+import { CreateDTO } from '../dto/user';
 import MyError from '../util/my-error';
 
 import { BaseService } from './base';
@@ -31,20 +32,7 @@ export class UserService extends BaseService<User> {
   private redis: Redis;
 
   @InjectEntityModel(User)
-  userModel: ReturnModelType<typeof User>;
-
-  /*
-   * 根据登录名查找用户
-   * @param {String} username 登录名
-   * @param {Boolean} pass 启用密码
-   * @return {Promise[user]} 承载用户的 Promise 对象
-   */
-  async getUserByLoginName(loginName: string, pass: boolean): Promise<User> {
-    const query = { loginname: new RegExp('^' + loginName + '$', 'i') };
-    const projection = null;
-
-    return;
-  }
+  private userModel: ReturnModelType<typeof User>;
 
   /**
    * 根据用户id获取数据
@@ -69,10 +57,12 @@ export class UserService extends BaseService<User> {
     const { password } = params;
     const passwordHash = this.ctx.helper.bhash(password);
     params.password = passwordHash;
-    const { id } = await this.userModel.create(params as User); // an "as" assertion, to have types for all properties
 
     // find data
+    this.ctx.logger.info(this.userModel);
+    const { _id: id } = await this.userModel.create(params as User); // an "as" assertion, to have types for all properties
     const user = await this.userModel.findById(id).exec();
+
     const token = await this.createUserToken(user);
 
     await this.cacheAdminUser(user);
@@ -125,7 +115,19 @@ export class UserService extends BaseService<User> {
     );
   }
 
-  async updateUser(id: string, data: User): Promise<User> {
+  async updateUser(id: string, data: Partial<User>): Promise<User> {
     return await super.update(id, data);
+  }
+
+  /*
+   * 根据登录名查找用户
+   * @param {String} username 登录名
+   * @param {Boolean} pass 启用密码
+   * @return {Promise[user]} 承载用户的 Promise 对象
+   */
+  async getUserByName(name: string): Promise<User> {
+    const query = { name: new RegExp('^' + name + '$', 'i') };
+
+    return super.findOneAsync(query);
   }
 }

@@ -11,7 +11,6 @@ import * as jwt from '@mw-components/jwt';
 import * as koid from '@mw-components/koid';
 import * as typegoose from '@midwayjs/typegoose';
 
-
 import { Application, NpmPkg } from '@/interface';
 
 import { customLogger } from './app/util/custom-logger';

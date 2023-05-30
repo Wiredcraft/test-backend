@@ -1,8 +1,9 @@
 import { Ref, prop } from '@typegoose/typegoose';
 import { Schema } from 'mongoose';
+import { EntityModel } from '@midwayjs/typegoose';
 
 import { BaseModel } from './base';
-
+@EntityModel()
 export class User extends BaseModel {
   @prop({ required: true })
   public name: string;
@@ -27,7 +28,10 @@ export class User extends BaseModel {
     type: Object,
     index: '2dsphere',
   })
-  public address: { type: { type: string }; coordinates: number[] };
+  public address?: {
+    type: 'Point';
+    coordinates: [number, number];
+  };
 }
 
 export type UserType = User;
