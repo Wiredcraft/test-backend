@@ -27,7 +27,7 @@ export class AuthController {
   service: AuthService;
 
   /**
-   * The login mode is email+ password
+   * The login mode is username+ password
    */
   @CreateApiDoc()
     .summary('User Login')
@@ -66,7 +66,7 @@ export class AuthController {
    * 退出登录
    */
   @CreateApiDoc()
-    .summary('管理员退出登录')
+    .summary('退出登录')
     .description('退出登录，退出成功 data 为{}')
     .respond(200, 'success')
     .build()

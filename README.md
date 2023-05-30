@@ -55,7 +55,7 @@ docker-compose up -d
 docker-compose down
 ```
 
-初始化db
+Initializing db
 ```
 docker exec -it mongo mongosh admin
 use admin
@@ -105,24 +105,10 @@ This implementation is based on the ctx mechanism and combined with midway's dep
   ctx.tracerManager.finishSpan()
   ```
 
-## Interface response statistics middleware
-
-- Help troubleshoot online interface response problems
-- Monitors the real-time system status
-
-Although the framework already has logging capabilities, there are many scenarios where we might need to look at the response state of each interface service
-
-Is it in normal service or is there a problem? With the help of monitoring, it can quickly help us locate logs and troubleshoot problems.
-
-For real-time statistical data, we will use the RTS technique here, using RabbitMQ and Redis
-
-RabbitMQ is used to asynchronize statistical calculations so that normal service request processing is not affected
-
-(Consumer logic code, need to be written in a separate project, independent deployment)
-
-The general process is as follows
-
-![IMG_5365 HEIC](https://user-images.githubusercontent.com/10667077/101478900-55a4cb00-398c-11eb-97c3-4a41195c572d.JPG)
+## Interface document
+```bash
+open http://127.0.0.1:7001/swagger-ui/index.html#/
+```
 
 
 ## Unit testing
