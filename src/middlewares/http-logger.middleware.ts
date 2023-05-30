@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { Request, Response } from "express";
 import { Logger as WinstonLogger } from "winston";
 import { WINSTON_MODULE_NEST_PROVIDER } from "nest-winston";
+import { now } from "@wiredcraft/utils/comm.util";
 
 @Injectable()
 export class HttpLoggerMiddleware {
@@ -13,10 +14,13 @@ export class HttpLoggerMiddleware {
     const { method, originalUrl: url } = req;
 
     res.on("finish", () => {
-      const startTime = Date.now();
+      const startTime = now("micro");
       this.logger.log({
         level: "info",
-        message: `${method} ${url} - total time: ${Date.now() - startTime}ms`,
+        message: `${method} ${url} - total time: ${(
+          (now("micro") - startTime) /
+          1000
+        ).toFixed(3)}ms`,
       });
     });
 

@@ -37,7 +37,6 @@ export class DBAccessService implements DBAccess {
     return await this.prisma.user.findUnique({ where: { id } });
   }
   async update(id: string, userData: UserDto): Promise<UserDto> {
-    delete userData.id;
     const existingUser = await this.findUserByEmail(userData.email);
     if (existingUser && existingUser.id !== id) {
       throw new ConflictException("Email address is ready existed");

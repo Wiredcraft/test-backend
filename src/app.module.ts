@@ -27,7 +27,6 @@ import { HttpLoggerMiddleware } from "./middlewares/http-logger.middleware";
   ],
   controllers: [AppController],
   providers: [AppService],
-  exports: [DBAccessModule],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

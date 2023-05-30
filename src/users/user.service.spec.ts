@@ -6,6 +6,7 @@ import { createPrismaMockService } from "@wiredcraft/mocks/prisma.mock.service";
 import UserDto from "./dto/user.dto";
 import { UserService } from "./user.service";
 import { ConflictException } from "@nestjs/common";
+import { excludedFields } from "@wiredcraft/utils/comm.util";
 
 //create random date for dob
 function randomDate(start = new Date(2012, 0, 1), end = new Date()) {
@@ -95,11 +96,13 @@ describe("UserService", () => {
     it("should update success", async () => {
       const updatedName = "updated User";
       const createdUser = await service.create(createUserDto());
+      const id = createdUser.id;
       createdUser.name = updatedName;
-      delete createdUser.createAt;
-      delete createdUser.updateAt;
 
-      const updatedUser = await service.update(createdUser.id, createdUser);
+      const updatedUser = await service.update(
+        id,
+        excludedFields(createdUser, ["id", "createAt", "updateAt"])
+      );
       expect(updatedUser.updateAt).not.toStrictEqual(updatedUser.createAt);
       expect(updatedUser.name).toBe("updated User");
     });
