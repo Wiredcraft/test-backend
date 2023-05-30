@@ -11,8 +11,9 @@ export default class MyError extends Error {
    * @param errors 错误数组(jio 表单错误多条)
    */
   constructor(message: string, status?: number, errors?: any[]) {
-    super(message + ` &>${status || ''}`); // 兼容ci测试时，assert无法自定义增加status
+    super(message + ` &>${status || ''}`);
     this.status = typeof status === 'number' ? status : 0;
     this.errors = errors;
+    this.message = message;
   }
 }

@@ -55,6 +55,16 @@ docker-compose up -d
 docker-compose down
 ```
 
+初始化db
+```
+docker exec -it mongo mongosh admin
+use admin
+db.auth('admin','admin')
+use test
+db.createUser({user:'admin',pwd:'123456',roles:[{role:'readWrite',db:'test'}]})
+
+```
+
 ### Development
 
 ```bash

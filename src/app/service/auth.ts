@@ -1,6 +1,4 @@
 import { Provide, Plugin, Inject, Config } from '@midwayjs/decorator';
-import { InjectEntityModel } from '@midwayjs/typegoose';
-import { ReturnModelType } from '@typegoose/typegoose';
 import { JwtComponent } from '@mw-components/jwt';
 import { Redis } from 'ioredis';
 
@@ -8,6 +6,8 @@ import { Context } from '@/interface';
 
 import { JwtAuthMiddlewareConfig } from '../../config/config.types';
 import { User, UserType } from '../entity/user';
+
+import { UserService } from './user';
 
 @Provide()
 export class AuthService {
@@ -17,11 +17,11 @@ export class AuthService {
   @Inject('jwt:jwtComponent')
   jwt: JwtComponent;
 
+  @Inject()
+  userService: UserService;
+
   @Config('jwtAuth')
   private jwtAuthConfig: JwtAuthMiddlewareConfig;
-
-  @InjectEntityModel(User)
-  private userModel: ReturnModelType<typeof User>;
 
   @Plugin()
   private redis: Redis;
@@ -31,8 +31,8 @@ export class AuthService {
    * @param {User} data 保存的数据
    * @returns {String} 生成的Token字符串
    */
-  async createUserToken(data: User): Promise<string> {
-    const token: string = this.jwt.sign({ id: data.id.toString() }, '', {
+  async createUserToken(data: UserType): Promise<string> {
+    const token: string = this.jwt.sign({ id: data._id }, '', {
       expiresIn: this.jwtAuthConfig.accessTokenExpiresIn,
     });
     await this.redis.set(
@@ -54,20 +54,6 @@ export class AuthService {
   }
 
   /**
-   * 根据登录名查找用户
-   * @param {String} username 登录名
-   * @returns {UserModel | null} 承载用户的 Promise 对象
-   */
-  async getUserByUserName(username: string): Promise<User> {
-    const user = await this.userModel.findOne({
-      where: {
-        username,
-      },
-    });
-    return user;
-  }
-
-  /**
    * 读取Redis缓存中的用户信息(弃用)
    * @param {String} id
    * @returns {UserModel} 用户信息
@@ -84,7 +70,7 @@ export class AuthService {
    * @param {UserModel} data 用户数据
    * @returns {OK | null} 缓存处理结果
    */
-  async cacheUser(data: UserType): Promise<'OK' | null> {
+  async cacheUser(data: User): Promise<'OK' | null> {
     const { id, username, name } = data;
 
     const userinfo = {
@@ -119,13 +105,8 @@ export class AuthService {
     username: string;
     password: string;
   }): Promise<User | null> {
-    // 获取用户函数
-    const getUser = (username: string) => {
-      return this.getUserByUserName(username);
-    };
-
     // 查询用户是否在数据库中
-    const existUser = await getUser(params.username);
+    const existUser = await this.userService.getUserByUserName(params.username);
     // 用户不存在
     if (!existUser) {
       return null;

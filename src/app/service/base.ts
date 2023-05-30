@@ -1,5 +1,4 @@
 import { PopulateOptions, QueryOptions, Types, Query } from 'mongoose';
-import { MongoError } from 'mongodb';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { IsOptional, Max, Min } from 'class-validator';
 import { ReturnModelType, DocumentType } from '@typegoose/typegoose';
@@ -109,7 +108,7 @@ export abstract class BaseService<T extends BaseModel> {
    * @param {MongoError} err
    * @memberof BaseService
    */
-  protected static throwMongoError(err: MongoError): void {
+  protected static throwMongoError(err: any): void {
     throw new MyError(JSON.stringify(err), 500);
   }
 

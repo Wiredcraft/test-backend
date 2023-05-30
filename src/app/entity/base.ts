@@ -10,9 +10,13 @@ import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
  */
 export abstract class BaseModel extends TimeStamps {
   @prop()
+  public _id?: string;
+
+  @prop()
   created_at?: Date; // 创建时间
   @prop()
   updated_at?: Date; // 更新时间
 
+  @prop({ _id: true })
   public id?: string; // 实际上是 model._id getter
 }

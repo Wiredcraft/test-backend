@@ -59,7 +59,7 @@ export = {
   },
 
   /**
-   * 处理失败响应(未使用，暂时注释)
+   * 处理失败响应
    * @param ctx
    * @param code
    * @param message
@@ -70,6 +70,6 @@ export = {
       message,
       data: null,
     };
-    this.ctx.status = code;
+    this.ctx.status = 500;
   },
 };

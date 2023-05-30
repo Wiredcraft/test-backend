@@ -27,7 +27,7 @@ export default (appInfo: EggAppInfo): DefaultConfig => {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         user: 'admin',
-        pass: 'admin',
+        pass: '123456',
       },
       // 关联实体
     },

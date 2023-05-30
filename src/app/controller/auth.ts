@@ -46,7 +46,7 @@ export class AuthController {
   async login(ctx: Context, @Body(ALL) params: LoginDTO): Promise<void> {
     const existUser = await this.service.localHandler(params);
 
-    assert.ok(existUser, new MyError('User does not exist', 400));
+    assert.ok(existUser !== null, new MyError('User does not exist', 400));
 
     const token = await this.service.createUserToken(existUser);
 
@@ -93,7 +93,10 @@ export class AuthController {
         username: 'user1',
         name: 'Alex',
         dob: '1994.01.10',
-        address: ['-111', '111'],
+        address: {
+          type: 'Point',
+          coordinates: [-1111, 1111],
+        },
         description: 'my name is alex',
         createdAt: '2020-08-20T01:14:57.000Z',
         updatedAt: '2020-08-20T01:14:57.000Z',

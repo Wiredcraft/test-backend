@@ -1,24 +1,22 @@
-import * as assert from 'assert';
-
 import { Provide, Inject, Config, Plugin } from '@midwayjs/decorator';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { InjectEntityModel } from '@midwayjs/typegoose';
 import { Context } from '@midwayjs/web';
 import { JwtComponent } from '@mw-components/jwt';
+// eslint-disable-next-line import/order
 import { Redis } from 'ioredis';
+
 // eslint-disable-next-line node/no-extraneous-import
 import * as _ from 'lodash';
+import { ObjectId } from 'mongodb';
 
 import { JwtAuthMiddlewareConfig } from '@/config/config.types';
 
 import { User } from '../entity/user';
 import { CreateDTO } from '../dto/user';
-import MyError from '../util/my-error';
-
-import { BaseService } from './base';
 
 @Provide()
-export class UserService extends BaseService<User> {
+export class UserService {
   @Inject()
   ctx: Context;
 
@@ -38,13 +36,12 @@ export class UserService extends BaseService<User> {
    * 根据用户id获取数据
    * @param id 用户id
    */
-  async getUserById(id: string): Promise<User> {
-    const userInfo = await super.findById(id, null, { lean: true });
-
-    assert.ok(
-      !userInfo,
-      new MyError('The user does not exist. Please check the id', 400)
-    );
+  async getUserById(id: ObjectId): Promise<User> {
+    const userInfo = await this.userModel
+      .findById(id, null, {
+        lean: true,
+      })
+      .exec();
 
     return userInfo;
   }
@@ -53,7 +50,7 @@ export class UserService extends BaseService<User> {
    * 创建用户
    * @param {CreateDTO} params 创建参数
    */
-  async createUser(params: CreateDTO): Promise<string> {
+  async createUser(params: CreateDTO): Promise<any> {
     const { password } = params;
     const passwordHash = this.ctx.helper.bhash(password);
     params.password = passwordHash;
@@ -67,15 +64,15 @@ export class UserService extends BaseService<User> {
 
     await this.cacheAdminUser(user);
 
-    return token;
+    return { token, user };
   }
 
   /**
    * delete user
    * @param {UpdateDTO} params 更新参数
    */
-  async deleteUser(id: string): Promise<User> {
-    return await super.delete({ id });
+  async deleteUser(id: ObjectId): Promise<User> {
+    return this.userModel.findByIdAndDelete(id).exec();
   }
 
   async createUserToken(data: User): Promise<string> {
@@ -116,18 +113,30 @@ export class UserService extends BaseService<User> {
   }
 
   async updateUser(id: string, data: Partial<User>): Promise<User> {
-    return await super.update(id, data);
+    return await this.userModel
+      .findByIdAndUpdate(id, data, { new: true })
+      .exec();
   }
 
   /*
-   * 根据登录名查找用户
-   * @param {String} username 登录名
-   * @param {Boolean} pass 启用密码
+   * 根据name查找用户
+   * @param {String} name 登陆
    * @return {Promise[user]} 承载用户的 Promise 对象
    */
   async getUserByName(name: string): Promise<User> {
-    const query = { name: new RegExp('^' + name + '$', 'i') };
+    const query = { name };
 
-    return super.findOneAsync(query);
+    return this.userModel.findOne(query).exec();
+  }
+
+  /*
+   * 根据username查找用户
+   * @param {String} username 登陆
+   * @return {Promise[user]} 承载用户的 Promise 对象
+   */
+  public async getUserByUserName(username: string): Promise<User> {
+    const query = { username };
+
+    return this.userModel.findOne(query, null, { lean: true }).exec();
   }
 }

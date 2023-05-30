@@ -15,6 +15,7 @@ import {
   Param,
 } from '@midwayjs/decorator';
 import { Context } from '@midwayjs/web';
+import { ObjectId } from 'mongodb';
 
 import { UserService } from '../service/user';
 import { CreateDTO, UpdateDTO } from '../dto/user';
@@ -38,12 +39,16 @@ export class UserController {
     ctx: Context,
     @Param(ALL)
     param: {
-      id: string;
+      id: ObjectId;
     }
   ) {
     const { id } = param;
     const user = await this.service.getUserById(id);
 
+    assert.ok(
+      user,
+      new MyError('The user does not exist. Please check the id', 400)
+    );
     ctx.helper.success(user);
   }
 
@@ -72,11 +77,10 @@ export class UserController {
   @Validate()
   async query(ctx: Context, @Body(ALL) body: CreateDTO) {
     try {
-      const token = await this.service.createUser(body);
-      ctx.helper.success({ token });
+      const result = await this.service.createUser(body);
+      ctx.helper.success(result);
     } catch (error) {
-      ctx.logger.info(error);
-      ctx.helper.error(2001, error);
+      ctx.helper.error(400, error);
     }
   }
 
@@ -89,13 +93,13 @@ export class UserController {
     ctx: Context,
     @Param(ALL)
     param: {
-      id: string;
+      id: ObjectId;
     }
   ) {
     const user = await this.service.deleteUser(param.id);
 
     assert.ok(
-      !user,
+      user,
       new MyError('The user does not exist. Please check the id', 400)
     );
 
@@ -115,8 +119,8 @@ export class UserController {
     },
     @Body(ALL) body: UpdateDTO
   ) {
-    await this.service.updateUser(param.id, body);
-    ctx.helper.success(null, null, 200);
+    const user = await this.service.updateUser(param.id, body);
+    ctx.helper.success(user);
   }
 
   // @Get('/:id/followers', {

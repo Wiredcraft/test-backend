@@ -37,16 +37,12 @@ export class CreateDTO {
  * 更新管理员参数
  */
 export class UpdateDTO {
-  @CreateApiPropertyDoc("Account number. It's for logging in")
-  @Rule(RuleType.string().trim().min(5).max(190).required())
-  username?: string;
-
   @CreateApiPropertyDoc('name')
-  @Rule(RuleType.string().trim().min(5).max(255).required())
+  @Rule(RuleType.string().trim().min(5).max(255))
   name?: string;
 
   @CreateApiPropertyDoc('date of birth')
-  @Rule(RuleType.date().required())
+  @Rule(RuleType.date())
   dob?: string;
 
   @CreateApiPropertyDoc('user description')
