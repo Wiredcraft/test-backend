@@ -54,3 +54,17 @@ export const excludedFields = (obj: any, fields: string[]) => {
   }
   return cloned;
 };
+
+export const toIntNumber = (data, min, max, defaultValue = null) => {
+  const converted = Number.parseInt(data, 10);
+  if (isNaN(converted)) {
+    return defaultValue || data;
+  }
+  if (min && converted < min) {
+    return min;
+  }
+  if (max && converted > max) {
+    return max;
+  }
+  return converted;
+};

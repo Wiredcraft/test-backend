@@ -4,6 +4,7 @@ import {
   DB_ACCESS_SERVICE,
 } from "@wiredcraft/dbaccess/dbaccess.service";
 import UserDto from "./dto/user.dto";
+import paginationConfig from "@wiredcraft/config/pagniation.config";
 
 @Injectable()
 export class UserService {
@@ -12,8 +13,11 @@ export class UserService {
     private readonly dbService: DBAccess
   ) {}
 
-  async findAll(): Promise<UserDto[]> {
-    return this.dbService.findAll();
+  async findAll(
+    page: number = paginationConfig.defaultPage,
+    perPage: number = paginationConfig.defaultPerPage
+  ): Promise<UserDto[]> {
+    return this.dbService.findAll(page, perPage);
   }
 
   async findById(id: string): Promise<UserDto | null> {

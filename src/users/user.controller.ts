@@ -7,11 +7,14 @@ import {
   Param,
   Body,
   UsePipes,
+  Query,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import UserDto from "./dto/user.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { RequestStripPipe } from "@wiredcraft/pipes/request-strip.pipe";
+import { PaginationValidationPipe } from "@wiredcraft/pipes/pagination-validation.pipe";
+import { PaginationQueryDto } from "@wiredcraft/app.dto";
 
 @Controller("users")
 @ApiTags("User APIs")
@@ -19,8 +22,12 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  async findAll(): Promise<UserDto[]> {
-    const resp = await this.userService.findAll();
+  @UsePipes(new PaginationValidationPipe())
+  async findAll(@Query() pagination?: PaginationQueryDto): Promise<UserDto[]> {
+    const resp = await this.userService.findAll(
+      pagination?.page,
+      pagination?.perPage
+    );
     return resp;
   }
 

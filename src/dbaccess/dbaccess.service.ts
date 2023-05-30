@@ -6,7 +6,7 @@ export const DB_ACCESS_SERVICE = "DB_ACCESS_SERVICE";
 
 export interface DBAccess {
   create(userData: UserDto): Promise<UserDto>;
-  findAll(): Promise<UserDto[] | []>;
+  findAll(page?: number, perPage?: number): Promise<UserDto[] | []>;
   findById(id: string): Promise<UserDto | null>;
   update(id: string, userData: UserDto): Promise<UserDto>;
   delete(id: string): Promise<UserDto>;
@@ -30,8 +30,12 @@ export class DBAccessService implements DBAccess {
     return await this.prisma.user.create({ data: userData });
   }
 
-  async findAll(): Promise<UserDto[]> {
-    return this.prisma.user.findMany();
+  async findAll(page, perPage): Promise<UserDto[]> {
+    const skip = (page - 1) * perPage;
+    return this.prisma.user.findMany({
+      skip,
+      take: perPage,
+    });
   }
   async findById(id: string): Promise<UserDto> {
     return await this.prisma.user.findUnique({ where: { id } });
