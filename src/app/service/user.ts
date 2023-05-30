@@ -141,9 +141,9 @@ export class UserService {
   }
 
   async getNearbyUsersByLocation(distance: number): Promise<User[]> {
-    const {_id} = this.ctx.currentUser;
+    const { _id } = this.ctx.currentUser;
     const currentUser = await this.getUserById(_id);
-    const [latitude, longitude ]  = currentUser.address.coordinates;
+    const [latitude, longitude] = currentUser.address.coordinates;
 
     return this.userModel.find({
       location: {
@@ -152,11 +152,11 @@ export class UserService {
             type: 'Point',
             coordinates: [longitude, latitude], // 注意经纬度顺序
           },
-          $maxDistance: distance, 
+          $maxDistance: distance,
         },
       },
       _id: {
-        $in: currentUser.following.map((user) => user._id), // 仅返回关注用户列表中的用户
+        $in: currentUser.following.map((user: User) => user._id), // 仅返回关注用户列表中的用户
       },
     });
   }

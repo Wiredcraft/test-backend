@@ -129,10 +129,8 @@ export class UserController {
   })
   @Validate()
   async nearby(ctx: Context, @Query(ALL) params: NearByDTO) {
-     const { distance } = params;
-    const users = await  this.service.getNearbyUsersByLocation( distance);
+    const { distance } = params;
+    const users = await this.service.getNearbyUsersByLocation(distance);
     ctx.helper.success(users);
   }
-
-  
 }

@@ -57,7 +57,6 @@ export class UpdateDTO {
   };
 }
 
-
 export class NearByDTO {
   @CreateApiPropertyDoc('distance')
   @Rule(RuleType.number().required())

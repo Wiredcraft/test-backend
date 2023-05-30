@@ -25,7 +25,7 @@ The capabilities supported by Test Service
 |                | Test                                   |   ✓   |
 | **enhance**       |                                     |       |
 |                | Cache (Redis)                          |   ✓   |
-|                | Database(TypeORM)                      |   ✓   |
+|                | Database(Typegoose)                      |   ✓   |
 |                | MongoDB                                |   ✓   |
 |                | Swagger                                |   ✓   |
 | **Web**    |                                         |       |
