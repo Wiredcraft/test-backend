@@ -18,7 +18,7 @@ import { Context } from '@midwayjs/web';
 import { ObjectId } from 'mongodb';
 
 import { UserService } from '../service/user';
-import { CreateDTO, UpdateDTO } from '../dto/user';
+import { CreateDTO, NearByDTO, UpdateDTO } from '../dto/user';
 import MyError from '../util/my-error';
 
 @Provide()
@@ -123,36 +123,16 @@ export class UserController {
     ctx.helper.success(user);
   }
 
-  // @Get('/:id/followers', {
-  //   summary: 'get a list of user followers',
-  //   description: '',
-  // })
-  // @Validate()
-  // async userFans(ctx: Context, @Body(ALL) params: UpdateDTO) {
-  //   // const { roles, permissions } = params;
-  //   await this.service.updateUser(params);
-  //   ctx.helper.success(null, null, 204);
-  // }
+  @Get('/:id/nearby', {
+    summary: 'search nearby user',
+    description: '',
+  })
+  @Validate()
+  async nearby(ctx: Context, @Query(ALL) params: NearByDTO) {
+     const { distance } = params;
+    const users = await  this.service.getNearbyUsersByLocation( distance);
+    ctx.helper.success(users);
+  }
 
-  // @Get('/:id/following', {
-  //   summary: 'get a list of user following',
-  //   description: '',
-  // })
-  // @Validate()
-  // async userfollowing(ctx: Context, @Body(ALL) params: UpdateDTO) {
-  //   // const { roles, permissions } = params;
-  //   await this.service.updateUser(params);
-  //   ctx.helper.success(null, null, 204);
-  // }
-
-  // @Post('/:id/follow', {
-  //   summary: '',
-  //   description: '',
-  // })
-  // @Validate()
-  // async follow(ctx: Context, @Body(ALL) params: UpdateDTO) {
-  //   // const { roles, permissions } = params;
-  //   await this.service.updateUser(params);
-  //   ctx.helper.success(null, null, 204);
-  // }
+  
 }

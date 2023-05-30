@@ -56,3 +56,10 @@ export class UpdateDTO {
     coordinates: [number, number];
   };
 }
+
+
+export class NearByDTO {
+  @CreateApiPropertyDoc('distance')
+  @Rule(RuleType.number().required())
+  distance?: number;
+}

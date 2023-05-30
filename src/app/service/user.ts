@@ -139,4 +139,25 @@ export class UserService {
 
     return this.userModel.findOne(query, null, { lean: true }).exec();
   }
+
+  async getNearbyUsersByLocation(distance: number): Promise<User[]> {
+    const {_id} = this.ctx.currentUser;
+    const currentUser = await this.getUserById(_id);
+    const [latitude, longitude ]  = currentUser.address.coordinates;
+
+    return this.userModel.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [longitude, latitude], // 注意经纬度顺序
+          },
+          $maxDistance: distance, 
+        },
+      },
+      _id: {
+        $in: currentUser.following.map((user) => user._id), // 仅返回关注用户列表中的用户
+      },
+    });
+  }
 }
