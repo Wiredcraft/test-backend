@@ -9,7 +9,7 @@
     "@midwayjs/orm": "^2.13.2",
     "@midwayjs/swagger": "^1.1.0",
     "@midwayjs/typegoose": "2",
-    "@midwayjs/web": "^2.13.2",
+    "@midwayjs/web": "^3.11.9",
     "@mw-components/jaeger": "^9.0.1",
     "@mw-components/jwt": "^9.2.0",
     "@mw-components/koid": "^5.0.0",

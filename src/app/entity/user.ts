@@ -32,6 +32,12 @@ export class User extends BaseModel {
     type: 'Point';
     coordinates: [number, number];
   };
+
+  @prop({ ref: 'UserModel' })
+  followers: Ref<User>[];
+
+  @prop({ ref: 'UserModel' })
+  following: Ref<User>[];
 }
 
 export type UserType = User;
