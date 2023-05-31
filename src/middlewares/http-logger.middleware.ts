@@ -13,8 +13,8 @@ export class HttpLoggerMiddleware {
   use(req: Request, res: Response, next: () => void) {
     const { method, originalUrl: url } = req;
 
+    const startTime = now("micro");
     res.on("finish", () => {
-      const startTime = now("micro");
       this.logger.log({
         level: "info",
         message: `${method} ${url} - total time: ${(
