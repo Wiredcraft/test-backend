@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+  
+}
+
+//Models
+model User {
+  //"id": "xxx",                  // user ID 
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  
+  //"name": "test",               // user name
+  name String 
+  //email
+  email String @unique
+  // "dob": "",                    // date of birth
+  dob DateTime @db.Date
+  // "address": "",                // user address
+  address String
+  // "description": "",            // user description
+  description String
+  // "createdAt": ""               // user created date
+  createAt DateTime @default(now())
+  // "updateAt" //this is extra field that I think it is good to have
+  updateAt DateTime @updatedAt
+}
