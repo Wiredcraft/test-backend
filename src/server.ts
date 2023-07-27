@@ -26,7 +26,7 @@ server.get("/users", async (request, reply) => {
 }
 );
 
-server.get("/user/:id", async (request, reply) => {
+server.get("/users/:id", async (request, reply) => {
     const userId = userIdSchema.parse(request.params);
     const user = await prisma.user.findUnique({
         where: {
@@ -36,7 +36,7 @@ server.get("/user/:id", async (request, reply) => {
     return { user };
 });
 
-server.post("/user", async (request, reply) => {
+server.post("/users", async (request, reply) => {
     console.log(request.body);
 
     // o parse faz a validação e retorna um objeto com os campos validados
@@ -55,7 +55,7 @@ server.post("/user", async (request, reply) => {
 
 });
 
-server.put("/user/:id", async (request, reply) => {
+server.put("/users/:id", async (request, reply) => {
 
 
     const userId = userIdSchema.parse(request.params);
@@ -75,7 +75,7 @@ server.put("/user/:id", async (request, reply) => {
     return reply.status(204).send();
 });
 
-server.delete("/user/:id", async (request, reply) => {
+server.delete("/users/:id", async (request, reply) => {
     const userId = userIdSchema.parse(request.params);
     await prisma.user.delete({
         where: {
