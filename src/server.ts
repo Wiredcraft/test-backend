@@ -4,8 +4,8 @@ import fastify from "fastify";
 import { z } from "zod";
 
 
-const server = fastify();
-const prisma = new PrismaClient();
+export const server = fastify();
+export const prisma = new PrismaClient();
 
 // Zod usado para validação da entrada
 const userSchema = z.object({
