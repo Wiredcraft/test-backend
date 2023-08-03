@@ -1,13 +1,20 @@
-# Backend Developer (Node.js) test
+# Teste do desenvolvedor back-end (Node.js)
 
-Make sure you read the whole document carefully and follow the guidelines in it.
+A desafio de desenvolvimento de API RESTful foi inspirado no https://github.com/Wiredcraft/test-backend
 
-## Context
+## Contexto
 
-Build a RESTful API that can `get/create/update/delete` user data from a persistence database
+Criação de uma API RESTful em que seje possa realizar as requisições `get/create/update/delete` de dados armazenados em uma banco de dados. Nesta solução o banco de dados escolhido foi o PostgreSQL.
 
-### User Model
+### Requisitos
 
+- A API segue o padrão de design RESTful API.
+- Os dados são salvos em banco de dados PostgreSQL.
+
+
+### Modelo de Usuário
+
+Os dados estão modelados dessa forma:
 ```
 {
   "id": "xxx",                  // user ID 
@@ -19,55 +26,112 @@ Build a RESTful API that can `get/create/update/delete` user data from a persist
 }
 ```
 
-## Requirements
+### Funcionalidades
 
-### Functionality
-
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper unit test.
-- Provide proper API document.
-
-### Tech stack
-
-- Use Node.js and any framework.
-- Use any DB. NoSQL DB is preferred.
-
-### Bonus
-
-- Write clear documentation on how it's designed and how to run the code.
-- Write good in-code comments.
-- Write good commit messages.
-- An online demo is always welcome.
-
-### Advanced requirements
-
-*These are used for some further challenges. You can safely skip them if you are not asked to do any, but feel free to try out.*
-
-- Provide a complete user auth (authentication/authorization/etc.) strategy, such as OAuth.
-- Provide a complete logging (when/how/etc.) strategy.
-- Imagine we have a new requirement right now that the user instances need to link to each other, i.e., a list of "followers/following" or "friends". Can you find out how you would design the model structure and what API you would build for querying or modifying it?
-- Related to the requirement above, suppose the address of user now includes a geographic coordinate(i.e., latitude and longitude), can you build an API that,
-  - given a user name
-  - return the nearby friends
+- Cadastro de Usuários
+- Atualização de Usuários
+- Listagem de um ou todos os Usuários	
+- Exclução de Usuários
 
 
-## What We Care About
+## Documentação da API
 
-Feel free to use any open-source library as you see fit, but remember that we are evaluating your coding skills and problem solving skills.
+#### Retorna todos os usuários
 
-Here's what you should aim for:
+```http
+  GET /api/users
+```
 
-- Good use of current Node.js & API design best practices.
-- Good testing approach.
-- Extensible code.
+```
+{
+  "users":[
+  {
+    "id": "f3c931ca-0e5d-42c3-9e77-6325595e0592",                  
+    "name": "test",               
+    "dob": "1994-01-14T02:00:00.000Z",                    
+    "address": "Casa do Deploy",                
+    "description": "Uma API feita em Node JS",            
+    "createdAt": "2023-07-27T02:02:33.640Z" 
+  },
+   {
+    "id": "f3c931ca-0e5d-42c3-9e77-6325595e0592",                  
+    "name": "test",               
+    "dob": "1994-01-14T02:00:00.000Z",                    
+    "address": "Casa do Deploy",                
+    "description": "Uma API feita em Node JS",            
+    "createdAt": "2023-07-27T02:02:33.640Z" 
+  },
+  ]
+}
+```
 
-## FAQ
+#### Retorna um usuário
 
-> Where should I send back the result when I'm done?
+```http
+  GET /api/users/${id}
+```
 
-Fork this repo and send us a pull request when you think it's ready for review. You don't have to finish everything prior and you can continue to work on it. We don't have a deadline for the task.
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `id`      | `string` | **Obrigatório**. O ID do usuário que você quer |
 
-> What if I have a question?
 
-Create a new issue in the repo and we will get back to you shortly.
+```
+{
+  "user":
+  {
+    "id": "f3c931ca-0e5d-42c3-9e77-6325595e0592",                  
+    "name": "test",               
+    "dob": "1994-01-14T02:00:00.000Z",                    
+    "address": "Casa do Deploy",                
+    "description": "Uma API feita em Node JS",            
+    "createdAt": "2023-07-27T02:02:33.640Z" 
+  }
+}
+```
+#### Cria um usuário
+
+
+```http
+  POST /api/users
+```
+```
+{
+  "name": "Fulano de Tal",               // user name
+  "dob": "1994-10-12",                    // date of birth
+  "address": "Casa do Fulano, 2",                // user address
+  "description": "O fulano é um cara legal",            // user description 
+}
+```
+
+#### Atualiza um usuário
+
+```http
+  PATCH /api/users/${id}
+```
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `id`      | `string` | **Obrigatório**. O ID do usuário que você quer |
+
+
+#### Exclui um usuário
+```http
+  DELETE /api/users/${id}
+```
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `id`      | `string` | **Obrigatório**. O ID do usuário que você quer |
+
+
+
+
+## Stack utilizada
+
+**Back-end:** Node JS
+
+**Frameworks:** Fastify e Prisma
+
+**Languages:** JavaScript e TypeScript
+
