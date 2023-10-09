@@ -1,7 +1,17 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import User from 'App/Models/User'
 
 export default class UsersController {
-  public async index({}: HttpContextContract) {}
+  /**
+   *
+   * @returns a list of users with pagination metadata
+   */
+  public async index({ request, response }: HttpContextContract) {
+    const { page } = request.qs() // Get pagination parameters
+
+    const users = await User.query().paginate(page || 1, 50) // Use default pagination parameters if none are provided
+    return response.ok(users)
+  }
 
   public async store({}: HttpContextContract) {}
 
