@@ -11,7 +11,9 @@ export default class User extends BaseModel {
   @column()
   public date_of_birth: DateTime
 
-  @column()
+  @column({
+    consume: (value) => (value ? JSON.parse(value) : ''),
+  })
   public address: String
 
   @column()
