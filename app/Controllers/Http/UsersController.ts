@@ -51,5 +51,14 @@ export default class UsersController {
 
   public async update({}: HttpContextContract) {}
 
-  public async destroy({}: HttpContextContract) {}
+  public async destroy({ params, response }: HttpContextContract) {
+    const user = await User.query().where('id', params.id).first()
+
+    /**
+     * return a 404 if no record found
+     */
+    response.abortIf(!user, 404)
+
+    await user?.delete()
+  }
 }
