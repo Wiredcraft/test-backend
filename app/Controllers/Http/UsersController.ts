@@ -27,13 +27,27 @@ export default class UsersController {
       ...payload,
     })
 
+    /**
+     * @todo Internationalise response strings
+     */
     return response.created({
       message: 'User created successfully',
       data: user,
     })
   }
 
-  public async show({}: HttpContextContract) {}
+  public async show({ params, response }: HttpContextContract) {
+    const user = await User.query().where('id', params.id).first()
+
+    /**
+     * return a 404 if no record found
+     */
+    response.abortIf(!user, 404)
+
+    return response.ok({
+      data: user,
+    })
+  }
 
   public async update({}: HttpContextContract) {}
 
